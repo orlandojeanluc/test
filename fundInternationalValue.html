@@ -43,6 +43,9 @@
     <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
     <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
    <!-- script
    ================================================== -->
 
@@ -226,17 +229,17 @@
 
       </h1>
 
-      <p class="text-black font-mreg text-lg w-full font-bold">1x Levered SPY or ES Futures</p>
+      <p class="text-black font-mreg text-lg w-full font-bold">Growth of $1,000 Investment</p>
 
       <h1 class="title-font sm:text-4xl text-3xl mb-8 font-bold text-black mt-8 font-mreg ">Historical Performance
 
       </h1>
-
+      
 
       <div class=" inline bg-white w-full rounded-3xl items-center justify-center object-center">
 
 
-      <div class="w-full " id="chart"></div>
+      <div class="w-full " id="chart4"></div>
 
 
     </div>
@@ -262,14 +265,30 @@
 
 
       <div class="w-full " id="chart1"></div>
+      
 
 
     </div>
 
     </div>
 
+    
 
   </div>
+
+ <!-- Centering wrapper -->
+<div class="w-full flex justify-center">
+  
+  <div class="bg-white w-full max-w-4xl rounded-3xl px-4">
+    <h1 class="title-font sm:text-4xl text-3xl xl:mb-8 lg:mb-16 md:mb-8 sm:mb-8 font-bold text-black mt-0  font-mreg text-center">Historical Allocation
+
+    </h1>
+    <p class="font-mreg text-gray-800 text-lg mb-2 mt-12">*Allocations change daily, this is Monthly and Of course shows lagged increases or decreases. However, if shown in daily format you could never see it. I will post another full daily*</p>
+    <div class="mb-16" id="chart5"></div>
+  </div>
+</div>
+
+
 
 </section>
 
@@ -344,7 +363,322 @@
       </div>
 
 
+      <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
+    
+        const firebaseConfig = {
+          apiKey: "AIzaSyBxG5qf6mb8E_-b2TeXlRNseMZ26L9DRYg",
+          authDomain: "trendscores-df341.firebaseapp.com",
+          projectId: "trendscores-df341",
+          storageBucket: "trendscores-df341.appspot.com",
+          messagingSenderId: "565710392511",
+          appId: "1:565710392511:web:37349319364bba19b3ca0a",
+          measurementId: "G-8TVLFBWN63",
+          databaseURL: "https://trendscores-df341-default-rtdb.firebaseio.com"
+        };
+    
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+    
+        const monthlyRef = ref(db, "monthlyspy");
+    
+        get(monthlyRef).then(snapshot => {
+          const data = snapshot.val();
+          if (!data) return;
+    
+          const sorted = Object.entries(data).sort(([a], [b]) => new Date(a) - new Date(b));
+          const categories = sorted.map(([date]) => date);
+          const series1 = sorted.map(([, values]) => values[0]);
+          const series2 = sorted.map(([, values]) => values[1]);
+    
+          const options = {
+            chart: {
+              fontFamily: 'montserrat-regular, sans-serif',
+              type: 'area',
+              height: 450,
+              toolbar: { show: false },
+              zoom: { enabled: false },
+              animations: {
+                enabled: true,
+                easing: 'easeinout',
+                
+                speed: 800
+              }
+            },
+            stroke: {
+              curve: 'smooth',
+              width: 3
+            },
+            dataLabels: {
+              enabled: false
+            },
+            title: {
+              text: "",
+              align: 'center',
+              style: {
+                fontSize: '22px',
+                fontWeight: 'bold',
+                color: '#111827',
+                fontFamily: 'montserrat-regular, sans-serif'
+              }
+            },
+            xaxis: {
+              categories,
+              labels: {
+                show: false,
+                rotate: -45,
+                style: {
+                  fontSize: '12px',
+                  colors: '#4B5563'
+                }
+              }
+            },
+            yaxis: {
+              labels: {
+                formatter: function (val) {
+      return val.toFixed(2); // or .toFixed(2) if you want 2 decimal places
+                },
+                style: {
+                  colors: '#4B5563',
+                  fontSize: '12px'
+                }
+              },
 
+
+
+ 
+
+
+
+              title: {
+                text: '',
+                style: {
+                  color: '#374151',
+                  fontWeight: 500
+                }
+              }
+            },
+            grid: {
+              borderColor: '#E5E7EB',
+              show: false,
+              row: { colors: ['#F9FAFB', 'transparent'], opacity: 0.5 }
+            },
+            colors: [],
+            fill: {
+              type: "gradient",
+              gradient: {
+                shadeIntensity: 1,
+                opacityFrom: 0.4,
+                opacityTo: 0.1,
+                stops: [0, 90, 100]
+              }
+            },
+            markers: {
+              size: 0,
+              strokeWidth: 2,
+              strokeColors: "#fff",
+              hover: { size: 6 }
+            },
+            tooltip: {
+              theme: "light",
+              x: { format: 'MMM yyyy' }
+            },
+            series: [
+              { name: "Caltropia", data: series1 },
+              { name: "S&P 500", data: series2 },
+              
+              
+            ]
+          };
+    
+          const chart = new ApexCharts(document.querySelector("#chart4"), options);
+          chart.render();
+        }).catch(err => console.error("Data fetch error:", err));
+
+
+        
+        
+        const refPath = ref(db, "yearlyspyDailyPerf");
+
+get(refPath).then(snapshot => {
+  const data = snapshot.val();
+  if (!data) return console.error("No data found.");
+
+  // Convert and sort by parsed date keys
+  const sorted = Object.entries(data).sort(([a], [b]) => new Date(a) - new Date(b));
+
+  // Extract values
+  const years = sorted.map(([dateStr]) => {
+    const year = new Date(dateStr).getFullYear();
+    return "'" + year.toString().slice(-2);
+  });
+
+  const caltropia = sorted.map(([, values]) => values[0]);
+  const sp500 = sorted.map(([, values]) => values[1]);
+
+  // Now use in ApexCharts
+  const options = {
+    series: [
+      { name: 'Caltropia', data: caltropia },
+      { name: 'S&P 500', data: sp500 }
+    ],
+    chart: {
+      fontFamily: 'montserrat-regular, sans-serif',
+      type: 'bar',
+  height: 450,
+  toolbar: {
+    show: false // this disables the entire menu and removes the icon
+  }
+},
+    xaxis: {
+      categories: years
+    },
+    yaxis: {
+  title: {
+    text: ''
+  },
+  labels: {
+    formatter: function (val) {
+      return val.toFixed(2); // or .toFixed(2) if you want 2 decimal places
+    }
+  }
+},
+    grid: {
+              borderColor: '#E5E7EB',
+              show: false,
+              row: { colors: ['#F9FAFB', 'transparent'], opacity: 0.5 }
+            },
+    tooltip: {
+      y: {
+        formatter: val => val.toFixed(2) + " %"
+      }
+    },
+    fill: { opacity: 1 },
+    plotOptions: {
+      bar: {
+        horizontal: false,
+        columnWidth: '75%',
+        borderRadius: 3
+      }
+    },
+    dataLabels: { enabled: false },
+    stroke: {
+      show: true,
+      width: 2,
+      colors: ['transparent']
+    }
+  };
+
+  const chartEl = document.querySelector("#chart1");
+  if (chartEl) {
+    const chart = new ApexCharts(chartEl, options);
+    chart.render();
+  } else {
+    console.error("Element #chart1 not found.");
+  }
+}).catch(err => console.error("Error fetching Firebase data:", err));
+
+
+
+const allocationsRef = ref(db, "SpDailyHistAlloc");
+
+get(allocationsRef).then(snapshot => {
+  const data = snapshot.val();
+  if (!data) return;
+
+  const sorted = Object.entries(data).sort(([a], [b]) => new Date(a) - new Date(b));
+  const dates = sorted.map(([date]) =>
+    new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'short' })
+  );
+  const values = sorted.map(([, value]) => value * 100); // convert to percentage
+
+  const options = {
+    chart: {
+      fontFamily: 'montserrat-regular, sans-serif',
+      type: 'line',
+      height: 450,
+      toolbar: { show: false },
+      zoom: { enabled: false },
+      animations: {
+        enabled: true,
+        easing: 'easeinout',
+        speed: 800
+      }
+    },
+    stroke: {
+      curve: 'smooth',
+      width: 3
+    },
+    dataLabels: { enabled: false },
+    title: {
+      text: "",
+      align: 'center',
+      style: {
+        fontSize: '22px',
+        fontWeight: 'bold',
+        color: '#111827'
+      }
+    },
+    xaxis: {
+      categories: dates,
+      labels: {
+        rotate: -45,
+        style: {
+          fontSize: '0.1px',
+          colors: '#4B5563'
+        }
+      }
+    },
+    yaxis: {
+      labels: {
+        formatter: function (val) {
+          return parseFloat(val.toFixed(1)); // clean 1 decimal max
+        },
+        style: {
+          colors: '#4B5563',
+          fontSize: '12px'
+        }
+      },
+      title: {
+        text: 'Allocation (%)',
+        style: {
+          color: '#374151',
+          fontWeight: 500
+        }
+      }
+    },
+    grid: { show: false },
+    colors: ['#3b82f6'],
+    fill: {
+      type: "solid",
+      colors: ['#3b82f6']
+    },
+    markers: {
+      size: 0,
+      strokeWidth: 2,
+      strokeColors: "#fff",
+      hover: { size: 6 }
+    },
+    tooltip: {
+      theme: "light",
+      y: {
+        formatter: val => val.toFixed(1) + " %"
+      }
+    },
+    series: [{
+      name: 'Allocation %',
+      data: values
+    }]
+  };
+
+  const chart = new ApexCharts(document.querySelector("#chart5"), options);
+  chart.render();
+});
+
+
+
+      </script>
 
 
 </section>
@@ -547,94 +881,7 @@
         var chart = new ApexCharts(document.querySelector("#chart"), options);
         chart.render();
 
-         var options = {
-          series: [{
-          name: 'Caltropia',
-          data: [6, -22.77, 14.35, 16.44, 13.88, 14.61, 29.98, 16.86, 5.08, 10.07, 26.75, 3.48, 22.21]
-        }, {
-          name: 'S&P 500',
-          data: [0.05, -36.81, 26.36, 15.06, 1.89, 15.99, 32.31, 13.46, 1.25, 12, 21.70, -4.56, 27.52]
-        }, ],
-        grid: {
-    show: true,
-    borderColor: '#90A4AE',
-    strokeDashArray: 0,
-    position: 'back',
-    xaxis: {
-        lines: {
-            show: false
-        }
-    },   
-    yaxis: {
-        lines: {
-            show: false
-        }
-    },  
- padding: {
-        top: 0,
-        right: 0,
-        bottom: 10,
-        left: 10,
-    },     
-},
-          chart: {
-            fontFamily: 'montserrat-regular, sans-serif',
-          type: 'bar',
-          height: 450,
-          toolbar: {
-        show: false,
-        offsetX: 0,
-        offsetY: 0,
-        tools: {
-          download: false,
-          selection: true,
-          zoom: true,
-          zoomin: true,
-          zoomout: true,
-          pan: true,
-          reset: true | '<img src="/static/icons/reset.png" width="20">',
-          customIcons: []
-        },
-    },
-        },
-        plotOptions: {
-          bar: {
-            horizontal: false,
-            columnWidth: '55%',
-            endingShape: 'rounded',
-            borderRadius: 5
-          },
-        },
-        dataLabels: {
-          enabled: false
-        },
-        stroke: {
-          show: true,
-          width: 2,
-          colors: ['transparent']
-        },
-        xaxis: {
-          categories: ['07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19'],
-        },
-        yaxis: {
-          title: {
-            text: '% (Percent)'
-          }
-        },
-        fill: {
-          opacity: 1
-        },
-        tooltip: {
-          y: {
-            formatter: function (val) {
-              return val + " %"
-            }
-          }
-        }
-        };
-
-        var chart = new ApexCharts(document.querySelector("#chart1"), options);
-        chart.render();
+        
       
     </script>
 
