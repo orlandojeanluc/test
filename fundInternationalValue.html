@@ -24,6 +24,7 @@
 <link rel="stylesheet" href="public/styles1.css"> 
 <link rel="stylesheet" href="css/fonts.css"> 
 
+
 <script src="js/jquery-2.1.3.min.js"></script>
 
 <script>
@@ -382,119 +383,112 @@
         const db = getDatabase(app);
     
         const monthlyRef = ref(db, "monthlyspy");
-    
-        get(monthlyRef).then(snapshot => {
-          const data = snapshot.val();
-          if (!data) return;
-    
-          const sorted = Object.entries(data).sort(([a], [b]) => new Date(a) - new Date(b));
-          const categories = sorted.map(([date]) => date);
-          const series1 = sorted.map(([, values]) => values[0]);
-          const series2 = sorted.map(([, values]) => values[1]);
-    
-          const options = {
-            chart: {
-              fontFamily: 'montserrat-regular, sans-serif',
-              type: 'area',
-              height: 450,
-              toolbar: { show: false },
-              zoom: { enabled: false },
-              animations: {
-                enabled: true,
-                easing: 'easeinout',
-                
-                speed: 800
-              }
-            },
-            stroke: {
-              curve: 'smooth',
-              width: 3
-            },
-            dataLabels: {
-              enabled: false
-            },
-            title: {
-              text: "",
-              align: 'center',
-              style: {
-                fontSize: '22px',
-                fontWeight: 'bold',
-                color: '#111827',
-                fontFamily: 'montserrat-regular, sans-serif'
-              }
-            },
-            xaxis: {
-              categories,
-              labels: {
-                show: false,
-                rotate: -45,
-                style: {
-                  fontSize: '12px',
-                  colors: '#4B5563'
-                }
-              }
-            },
-            yaxis: {
-              labels: {
-                formatter: function (val) {
-      return val.toFixed(2); // or .toFixed(2) if you want 2 decimal places
-                },
-                style: {
-                  colors: '#4B5563',
-                  fontSize: '12px'
-                }
-              },
 
+get(monthlyRef).then(snapshot => {
+  const data = snapshot.val();
+  if (!data) return;
 
+  const sorted = Object.entries(data).sort(([a], [b]) => new Date(a) - new Date(b));
+  const categories = sorted.map(([date]) =>
+    new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'short' })
+  );
+  const series1 = sorted.map(([, values]) => values[0]);
+  const series2 = sorted.map(([, values]) => values[1]);
 
- 
+  const options = {
+    chart: {
+      fontFamily: 'montserrat-regular, sans-serif',
+      type: 'area',
+      height: 450,
+      toolbar: { show: false },
+      zoom: { enabled: false },
+      animations: {
+        enabled: true,
+        easing: 'easeinout',
+        speed: 800
+      }
+    },
+    stroke: {
+      curve: 'smooth',
+      width: 3
+    },
+    dataLabels: {
+      enabled: false
+    },
+    title: {
+      text: "",
+      align: 'center',
+      style: {
+        fontSize: '22px',
+        fontWeight: 'bold',
+        color: '#111827',
+        fontFamily: 'montserrat-regular, sans-serif'
+      }
+    },
+    xaxis: {
+      categories,
+      labels: {
+        show: false,
+        rotate: -45,
+        style: {
+          fontSize: '12px',
+          colors: '#4B5563'
+        }
+      }
+    },
+    yaxis: {
+      labels: {
+        formatter: function (val) {
+          return val.toFixed(2);
+        },
+        style: {
+          colors: '#4B5563',
+          fontSize: '12px'
+        }
+      },
+      title: {
+        text: '',
+        style: {
+          color: '#374151',
+          fontWeight: 500
+        }
+      }
+    },
+    grid: {
+      borderColor: '#E5E7EB',
+      show: false,
+      row: { colors: ['#F9FAFB', 'transparent'], opacity: 0.5 }
+    },
+    colors: [],
+    fill: {
+      type: "gradient",
+      gradient: {
+        shadeIntensity: 1,
+        opacityFrom: 0.4,
+        opacityTo: 0.1,
+        stops: [0, 90, 100]
+      }
+    },
+    markers: {
+      size: 0,
+      strokeWidth: 2,
+      strokeColors: "#fff",
+      hover: { size: 6 }
+    },
+    tooltip: {
+      theme: "light",
+      x: { format: 'MMM yyyy' }
+    },
+    series: [
+      { name: "Caltropia", data: series1 },
+      { name: "S&P 500", data: series2 }
+    ]
+  };
 
+  const chart = new ApexCharts(document.querySelector("#chart4"), options);
+  chart.render();
+}).catch(err => console.error("Data fetch error:", err));
 
-
-              title: {
-                text: '',
-                style: {
-                  color: '#374151',
-                  fontWeight: 500
-                }
-              }
-            },
-            grid: {
-              borderColor: '#E5E7EB',
-              show: false,
-              row: { colors: ['#F9FAFB', 'transparent'], opacity: 0.5 }
-            },
-            colors: [],
-            fill: {
-              type: "gradient",
-              gradient: {
-                shadeIntensity: 1,
-                opacityFrom: 0.4,
-                opacityTo: 0.1,
-                stops: [0, 90, 100]
-              }
-            },
-            markers: {
-              size: 0,
-              strokeWidth: 2,
-              strokeColors: "#fff",
-              hover: { size: 6 }
-            },
-            tooltip: {
-              theme: "light",
-              x: { format: 'MMM yyyy' }
-            },
-            series: [
-              { name: "Caltropia", data: series1 },
-              { name: "S&P 500", data: series2 },
-              
-              
-            ]
-          };
-    
-          const chart = new ApexCharts(document.querySelector("#chart4"), options);
-          chart.render();
-        }).catch(err => console.error("Data fetch error:", err));
 
 
         
