@@ -864,68 +864,83 @@ get(returnsRef).then(snapshot => {
 
 });
 
-const options = {
-      chart: {
-        fontFamily: 'montserrat-regular, sans-serif',
-        type: 'bar',
-        height: 400,
-        toolbar: { show: false }
-      },
-      plotOptions: {
-        bar: {
-          horizontal: true,
-          barHeight: '45%',
-          borderRadius: 8
-        }
-      },
-      dataLabels: {
-        enabled: true,
-        style: {
-          fontSize: '14px',
-          colors: ['#fff']
-        },
-        formatter: val => val + '%'
-      },
-      xaxis: {
-        categories: ['AAPL', 'MSFT', 'NVDA', 'GOOGL', 'AMZN'],
-        title: {
-          text: 'Weight (%)',
-          style: {
-            color: '#fff',
-            fontSize: '14px'
-          }
-        },
-        labels: {
-          style: {
-            colors: '#fff',
-            fontSize: '12px'
-          }
-        }
-      },
-      yaxis: {
-  labels: {
-    style: {
-      colors: '#ffffff', // sets text to white
-      fontSize: '14px',
-      fontWeight: 500
-    }
-  }
-},
-      grid: {
-        show: false
-      },
-      tooltip: {
-        enabled: false
-      },
-      colors: ['#60a5fa'], // Tailwind blue-400
-      series: [{
-        name: 'Weight',
-        data: [20.5, 15.2, 12.7, 10.1, 8.6]
-      }]
-    };
+const holdingsRef = ref(db, "coreequityholdings");
 
-    const chart = new ApexCharts(document.querySelector("#barChart"), options);
-    chart.render();
+get(holdingsRef).then(snapshot => {
+  const data = snapshot.val();
+  if (!data) return;
+
+  const tickers = Object.keys(data);
+  const weights = tickers.map(ticker => parseFloat(data[ticker][0].toFixed(2)));
+
+  const options = {
+    chart: {
+      fontFamily: 'montserrat-regular, sans-serif',
+      type: 'bar',
+      height: 1000,
+
+      toolbar: { show: false }
+    },
+    plotOptions: {
+      bar: {
+        horizontal: true,
+        barHeight: '45%',
+        
+        borderRadius: 2
+      }
+    },
+    dataLabels: {
+      enabled: true,
+      style: {
+        fontSize: '14px',
+        colors: ['#fff']
+      },
+      formatter: val => val + '%'
+    },
+    xaxis: {
+      categories: tickers,
+      title: {
+        text: 'Weight (%)',
+        style: {
+          color: '#fff',
+          fontSize: '14px'
+        }
+      },
+      labels: {
+        style: {
+          colors: '#fff',
+          fontSize: '12px'
+        }
+      }
+    },
+    yaxis: {
+      labels: {
+        style: {
+          colors: '#ffffff',
+          fontSize: '14px',
+          fontWeight: 500
+        },
+        offsetX: -10,
+        offsetY: 3,         // shifts the text closer to the chart
+    maxWidth: 70 
+      }
+    },
+    grid: {
+      show: false
+    },
+    tooltip: {
+      enabled: false
+    },
+    colors: ['#60a5fa'],
+    series: [{
+      name: 'Weight',
+      data: weights
+    }]
+  };
+
+  const chart = new ApexCharts(document.querySelector("#barChart"), options);
+  chart.render();
+}).catch(err => console.error("Firebase fetch error:", err));
     
     
 
@@ -1221,7 +1236,7 @@ const options = {
 
       
     </h2>
-    <h1 class="text-center text-5xl mb-4 text-3xl text-gray-300 mx-auto px-6 mt-24 -mb-8">Portfolio Composition</h1>
+    <h1 class="text-center text-4xl mb-4  text-gray-300 mx-auto px-6 mt-24 -mb-8">Portfolio Composition</h1>
   </div>
 
   <div class="container mx-auto flex py-0 md:flex-row flex-col items-center xl:pl-0 lg:pl-0 md:pl-12 sm:pl-0 ">
@@ -1233,7 +1248,7 @@ const options = {
       </h1>
       
       
-      <h1 class="title-font sm:text-4xl text-3xl xl:mb-8 lg:mb-16 md:mb-8 sm:mb-8 text-white mt-0 sm:-mt-12 md:-mt-32 lg:mt-0 xl:mt-0 text-center mx-auto ">Current Allocations
+      <h1 class="title-font sm:text-3xl text-2xl xl:mb-8 lg:mb-16 md:mb-8 sm:mb-8 text-white mt-0 sm:-mt-12 md:-mt-32 lg:mt-0 xl:mt-0 text-center mx-auto ">Current Allocations
 
       </h1>
 
@@ -1256,7 +1271,7 @@ const options = {
       </h1>
 
       
-      <h1 class="title-font sm:text-4xl text-3xl xl:mb-8 lg:mb-16 md:mb-8 sm:mb-8 text-white mt-0 sm:-mt-12 md:-mt-32 lg:mt-0 xl:mt-0 text-center mx-auto ">Sector Allocations
+      <h1 class="title-font sm:text-3xl text-2xl xl:mb-8 lg:mb-16 md:mb-8 sm:mb-8 text-white mt-0 sm:-mt-12 md:-mt-32 lg:mt-0 xl:mt-0 text-center mx-auto ">Sector Allocations
 
       </h1>
 
