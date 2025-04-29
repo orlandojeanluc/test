@@ -1,0 +1,1170 @@
+<!--Should work sehn hosted-->
+
+<!DOCTYPE html>
+<!--[if IE 8 ]><html class="no-js oldie ie8" lang="en"> <![endif]-->
+<!--[if IE 9 ]><html class="no-js oldie ie9" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+
+   <!--- basic page needs
+   ================================================== -->
+   <meta charset="utf-8">
+	<title>Caltropia Research</title>
+	<meta name="description" content="">  
+	<meta name="author" content="">
+
+   <!-- mobile specific metas
+   ================================================== -->
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+ 	<!-- CSS
+   ================================================== -->
+   <link rel="stylesheet" href="css/base.css">
+   <link rel="stylesheet" href="css/vendor.css">  
+   <link rel="stylesheet" href="css/main.css">  
+   <link rel="stylesheet" href="public/styles.css">  
+   <!-- script
+   ================================================== -->
+	<script src="js/modernizr.js"></script>
+	<script src="js/pace.min.js"></script>
+
+   <!-- favicons
+	================================================== -->
+	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+	<link rel="icon" href="favicon.ico" type="image/x-icon">
+
+	 <style>
+      
+        #chart {
+      max-width: 1250px;
+      margin: 35px auto;
+      margin-top: -10em;
+      color: #000;
+    }
+     
+body section {
+  display: block;
+}
+body h1,
+body h2,
+body h3,
+body h4,
+body h5,
+body h6,
+body ul,
+body li {
+  margin: 0;
+  padding: 0;
+}
+
+body li {
+  list-style-type: none;
+}
+body a {
+  text-decoration: none;
+}
+.bg-wrapper {
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8));
+}
+.section-header {
+  padding-top: 5.625em;
+  text-align: center;
+}
+.section-header h3 {
+  margin-bottom: 0.5em;
+}
+.section-header .line-red {
+  margin: 2.5em auto 2.9375em auto;
+}
+.line-red {
+  display: block;
+  width: 4em;
+  height: 0.1875em;
+  margin: 0 auto;
+  background: #f38181;
+}
+/* Main Header Styles */
+.main-header {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  font-family: Montserrat, sans-serif;
+  color: #fff;
+  background: transparent;
+}
+.main-header .header-wrapper {
+  display: block;
+  width: 70%;
+  margin: 0 auto;
+  padding-top: 1em;
+}
+.main-header .header-wrapper .main-logo {
+  float: left;
+  font-weight: 700;
+  font-size: 1.875em;
+}
+.main-header .header-wrapper .main-menu {
+  float: right;
+  text-align: center;
+}
+.main-header .header-wrapper .main-menu li {
+  display: inline-block;
+  padding: 0.75em 1.875em;
+}
+.main-header .header-wrapper .main-menu li a {
+  padding-bottom: 0.75em;
+  text-transform: uppercase;
+  color: #fff;
+  font-size: 0.875em;
+}
+.main-header .header-wrapper .main-menu li a:hover {
+  color: #fce38a;
+  border-bottom: 0.1875em solid #000;
+  transition: 0.1s;
+}
+.main-header .header-wrapper .main-menu li a span {
+  font-size: 1.2em;
+}
+.main-header .header-wrapper .main-menu li:last-child {
+  padding: 0.75em 0;
+}
+.main-header .header-wrapper .main-menu li:nth-child(6) a:hover,
+.main-header .header-wrapper .main-menu li:last-child a:hover {
+  border: none;
+}
+/* Section-1 Styles */
+#section-1 {
+
+  height: 38em;
+  color: #fff;
+  background-color: #f1f3f8;
+}
+#section-1 .content-slider {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+#section-1 .content-slider input {
+  display: none;
+}
+#section-1 .content-slider .slider {
+  position: relative;
+  width: inherit;
+  height: inherit;
+  overflow: hidden;
+}
+#section-1 .content-slider .slider .banner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  z-index: 0;
+  width: inherit;
+  height: inherit;
+  text-align: center;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  transition: all 0.5s ease;
+}
+#section-1 .content-slider .slider .banner .banner-inner-wrapper {
+  height: 100%;
+  padding-top: 6em;
+
+  box-sizing: border-box;
+}
+#section-1 .content-slider .slider .banner .banner-inner-wrapper h2 {
+  padding-bottom: 0.3em;
+  font-family: 'Kaushan Script', cursive;
+  font-weight: 400;
+  font-size: 2.5em;
+  text-transform: none;
+}
+#section-1 .content-slider .slider .banner .banner-inner-wrapper h1 {
+  font-size: 6em;
+  line-height: 95%;
+}
+#section-1 .content-slider .slider .banner .banner-inner-wrapper .line {
+  display: block;
+  width: 4em;
+  height: 0.1875em;
+  margin: 2.5em auto;
+  background: #fff;
+}
+#section-1 .content-slider .slider .banner .banner-inner-wrapper .learn-more-button {
+  padding-bottom: 5em;
+  z-index: 15 !important;
+}
+#section-1 .content-slider .slider .banner .banner-inner-wrapper .learn-more-button a {
+  padding: 0.5em 2em;
+  text-align: center;
+  font-family: Montserrat, sans-serif;
+  font-size: 0.875em;
+  color: #fff;
+  text-transform: uppercase;
+  border: 0.1875em solid #fff;
+}
+#section-1 .content-slider .slider .banner .banner-inner-wrapper .learn-more-button a:hover {
+  color: #fff;
+  border-color: #fff;
+  transition: 0.3s;
+}
+#section-1 .content-slider .slider #top-banner-1 {
+  background: url('') no-repeat center center;
+  background-size: cover;
+}
+#section-1 .content-slider .slider #top-banner-2 {
+  background: url('') no-repeat center center;
+  background-size: cover;
+}
+#section-1 .content-slider .slider #top-banner-3 {
+  background: url('') no-repeat center center;
+  background-size: cover;
+}
+#section-1 .content-slider .slider #top-banner-4 {
+  background: url('') no-repeat center center;
+  background-size: cover;
+}
+#section-1 .content-slider nav {
+  position: absolute;
+  bottom: 0.5em;
+  width: 100%;
+  z-index: 10;
+  text-align: center;
+
+}
+#section-1 .content-slider nav .controls {
+  display: block;
+  width: 70%;
+  margin: 0 auto;
+  font-family: Montserrat, sans-serif;
+  color: #000;
+  margin-top: -27em;
+}
+#section-1 .content-slider nav .controls label {
+  position: relative;
+  display: inline-block;
+  width: 20%;
+  height: 3.1em;
+  overflow: hidden;
+  margin: 0 1em;
+  padding-top: 1em;
+  text-align: left;
+  text-transform: uppercase;
+  font-family: Montserrat, sans-serif;
+  font-size: 1em;
+  color: #000;
+  font-weight: 400;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+#section-1 .content-slider nav .controls label .progressbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 100%;
+  background: #f6eac5;
+  z-index: 100;
+}
+#section-1 .content-slider nav .controls label .progressbar .progressbar-fill {
+  position: inherit;
+  width: inherit;
+  height: inherit;
+  margin-left: -100%;
+  background: #e88382;
+}
+#section-1 .content-slider nav .controls label span {
+  font-size: 1.4em;
+  font-weight: 700;
+}
+#section-1 .content-slider nav .controls label:hover {
+  color: #e88382;
+}
+#section-1 .content-slider #banner1:checked ~ .slider #top-banner-1,
+#section-1 .content-slider #banner2:checked ~ .slider #top-banner-2,
+#section-1 .content-slider #banner3:checked ~ .slider #top-banner-3,
+#section-1 .content-slider #banner4:checked ~ .slider #top-banner-4 {
+  opacity: 1;
+  z-index: 1;
+}
+#section-1 .content-slider #banner1:checked ~ nav label:nth-of-type(1),
+#section-1 .content-slider #banner2:checked ~ nav label:nth-of-type(2),
+#section-1 .content-slider #banner3:checked ~ nav label:nth-of-type(3),
+#section-1 .content-slider #banner4:checked ~ nav label:nth-of-type(4) {
+  cursor: default;
+  color: #000;
+  transition: all 0.5s;
+}
+#section-1 .content-slider #banner1:checked ~ nav label:nth-of-type(1) .progressbar,
+#section-1 .content-slider #banner2:checked ~ nav label:nth-of-type(2) .progressbar,
+#section-1 .content-slider #banner3:checked ~ nav label:nth-of-type(3) .progressbar,
+#section-1 .content-slider #banner4:checked ~ nav label:nth-of-type(4) .progressbar {
+  background: #fff;
+}
+#section-1 .content-slider #banner1:checked ~ nav label:nth-of-type(1) .progressbar-fill,
+#section-1 .content-slider #banner2:checked ~ nav label:nth-of-type(2) .progressbar-fill,
+#section-1 .content-slider #banner3:checked ~ nav label:nth-of-type(3) .progressbar-fill,
+#section-1 .content-slider #banner4:checked ~ nav label:nth-of-type(4) .progressbar-fill {
+  animation: progressBarFill 5s linear;
+}
+/* Animations */
+@keyframes progressBarFill {
+  from {
+    margin-left: -100%;
+  }
+  to {
+    margin-left: 0;
+  }
+}
+/* Media Queries */
+@media only screen and (min-width: 1920px) {
+  body {
+    font-size: 22px;
+  }
+  .main-header .header-wrapper {
+    width: 57%;
+  }
+  #section-1 {
+    height: 65em;
+  }
+  #section-1 .content-slider .slider .banner .banner-inner-wrapper {
+    padding-top: 12em;
+  }
+}
+@media only screen and (max-width: 1919px) {
+  body {
+    font-size: 20px;
+  }
+  .main-header .header-wrapper {
+    width: 60%;
+  }
+  #section-1 {
+    height: 65em;
+  }
+  #section-1 .content-slider .slider .banner .banner-inner-wrapper {
+    padding-top: 11em;
+  }
+}
+@media only screen and (max-width: 1680px) {
+  body {
+    font-size: 18px;
+  }
+  .main-header .header-wrapper {
+    width: 65%;
+  }
+  #section-1 {
+    height: 65em;
+  }
+  #section-1 .content-slider .slider .banner .banner-inner-wrapper {
+    padding-top: 9em;
+  }
+}
+@media only screen and (max-width: 1366px) {
+  body {
+    font-size: 16px;
+  }
+  #section-1 {
+    height: 65em;
+  }
+
+  .main-header .header-wrapper {
+    width: 70%;
+  }
+}
+@media only screen and (max-width: 1120px) {
+  .main-header .header-wrapper .main-menu li {
+    padding: 0.75em 1.4em;
+  }
+  #section-1 {
+    height: 65em;
+  }
+  #section-1 .content-slider nav {
+    bottom: -0.2em;
+  }
+  #section-1 .content-slider .slider .banner .banner-inner-wrapper {
+    padding-top: 7em;
+  }
+  #section-1 .content-slider .slider .banner .banner-inner-wrapper .line {
+    margin: 2em auto;
+  }
+}
+@media only screen and (max-width: 1024px) {
+  body {
+    font-size: 14px;
+  }
+  .main-header .header-wrapper .main-menu li {
+    padding: 0.75em 1.3em;
+  }
+  #section-1 .content-slider nav {
+    bottom: 0;
+  }
+  #section-1 .content-slider nav .controls {
+    width: 80%;
+  }
+}
+@media only screen and (max-width: 860px) {
+  .main-header .header-wrapper .main-menu li {
+    padding: 0.75em 0.9em;
+  }
+  #section-1 {
+    height: 65em;
+  }
+  #section-1 .content-slider nav {
+    bottom: -1em;
+  }
+  #section-1 .content-slider nav .controls {
+    width: 90%;
+  }
+  #section-1 .content-slider .slider .banner .banner-inner-wrapper h2 {
+    font-size: 2em;
+  }
+  #section-1 .content-slider .slider .banner .banner-inner-wrapper h1 {
+    font-size: 4.5em;
+  }
+  #section-1 .content-slider .slider .banner .banner-inner-wrapper {
+    padding-top: 5em;
+  }
+}
+@media only screen and (max-width: 768px) {
+  .main-header .header-wrapper .main-menu li {
+    padding: 0.75em 0.5em;
+  }
+  #section-1 {
+    height: 65em;
+  }
+  #section-1 .content-slider nav .controls {
+    width: 100%;
+  }
+  #section-1 .content-slider nav .controls label {
+    width: 19%;
+    font-size: 0.8em;
+  }
+  #section-1 .content-slider .slider .banner .banner-inner-wrapper .line {
+    margin: 1.7em auto;
+  }
+}
+@media only screen and (max-width: 650px) {
+  .main-header .header-wrapper {
+    width: 95%;
+  }
+
+}
+@media only screen and (max-width: 480px) {
+  .main-header .header-wrapper {
+    width: 100%;
+  }
+  .main-header .header-wrapper .main-logo {
+    display: none;
+  }
+  .main-header .header-wrapper .main-menu li {
+    padding: 0.2em 0.3em;
+  }
+  .main-header .header-wrapper .main-menu li:last-child,
+  .main-header .header-wrapper .main-menu li:nth-child(6) {
+    padding: 0.2em 0.7em;
+  }
+  #section-1 {
+    height: 65em;
+  }
+  #section-1 .content-slider nav {
+    bottom: -0.5em;
+  }
+  #section-1 .content-slider nav .controls label {
+    width: 40%;
+    font-size: 0.7em;
+  }
+  #section-1 .content-slider .slider .banner .banner-inner-wrapper h2 {
+    font-size: 1.5em;
+  }
+  #section-1 .content-slider .slider .banner .banner-inner-wrapper h1 {
+    font-size: 3em;
+  }
+  #section-1 .content-slider .slider .banner .banner-inner-wrapper .line {
+    margin: 1.7em auto;
+  }
+}
+
+
+
+@media only screen and (max-width: 375px) {
+  .main-header .header-wrapper {
+    width: 100%;
+  }
+  .main-header .header-wrapper .main-logo {
+    display: none;
+  }
+  .main-header .header-wrapper .main-menu li {
+    padding: 0.2em 0.3em;
+  }
+  .main-header .header-wrapper .main-menu li:last-child,
+  .main-header .header-wrapper .main-menu li:nth-child(6) {
+    padding: 0.2em 0.7em;
+  }
+  #section-1 {
+    height: 65em;
+  }
+  #section-1 .content-slider nav {
+    bottom: -3.5em;
+  }
+  #section-1 .content-slider nav .controls label {
+    width: 40%;
+    font-size: 0.7em;
+  }
+  #section-1 .content-slider .slider .banner .banner-inner-wrapper h2 {
+    font-size: 1.5em;
+  }
+  #section-1 .content-slider .slider .banner .banner-inner-wrapper h1 {
+    font-size: 3em;
+  }
+  #section-1 .content-slider .slider .banner .banner-inner-wrapper .line {
+    margin: 1.7em auto;
+  }
+}
+
+@media only screen and (max-width: 450px) {
+  .main-header .header-wrapper {
+    width: 100%;
+  }
+  .main-header .header-wrapper .main-logo {
+    display: none;
+  }
+  .main-header .header-wrapper .main-menu li {
+    padding: 0.2em 0.3em;
+  }
+  .main-header .header-wrapper .main-menu li:last-child,
+  .main-header .header-wrapper .main-menu li:nth-child(6) {
+    padding: 0.2em 0.7em;
+  }
+  #section-1 {
+    height: 65em;
+  }
+  #section-1 .content-slider nav {
+    bottom: -5.5em;
+  }
+
+
+  #section-1 .content-slider nav .controls label {
+    width: 40%;
+    font-size: 0.7em;
+  }
+  #section-1 .content-slider .slider .banner .banner-inner-wrapper h2 {
+    font-size: 1.5em;
+  }
+  #section-1 .content-slider .slider .banner .banner-inner-wrapper h1 {
+    font-size: 3em;
+  }
+  #section-1 .content-slider .slider .banner .banner-inner-wrapper .line {
+    margin: 1.7em auto;
+  }
+
+  #progress {
+  	display: none;
+  }
+}
+#progress {
+	/* DO A ROTATE FOR NEGATIVE VALS */
+}
+
+
+     #card {
+
+      max-width: 250px;
+      margin: 5px auto;
+      padding: 0px;
+      text-align: center;
+
+
+
+
+
+    }
+
+
+    .metrics {
+    	padding-top: 20px;
+    	padding-bottom: 20px;
+    }
+
+    #yearly {
+      max-width: 1250px;
+      margin: 35px auto;
+      color: #000;
+    }
+      
+   
+
+    .num {
+    	color: #ffd36b;
+    }
+
+    .newButton {
+    	background: transparent !important;
+  border: 3px solid #fff;
+  line-height: 4.8rem;
+color: white;
+
+
+    }
+
+    .color1 {
+    	color: #ECB365;
+    }
+
+    #linkTwo {
+      /*color: #fff;*/
+    }
+
+
+    </style>
+
+    <script>
+      window.Promise ||
+        document.write(
+          '<script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js"><\/script>'
+        )
+      window.Promise ||
+        document.write(
+          '<script src="https://cdn.jsdelivr.net/npm/eligrey-classlist-js-polyfill@1.2.20171210/classList.min.js"><\/script>'
+        )
+      window.Promise ||
+        document.write(
+          '<script src="https://cdn.jsdelivr.net/npm/findindex_polyfill_mdn"><\/script>'
+        )
+    </script>
+
+    
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+   
+
+    <script src="https://js.stripe.com/v3/"></script>
+
+
+
+
+
+</head>
+
+
+
+
+<header id="HEAAD" class="text-white body-font hidden md:block fixed">
+
+
+
+
+  <div class=" mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
+    <a href="index.html" class="flex title-font font-medium items-center  mb-4 md:mb-0">
+      <!--
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-10 h-10 text-white p-2 bg-indigo-500 rounded-full" viewBox="0 0 24 24">
+        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+      </svg>
+      !-->
+      <span id="CivHeader" class="animate-intro ml-12 text-4xl font-mreg font-bold tracking-widest mr-4 text-gray-900">C A L T R O P I A</span>
+    </a>
+    <nav class="md:mr-auto md:ml-4 md:py-1 md:pl-4  flex flex-wrap items-center text-base justify-center">
+      
+      <a href="aboutus.html" class="animate-intro ml-12 mr-12  font-mreg font-bold tracking-widest text-2xl text-gray-900 mb-4 sm:mb-0">ABOUT US</a>
+
+
+      <a href="Strategies.html" class="animate-intro mr-12  font-mreg font-bold tracking-widest text-2xl text-gray-900 mb-4 sm:mb-0">STRATEGIES</a>
+      <a id="trend-link" href="#" class="animate-intro mr-12  font-mreg font-bold tracking-widest text-2xl text-gray-900 ml-12 sm:ml-0">TREND SCORES</a>
+      
+      <a id="macro-link" href="#" class="animate-intro mr-12  font-mreg font-bold tracking-widest text-2xl text-gray-900">MACRO REGIMES</a>
+<!--      <a id="linkTwoThree" class="mr-12  font-mreg font-bold tracking-widest text-2xl">PERFORMANCE</a>
+!-->
+    </nav>
+    <a id="" href="login.html"><button id="LogB" class="hover:bg-transparent hover:animate-ping no-underline hover:underline inline-flex items-center  py-1 px-3  rounded text-base hidden sm:hidden lg:block mt-4 md:mt-0 font-mreg font-bold tracking-widest text-2xl text-gray-900">LOGIN
+      
+    </button>
+  </a>
+  </div>
+
+
+
+</header> 
+
+<body id="top">
+
+  
+
+
+
+	<!-- header 
+   ================================================== -->
+<header class=" xl:hidden lg:hidden "> 
+
+   	
+<!--
+   	<div class="header-logo">
+
+	      <a href="index.html">CIV Capital</a>
+	   </div> 
+!-->
+
+
+			
+			<a id="header-menu-trigger" href="#0">
+		 	<span class="header-menu-text"></span>
+
+		  	<span class="animate-intro header-menu-icon"></span>
+
+		</a> 
+
+		<nav id="menu-nav-wrap">
+
+			<a href="#0" class="close-button" title="close"><span>Close</span></a>	
+
+	   	<h3 class="text-gray-900">Caltropia Research</h3>  
+
+			<ul class="nav-list">
+				<li class="current"><a class="smoothscroll" href="#home" title="">Home</a></li>
+				<li><a class="smoothscroll" href="#about" title="">About Us</a></li>
+				<li><a class="smoothscroll" href="#services" title="">Our Approach</a></li>
+				<li><a class="smoothscroll" href="#portfolio" title="">Performance</a></li>
+				<li><a class="smoothscroll" href="#contact" title="">Contact</a></li>						
+			</ul>	
+
+
+
+			
+
+		</nav> <!-- end #menu-nav-wrap -->
+
+	</header> <!-- end header -->  
+
+
+   <!-- home
+   ================================================== -->
+   <section class="">
+
+    <div class="container px-4 flex-grow w-full py-4 sm:py-16 mx-auto px-0  ">
+      
+      
+      <div class="mx-auto w-full md:w-3/4 px-4">
+        <div class="container my-8">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-3xl font-mreg font-semibold mb-6 mt-6">
+    
+              
+            </h2>
+            
+          </div>
+          <div
+            id="scrollContainer"
+            class="relative flex flex-no-wrap  items-start mb-24"
+          >
+            <div
+              class="flex-none w-full sm:w-full mr-8 md:pb-4 rounded-xl"
+            >
+
+                <div class="aspect-w-16 aspect-h-9">
+                  
+                  
+                  
+                  
+                </div>
+                
+            </div>
+            
+          </div>
+          <h1 class="text-center text-2xl mb-8 text-6xl text-blue-900 mx-auto px-6">Pricing Plans</h1>                  
+                  <p1 class="text-center flex text-2xl sm:text-2xl mb-4 text-blue-900 mx-auto px-2">Swipe to discover our fairly priced plans all giving you access to more trading strategies to implement in your portfolio's</p1>      
+        </div>
+        <!---->
+        
+    </div>
+<!-- Firebase App (the core Firebase SDK) -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+
+<script>
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyBxG5qf6mb8E_-b2TeXlRNseMZ26L9DRYg",
+    authDomain: "trendscores-df341.firebaseapp.com",
+    projectId: "trendscores-df341",
+    databaseURL: "https://trendscores-df341-default-rtdb.firebaseio.com",
+    storageBucket: "trendscores-df341.appspot.com",
+    messagingSenderId: "565710392511",
+    appId: "1:565710392511:web:37349319364bba19b3ca0a",
+    measurementId: "G-8TVLFBWN63"
+  };
+
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+
+  // Set persistence to browser local persistence (keeps the user signed in across page reloads)
+  firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+    .then(() => {
+      // Now you can safely listen for auth state changes
+      firebase.auth().onAuthStateChanged(user => {
+        if (user) {
+          console.log("Logged in as:", user.email);
+        } else {
+          console.log("Not logged in");
+        }
+      });
+    })
+    .catch((error) => {
+      console.error("Error setting persistence:", error);
+    });
+
+  // Handle Auth Button Logic
+  const authButtonLink = document.getElementById("auth-button");
+  const authButton = authButtonLink.querySelector("button");
+
+  // Wait for Firebase Auth state to change
+  firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+      // User is logged in - Update button text to 'Sign Out'
+      authButton.textContent = "SIGN OUT";
+      
+      // Make the button sign out when clicked
+      authButtonLink.href = "#";
+      authButton.onclick = () => {
+        firebase.auth().signOut().then(() => {
+          // Optionally reload the page after signing out
+          location.reload();
+        });
+      };
+    } else {
+      // User is not logged in - Update button text to 'Log In'
+      authButton.textContent = "LOG IN";
+      
+      // When clicked, go to the login page
+      authButtonLink.href = "login.html"; // Change to your actual login page URL
+      authButton.onclick = null; // Remove any click action
+    }
+  });
+</script>
+
+
+</script>
+    
+    </section>
+
+    
+
+    <section class="">
+
+      <div class="container px-4 flex-grow w-full py-4 sm:py-0 mx-auto px-0  ">
+        
+        <h1
+          class="text-center text-6xl font-mreg font-semibold text-blue-900 mx-auto px-2"
+        >
+          
+        </h1>
+        <p1 class="text-center text-2xl mb-4 text-blue-900 mx-auto px-2"></p1>
+        <div class="mx-auto w-full md:w-2/3 px-4">
+          <div class="container my-8">
+            <div class="flex justify-between items-center ">
+              <h2 class="text-3xl font-mreg font-semibold ">
+      
+                
+              </h2>
+              
+            </div>
+
+            <style>
+              .custom-scrollbar-hide::-webkit-scrollbar {
+                display: none;
+              }
+              .custom-scrollbar-hide {
+                -ms-overflow-style: none;  /* IE and Edge */
+                scrollbar-width: none;     /* Firefox */
+              }
+            </style>
+            
+
+            <div
+              id="scrollContainer"
+              class="flex flex-no-wrap overflow-x-scroll custom-scrollbar-hide scrolling-touch items-start -mt-12  "
+            >
+              <div
+                class="flex-none w-2/3 md:w-1/3 mr-8   rounded-xl "
+              >
+
+                  <div class="aspect-w-16 aspect-h-9 ">
+                    
+                    
+                    <div  class="object-cover shadow-md hover:shadow-xl rounded-3xl">
+      
+                      <img class="object-cover hover:shadow-xl rounded-3xl" src="purp.png" style=" height: 300px" alt="">
+      
+                    </div>
+      
+                    
+                  </div>
+                  <div class="px-4 py-2">
+                    <div class="text-lg leading-6 font-medium space-y-4 ">
+                      <h1 class=" text-gray-800 text-4xl mb-4 mt-12 font-semibold">
+                        Base Plan
+                      </h1>
+                      <h1 class="font-semibold text-blue-700 text-3xl mb-2 mt-12">
+                        Free Forever
+                      </h1>
+                      <h3 class="font-mreg font-bold text-gray-800  text-2xl mb-2 mt-12">
+                        - Access our Trend Dashboard
+                      </h3>
+                      <h3 class="font-mreg font-bold text-gray-800  text-2xl mb-2 mt-12">
+                        - Access our Factor Dashboard (*soon)
+                      </h3>
+                      <h3 class="font-mreg font-bold text-gray-800  text-2xl mb-2 mt-12">
+                        - View All Strategies and Performance
+                      </h3>
+                      <h3 class="font-mreg font-bold text-gray-800  text-2xl mb-2 mt-12">
+                        - View All Mean Reversion and Breakout/Down Signals
+                      </h3>
+                      <h3 class="font-mreg font-bold text-gray-800  text-2xl mb-2 mt-12">
+                        - Access Our Equal Weight Managed Futures Program
+                      </h3>
+                      <h3 class="font-mreg font-bold text-gray-800  text-2xl mb-2 mt-12">
+                        - Access Our Daily S&P 500 Risk Program
+                      </h3>
+                    </div>
+                    <div class="text-2xl">
+                      <p class="font-mreg font-large">
+                        
+                      </p>
+      
+                      <p class="font-medium text-sm text-indigo-600 mt-2">
+                        <span class="text-indigo-600"></span>
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div class="sm:text-left text-center">
+                  <a href="signup.html">
+                    <button class=" rounded-full bg-blue-700 w-1/2 text-white text-2xl font-mreg font-bold mt-6">Access</button></a>
+                  </div>
+              </div>
+              <div
+                class="flex-none w-2/3 md:w-1/3 mr-8 md:pb-4  rounded-lg"
+              >
+
+                  <div class="aspect-w-16 aspect-h-9">
+      
+                      <div class="object-cover shadow-md hover:shadow-xl rounded-3xl">
+                        <img class="object-cover hover:shadow-xl rounded-3xl" src="purp.png" style=" height: 300px" alt="">
+                        </div>
+
+                  </div>
+                  <div class="px-4 py-2">
+                    <div class="text-lg leading-6 font-medium space-y-4 ">
+                      <h1 class=" text-gray-800 text-4xl mb-4 mt-12 font-semibold">
+                        Investor Plan
+                      </h1>
+                      <h1 class="font-semibold text-blue-700 text-3xl mb-2 mt-12">
+                        No Price Yet
+                      </h1>
+                      <h3 class="font-mreg font-bold text-gray-800  text-2xl mb-2 mt-12">
+                        - Everything From Our Base Plan
+                      </h3>
+                      <h3 class="font-mreg font-bold text-gray-800  text-2xl mb-2 mt-12">
+                        - Access our Factor Dashboard (*soon)
+                      </h3>
+                      <h3 class="font-mreg font-bold text-gray-800  text-2xl mb-2 mt-12">
+                        - View Our Strategies and Performance
+                      </h3>
+                      <h3 class="font-mreg font-bold text-gray-800  text-2xl mb-2 mt-12">
+                        - View Our Mean Reversion and Breakout/Down Signals
+                      </h3>
+                    </div>
+                    <div class="text-lg">
+                      <p class="font-mreg font-medium">
+                        
+                      </p>
+                      <p class="font-medium text-sm text-indigo-600 mt-2">
+                        <span class="text-indigo-600"></span>
+                      </p>
+                    </div>
+                    <div class="sm:text-left text-center">
+
+                        <button class=" rounded-full bg-blue-700 w-1/2 text-white text-2xl font-mreg font-bold mt-6">Soon</button>
+                      </div>
+                  </div>
+
+                
+
+                <script>
+                  document.getElementById("subscribe-basic").onclick = () => {
+  firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+      window.location.href = `checkout.html?plan=basic`;
+    } else {
+      window.location.href = "login.html";
+    }
+  });
+};
+                </script>
+              </div>
+              <div
+                class="flex-none w-2/3 md:w-1/3 mr-8 md:pb-4  rounded-lg mb-48"
+              >
+
+                  <div class="aspect-w-16 aspect-h-9">
+      
+                    <div class="object-cover shadow-md hover:shadow-xl rounded-3xl">
+                     <!--add this object cover to fix on mobile and keep the height in style but delete the width--> <img class="object-cover hover:shadow-xl rounded-3xl" src="purp.png" style=" height: 300px" alt="">
+                    </div>
+                      
+                  </div>
+                  <div class="px-4 py-2">
+                    <div class="text-lg leading-6 font-medium space-y-4 ">
+                      <h1 class=" text-gray-800 text-4xl mb-4 mt-12 font-semibold">
+                        Allocator Plan
+                      </h1>
+                      <h1 class="font-semibold text-blue-700 text-3xl mb-2 mt-12">
+                        No Price Yet
+                      </h1>
+                      <h3 class="font-mreg font-bold text-gray-800  text-2xl mb-2 mt-12">
+                        - Everything From Our Base Plan
+                      </h3>
+                      <h3 class="font-mreg font-bold text-gray-800  text-2xl mb-2 mt-12">
+                        - Access our Factor Dashboard (*soon)
+                      </h3>
+                      <h3 class="font-mreg font-bold text-gray-800  text-2xl mb-2 mt-12">
+                        - View Our Strategies and Performance
+                      </h3>
+                      <h3 class="font-mreg font-bold text-gray-800  text-2xl mb-2 mt-12">
+                        - View Our Mean Reversion and Breakout/Down Signals
+                      </h3>
+                    </div>
+                    <div class="text-lg">
+                      <p class="font-mreg font-medium">
+                        
+                      </p>
+                      <p class="font-medium text-sm text-indigo-600 mt-2">
+                        <span class="text-indigo-600"></span>
+                      </p>
+                    </div>
+                  </div>
+                  <div class="sm:text-left text-center">
+
+                      <button class=" rounded-full bg-blue-700 w-1/2 text-white text-2xl font-mreg font-bold mt-6">Soon</button>
+                    </div>
+              </div>
+              
+            </div>
+          </div>
+          <!---->
+
+        
+          
+      </div>
+
+      </section>
+
+   
+
+  
+   
+
+
+
+   <!-- about
+   ================================================== -->
+   
+   </style>
+   
+
+
+
+   	
+
+
+   
+
+  
+   <script src="js/jquery-2.1.3.min.js"></script>
+   <script src="js/plugins.js"></script>
+   <script src="js/main.js"></script>
+   
+
+<script>
+      var a = $("#HEAAD").offset().top;
+
+$(document).scroll(function(){
+    if($(this).scrollTop() > 200)
+    {   
+       $('#HEAAD').css({"background":"#fff"});
+       $('#linkTwo').css({"color":"#000"});
+       $('#CivHeader').css({"color":"#0D4C92"});
+       $('#linkTwoOne').css({"color":"#000"});
+       $('#linkTwoTwo').css({"color":"#000"});
+       $('#linkTwoThree').css({"color":"#000"});
+       $('#LogB').css({"color":"#0D4C92"});
+    } else {
+       $('#HEAAD').css({"background":"transparent"});
+       $('#linkTwo').css({"color":"#000"});
+       $('#CivHeader').css({"color":"#000"});
+       $('#linkTwoOne').css({"color":"#000"});
+       $('#linkTwoTwo').css({"color":"#000"});
+       $('#linkTwoThree').css({"color":"#000"});
+       $('#LogB').css({"color":"#000"});
+    }
+    
+});
+    </script>
+
+
+<script>
+  // Use your Stripe public key here
+  const stripe = Stripe("pk_test_51RDxhERpJyCs7b4pUKaesidvohq0sgrB19cImcXTokFkpT4ZrWVWA5YvhievAoHsVoIgBA1bIyPqcB3DfyP8sOwD00vOf6koK2");
+
+  // Add event listeners for buttons
+  document.getElementById('subscribe-basic').addEventListener('click', async () => {
+    const { sessionId } = await createCheckoutSession('basic');
+    stripe.redirectToCheckout({ sessionId });
+  });
+
+  document.getElementById('subscribe-investor').addEventListener('click', async () => {
+    const { sessionId } = await createCheckoutSession('investor');
+    stripe.redirectToCheckout({ sessionId });
+  });
+
+  document.getElementById('subscribe-allocator').addEventListener('click', async () => {
+    const { sessionId } = await createCheckoutSession('allocator');
+    stripe.redirectToCheckout({ sessionId });
+  });
+
+  // Helper function to get sessionId (Mocking for this example)
+  async function createCheckoutSession(planId) {
+    let sessionUrl = '';
+    switch (planId) {
+      case 'basic':
+        sessionUrl = 'https://checkout.stripe.com/pay/cs_test_a1b2c3d4';
+        break;
+      case 'investor':
+        sessionUrl = 'https://checkout.stripe.com/pay/cs_test_b1c2d3e4';
+        break;
+      case 'allocator':
+        sessionUrl = 'https://checkout.stripe.com/pay/cs_test_c1d2e3f4';
+        break;
+      default:
+        throw new Error('Invalid plan');
+    }
+    return { sessionId: sessionUrl };  // Return mock sessionId
+  }
+</script>
+
+<script>
+  firebase.auth().onAuthStateChanged((user) => {
+    const trendLink = document.getElementById("trend-link");
+    if (user) {
+      // User is logged in, link to actual page
+      trendLink.href = "Trend.html";
+    } else {
+      // Not logged in, link to sign up page
+      trendLink.href = "signup.html";
+    }
+  });
+</script>
+
+
+</body>
+
+</html>

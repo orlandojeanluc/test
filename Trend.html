@@ -642,6 +642,7 @@ color: white;
       import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-analytics.js";
       import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
       import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+      
     
       // Firebase config
       const firebaseConfig = {
@@ -690,7 +691,13 @@ color: white;
           });
         });
       }
+
+
+      
+
     </script>
+
+
     
 
 </head>
@@ -706,19 +713,86 @@ color: white;
       <span id="CivHeader" class="animate-intro ml-12 text-4xl font-mreg font-bold tracking-widest mr-4 text-gray-900">C A L T R O P I A</span>
     </a>
     <nav class="md:mr-auto md:ml-4 md:py-1 md:pl-4  flex flex-wrap items-center text-base justify-center">
-<a id="linkTwo" class="ml-12 mr-12  font-mreg font-bold tracking-widest text-2xl text-gray-900">ABOUT US</a>
+  <a href="Strategies.html" class="animate-intro ml-12 mr-12  font-mreg font-bold tracking-widest text-2xl text-gray-900 mb-4 sm:mb-0">ABOUT US</a>
 
-      <a href="Strategies.html" class="mr-12  font-mreg font-bold tracking-widest text-2xl text-gray-900">STRATEGIES</a>
-      <a href="Trend.html" class="mr-12  font-mreg font-bold tracking-widest text-2xl text-gray-900 ">TREND</a>
+
+<a href="Strategies.html" class="animate-intro mr-12  font-mreg font-bold tracking-widest text-2xl text-gray-900 mb-4 sm:mb-0">STRATEGIES</a>
+<a id="trend-link" href="#" class="animate-intro mr-12  font-mreg font-bold tracking-widest text-2xl text-gray-900 ml-12 sm:ml-0">TREND SCORES</a>
+
+<a id="macro-link" href="#" class="animate-intro mr-12  font-mreg font-bold tracking-widest text-2xl text-gray-900">MACRO REGIMES</a>
  <!--     <a id="linkTwoThree" class="mr-12  font-mreg font-bold tracking-widest text-2xl">PERFORMANCE</a>
 !-->
     </nav>
-    <a id="" href="login.html"><button id="LogB" class="hover:bg-transparent hover:animate-ping no-underline hover:underline inline-flex items-center  py-1 px-3  rounded text-base hidden sm:hidden lg:block mt-4 md:mt-0 font-mreg font-bold tracking-widest text-2xl text-gray-900">LOGIN
-      
-    </button>
-  </a>
+    <a id="auth-button" href="#">
+      <button class="hover:bg-transparent hover:animate-ping no-underline hover:underline inline-flex items-center py-1 px-3 rounded text-base hidden sm:hidden lg:block mt-4 md:mt-0 font-mreg font-bold tracking-widest text-2xl text-gray-900">
+        ENTER
+      </button>
+    </a>
   </div>
 </header> 
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+
+
+<script>
+// Your web app's Firebase configuration
+const firebaseConfig1 = {
+apiKey: "AIzaSyBxG5qf6mb8E_-b2TeXlRNseMZ26L9DRYg",
+authDomain: "trendscores-df341.firebaseapp.com",
+projectId: "trendscores-df341",
+databaseURL: "https://trendscores-df341-default-rtdb.firebaseio.com",
+storageBucket: "trendscores-df341.appspot.com",
+messagingSenderId: "565710392511",
+appId: "1:565710392511:web:37349319364bba19b3ca0a",
+measurementId: "G-8TVLFBWN63"
+};
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig1);
+
+
+
+
+// Example: check if user is logged in
+firebase.auth().onAuthStateChanged(user => {
+if (user) {
+  console.log("Logged in as:", user.email);
+} else {
+  console.log("Not logged in");
+}
+});
+
+
+
+</script>
+<script>
+  const authButtonLink = document.getElementById("auth-button");
+  const authButton = authButtonLink.querySelector("button");
+
+  // Wait for Firebase Auth state to change
+  firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+      // User is logged in - Update button text to 'Sign Out'
+      authButton.textContent = "SIGN OUT";
+      
+      // Make the button sign out when clicked
+      authButtonLink.href = "#";
+      authButton.onclick = () => {
+        firebase.auth().signOut().then(() => {
+          // Optionally reload the page after signing out
+          location.reload();
+        });
+      };
+    } else {
+      // User is not logged in - Update button text to 'Log In'
+      authButton.textContent = "ENTER";
+      
+      // When clicked, go to the login page
+      authButtonLink.href = "login.html"; // Change to your actual login page URL
+      authButton.onclick = null; // Remove any click action
+    }
+  });
+</script>
 
 <body id="top">
 
@@ -822,24 +896,24 @@ color: white;
         
     </div>
     
-    <div class="relative overflow-x-auto shadow-xl sm:rounded-lg">
-      <table class="w-full text-sm text-left rtl:text-right text-black dark:text-gray-400">
-          <thead class=" text-black  bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+    <div class="relative overflow-x-auto shadow-xl sm:rounded-lg" >
+      <table class="w-full text-sm text-left rtl:text-right text-black dark:text-gray-400" >
+          <thead class=" text-black  bg-gray-50 dark:bg-gray-700 dark:text-gray-400 " >
               <tr>
-                  <th scope="col" class="p-4">
-                      <div class="flex items-center">
+                  <th scope="col" class="p-4" >
+                      <div class="flex items-center" >
                           
                           
                       </div>
                   </th>
-                  <th scope="col" class="sticky top-0  px-6 py-3 text-2xl text-3xl">
+                  <th scope="col" class="sticky top-0  px-6 py-3 text-2xl text-3xl" >
                       Ticker
                   </th>
                   <th scope="col" class=" px-6 py-3 text-3xl font-semibold">
                     Asset
                 </th>
-                  <th scope="col" class=" px-6 py-3 text-3xl font-semibold">
-                      Short Term Trend
+                  <th scope="col" class=" px-6 py-3 text-3xl font-semibold" >
+                      Short Term Trend 
                   </th>
                   <th scope="col" class="px-6 py-3 text-2xl text-3xl font-semibold">
                       Short Term Strength
@@ -859,6 +933,7 @@ color: white;
                   
               </tr>
           </thead>
+          
           <tbody>
               <tr id="GLD" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
                   <td class="w-4 p-4">
@@ -872,7 +947,7 @@ color: white;
                   <td class="px-6 py-4 text-2xl ">
                       Gold
                   </td>
-                  <td id="GLD-shortTermTrend" class="px-6 py-4 text-2xl">
+                  <td id="GLD-shortTermTrend"  class="px-6 py-4 text-2xl">
                       
                   </td>
                   <td id="GLD-shortTermStrength" class="px-6 py-4 text-2xl">
@@ -1656,7 +1731,9 @@ color: white;
 </tr>
 
           </tbody>
+          
       </table>
+     
   </div>
   
 
@@ -1707,7 +1784,7 @@ color: white;
               <div
                 class="flex-none w-2/3 md:w-1/3 mr-8   rounded-xl"
               >
-                <a href="#" class="space-y-4">
+                <a href="ManagedFuturesEqualWeight.html" class="space-y-4">
                   <div class="aspect-w-16 aspect-h-9">
                     
                     
@@ -1740,7 +1817,7 @@ color: white;
               <div
                 class="flex-none w-2/3 md:w-1/3 mr-8 md:pb-4  rounded-lg"
               >
-                <a href="#" class="space-y-4">
+                <a href="BondRegimeModel.html" class="space-y-4">
                   <div class="aspect-w-16 aspect-h-9">
       
                       <div class="object-cover shadow-md hover:shadow-xl rounded-3xl">
@@ -2066,54 +2143,9 @@ color: white;
       
       </section>
 
-   <section class="h-full mb-48">
+
     
-<!-- New Way to get Video put loop at the end of muted to get video to loop again!-->
-<video class="absolute bg-cover bg-center h-screen w-screen object-cover" playsinline autoplay muted loop > 
-        <source src="v.mov" alt="feature" class="absolute bg-cover bg-center h-screen w-screen object-cover " >
-        </video>
 
-
-   <!--class="rounded-t-full"!-->
-   		<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
-<!--<lottie-player src="https://assets10.lottiefiles.com/packages/lf20_mwuj99hk.json"  background="transparent"  speed="1"  style="width: 100%; height: 95%; position: absolute; "  loop  autoplay></lottie-player>!-->
-
-   	<div class="overlay"></div>
-
-   	<div class="home-content-table">	
-		   <div class="home-content-tablecell">
-		   	<div class="row">
-		   		<div class="col-twelve">		   			
-			  		
-
-			  				<h3 class="animate-intro"><span class="text-gray-900 tracking-widest">Caltropia Research</span></h3>
-				  			<h1 class="animate-intro">
-							Invest 
-							<span class="text-gray-900"> Differently.</span>
-				  			</h1>	
-
-				  			<div class="more animate-intro">
-				  				<a class="smoothscroll" href="#about">
-				  					<!--<button class="shadow-lg z-auto relative font-mreg font-regular rounded-full sm:w-3/4 md:w-1/4 lg:w-1/3 xl:w-1/4 inline bg-transparent border-solid border-white  text-white font-semibold rounded-lg px-4 py-0 pl-6 pr-6 mt-6 text-xl hover:bg-blue-700">Learn More</button>!-->
-				  				</a>
-				  			</div>							
-				  			
-
-				  			<div class="more animate-intro">
-
-				  					<a href="signup.html"><button class="shadow-2xl bg-gray-900 z-auto relative font-mreg font-regular rounded-full sm:w-3/4 md:w-1/2 lg:w-1/3 xl:w-1/4 inline  hover:bg-blue-400 focus:bg-blue-400 text-white font-semibold rounded-lg px-4 py-0 mt-6 pl-6 pr-6  md:ml-12 lg:ml-12 xl:ml-12 text-xl">SIGN UP</button></a>
-				  				</a>
-				  			</div>		
-
-				  								
-
-			  		</div> <!-- end col-twelve --> 
-
-		   	</div> <!-- end row --> 
-
-		   </div> <!-- end home-content-tablecell --> 		   
-
-		</div> <!-- end home-content-table -->
 
 		
 
@@ -2124,7 +2156,7 @@ color: white;
 			</a>
 		</div>			
    
-   </section> <!-- end home -->
+
 
 
   
@@ -2151,544 +2183,7 @@ color: white;
    <script src="js/jquery-2.1.3.min.js"></script>
    <script src="js/plugins.js"></script>
    <script src="js/main.js"></script>
-   <script>
-      
-        var options = {
-          series: [{
-          name: 'CIV Capital',
-          data: [100000,	 103960, 	105997.62,	105891.62,	106008.1,	101227.13,	98240.93,	98545.48,	100743.04,	101448.25,	94509.19,	95227.46,	97103.44,	94355.41,	82749.69,	81202.27,	81876.25,	74654.77,	68137.41,	72600.41,	74037.89,	77924.88,	78478.15,	82715.97,	84064.24,	87082.15,	86698.99,	93019.34,	93642.57,	91647.99,	93297.65,	97188.16,	98956.99,	92910.71,	91870.11,	96537.12,	96286.12,	103151.32,	105812.62,	104257.18,	109042.58,	108573.7,	111472.62,	112397.84,	116477.88,	116477.88,	115406.28,	114667.68,	114140.21,	112508.01,	118909.71,	120740.92,	124182.04,	124951.97,	127213.6,	132213.09,	132860.94,	131997.34,	137382.83,	141476.84,	141406.1,	145789.69,	142640.63,	143582.06,	142332.9,	150460.11,	155019.05,	161343.83,	165651.71,	165386.66,	164295.11,	171556.96,	164694.68,	167642.71,	177114.53,	183242.69,	184983.49,	180377.4,	186311.82,	187932.73,	190225.51,	191918.52,	193415.48,	194092.44,	206397.9,	206377.26,	211639.88,	218602.83,	216154.48,	213430.93,	222885.92,	218027.01,	219902.04,	221463.35,	216613.3,	227682.24,	212746.28,	209193.42,	225196.72,	226840.65,	227135.55,	222320.27,	220808.5,	233482.9,	230937.94,	234009.41,	237285.55,	243905.81,	242320.43,	242998.92,	238284.74,	243765.29,	250054.44,	254330.37,	266182.16,	267566.31,	275084.92,	281797,	282022.43,	289242.21,	294824.58,	296328.19,	302076.95,	313857.96,	316965.15,	331482.15,	314841.75,	308293.04,	312331.68,	315829.79,	321262.07,	334080.42,	346307.77,	349459.17,	337961.96,	349249.89,	327980.57,	345166.75,	352656.87,	361261.7,	371232.52,	358610.62,	378800.4,	380959.56,	387664.45,	390920.83]
-        }, {
-          name: 'S&P 500',
-          data: [100000,	103870,	105279,	101202,	100054,	94005,	91576,	90749,	95074,	96511,	88452,	87658,	89012,	80612,	67296,	62612,	63227,	58035,	51800,	56124,	61699,	65306,	65262,	70131,	72721,	75300,	73852,	78402,	79897,	76993,	79395,	84230,	85533,	78737,	74663,	79762,	76175,	82996,	86167,	86167,	91927,	94069,	97337,	97347,	100166,	99043,	97370,	95423,	90177,	83914,	93073,	92695,	93662,	98006,	102260,	105548,	104844,	98547,	102541,	103754,	106353,	109050,	107065,	107671,	108640,	114201,	115659,	120051,	122357,	125246,	123573,	129959,	126061,	130055,	136077,	140110,	143738,	138672,	144983,	146189,	147205,	150621,	153729,	151663,	157648,	155474,	159136,	163508,	163089,	158257,	167152,	164520,	166138,	168274,	164859,	168583,	158308,	154282,	167405,	168017,	165131,	156910,	156780,	167323,	167982,	170840,	171437,	177689,	177902,	177916,	174832,	181272,	184949,	188258,	195655,	195901,	197846,	200638,	201917,	206067,	206669,	210831,	215799,	222396,	225083,	237769,	229123,	222842,	223994,	229439,	230760,	239308,	246947,	248416,	231250,	235539,	214826,	232027,	239548,	243879,	253842,	237654,	254193,	258037,	253716,	258659]
-        }],
-        grid: {
-    show: true,
-    borderColor: '#90A4AE',
-    strokeDashArray: 0,
-    position: 'back',
-    xaxis: {
-        lines: {
-            show: false
-        }
-    },   
-    yaxis: {
-        lines: {
-            show: false
-        }
-    },  
-    padding: {
-        top: 0,
-        right: 5,
-        bottom: 30,
-        left: 5,
-    },  
-},
-          chart: {
-          	fontFamily: 'montserrat-bold, sans-serif',
-          height: 550,
-
-          type: 'area',
-          toolbar: {
-        show: false,
-        offsetX: 0,
-        offsetY: 0,
-        tools: {
-          download: true,
-          selection: true,
-          zoom: true,
-          zoomin: true,
-          zoomout: true,
-          pan: true,
-          reset: true | '<img src="/static/icons/reset.png" width="20">',
-          customIcons: []
-        },
-    },
-        },
-
-
-
-        dataLabels: {
-          enabled: false
-        },
-        stroke: {
-          curve: 'smooth'
-        },
-        xaxis: {
-          type: 'datetime',
-          categories: ["2007-08",	"2007-09",	"2007-10",	"2007-11",	"2007-12",	"2008-01",	"2008-02",	"2008-03",	"2008-04",	"2008-05",	"2008-06",	"2008-07",	"2008-08",	"2008-09",	"2008-10",	"2008-11",	"2008-12",	"2009-01",	"2009-02",	"2009-03",	"2009-04",	"2009-05",	"2009-06",	"2009-07",	"2009-08",	"2009-09",	"2009-10",	"2009-11",	"2009-12",	"2010-01",	"2010-02",	"2010-03",	"2010-04",	"2010-05",	"2010-06",	"2010-07",	"2010-08",	"2010-09",	"2010-10",	"2010-11",	"2010-12",	"2011-01",	"2011-02",	"2011-03",	"2011-04",	"2011-05",	"2011-06",	"2011-07",	"2011-08",	"2011-09",	"2011-10",	"2011-11",	"2011-12",	"2012-01",	"2012-02",	"2012-03",	"2012-04",	"2012-05",	"2012-06",	"2012-07",	"2012-08",	"2012-09",	"2012-10",	"2012-11",	"2012-12",	"2013-01",	"2013-02",	"2013-03",	"2013-04",	"2013-05",	"2013-06",	"2013-07",	"2013-08",	"2013-09",	"2013-10",	"2013-11",	"2013-12",	"2014-01",	"2014-02",	"2014-03",	"2014-04",	"2014-05",	"2014-06",	"2014-07",	"2014-08",	"2014-09",	"2014-10",	"2014-11",	"2014-12",	"2015-01",	"2015-02",	"2015-03",	"2015-04",	"2015-05",	"2015-06",	"2015-07",	"2015-08",	"2015-09",	"2015-10",	"2015-11",	"2015-12",	"2016-01",	"2016-02",	"2016-03",	"2016-04",	"2016-05",	"2016-06",	"2016-07",	"2016-08",	"2016-09",	"2016-10",	"2016-11",	"2016-12",	"2017-01",	"2017-02",	"2017-03",	"2017-04",	"2017-05",	"2017-06",	"2017-07",	"2017-08",	"2017-09",	"2017-10",	"2017-11",	"2017-12",	"2018-01",	"2018-02",	"2018-03",	"2018-04",	"2018-05",	"2018-06",	"2018-07",	"2018-08",	"2018-09",	"2018-10",	"2018-11",	"2018-12",	"2019-01",	"2019-02",	"2019-03",	"2019-04",	"2019-05",	"2019-06",	"2019-07",	"2019-08",	"2019-09"]
-
-        },
-        tooltip: {
-          x: {
-            format: 'MM/yy',
-
-          },
-        },
-        };
-
-        var chart = new ApexCharts(document.querySelector("#chart"), options);
-        chart.render();
-      
-      
-    </script>
-
-  <script>
-      	
-        var options = {
-          series: [12],
-          chart: {
-          height: 100,
-          type: 'radialBar',
-          toolbar: {
-            show: false
-          }
-        },
-        plotOptions: {
-          radialBar: {
-            startAngle:0,
-            endAngle: 225,
-             hollow: {
-              margin: 0,
-              size: '70%',
-              background: 'rgba(255, 255, 255, 0.7)',
-              image: undefined,
-              imageOffsetX: 0,
-              imageOffsetY: 0,
-              position: 'front',
-              dropShadow: {
-                enabled: true,
-                top: 3,
-                left: 0,
-                blur: 4,
-                opacity: 0.74
-              }
-            },
-            track: {
-              background: '#fff',
-              strokeWidth: '67%',
-              margin: 0, // margin is in pixels
-              dropShadow: {
-                enabled: true,
-                top: -3,
-                left: 0,
-                blur: 4,
-                opacity: 0.35
-              }
-            },
-        
-            dataLabels: {
-              show: true,
-              name: {
-
-                offsetY: 25,
-               
-
-                show: true,
-                color: '#888',
-                fontSize: '16px'
-              },
-              value: {
-                formatter: function(val) {
-                  return parseFloat(val) +"%";
-                },
-                color: '#000',
-                offsetY: -10,
-                fontSize: '16px',
-                show: true,
-              }
-            }
-          }
-        },
-        fill: {
-          type: 'gradient',
-          gradient: {
-            shade: 'dark',
-            type: 'horizontal',
-            shadeIntensity: 0.5,
-            gradientToColors: ['#000'],
-            inverseColors: true,
-            opacityFrom: 1,
-            opacityTo: 1,
-            stops: [0, 100]
-          }
-        },
-        stroke: {
-          lineCap: 'round'
-        },
-        labels: [''],
-        };
-
-        var chart = new ApexCharts(document.querySelector("#progress"), options);
-        chart.render();
-      
-      
-    </script>
-
-    <script>
-      	
-        var options = {
-          series: [11.18],
-          chart: {
-          height: 100,
-          type: 'radialBar',
-          toolbar: {
-            show: false
-          }
-        },
-        plotOptions: {
-          radialBar: {
-            startAngle:0,
-            endAngle: 225,
-             hollow: {
-              margin: 0,
-              size: '70%',
-              background: 'rgba(255, 255, 255, 0.7)',
-              image: undefined,
-              imageOffsetX: 0,
-              imageOffsetY: 0,
-              position: 'front',
-              dropShadow: {
-                enabled: true,
-                top: 3,
-                left: 0,
-                blur: 4,
-                opacity: 0.74
-              }
-            },
-            track: {
-              background: '#fff',
-              strokeWidth: '67%',
-              margin: 0, // margin is in pixels
-              dropShadow: {
-                enabled: true,
-                top: -3,
-                left: 0,
-                blur: 4,
-                opacity: 0.35
-              }
-            },
-        
-            dataLabels: {
-              show: true,
-              name: {
-
-                offsetY: 25,
-               
-
-                show: true,
-                color: '#888',
-                fontSize: '16px'
-              },
-              value: {
-                formatter: function(val) {
-                  return parseFloat(val) +"%";
-                },
-                color: '#000',
-                offsetY: -10,
-                fontSize: '16px',
-                show: true,
-              }
-            }
-          }
-        },
-        fill: {
-          type: 'gradient',
-          gradient: {
-            shade: 'dark',
-            type: 'horizontal',
-            shadeIntensity: 0.5,
-            gradientToColors: ['#000'],
-            inverseColors: true,
-            opacityFrom: 1,
-            opacityTo: 1,
-            stops: [0, 100]
-          }
-        },
-        stroke: {
-          lineCap: 'round'
-        },
-        labels: [''],
-        };
-
-        var chart = new ApexCharts(document.querySelector("#civStandard"), options);
-        chart.render();
-      
-      
-    </script>
-
-    <script>
-      	
-        var options = {
-          series: [35.73],
-          chart: {
-          height: 100,
-          type: 'radialBar',
-          toolbar: {
-            show: false
-          }
-        },
-        plotOptions: {
-          radialBar: {
-            startAngle: -90,
-            endAngle: 160,
-             hollow: {
-              margin: 0,
-              size: '70%',
-              background: 'rgba(255, 255, 255, 0.7)',
-              image: undefined,
-              imageOffsetX: 0,
-              imageOffsetY: 0,
-              position: 'front',
-              dropShadow: {
-                enabled: true,
-                top: 3,
-                left: 0,
-                blur: 4,
-                opacity: 0.74
-              }
-            },
-            track: {
-              background: '#fff',
-              strokeWidth: '67%',
-              margin: 0, // margin is in pixels
-              dropShadow: {
-                enabled: true,
-                top: -3,
-                left: 0,
-                blur: 4,
-                opacity: 0.35
-              }
-            },
-        
-            dataLabels: {
-              show: true,
-              name: {
-
-                offsetY: 25,
-               
-
-                show: true,
-                color: '#888',
-                fontSize: '16px'
-              },
-              value: {
-                formatter: function(val) {
-                  return "-" + parseFloat(val) +"%";
-                },
-                color: '#000',
-                offsetY: -10,
-                fontSize: '14px',
-                show: true,
-              }
-            }
-          }
-        },
-        fill: {
-          type: 'gradient',
-          gradient: {
-            shade: 'dark',
-            type: 'horizontal',
-            shadeIntensity: 0.5,
-            gradientToColors: ['#000'],
-            inverseColors: false,
-            opacityFrom: 1,
-            opacityTo: 1,
-            stops: [0, 100]
-          }
-        },
-        stroke: {
-          lineCap: 'round'
-        },
-        labels: [''],
-        };
-
-        var chart = new ApexCharts(document.querySelector("#civDraw"), options);
-        chart.render();
-      
-      
-    </script>
-
-    <script>
-      
-        var options = {
-          series: [14.86],
-          chart: {
-          height: 100,
-          type: 'radialBar',
-          toolbar: {
-            show: false
-          }
-        },
-        plotOptions: {
-          radialBar: {
-            startAngle:0,
-            endAngle: 225,
-             hollow: {
-              margin: 0,
-              size: '70%',
-              background: '#fff',
-              image: undefined,
-              imageOffsetX: 0,
-              imageOffsetY: 0,
-              position: 'front',
-              dropShadow: {
-                enabled: true,
-                top: 3,
-                left: 0,
-                blur: 4,
-                opacity: 0.24
-              }
-            },
-            track: {
-              background: '#fff',
-              strokeWidth: '67%',
-              margin: 0, // margin is in pixels
-              dropShadow: {
-                enabled: true,
-                top: -3,
-                left: 0,
-                blur: 4,
-                opacity: 0.35
-              }
-            },
-        
-            dataLabels: {
-              show: true,
-              name: {
-                offsetY: -20,
-                show: true,
-                color: '#888',
-                fontSize: '8px'
-              },
-              value: {
-                formatter: function(val) {
-                  return parseFloat(val);
-                },
-                color: '#111',
-                offsetY: -10,
-                fontSize: '16px',
-                show: true,
-              }
-            }
-          }
-        },
-        fill: {
-          type: 'gradient',
-          gradient: {
-            shade: 'dark',
-            type: 'horizontal',
-            shadeIntensity: 0.5,
-            gradientToColors: ['#000'],
-            inverseColors: true,
-            opacityFrom: 1,
-            opacityTo: 1,
-            stops: [-100, 100]
-          }
-        },
-        stroke: {
-          lineCap: 'round'
-        },
-        labels: [''],
-        };
-
-        var chart = new ApexCharts(document.querySelector("#riskspy"), options);
-        chart.render();
-      
-      
-    </script>
-
-    <script>
-      
-        var options = {
-          series: [{
-          name: 'CIV Capital',
-          data: [6, -22.77, 14.35, 16.44, 13.88, 14.61, 29.98, 16.86, 5.08, 10.07, 26.75, 3.48, 22.21]
-        }, {
-          name: 'S&P 500',
-          data: [0.05, -36.81, 26.36, 15.06, 1.89, 15.99, 32.31, 13.46, 1.25, 12, 21.70, -4.56, 27.52]
-        }, ],
-        grid: {
-    show: true,
-    borderColor: '#90A4AE',
-    strokeDashArray: 0,
-    position: 'back',
-    xaxis: {
-        lines: {
-            show: false
-        }
-    },   
-    yaxis: {
-        lines: {
-            show: false
-        }
-    },  
- padding: {
-        top: 0,
-        right: 5,
-        bottom: 30,
-        left: 30,
-    },     
-},
-          chart: {
-          	fontFamily: 'montserrat-bold, sans-serif',
-          type: 'bar',
-          height: 350,
-          toolbar: {
-        show: false,
-        offsetX: 0,
-        offsetY: 0,
-        tools: {
-          download: true,
-          selection: true,
-          zoom: true,
-          zoomin: true,
-          zoomout: true,
-          pan: true,
-          reset: true | '<img src="/static/icons/reset.png" width="20">',
-          customIcons: []
-        },
-    },
-        },
-        plotOptions: {
-          bar: {
-            horizontal: false,
-            columnWidth: '55%',
-            endingShape: 'rounded'
-          },
-        },
-        dataLabels: {
-          enabled: false
-        },
-        stroke: {
-          show: true,
-          width: 2,
-          colors: ['transparent']
-        },
-        xaxis: {
-          categories: ['2007', '2008', '2009', '2010', '2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019'],
-        },
-        yaxis: {
-          title: {
-            text: '% (Percent)'
-          }
-        },
-        fill: {
-          opacity: 1
-        },
-        tooltip: {
-          y: {
-            formatter: function (val) {
-              return val + " %"
-            }
-          }
-        }
-        };
-
-        var chart = new ApexCharts(document.querySelector("#yearly"), options);
-        chart.render();
-      
-      
-    </script>
+   
 
 <script>
       var a = $("#HEAAD").offset().top;
@@ -2705,12 +2200,12 @@ $(document).scroll(function(){
        $('#LogB').css({"color":"#0D4C92"});
     } else {
        $('#HEAAD').css({"background":"transparent"});
-       $('#linkTwo').css({"color":"#fff"});
-       $('#CivHeader').css({"color":"#fff"});
-       $('#linkTwoOne').css({"color":"#fff"});
-       $('#linkTwoTwo').css({"color":"#fff"});
-       $('#linkTwoThree').css({"color":"#fff"});
-       $('#LogB').css({"color":"#fff"});
+       $('#linkTwo').css({"color":"#000"});
+       $('#CivHeader').css({"color":"#000"});
+       $('#linkTwoOne').css({"color":"#000"});
+       $('#linkTwoTwo').css({"color":"#000"});
+       $('#linkTwoThree').css({"color":"#000"});
+       $('#LogB').css({"color":"#000"});
     }
     
 });
