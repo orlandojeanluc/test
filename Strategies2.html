@@ -654,17 +654,10 @@ color: white;
     
       const app = initializeApp(firebaseConfig);
       const db = getDatabase(app);
-      const analytics = getAnalytics(app);
-      const auth = getAuth(app);
+
+
     
-       // Auth check
-       onAuthStateChanged(auth, (user) => {
-        if (user) {
-          populateTickerData(); // Run only if logged in
-        } else {
-          window.location.href = "signup.html"; // Or wherever your signup page is
-        }
-      });
+
     
 
       const strategies = ["S&P 500 Daily Regime", "S&P 500 Dip Rip", "Bond Regime Model", "Relative Value Volatility", "Volatility Regimes", "Multi Strat Regimes", "Managed Futures Equal Weight", "Sector Regime Model", "Long Short Equity", "US Core Equity", "US Value Factor", "China Core Equity"]; // Add strategy names exactly as in the sheet
@@ -882,7 +875,7 @@ color: white;
    ================================================== -->
    <section style="background-color: #F7F6F2;">
     <div class="container mx-auto flex flex-col items-center justify-center text-center max-w-screen-lg py-24 px-4">
-      <h1 class="title-font text-6xl sm:text-6xl mb-12 text-blue-900 mt-32">Caltropia Strategy Grid</h1>
+      <h1 class="title-font text-6xl sm:text-6xl mb-12 text-blue-900 mt-24 sm:mt-24">Caltropia Strategy Grid</h1>
       <h2 class="mb-8 leading-relaxed w-11/12 text-2xl text-blue-900">
         Over 20 Distinctly Different Strategies and Models to Choose From
       </h2>
@@ -890,47 +883,48 @@ color: white;
   
         
         <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
-          <lottie-player src="https://lottie.host/59724aa7-85ca-44a1-98b4-03a1578f463c/UzlJIAIu2x.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player>
+          <a href="SPDailyRebalance.html"><lottie-player src="https://lottie.host/59724aa7-85ca-44a1-98b4-03a1578f463c/UzlJIAIu2x.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
           <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center">S&P Daily Rebalance</h2>
         </div>
+      
         <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
-          <lottie-player src="https://lottie.host/c7aa5b25-5f45-43b3-9007-5e9681913717/0AxWEw9GgW.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player>
+          <a href="SPDailyAgg.html"><lottie-player src="https://lottie.host/c7aa5b25-5f45-43b3-9007-5e9681913717/0AxWEw9GgW.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
           <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center">S&P Dip & Rip</h2>
         </div>
         <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
-          <lottie-player src="https://lottie.host/27142975-725a-4b81-8a7b-345d9da78534/SDbfq53JLL.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player>
+          <a href="BondRegimeModel.html"><lottie-player src="https://lottie.host/27142975-725a-4b81-8a7b-345d9da78534/SDbfq53JLL.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
           <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center">Bond Regime's</h2>
         </div>
         <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
-          <lottie-player src="https://lottie.host/e29fa483-7585-4acc-ba23-c8d6933614d4/7exHW5fwFM.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player>
+          <a href="BondRegimeModel.html"><lottie-player src="https://lottie.host/e29fa483-7585-4acc-ba23-c8d6933614d4/7exHW5fwFM.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
           <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center">60/40 Regime's</h2>
         </div>
         <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
-          <lottie-player src="https://lottie.host/e538eaca-2eee-4136-b8ea-f2c3a378f6f6/JqV0Xv89Zl.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player>
+          <a href="RelativeValueVolatility.html"><lottie-player src="https://lottie.host/e538eaca-2eee-4136-b8ea-f2c3a378f6f6/JqV0Xv89Zl.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
           <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center">Relative Value Vol</h2>
         </div>
         <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
-          <lottie-player src="https://lottie.host/5aeda6de-fd39-4f25-b9c0-2e2e3b124259/euKOteEwbe.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player>
+          <a href="#"><lottie-player src="https://lottie.host/5aeda6de-fd39-4f25-b9c0-2e2e3b124259/euKOteEwbe.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
           <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center">Volatility Regime's</h2>
         </div>
         <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
-          <lottie-player src="https://lottie.host/e1713160-829d-4db5-a4a2-7f5c46f71b51/ugTIUilkCD.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player>
+          <a href="#"><lottie-player src="https://lottie.host/e1713160-829d-4db5-a4a2-7f5c46f71b51/ugTIUilkCD.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
           <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center">Volatility Tail Risk</h2>
         </div>
         <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
-          <lottie-player src="https://lottie.host/b5324689-cb3d-44ff-abd5-a41ca8f15eb7/iOhYLij8Bq.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player>
+          <a href="MultiStratRegimeModel.html"><lottie-player src="https://lottie.host/b5324689-cb3d-44ff-abd5-a41ca8f15eb7/iOhYLij8Bq.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
           <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center">Multi Strat Regime's</h2>
         </div>
         <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
-          <lottie-player src="https://lottie.host/8187df26-d903-4aae-b6b9-c6f0d7fd5c47/3lpt7aSuNG.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player>
+          <a href="#"><lottie-player src="https://lottie.host/8187df26-d903-4aae-b6b9-c6f0d7fd5c47/3lpt7aSuNG.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
           <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center">Multi Strat</h2>
         </div>
         <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
-          <lottie-player src="https://lottie.host/005aa7a0-486e-4a8c-907d-25e7c0c53bd9/Bi7Riqd7En.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player>
+          <a href="#.html"><lottie-player src="https://lottie.host/005aa7a0-486e-4a8c-907d-25e7c0c53bd9/Bi7Riqd7En.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
           <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center">Managed Futures</h2>
         </div>
         <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
-          <lottie-player src="https://lottie.host/3e0c1b93-21d3-4d00-891f-c478771aa179/VCVZoHuIBK.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player>
+          <a href="ManagedFuturesEqualWeight.html"><lottie-player src="https://lottie.host/3e0c1b93-21d3-4d00-891f-c478771aa179/VCVZoHuIBK.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
           <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center">Managed Futures EW</h2>
         </div>
 
@@ -1347,8 +1341,8 @@ color: white;
 
 
 
-      <h1 class="text-center text-2xl mb-4 text-6xl text-blue-900 mx-auto px-6 mt-16">Strategy Performance</h1>                  
-                  <p1 class="w-1/2 text-center text-xl mb-12 text-blue-900 mx-auto flex px-2">Our robust portfolios are systemically designed to minimize risk through diversification and are optimized for long-term wealth — Swipe Below to Discover</p1>      
+      <h1 class="text-center text-2xl mb-8 text-6xl text-blue-900 mx-auto px-6 mt-16">Strategy Performance</h1>                  
+                  <p1 class="w-3/4 sm:w-1/2 text-center text-xl mb-16 text-blue-900 mx-auto flex px-2">Robust Strategy Performance: Navigating Markets with Precision, In Any Market Environment</p1>      
           <div class="relative overflow-x-auto shadow-md sm:rounded-lg mb-32">
             <table class="w-full text-sm text-left rtl:text-right text-black dark:text-gray-400 ">
                 <thead class="text-xs text-black uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 ">
