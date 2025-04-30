@@ -1,0 +1,1983 @@
+<!DOCTYPE html>
+<!--[if IE 8 ]><html class="no-js oldie ie8" lang="en"> <![endif]-->
+<!--[if IE 9 ]><html class="no-js oldie ie9" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+
+   <!--- basic page needs
+   ================================================== -->
+   <meta charset="utf-8">
+	<title>Caltropia Research</title>
+	<meta name="description" content="">  
+	<meta name="author" content="">
+
+   <!-- mobile specific metas
+   ================================================== -->
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+ 	<!-- CSS
+   ================================================== -->
+   <link rel="stylesheet" href="css/base.css">
+   <link rel="stylesheet" href="css/vendor.css">  
+   <link rel="stylesheet" href="css/main.css">  
+   <link rel="stylesheet" href="public/styles.css">  
+   <!-- script
+   ================================================== -->
+	<script src="js/modernizr.js"></script>
+	<script src="js/pace.min.js"></script>
+
+   <!-- favicons
+	================================================== -->
+	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+	<link rel="icon" href="favicon.ico" type="image/x-icon">
+
+	 <style>
+      
+        #chart {
+      max-width: 1250px;
+      margin: 35px auto;
+      margin-top: -10em;
+      color: #000;
+    }
+     
+body section {
+  display: block;
+}
+body h1,
+body h2,
+body h3,
+body h4,
+body h5,
+body h6,
+body ul,
+body li {
+  margin: 0;
+  padding: 0;
+}
+
+body li {
+  list-style-type: none;
+}
+body a {
+  text-decoration: none;
+}
+.bg-wrapper {
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8));
+}
+.section-header {
+  padding-top: 5.625em;
+  text-align: center;
+}
+.section-header h3 {
+  margin-bottom: 0.5em;
+}
+.section-header .line-red {
+  margin: 2.5em auto 2.9375em auto;
+}
+.line-red {
+  display: block;
+  width: 4em;
+  height: 0.1875em;
+  margin: 0 auto;
+  background: #f38181;
+}
+/* Main Header Styles */
+.main-header {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  font-family: Montserrat, sans-serif;
+  color: #fff;
+  background: transparent;
+}
+.main-header .header-wrapper {
+  display: block;
+  width: 70%;
+  margin: 0 auto;
+  padding-top: 1em;
+}
+.main-header .header-wrapper .main-logo {
+  float: left;
+  font-weight: 700;
+  font-size: 1.875em;
+}
+.main-header .header-wrapper .main-menu {
+  float: right;
+  text-align: center;
+}
+.main-header .header-wrapper .main-menu li {
+  display: inline-block;
+  padding: 0.75em 1.875em;
+}
+.main-header .header-wrapper .main-menu li a {
+  padding-bottom: 0.75em;
+  text-transform: uppercase;
+  color: #fff;
+  font-size: 0.875em;
+}
+.main-header .header-wrapper .main-menu li a:hover {
+  color: #fce38a;
+  border-bottom: 0.1875em solid #000;
+  transition: 0.1s;
+}
+.main-header .header-wrapper .main-menu li a span {
+  font-size: 1.2em;
+}
+.main-header .header-wrapper .main-menu li:last-child {
+  padding: 0.75em 0;
+}
+.main-header .header-wrapper .main-menu li:nth-child(6) a:hover,
+.main-header .header-wrapper .main-menu li:last-child a:hover {
+  border: none;
+}
+/* Section-1 Styles */
+#section-1 {
+
+  height: 38em;
+  color: #fff;
+  background-color: #f1f3f8;
+}
+#section-1 .content-slider {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+#section-1 .content-slider input {
+  display: none;
+}
+#section-1 .content-slider .slider {
+  position: relative;
+  width: inherit;
+  height: inherit;
+  overflow: hidden;
+}
+#section-1 .content-slider .slider .banner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  z-index: 0;
+  width: inherit;
+  height: inherit;
+  text-align: center;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  transition: all 0.5s ease;
+}
+#section-1 .content-slider .slider .banner .banner-inner-wrapper {
+  height: 100%;
+  padding-top: 6em;
+
+  box-sizing: border-box;
+}
+#section-1 .content-slider .slider .banner .banner-inner-wrapper h2 {
+  padding-bottom: 0.3em;
+  font-family: 'Kaushan Script', cursive;
+  font-weight: 400;
+  font-size: 2.5em;
+  text-transform: none;
+}
+#section-1 .content-slider .slider .banner .banner-inner-wrapper h1 {
+  font-size: 6em;
+  line-height: 95%;
+}
+#section-1 .content-slider .slider .banner .banner-inner-wrapper .line {
+  display: block;
+  width: 4em;
+  height: 0.1875em;
+  margin: 2.5em auto;
+  background: #fff;
+}
+#section-1 .content-slider .slider .banner .banner-inner-wrapper .learn-more-button {
+  padding-bottom: 5em;
+  z-index: 15 !important;
+}
+#section-1 .content-slider .slider .banner .banner-inner-wrapper .learn-more-button a {
+  padding: 0.5em 2em;
+  text-align: center;
+  font-family: Montserrat, sans-serif;
+  font-size: 0.875em;
+  color: #fff;
+  text-transform: uppercase;
+  border: 0.1875em solid #fff;
+}
+#section-1 .content-slider .slider .banner .banner-inner-wrapper .learn-more-button a:hover {
+  color: #fff;
+  border-color: #fff;
+  transition: 0.3s;
+}
+#section-1 .content-slider .slider #top-banner-1 {
+  background: url('') no-repeat center center;
+  background-size: cover;
+}
+#section-1 .content-slider .slider #top-banner-2 {
+  background: url('') no-repeat center center;
+  background-size: cover;
+}
+#section-1 .content-slider .slider #top-banner-3 {
+  background: url('') no-repeat center center;
+  background-size: cover;
+}
+#section-1 .content-slider .slider #top-banner-4 {
+  background: url('') no-repeat center center;
+  background-size: cover;
+}
+#section-1 .content-slider nav {
+  position: absolute;
+  bottom: 0.5em;
+  width: 100%;
+  z-index: 10;
+  text-align: center;
+
+}
+#section-1 .content-slider nav .controls {
+  display: block;
+  width: 70%;
+  margin: 0 auto;
+  font-family: Montserrat, sans-serif;
+  color: #000;
+  margin-top: -27em;
+}
+#section-1 .content-slider nav .controls label {
+  position: relative;
+  display: inline-block;
+  width: 20%;
+  height: 3.1em;
+  overflow: hidden;
+  margin: 0 1em;
+  padding-top: 1em;
+  text-align: left;
+  text-transform: uppercase;
+  font-family: Montserrat, sans-serif;
+  font-size: 1em;
+  color: #000;
+  font-weight: 400;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+#section-1 .content-slider nav .controls label .progressbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 100%;
+  background: #f6eac5;
+  z-index: 100;
+}
+#section-1 .content-slider nav .controls label .progressbar .progressbar-fill {
+  position: inherit;
+  width: inherit;
+  height: inherit;
+  margin-left: -100%;
+  background: #e88382;
+}
+#section-1 .content-slider nav .controls label span {
+  font-size: 1.4em;
+  font-weight: 700;
+}
+#section-1 .content-slider nav .controls label:hover {
+  color: #e88382;
+}
+#section-1 .content-slider #banner1:checked ~ .slider #top-banner-1,
+#section-1 .content-slider #banner2:checked ~ .slider #top-banner-2,
+#section-1 .content-slider #banner3:checked ~ .slider #top-banner-3,
+#section-1 .content-slider #banner4:checked ~ .slider #top-banner-4 {
+  opacity: 1;
+  z-index: 1;
+}
+#section-1 .content-slider #banner1:checked ~ nav label:nth-of-type(1),
+#section-1 .content-slider #banner2:checked ~ nav label:nth-of-type(2),
+#section-1 .content-slider #banner3:checked ~ nav label:nth-of-type(3),
+#section-1 .content-slider #banner4:checked ~ nav label:nth-of-type(4) {
+  cursor: default;
+  color: #000;
+  transition: all 0.5s;
+}
+#section-1 .content-slider #banner1:checked ~ nav label:nth-of-type(1) .progressbar,
+#section-1 .content-slider #banner2:checked ~ nav label:nth-of-type(2) .progressbar,
+#section-1 .content-slider #banner3:checked ~ nav label:nth-of-type(3) .progressbar,
+#section-1 .content-slider #banner4:checked ~ nav label:nth-of-type(4) .progressbar {
+  background: #fff;
+}
+#section-1 .content-slider #banner1:checked ~ nav label:nth-of-type(1) .progressbar-fill,
+#section-1 .content-slider #banner2:checked ~ nav label:nth-of-type(2) .progressbar-fill,
+#section-1 .content-slider #banner3:checked ~ nav label:nth-of-type(3) .progressbar-fill,
+#section-1 .content-slider #banner4:checked ~ nav label:nth-of-type(4) .progressbar-fill {
+  animation: progressBarFill 5s linear;
+}
+/* Animations */
+@keyframes progressBarFill {
+  from {
+    margin-left: -100%;
+  }
+  to {
+    margin-left: 0;
+  }
+}
+/* Media Queries */
+@media only screen and (min-width: 1920px) {
+  body {
+    font-size: 22px;
+  }
+  .main-header .header-wrapper {
+    width: 57%;
+  }
+  #section-1 {
+    height: 65em;
+  }
+  #section-1 .content-slider .slider .banner .banner-inner-wrapper {
+    padding-top: 12em;
+  }
+}
+@media only screen and (max-width: 1919px) {
+  body {
+    font-size: 20px;
+  }
+  .main-header .header-wrapper {
+    width: 60%;
+  }
+  #section-1 {
+    height: 65em;
+  }
+  #section-1 .content-slider .slider .banner .banner-inner-wrapper {
+    padding-top: 11em;
+  }
+}
+@media only screen and (max-width: 1680px) {
+  body {
+    font-size: 18px;
+  }
+  .main-header .header-wrapper {
+    width: 65%;
+  }
+  #section-1 {
+    height: 65em;
+  }
+  #section-1 .content-slider .slider .banner .banner-inner-wrapper {
+    padding-top: 9em;
+  }
+}
+@media only screen and (max-width: 1366px) {
+  body {
+    font-size: 16px;
+  }
+  #section-1 {
+    height: 65em;
+  }
+
+  .main-header .header-wrapper {
+    width: 70%;
+  }
+}
+@media only screen and (max-width: 1120px) {
+  .main-header .header-wrapper .main-menu li {
+    padding: 0.75em 1.4em;
+  }
+  #section-1 {
+    height: 65em;
+  }
+  #section-1 .content-slider nav {
+    bottom: -0.2em;
+  }
+  #section-1 .content-slider .slider .banner .banner-inner-wrapper {
+    padding-top: 7em;
+  }
+  #section-1 .content-slider .slider .banner .banner-inner-wrapper .line {
+    margin: 2em auto;
+  }
+}
+@media only screen and (max-width: 1024px) {
+  body {
+    font-size: 14px;
+  }
+  .main-header .header-wrapper .main-menu li {
+    padding: 0.75em 1.3em;
+  }
+  #section-1 .content-slider nav {
+    bottom: 0;
+  }
+  #section-1 .content-slider nav .controls {
+    width: 80%;
+  }
+}
+@media only screen and (max-width: 860px) {
+  .main-header .header-wrapper .main-menu li {
+    padding: 0.75em 0.9em;
+  }
+  #section-1 {
+    height: 65em;
+  }
+  #section-1 .content-slider nav {
+    bottom: -1em;
+  }
+  #section-1 .content-slider nav .controls {
+    width: 90%;
+  }
+  #section-1 .content-slider .slider .banner .banner-inner-wrapper h2 {
+    font-size: 2em;
+  }
+  #section-1 .content-slider .slider .banner .banner-inner-wrapper h1 {
+    font-size: 4.5em;
+  }
+  #section-1 .content-slider .slider .banner .banner-inner-wrapper {
+    padding-top: 5em;
+  }
+}
+@media only screen and (max-width: 768px) {
+  .main-header .header-wrapper .main-menu li {
+    padding: 0.75em 0.5em;
+  }
+  #section-1 {
+    height: 65em;
+  }
+  #section-1 .content-slider nav .controls {
+    width: 100%;
+  }
+  #section-1 .content-slider nav .controls label {
+    width: 19%;
+    font-size: 0.8em;
+  }
+  #section-1 .content-slider .slider .banner .banner-inner-wrapper .line {
+    margin: 1.7em auto;
+  }
+}
+@media only screen and (max-width: 650px) {
+  .main-header .header-wrapper {
+    width: 95%;
+  }
+
+}
+@media only screen and (max-width: 480px) {
+  .main-header .header-wrapper {
+    width: 100%;
+  }
+  .main-header .header-wrapper .main-logo {
+    display: none;
+  }
+  .main-header .header-wrapper .main-menu li {
+    padding: 0.2em 0.3em;
+  }
+  .main-header .header-wrapper .main-menu li:last-child,
+  .main-header .header-wrapper .main-menu li:nth-child(6) {
+    padding: 0.2em 0.7em;
+  }
+  #section-1 {
+    height: 65em;
+  }
+  #section-1 .content-slider nav {
+    bottom: -0.5em;
+  }
+  #section-1 .content-slider nav .controls label {
+    width: 40%;
+    font-size: 0.7em;
+  }
+  #section-1 .content-slider .slider .banner .banner-inner-wrapper h2 {
+    font-size: 1.5em;
+  }
+  #section-1 .content-slider .slider .banner .banner-inner-wrapper h1 {
+    font-size: 3em;
+  }
+  #section-1 .content-slider .slider .banner .banner-inner-wrapper .line {
+    margin: 1.7em auto;
+  }
+}
+
+
+
+@media only screen and (max-width: 375px) {
+  .main-header .header-wrapper {
+    width: 100%;
+  }
+  .main-header .header-wrapper .main-logo {
+    display: none;
+  }
+  .main-header .header-wrapper .main-menu li {
+    padding: 0.2em 0.3em;
+  }
+  .main-header .header-wrapper .main-menu li:last-child,
+  .main-header .header-wrapper .main-menu li:nth-child(6) {
+    padding: 0.2em 0.7em;
+  }
+  #section-1 {
+    height: 65em;
+  }
+  #section-1 .content-slider nav {
+    bottom: -3.5em;
+  }
+  #section-1 .content-slider nav .controls label {
+    width: 40%;
+    font-size: 0.7em;
+  }
+  #section-1 .content-slider .slider .banner .banner-inner-wrapper h2 {
+    font-size: 1.5em;
+  }
+  #section-1 .content-slider .slider .banner .banner-inner-wrapper h1 {
+    font-size: 3em;
+  }
+  #section-1 .content-slider .slider .banner .banner-inner-wrapper .line {
+    margin: 1.7em auto;
+  }
+}
+
+@media only screen and (max-width: 450px) {
+  .main-header .header-wrapper {
+    width: 100%;
+  }
+  .main-header .header-wrapper .main-logo {
+    display: none;
+  }
+  .main-header .header-wrapper .main-menu li {
+    padding: 0.2em 0.3em;
+  }
+  .main-header .header-wrapper .main-menu li:last-child,
+  .main-header .header-wrapper .main-menu li:nth-child(6) {
+    padding: 0.2em 0.7em;
+  }
+  #section-1 {
+    height: 65em;
+  }
+  #section-1 .content-slider nav {
+    bottom: -5.5em;
+  }
+
+
+  #section-1 .content-slider nav .controls label {
+    width: 40%;
+    font-size: 0.7em;
+  }
+  #section-1 .content-slider .slider .banner .banner-inner-wrapper h2 {
+    font-size: 1.5em;
+  }
+  #section-1 .content-slider .slider .banner .banner-inner-wrapper h1 {
+    font-size: 3em;
+  }
+  #section-1 .content-slider .slider .banner .banner-inner-wrapper .line {
+    margin: 1.7em auto;
+  }
+
+  #progress {
+  	display: none;
+  }
+}
+#progress {
+	/* DO A ROTATE FOR NEGATIVE VALS */
+}
+
+
+     #card {
+
+      max-width: 250px;
+      margin: 5px auto;
+      padding: 0px;
+      text-align: center;
+
+
+
+
+
+    }
+
+
+    .metrics {
+    	padding-top: 20px;
+    	padding-bottom: 20px;
+    }
+
+    #yearly {
+      max-width: 1250px;
+      margin: 35px auto;
+      color: #000;
+    }
+      
+   
+
+    .num {
+    	color: #ffd36b;
+    }
+
+    .newButton {
+    	background: transparent !important;
+  border: 3px solid #fff;
+  line-height: 4.8rem;
+color: white;
+
+
+    }
+
+    .color1 {
+    	color: #ECB365;
+    }
+
+    #linkTwo {
+      /*color: #fff;*/
+    }
+
+
+    </style>
+
+    <script>
+      window.Promise ||
+        document.write(
+          '<script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js"><\/script>'
+        )
+      window.Promise ||
+        document.write(
+          '<script src="https://cdn.jsdelivr.net/npm/eligrey-classlist-js-polyfill@1.2.20171210/classList.min.js"><\/script>'
+        )
+      window.Promise ||
+        document.write(
+          '<script src="https://cdn.jsdelivr.net/npm/findindex_polyfill_mdn"><\/script>'
+        )
+    </script>
+
+    
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+   
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+      import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
+    
+      const firebaseConfig = {
+        apiKey: "AIzaSyBxG5qf6mb8E_-b2TeXlRNseMZ26L9DRYg",
+        authDomain: "trendscores-df341.firebaseapp.com",
+        projectId: "trendscores-df341",
+        databaseURL: "https://trendscores-df341-default-rtdb.firebaseio.com",
+        storageBucket: "trendscores-df341.appspot.com",
+        messagingSenderId: "565710392511",
+        appId: "1:565710392511:web:37349319364bba19b3ca0a",
+        measurementId: "G-8TVLFBWN63"
+      };
+    
+      const app = initializeApp(firebaseConfig);
+      const db = getDatabase(app);
+    
+      const strategies = ["S&P 500 Daily Regime", "S&P 500 Dip Rip", "Bond Regime Model", "Relative Value Volatility", "Volatility Regimes", "Multi Strat Regimes", "Managed Futures Equal Weight", "Sector Regime Model", "Long Short Equity", "US Core Equity", "US Value Factor", "China Core Equity"]; // Add strategy names exactly as in the sheet
+    
+      function populateStrategyData() {
+        strategies.forEach(name => {
+          const cleanName = name.replace(/\s+/g, ''); // e.g. "Mean Reversion" → "MeanReversion"
+    
+          get(child(ref(db), `investmentStrategies/${name}`)).then((snapshot) => {
+            if (snapshot.exists()) {
+              const data = snapshot.val();
+    
+              document.getElementById(`${cleanName}-YTD`).textContent = (data["YTD Return"] * 100).toFixed(2) + '%';
+              document.getElementById(`${cleanName}-CAGR`).textContent = (data["CAGR"] * 100).toFixed(2) + '%';
+              document.getElementById(`${cleanName}-Volatility`).textContent = (data["Volatility"] * 100).toFixed(2) + '%';
+              document.getElementById(`${cleanName}-Sharpe`).textContent = data["Sharpe"];
+              document.getElementById(`${cleanName}-MaxDD`).textContent = (data["Max DD"] * 100).toFixed(2) + '%';
+              document.getElementById(`${cleanName}-Futures`).textContent = data["Futures"];
+            }
+          });
+        });
+      }
+    
+      window.onload = populateStrategyData;
+    </script>
+
+
+
+
+
+</head>
+
+<header id="HEAAD" class="text-white body-font hidden md:block fixed">
+  <div class=" mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
+    <a href="index.html" class="flex title-font font-medium items-center  mb-4 md:mb-0">
+      <!--
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-10 h-10 text-white p-2 bg-indigo-500 rounded-full" viewBox="0 0 24 24">
+        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+      </svg>
+      !-->
+      <span id="CivHeader" class="animate-intro ml-12 text-4xl font-mreg font-bold tracking-widest mr-4 text-gray-900">C A L T R O P I A</span>
+    </a>
+    <nav class="md:mr-auto md:ml-4 md:py-1 md:pl-4  flex flex-wrap items-center text-base justify-center">
+<a id="linkTwo" class="ml-12 mr-12  font-mreg font-bold tracking-widest text-2xl text-gray-900">ABOUT US</a>
+
+      <a href="Strategies.html" class="mr-12  font-mreg font-bold tracking-widest text-2xl text-gray-900">STRATEGIES</a>
+      <a href="Trend.html" class="mr-12  font-mreg font-bold tracking-widest text-2xl text-gray-900">TREND</a>
+<!--      <a id="linkTwoThree" class="mr-12  font-mreg font-bold tracking-widest text-2xl">PERFORMANCE</a>
+!-->
+    </nav>
+    <a id="" href="login.html"><button id="LogB" class="hover:bg-transparent hover:animate-ping no-underline hover:underline inline-flex items-center  py-1 px-3  rounded text-base hidden sm:hidden lg:block mt-4 md:mt-0 font-mreg font-bold tracking-widest text-2xl text-gray-900">LOGIN
+      
+    </button>
+  </a>
+  </div>
+</header> 
+
+<body id="top">
+
+  
+
+
+
+	<!-- header 
+   ================================================== -->
+<header class=" xl:hidden lg:hidden "> 
+
+   	
+<!--
+   	<div class="header-logo">
+
+	      <a href="index.html">CIV Capital</a>
+	   </div> 
+!-->
+
+		<a id="header-menu-trigger1" href="login.html">
+			
+			<span class="header-menu-text text-gray-900">Login</span>	
+			</a>	 		
+			
+		
+
+	</header> <!-- end header -->  
+
+
+   <!-- home
+   ================================================== -->
+   <section style="background-color: #F7F6F2;">
+    <div class="container mx-auto flex flex-col items-center justify-center text-center max-w-screen-lg py-24 px-4">
+      <h1 class="title-font text-6xl sm:text-6xl mb-12 text-blue-900 mt-32">Caltropia Strategy Grid</h1>
+      <h2 class="mb-8 leading-relaxed w-11/12 text-2xl text-blue-900">
+        Over 20 Distinctly Different Strategies and Models to Choose From
+      </h2>
+      <div class="grid grid-cols-3 sm:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-4 justify-items-center mt-6">
+  
+        
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          <lottie-player src="https://lottie.host/59724aa7-85ca-44a1-98b4-03a1578f463c/UzlJIAIu2x.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player>
+          <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center">S&P Daily Rebalance</h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          <lottie-player src="https://lottie.host/c7aa5b25-5f45-43b3-9007-5e9681913717/0AxWEw9GgW.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player>
+          <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center">S&P Dip & Rip</h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          <lottie-player src="https://lottie.host/27142975-725a-4b81-8a7b-345d9da78534/SDbfq53JLL.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player>
+          <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center">Bond Regime's</h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          <lottie-player src="https://lottie.host/e29fa483-7585-4acc-ba23-c8d6933614d4/7exHW5fwFM.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player>
+          <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center">60/40 Regime's</h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          <lottie-player src="https://lottie.host/e538eaca-2eee-4136-b8ea-f2c3a378f6f6/JqV0Xv89Zl.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player>
+          <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center">Relative Value Vol</h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          <lottie-player src="https://lottie.host/5aeda6de-fd39-4f25-b9c0-2e2e3b124259/euKOteEwbe.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player>
+          <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center">Volatility Regime's</h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          <lottie-player src="https://lottie.host/e1713160-829d-4db5-a4a2-7f5c46f71b51/ugTIUilkCD.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player>
+          <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center">Volatility Tail Risk</h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          <lottie-player src="https://lottie.host/b5324689-cb3d-44ff-abd5-a41ca8f15eb7/iOhYLij8Bq.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player>
+          <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center">Multi Strat Regime's</h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          <lottie-player src="https://lottie.host/8187df26-d903-4aae-b6b9-c6f0d7fd5c47/3lpt7aSuNG.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player>
+          <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center">Multi Strat</h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          <lottie-player src="https://lottie.host/005aa7a0-486e-4a8c-907d-25e7c0c53bd9/Bi7Riqd7En.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player>
+          <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center">Managed Futures</h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          <lottie-player src="https://lottie.host/3e0c1b93-21d3-4d00-891f-c478771aa179/VCVZoHuIBK.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player>
+          <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center">Managed Futures EW</h2>
+        </div>
+
+  <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+    <lottie-player src="https://lottie.host/59b25b24-6f30-4aac-9df2-e9b595cea5ac/hYk12Hh3oN.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player>
+    <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center">Sector Regime</h2>
+  </div>
+  <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+    <lottie-player src="https://lottie.host/c81c39e5-dc8a-4258-8c14-2a21a4894c6e/8CR2BFjCwJ.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player>
+    <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center">Bitcoin Regime's</h2>
+  </div>
+  <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+    <lottie-player src="https://lottie.host/3a8c097c-f705-4844-8850-be3453bdde8e/yCv2mcYjYS.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player>
+    <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center">Active Core Equity</h2>
+  </div>
+  <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+    <lottie-player src="https://lottie.host/da049647-a20f-468e-ad36-b5fc9b32221b/gRXujXNuTR.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player>
+    <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center">Long/Short Equity</h2>
+  </div>
+  <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+    <lottie-player src="https://lottie.host/e9cd66f4-1f40-4049-9d5b-069098d8ffed/f1Dkn2FJAq.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player>
+    <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center">Long/Short Neutral</h2>
+  </div>
+  <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+    <lottie-player src="https://lottie.host/d6076e77-1425-4992-b7db-a5d9346ca9cb/0q2KiNETqv.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player>
+    <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center">Value Factor</h2>
+  </div>
+  <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+    <lottie-player src="https://lottie.host/9702a5ea-bf8d-4a75-b180-e24d6262bef4/Yvor1JfUge.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player>
+    <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center">International Active</h2>
+  </div>
+  <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+    <lottie-player src="https://lottie.host/f41cd4c8-807b-46f3-9ec3-bde4d2d6d845/dHi0DuX1yZ.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player>
+    <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center">China Core Active</h2>
+  </div>
+  <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+    <lottie-player src="https://lottie.host/c65f8045-0152-4485-9fbb-bac856b7da68/8CKt4pVsLe.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player>
+    <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center">Mexico Active</h2>
+  </div>
+  <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+    <lottie-player src="https://lottie.host/9a380f23-2715-4613-a3bd-0164c09d5dec/ebimdjAj1v.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player>
+    <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center">Macro Long Only</h2>
+  </div>
+  <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+    <lottie-player src="https://lottie.host/ede4340f-3519-4e71-a60c-c5661879c835/NL9SNFe8Ed.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player>
+    <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center">Intra L/S Equity</h2>
+  </div>
+  <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+    <lottie-player src="https://lottie.host/30d350b8-ef13-4d21-95d7-c96d18167de8/YPrDPlUEqZ.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player>
+    <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center">Japan Active Equity</h2>
+  </div>
+  <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+    <lottie-player src="https://lottie.host/a00b447a-f2e8-4b79-8ecf-2497702002d0/FC0YXIGEtf.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player>
+    <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center">Gold Regimes</h2>
+  </div>
+  <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+    <lottie-player src="https://lottie.host/3e6a64b2-4069-4068-bac5-04225747bcb6/jsC8iZjDzU.json" background="transparent" speed="1" loop autoplay style="width: 150px; height: 50px;"></lottie-player>
+    <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center">More Coming Soon</h2>
+  </div>
+  
+      </div>
+    </div>
+  </section>
+
+    
+
+    <section class="bg-white">
+
+      <div class="container px-4 flex-grow w-full py-4 sm:py-0 mx-auto px-0  ">
+        
+        <h1
+          class="text-center text-6xl font-mreg font-semibold text-blue-900 mx-auto px-2"
+        >
+          
+        </h1>
+        <p1 class="text-center text-2xl mb-4 text-blue-900 mx-auto px-2"></p1>
+        <div class="mx-auto w-full md:w-2/3 px-4">
+          <div class="container my-8">
+
+              <h2 class="text-3xl font-mreg font-semibold ">
+      
+                
+              </h2>
+              
+            </div>
+
+            <style>
+              .custom-scrollbar-hide::-webkit-scrollbar {
+                display: none;
+              }
+              .custom-scrollbar-hide {
+                -ms-overflow-style: none;  /* IE and Edge */
+                scrollbar-width: none;     /* Firefox */
+              }
+            </style>
+            
+
+            
+          <!---->
+
+        
+          <h1 class="text-center text-2xl mb-8 text-6xl text-blue-900 mx-auto px-6 mt-12 sm:mt-16">Browse By Investment Category</h1>                  
+                  <p1 class="text-center text-2xl mb-16 text-blue-900 mx-auto flex px-2">Our robust portfolios are systemically designed to minimize risk through diversification and are optimized for long-term wealth — Swipe Below to Discover</p1>      
+                  <div
+              id="scrollContainer"
+              class="flex flex-no-wrap overflow-x-scroll custom-scrollbar-hide scrolling-touch items-start "
+            >
+              <div
+                class="flex-none w-2/3 md:w-1/3 mr-8   rounded-xl"
+              >
+                <a href="#" class="space-y-4">
+                  <div class="aspect-w-16 aspect-h-9">
+                    
+                    
+                    <div  class="object-cover shadow-md hover:shadow-xl rounded-3xl">
+      
+                      <img class="object-cover hover:shadow-xl rounded-3xl" src="purp.png" style=" height: 100px" alt="">
+      
+                    </div>
+      
+                    
+                  </div>
+                  <div class="px-4 py-2">
+                    <div class="text-lg leading-6 font-medium space-y-1">
+                      <h3 class="font-semibold text-gray-800 text-4xl mb-2 ">
+                        Regime Models
+                      </h3>
+                    </div>
+                    <div class="text-2xl">
+                      <p class="font-mreg font-large">
+                       
+                      </p>
+      
+                      <p class="font-medium text-sm text-indigo-600 mt-2">
+                        <span class="text-indigo-600"></span>
+                      </p>
+                    </div>
+                  </div>
+                </a>
+              </div>
+              <div
+                class="flex-none w-2/3 md:w-1/3 mr-8 md:pb-4  rounded-lg"
+              >
+                <a href="#" class="space-y-4">
+                  <div class="aspect-w-16 aspect-h-9">
+      
+                      <div class="object-cover shadow-md hover:shadow-xl rounded-3xl">
+                        <img class="object-cover hover:shadow-xl rounded-3xl" src="purp.png" style=" height: 100px" alt="">
+                        </div>
+
+                  </div>
+                  <div class="px-4 py-2">
+                    <div class="text-lg leading-6 font-medium space-y-1">
+                      <h3 class="font-semibold text-gray-800 text-4xl mb-2 ">
+                        Long/Short 
+                      </h3>
+                    </div>
+                    <div class="text-lg">
+                      <p class="font-mreg font-medium">
+                        
+                      </p>
+                      <p class="font-medium text-sm text-indigo-600 mt-2">
+                        <span class="text-indigo-600"></span>
+                      </p>
+                    </div>
+                  </div>
+                </a>
+              </div>
+              <div
+                class="flex-none w-2/3 md:w-1/3 mr-8 md:pb-4  rounded-lg"
+              >
+                <a href="#" class="space-y-4">
+                  <div class="aspect-w-16 aspect-h-9">
+      
+                    <div class="object-cover shadow-md hover:shadow-xl rounded-3xl">
+                     <!--add this object cover to fix on mobile and keep the height in style but delete the width--> <img class="object-cover hover:shadow-xl rounded-3xl" src="purp.png" style=" height: 100px" alt="">
+                    </div>
+                      
+                  </div>
+                  <div class="px-4 py-2">
+                    <div class="text-lg leading-6 font-medium space-y-1">
+                      <h3 class="font-semibold text-gray-800 text-4xl mb-2 ">
+                        Core Equity
+                      </h3>
+                    </div>
+                    <div class="text-lg">
+                      <p class="font-mreg font-medium">
+                        
+                      </p>
+                      <p class="font-medium text-sm text-indigo-600 mt-2">
+                        <span class="text-indigo-600"></span>
+                      </p>
+                    </div>
+                  </div>
+                </a>
+              </div>
+              <div
+                class="flex-none w-2/3 md:w-1/3 mr-8 md:pb-4  rounded-lg"
+              >
+                <a href="#" class="space-y-4">
+                  <div class="aspect-w-16 aspect-h-9">
+      
+                    <div class="object-cover shadow-md hover:shadow-xl rounded-3xl">
+                     <!--add this object cover to fix on mobile and keep the height in style but delete the width--> <img class="object-cover hover:shadow-xl rounded-3xl" src="purp.png" style=" height: 100px" alt="">
+                    </div>
+                      
+                  </div>
+                  <div class="px-4 py-2">
+                    <div class="text-lg leading-6 font-medium space-y-1">
+                      <h3 class="font-semibold text-gray-800 text-4xl mb-2 ">
+                        Managed Futures Trend
+                      </h3>
+                    </div>
+                    <div class="text-lg">
+                      <p class="font-mreg font-medium">
+                        
+                      </p>
+                      <p class="font-medium text-sm text-indigo-600 mt-2">
+                        <span class="text-indigo-600"></span>
+                      </p>
+                    </div>
+                  </div>
+                </a>
+              </div>
+              <div
+                class="flex-none w-2/3 md:w-1/3 mr-8 md:pb-4  rounded-lg"
+              >
+                <a href="#" class="space-y-4">
+                  <div class="aspect-w-16 aspect-h-9">
+      
+                    <div class="object-cover shadow-md hover:shadow-xl rounded-3xl">
+                     <!--add this object cover to fix on mobile and keep the height in style but delete the width--> <img class="object-cover hover:shadow-xl rounded-3xl" src="purp.png" style=" height: 100px" alt="">
+                    </div>
+                      
+                  </div>
+                  <div class="px-4 py-2">
+                    <div class="text-lg leading-6 font-medium space-y-1">
+                      <h3 class="font-semibold text-gray-800 text-4xl mb-2">
+                        Volatility
+                      </h3>
+                    </div>
+                    <div class="text-lg">
+                      <p class="font-mreg font-medium">
+                        
+                      </p>
+                      <p class="font-medium text-sm text-indigo-600 mt-2">
+                        <span class="text-indigo-600"></span>
+                      </p>
+                    </div>
+                  </div>
+                </a>
+              </div>
+              <div
+                class="flex-none w-2/3 md:w-1/3 mr-8 md:pb-4  rounded-lg"
+              >
+                <a href="#" class="space-y-4">
+                  <div class="aspect-w-16 aspect-h-9">
+      
+                    <div class="object-cover shadow-md hover:shadow-xl rounded-3xl">
+                     <!--add this object cover to fix on mobile and keep the height in style but delete the width--> <img class="object-cover hover:shadow-xl rounded-3xl" src="purp.png" style=" height: 100px" alt="">
+                    </div>
+                      
+                  </div>
+                  <div class="px-4 py-2">
+                    <div class="text-lg leading-6 font-medium space-y-1">
+                      <h3 class="font-semibold text-gray-800 text-4xl mb-2">
+                        Crypto
+                      </h3>
+                    </div>
+                    <div class="text-lg">
+                      <p class="font-mreg font-medium">
+                        
+                      </p>
+                      <p class="font-medium text-sm text-indigo-600 mt-2">
+                        <span class="text-indigo-600"></span>
+                      </p>
+                    </div>
+                  </div>
+                </a>
+              </div>
+              <div
+                class="flex-none w-2/3 md:w-1/3 mr-8 md:pb-4  rounded-lg"
+              >
+                <a href="#" class="space-y-4">
+                  <div class="aspect-w-16 aspect-h-9">
+      
+                    <div class="object-cover shadow-md hover:shadow-xl rounded-3xl">
+                     <!--add this object cover to fix on mobile and keep the height in style but delete the width--> <img class="object-cover hover:shadow-xl rounded-3xl" src="purp.png" style=" height: 100px" alt="">
+                    </div>
+                      
+                  </div>
+                  <div class="px-4 py-2">
+                    <div class="text-lg leading-6 font-medium space-y-1">
+                      <h3 class="font-semibold text-gray-800 text-4xl mb-2 ">
+                        Bonds
+                      </h3>
+                    </div>
+                    <div class="text-lg">
+                      <p class="font-mreg font-medium">
+                        
+                      </p>
+                      <p class="font-medium text-sm text-indigo-600 mt-2">
+                        <span class="text-indigo-600"></span>
+                      </p>
+                    </div>
+                  </div>
+                </a>
+              </div>
+              <div
+                class="flex-none w-2/3 md:w-1/3 mr-8 md:pb-4  rounded-lg"
+              >
+                <a href="#" class="space-y-4">
+                  <div class="aspect-w-16 aspect-h-9">
+      
+                    <div class="object-cover shadow-md hover:shadow-xl rounded-3xl">
+                     <!--add this object cover to fix on mobile and keep the height in style but delete the width--> <img class="object-cover hover:shadow-xl rounded-3xl" src="purp.png" style=" height: 100px" alt="">
+                    </div>
+                      
+                  </div>
+                  <div class="px-4 py-2">
+                    <div class="text-lg leading-6 font-medium space-y-1">
+                      <h3 class="font-semibold text-gray-800 text-4xl mb-2 ">
+                        International
+                      </h3>
+                    </div>
+                    <div class="text-lg">
+                      <p class="font-mreg font-medium">
+                        
+                      </p>
+                      <p class="font-medium text-sm text-indigo-600 mt-2 mb-32">
+                        <span class="text-indigo-600"></span>
+                      </p>
+                    </div>
+                  </div>
+                </a>
+              </div>
+
+              <div
+                class="flex-none w-2/3 md:w-1/3 mr-8 md:pb-4  rounded-lg"
+              >
+                <a href="#" class="space-y-4">
+                  <div class="aspect-w-16 aspect-h-9">
+      
+                    <div class="object-cover shadow-md hover:shadow-xl rounded-3xl">
+                     <!--add this object cover to fix on mobile and keep the height in style but delete the width--> <img class="object-cover hover:shadow-xl rounded-3xl" src="purp.png" style=" height: 100px" alt="">
+                    </div>
+                      
+                  </div>
+                  <div class="px-4 py-2">
+                    <div class="text-lg leading-6 font-medium space-y-1">
+                      <h3 class="font-semibold text-gray-800 text-4xl mb-2 ">
+                        Commodities
+                      </h3>
+                    </div>
+                    <div class="text-lg">
+                      <p class="font-mreg font-medium">
+                        
+                      </p>
+                      <p class="font-medium text-sm text-indigo-600 mt-2 mb-32">
+                        <span class="text-indigo-600"></span>
+                      </p>
+                    </div>
+                  </div>
+                </a>
+              </div>
+
+              <div
+                class="flex-none w-2/3 md:w-1/3 mr-8 md:pb-4  rounded-lg"
+              >
+                <a href="#" class="space-y-4">
+                  <div class="aspect-w-16 aspect-h-9">
+      
+                    <div class="object-cover shadow-md hover:shadow-xl rounded-3xl">
+                     <!--add this object cover to fix on mobile and keep the height in style but delete the width--> <img class="object-cover hover:shadow-xl rounded-3xl" src="purp.png" style=" height: 100px" alt="">
+                    </div>
+                      
+                  </div>
+                  <div class="px-4 py-2">
+                    <div class="text-lg leading-6 font-medium space-y-1">
+                      <h3 class="font-semibold text-gray-800 text-4xl mb-2 ">
+                        View All
+                      </h3>
+                    </div>
+                    <div class="text-lg">
+                      <p class="font-mreg font-medium">
+                        
+                      </p>
+                      <p class="font-medium text-sm text-indigo-600 mt-2 mb-32">
+                        <span class="text-indigo-600"></span>
+                      </p>
+                    </div>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+
+
+          
+      </div>
+      
+      </section>
+
+      <section class="">
+
+        <div class="container px-4 flex-grow w-full py-4 sm:py-0 mx-auto px-0  ">
+          
+          <h1
+            class="text-center text-6xl font-mreg font-semibold text-blue-900 mx-auto px-2"
+          >
+            
+          </h1>
+          <p1 class="text-center text-2xl mb-4 text-blue-900 mx-auto px-2"></p1>
+
+
+
+      <h1 class="text-center text-2xl mb-4 text-6xl text-blue-900 mx-auto px-6 mt-16">Strategy Performance</h1>                  
+                  <p1 class="w-1/2 text-center text-xl mb-12 text-blue-900 mx-auto flex px-2">Our robust portfolios are systemically designed to minimize risk through diversification and are optimized for long-term wealth — Swipe Below to Discover</p1>      
+          <div class="relative overflow-x-auto shadow-md sm:rounded-lg mb-32">
+            <table class="w-full text-sm text-left rtl:text-right text-black dark:text-gray-400 ">
+                <thead class="text-xs text-black uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 ">
+                    <tr>
+                        <th scope="col" class="p-4 ">
+                            <div class="flex items-center">
+                                
+                                
+                            </div>
+                        </th>
+                        <th scope="col" class="font-semibold px-6 py-3 text-2xl text-3xl font-semibold">
+                            Strategy
+                        </th>
+                        <th scope="col" class=" px-6 py-3 text-3xl font-semibold">
+                            YTD Return
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-2xl text-3xl font-semibold">
+                            CAGR
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-2xl text-3xl font-semibold">
+                            Volatility
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-2xl text-3xl font-semibold">
+                            Sharpe
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-2xl text-3xl font-semibold">
+                            Max DD
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-2xl text-3xl font-semibold">
+                            Futures
+                        </th>
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+                        <td class="w-4 p-4">
+                            <div class="flex items-center">
+                                
+                            </div>
+                        </td>
+                        <th scope="row" class="px-6 py-4  text-gray-900 whitespace-nowrap dark:text-white text-2xl text-2xl ">
+                            S&P 500 Daily Regime
+                        </th>
+                        <td id="S&P500DailyRegime-YTD" class="px-6 py-4 text-2xl text-black ">
+                            
+                        </td>
+                        <td id="S&P500DailyRegime-CAGR" class="px-6 py-4 text-2xl">
+                            
+                        </td>
+                        <td id="S&P500DailyRegime-Volatility" class="px-6 py-4 text-2xl">
+
+                        </td>
+                        <td id="S&P500DailyRegime-Sharpe" class="px-6 py-4 text-2xl">
+                            
+                        </td>
+                        <td id="S&P500DailyRegime-MaxDD" class="px-6 py-4 text-2xl">
+                            
+                        </td>
+                        <td id="S&P500DailyRegime-Futures" class="px-6 py-4 text-2xl">
+
+                        </td>
+                        
+                    </tr>
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+                        <td class="w-4 p-4">
+                            <div class="flex items-center">
+                                
+                            </div>
+                        </td>
+                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-2xl">
+                          S&P 500 Dip/Rip
+                                        </th>
+                        <td id="S&P500DipRip-YTD" class="px-6 py-4 text-2xl">
+                            
+                        </td>
+                        <td id="S&P500DipRip-CAGR" class="px-6 py-4 text-2xl">
+                            
+                        </td>
+                        <td id="S&P500DipRip-Volatility" class="px-6 py-4 text-2xl">
+
+                        </td>
+                        <td id="S&P500DipRip-Sharpe" class="px-6 py-4 text-2xl">
+
+                        </td>
+                        <td id="S&P500DipRip-MaxDD" class="px-6 py-4 text-2xl">
+
+                        </td>
+                        <td id="S&P500DipRip-Futures" class="px-6 py-4 text-2xl">
+.
+                        </td>
+                        
+                    </tr>
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+                        <td class="w-4 p-4">
+                            <div class="flex items-center">
+                                
+                            </div>
+                        </td>
+                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-2xl">
+                          Bond Regime Model
+                        </th>
+                        <td id="BondRegimeModel-YTD" class="px-6 py-4 text-2xl font-medium">
+                            
+                        </td>
+                        <td id="BondRegimeModel-CAGR" class="px-6 py-4 text-2xl">
+                            
+                        </td>
+                        <td id="BondRegimeModel-Volatility" class="px-6 py-4 text-2xl">
+
+                        </td>
+                        <td id="BondRegimeModel-Sharpe" class="px-6 py-4 text-2xl">
+
+                        </td>
+                        <td id="BondRegimeModel-MaxDD" class="px-6 py-4 text-2xl">
+
+                        </td>
+                        <td id="BondRegimeModel-Futures" class="px-6 py-4 text-2xl">
+
+                        </td>
+                        
+                    </tr>
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+                        <td class="w-4 p-4">
+                            <div class="flex items-center">
+                                
+                            </div>
+                        </td>
+                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-2xl">
+                            Relative Value Volatility
+                        </th>
+                        <td id="RelativeValueVolatility-YTD" class="px-6 py-4 text-2xl">
+
+                        </td>
+                        <td id="RelativeValueVolatility-CAGR" class="px-6 py-4 text-2xl">
+
+                        </td>
+                        <td id="RelativeValueVolatility-Volatility" class="px-6 py-4 text-2xl">
+                            
+                        </td>
+                        <td id="RelativeValueVolatility-Sharpe" class="px-6 py-4 text-2xl">
+
+                        </td>
+                        <td id="RelativeValueVolatility-MaxDD" class="px-6 py-4 text-2xl">
+
+                        </td>
+                        <td id="RelativeValueVolatility-Futures"class="px-6 py-4 text-2xl">
+
+                        </td>
+                        
+                    </tr>
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+                        <td class="w-4 p-4">
+                            <div class="flex items-center">
+                                
+                            </div>
+                        </td>
+                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-2xl">
+                            Volatility Regimes
+                        </th>
+                        <td id="VolatilityRegimes-YTD" class="px-6 py-4 text-2xl">
+
+                        </td>
+                        <td id="VolatilityRegimes-CAGR" class="px-6 py-4 text-2xl">
+
+                        </td>
+                        <td id="VolatilityRegimes-Volatility" class="px-6 py-4 text-2xl">
+
+                        </td>
+                        <td id="VolatilityRegimes-Sharpe" class="px-6 py-4 text-2xl">
+
+                        </td>
+                        <td id="VolatilityRegimes-MaxDD" class="px-6 py-4 text-2xl">
+
+                        </td>
+                        <td id="VolatilityRegimes-Futures" class="px-6 py-4 text-2xl">
+
+                        </td>
+                        
+                    </tr>
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+                        <td class="w-4 p-4">
+                            <div class="flex items-center">
+                                
+                            </div>
+                        </td>
+                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-2xl">
+                            Multi Strat Regimes
+                        </th>
+                        <td id="MultiStratRegimes-YTD" class="px-6 py-4 text-2xl">
+
+                        </td>
+                        <td id="MultiStratRegimes-CAGR" class="px-6 py-4 text-2xl">
+
+                        </td>
+                        <td id="MultiStratRegimes-Volatility" class="px-6 py-4 text-2xl">
+
+                        </td>
+                        <td id="MultiStratRegimes-Sharpe" class="px-6 py-4 text-2xl">
+
+                        </td>
+                        <td id="MultiStratRegimes-MaxDD" class="px-6 py-4 text-2xl">
+
+                        </td>
+                        <td id="MultiStratRegimes-Futures" class="px-6 py-4 text-2xl">
+
+                        </td>
+                        
+                    </tr>
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+                        <td class="w-4 p-4">
+                            <div class="flex items-center">
+                                
+                            </div>
+                        </td>
+                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-2xl">
+                            Multi Strat
+                        </th>
+                        <td class="px-6 py-4 text-2xl">
+                            Gold
+                        </td>
+                        <td class="px-6 py-4 text-2xl">
+                            Tablet
+                        </td>
+                        <td class="px-6 py-4 text-2xl">
+                            No
+                        </td>
+                        <td class="px-6 py-4 text-2xl">
+                            Yes
+                        </td>
+                        <td class="px-6 py-4 text-2xl">
+                            $699
+                        </td>
+                        <td class="px-6 py-4 text-2xl">
+                            1.3 lb.
+                        </td>
+                        
+                    </tr>
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+                        <td class="w-4 p-4">
+                            <div class="flex items-center">
+                                
+                            </div>
+                        </td>
+                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-2xl">
+                            Managed Futures
+                        </th>
+                        <td class="px-6 py-4 text-2xl">
+                            Black
+                        </td>
+                        <td class="px-6 py-4 text-2xl">
+                            Accessories
+                        </td>
+                        <td class="px-6 py-4 text-2xl">
+                            Yes
+                        </td>
+                        <td class="px-6 py-4 text-2xl">
+                            Yes
+                        </td>
+                        <td class="px-6 py-4 text-2xl">
+                            $99
+                        </td>
+                        <td class="px-6 py-4 text-2xl">
+                            453 g
+                        </td>
+                        
+                    </tr>
+                    
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+                        <td class="w-4 p-4">
+                            <div class="flex items-center">
+                                
+                            </div>
+                        </td>
+                        
+                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-2xl">
+                          <a href="index.html">Managed Futures Equal Weight
+                        </th></a>
+                        <td id="ManagedFuturesEqualWeight-YTD" class="px-6 py-4 text-2xl">
+
+                        </td>
+                        <td id="ManagedFuturesEqualWeight-CAGR" class="px-6 py-4 text-2xl">
+
+                        </td>
+                        <td id="ManagedFuturesEqualWeight-Volatility" class="px-6 py-4 text-2xl">
+
+                        </td>
+                        <td id="ManagedFuturesEqualWeight-Sharpe" class="px-6 py-4 text-2xl">
+
+                        </td>
+                        <td id="ManagedFuturesEqualWeight-MaxDD" class="px-6 py-4 text-2xl">
+
+                        </td>
+                       
+                        <td id="ManagedFuturesEqualWeight-Futures" class="px-6 py-4 text-2xl">
+
+                        </td>
+                        
+                    </tr>
+
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+                        <td class="w-4 p-4">
+                            <div class="flex items-center">
+                                
+                            </div>
+                        </td>
+                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-2xl">
+                            Sector Regime Model
+                        </th>
+                        <td id="SectorRegimeModel-YTD" class="px-6 py-4 text-2xl">
+
+                        </td>
+                        <td id="SectorRegimeModel-CAGR" class="px-6 py-4 text-2xl">
+
+                        </td>
+                        <td id="SectorRegimeModel-Volatility" class="px-6 py-4 text-2xl">
+
+                        </td>
+                        <td id="SectorRegimeModel-Sharpe" class="px-6 py-4 text-2xl">
+
+                        </td>
+                        <td id="SectorRegimeModel-MaxDD" class="px-6 py-4 text-2xl">
+
+                        </td>
+                        <td id="SectorRegimeModel-Futures" class="px-6 py-4 text-2xl">
+
+                        </td>
+                        
+                    </tr>
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+                      <td class="w-4 p-4">
+                          <div class="flex items-center">
+                              
+                          </div>
+                      </td>
+                      <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-2xl">
+                          Long/Short Equity
+                      </th>
+                      <td id="LongShortEquity-YTD" class="px-6 py-4 text-2xl">
+
+                      </td>
+                      <td id="LongShortEquity-CAGR" class="px-6 py-4 text-2xl">
+
+                      </td>
+                      <td id="LongShortEquity-Volatility" class="px-6 py-4 text-2xl">
+
+                      </td>
+                      <td id="LongShortEquity-Sharpe" class="px-6 py-4 text-2xl">
+
+                      </td>
+                      <td id="LongShortEquity-MaxDD" class="px-6 py-4 text-2xl">
+
+                      </td>
+                      <td id="LongShortEquity-Futures" class="px-6 py-4 text-2xl">
+
+                      </td>
+                      
+                  </tr>
+                  <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+                    <td class="w-4 p-4">
+                        <div class="flex items-center">
+                            
+                        </div>
+                    </td>
+                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-2xl">
+                        Long/Short Equity Neutral
+                    </th>
+                    <td class="px-6 py-4 text-2xl">
+                        Silver
+                    </td>
+                    <td class="px-6 py-4 text-2xl">
+                        Accessories
+                    </td>
+                    <td class="px-6 py-4 text-2xl">
+                        Yes
+                    </td>
+                    <td class="px-6 py-4 text-2xl">
+                        No
+                    </td>
+                    <td class="px-6 py-4 text-2xl">
+                        $29
+                    </td>
+                    <td class="px-6 py-4 text-2xl">
+                        53 g
+                    </td>
+                    
+                </tr>
+                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+                  <td class="w-4 p-4">
+                      <div class="flex items-center">
+                          
+                      </div>
+                  </td>
+                  <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-2xl">
+                      US Core Equity
+                  </th>
+                  <td id="USCoreEquity-YTD" class="px-6 py-4 text-2xl">
+
+                  </td>
+                  <td id="USCoreEquity-CAGR" class="px-6 py-4 text-2xl">
+
+                  </td>
+                  <td id="USCoreEquity-Volatility" class="px-6 py-4 text-2xl">
+
+                  </td>
+                  <td id="USCoreEquity-Sharpe" class="px-6 py-4 text-2xl">
+
+                  </td>
+                  <td id="USCoreEquity-MaxDD" class="px-6 py-4 text-2xl">
+
+                  </td>
+                  <td id="USCoreEquity-Futures" class="px-6 py-4 text-2xl">
+
+                  </td>
+                  
+              </tr>
+              <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+                <td class="w-4 p-4">
+                    <div class="flex items-center">
+                        
+                    </div>
+                </td>
+                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-2xl">
+                    US Value Factor
+                </th>
+                <td id="USValueFactor-YTD" class="px-6 py-4 text-2xl">
+
+                </td>
+                <td id="USValueFactor-CAGR" class="px-6 py-4 text-2xl">
+
+                </td>
+                <td id="USValueFactor-Volatility" class="px-6 py-4 text-2xl">
+
+                </td>
+                <td id="USValueFactor-Sharpe" class="px-6 py-4 text-2xl">
+
+                </td>
+                <td id="USValueFactor-MaxDD" class="px-6 py-4 text-2xl">
+
+                </td>
+                <td id="USValueFactor-Futures" class="px-6 py-4 text-2xl">
+
+                </td>
+                
+            </tr>
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+              <td class="w-4 p-4">
+                  <div class="flex items-center">
+                      
+                  </div>
+              </td>
+              <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-2xl">
+                  China Core Equity
+              </th>
+              <td id="ChinaCoreEquity-YTD" class="px-6 py-4 text-2xl">
+
+              </td>
+              <td id="ChinaCoreEquity-CAGR" class="px-6 py-4 text-2xl">
+
+              </td>
+              <td id="ChinaCoreEquity-Volatility" class="px-6 py-4 text-2xl">
+
+              </td>
+              <td id="ChinaCoreEquity-Sharpe" class="px-6 py-4 text-2xl">
+
+              </td>
+              <td id="ChinaCoreEquity-MaxDD" class="px-6 py-4 text-2xl">
+
+              </td>
+              <td id="ChinaCoreEquity-Futures" class="px-6 py-4 text-2xl">
+
+              </td>
+              
+          </tr>
+          <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+            <td class="w-4 p-4">
+                <div class="flex items-center">
+                    
+                </div>
+            </td>
+            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-2xl">
+              Europe Core Equity
+            </th>
+            <td class="px-6 py-4 text-2xl">
+                Silver
+            </td>
+            <td class="px-6 py-4 text-2xl">
+                Accessories
+            </td>
+            <td class="px-6 py-4 text-2xl">
+                Yes
+            </td>
+            <td class="px-6 py-4 text-2xl">
+                No
+            </td>
+            <td class="px-6 py-4 text-2xl">
+                $29
+            </td>
+            <td class="px-6 py-4 text-2xl">
+                53 g
+            </td>
+            
+        </tr>
+        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+          <td class="w-4 p-4">
+              <div class="flex items-center">
+                  
+              </div>
+          </td>
+          <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-2xl">
+              Mexico Core Equity
+          </th>
+          <td class="px-6 py-4 text-2xl">
+              Silver
+          </td>
+          <td class="px-6 py-4 text-2xl">
+              Accessories
+          </td>
+          <td class="px-6 py-4 text-2xl">
+              Yes
+          </td>
+          <td class="px-6 py-4 text-2xl">
+              No
+          </td>
+          <td class="px-6 py-4 text-2xl">
+              $29
+          </td>
+          <td class="px-6 py-4 text-2xl">
+              53 g
+          </td>
+          
+      </tr>
+      <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+        <td class="w-4 p-4">
+            <div class="flex items-center">
+                
+            </div>
+        </td>
+        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-2xl">
+            Japan Core Equity
+        </th>
+        <td class="px-6 py-4 text-2xl">
+            Silver
+        </td>
+        <td class="px-6 py-4 text-2xl">
+            Accessories
+        </td>
+        <td class="px-6 py-4 text-2xl">
+            Yes
+        </td>
+        <td class="px-6 py-4 text-2xl">
+            No
+        </td>
+        <td class="px-6 py-4 text-2xl">
+            $29
+        </td>
+        <td class="px-6 py-4 text-2xl">
+            53 g
+        </td>
+        
+    </tr>
+    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+      <td class="w-4 p-4">
+          <div class="flex items-center">
+              
+          </div>
+      </td>
+      <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-2xl">
+        Macro Long Only 
+      </th>
+      <td class="px-6 py-4 text-2xl">
+          Silver
+      </td>
+      <td class="px-6 py-4 text-2xl">
+          Accessories
+      </td>
+      <td class="px-6 py-4 text-2xl">
+          Yes
+      </td>
+      <td class="px-6 py-4 text-2xl">
+          No
+      </td>
+      <td class="px-6 py-4 text-2xl">
+          $29
+      </td>
+      <td class="px-6 py-4 text-2xl">
+          53 g
+      </td>
+      
+  </tr>
+  <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+    <td class="w-4 p-4">
+        <div class="flex items-center">
+            
+        </div>
+    </td>
+    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-2xl">
+      Bitcoin Regime Model 
+    </th>
+    <td class="px-6 py-4 text-2xl">
+        Silver
+    </td>
+    <td class="px-6 py-4 text-2xl">
+        Accessories
+    </td>
+    <td class="px-6 py-4 text-2xl">
+        Yes
+    </td>
+    <td class="px-6 py-4 text-2xl">
+        No
+    </td>
+    <td class="px-6 py-4 text-2xl">
+        $29
+    </td>
+    <td class="px-6 py-4 text-2xl">
+        53 g
+    </td>
+    
+</tr>
+<tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+  <td class="w-4 p-4">
+      <div class="flex items-center">
+          
+      </div>
+  </td>
+  <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-2xl">
+    Intraday Long/Short
+  </th>
+  <td class="px-6 py-4 text-2xl">
+      Silver
+  </td>
+  <td class="px-6 py-4 text-2xl">
+      Accessories
+  </td>
+  <td class="px-6 py-4 text-2xl">
+      Yes
+  </td>
+  <td class="px-6 py-4 text-2xl">
+      No
+  </td>
+  <td class="px-6 py-4 text-2xl">
+      $29
+  </td>
+  <td class="px-6 py-4 text-2xl">
+      53 g
+  </td>
+  
+</tr>
+                </tbody>
+            </table>
+        </div>
+</div>
+
+
+   <section class="h-full mb-48">
+    
+<!-- New Way to get Video put loop at the end of muted to get video to loop again!-->
+<video class="absolute bg-cover bg-center h-screen w-screen object-cover" playsinline autoplay muted loop > 
+        <source src="v.mov" alt="feature" class="absolute bg-cover bg-center h-screen w-screen object-cover " >
+        </video>
+
+
+   <!--class="rounded-t-full"!-->
+   		<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+<!--<lottie-player src="https://assets10.lottiefiles.com/packages/lf20_mwuj99hk.json"  background="transparent"  speed="1"  style="width: 100%; height: 95%; position: absolute; "  loop  autoplay></lottie-player>!-->
+
+   	<div class="overlay"></div>
+
+   	<div class="home-content-table">	
+		   <div class="home-content-tablecell">
+		   	<div class="row">
+		   		<div class="col-twelve">		   			
+			  		
+
+			  				<h3 class="animate-intro"><span class="text-gray-900 tracking-widest">Caltropia Research</span></h3>
+				  			<h1 class="animate-intro">
+							Invest 
+							<span class="text-gray-900"> Differently.</span>
+				  			</h1>	
+
+				  			<div class="more animate-intro">
+				  				<a class="smoothscroll" href="#about">
+				  					<!--<button class="shadow-lg z-auto relative font-mreg font-regular rounded-full sm:w-3/4 md:w-1/4 lg:w-1/3 xl:w-1/4 inline bg-transparent border-solid border-white  text-white font-semibold rounded-lg px-4 py-0 pl-6 pr-6 mt-6 text-xl hover:bg-blue-700">Learn More</button>!-->
+				  				</a>
+				  			</div>							
+				  			
+
+				  			<div class="more animate-intro">
+
+				  					<a href="signup2.html"><button class="shadow-2xl bg-gray-900 z-auto relative font-mreg font-regular rounded-full sm:w-3/4 md:w-1/2 lg:w-1/3 xl:w-1/4 inline  hover:bg-blue-400 focus:bg-blue-400 text-white font-semibold rounded-lg px-4 py-0 mt-6 pl-6 pr-6  md:ml-12 lg:ml-12 xl:ml-12 text-xl">Sign Up</button></a>
+				  				</a>
+				  			</div>		
+
+				  								
+
+			  		</div> <!-- end col-twelve --> 
+
+		   	</div> <!-- end row --> 
+
+		   </div> <!-- end home-content-tablecell --> 		   
+
+		</div> <!-- end home-content-table -->
+
+		
+<!--
+		<div class="scrolldown text-gray-900">
+			<a href="#about" class="scroll-icon smoothscroll text-gray-900">		
+		   	Scroll Down		   	
+		   	<i class="fa fa-long-arrow-right" aria-hidden="true"></i>
+			</a>
+		</div>			
+   -->
+   </section> <!-- end home -->
+
+
+  
+   
+
+
+
+   <!-- about
+   ================================================== -->
+   
+   </style>
+   
+
+
+      <div id="go-top">
+		   <a class="smoothscroll" title="Back to Top" href="#top">
+		   	<i class="fa fa-long-arrow-up" aria-hidden="true"></i>
+		   </a>
+		</div>		
+   </footer>
+
+   
+
+  
+   <script src="js/jquery-2.1.3.min.js"></script>
+   <script src="js/plugins.js"></script>
+   <script src="js/main.js"></script>
+   
+
+<script>
+      var a = $("#HEAAD").offset().top;
+
+$(document).scroll(function(){
+    if($(this).scrollTop() > 600)
+    {   
+       $('#HEAAD').css({"background":"#fff"});
+       $('#linkTwo').css({"color":"#000"});
+       $('#CivHeader').css({"color":"#0D4C92"});
+       $('#linkTwoOne').css({"color":"#000"});
+       $('#linkTwoTwo').css({"color":"#000"});
+       $('#linkTwoThree').css({"color":"#000"});
+       $('#LogB').css({"color":"#0D4C92"});
+    } else {
+       $('#HEAAD').css({"background":"transparent"});
+       $('#linkTwo').css({"color":"#000"});
+       $('#CivHeader').css({"color":"#000"});
+       $('#linkTwoOne').css({"color":"#000"});
+       $('#linkTwoTwo').css({"color":"#000"});
+       $('#linkTwoThree').css({"color":"#000"});
+       $('#LogB').css({"color":"#000"});
+    }
+    
+});
+    </script>
+
+
+</body>
+
+</html>
