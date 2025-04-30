@@ -654,7 +654,19 @@ color: white;
     
       const app = initializeApp(firebaseConfig);
       const db = getDatabase(app);
+      const analytics = getAnalytics(app);
+      const auth = getAuth(app);
     
+       // Auth check
+       onAuthStateChanged(auth, (user) => {
+        if (user) {
+          populateTickerData(); // Run only if logged in
+        } else {
+          window.location.href = "signup.html"; // Or wherever your signup page is
+        }
+      });
+    
+
       const strategies = ["S&P 500 Daily Regime", "S&P 500 Dip Rip", "Bond Regime Model", "Relative Value Volatility", "Volatility Regimes", "Multi Strat Regimes", "Managed Futures Equal Weight", "Sector Regime Model", "Long Short Equity", "US Core Equity", "US Value Factor", "China Core Equity"]; // Add strategy names exactly as in the sheet
     
       function populateStrategyData() {
@@ -703,12 +715,158 @@ color: white;
 <!--      <a id="linkTwoThree" class="mr-12  font-mreg font-bold tracking-widest text-2xl">PERFORMANCE</a>
 !-->
     </nav>
-    <a id="" href="login.html"><button id="LogB" class="hover:bg-transparent hover:animate-ping no-underline hover:underline inline-flex items-center  py-1 px-3  rounded text-base hidden sm:hidden lg:block mt-4 md:mt-0 font-mreg font-bold tracking-widest text-2xl text-gray-900">LOGIN
+    <a id="auth-button" href=""><button id="auth-button" class="hover:bg-transparent hover:animate-ping no-underline hover:underline inline-flex items-center  py-1 px-3  rounded text-base hidden sm:hidden lg:block mt-4 md:mt-0 font-mreg font-bold tracking-widest text-2xl text-gray-900">LOGIN
       
     </button>
   </a>
   </div>
 </header> 
+
+
+
+<!-- header 
+   ================================================== -->
+   <header class=" xl:hidden lg:hidden "> 
+
+   	
+    <!--
+         <div class="header-logo">
+    
+            <a href="index.html">CIV Capital</a>
+         </div> 
+    !-->
+    
+    
+          
+          <a id="header-menu-trigger" href="#0">
+           <span class="header-menu-text"></span>
+    
+            <span class="animate-intro header-menu-icon"></span>
+    
+        </a> 
+    
+        <nav id="menu-nav-wrap">
+    
+          <a href="#0" class="close-button mt-16" title="close"><span>Close</span></a>	
+    
+           <h3 class="text-gray-900">Caltropia Research</h3>  
+    
+          <ul class="nav-list">
+            <li class="current"><a class="smoothscroll" href="#home" title="">Home</a></li>
+            <li><a class="smoothscroll" href="#about" title="">About Us</a></li>
+            <li><a class="smoothscroll" href="#services" title="">Our Approach</a></li>
+            <li><a class="smoothscroll" href="#portfolio" title="">Performance</a></li>
+            <li><a class="smoothscroll" href="#contact" title="">Contact</a></li>	
+            
+
+          </ul>	
+          <a id="auth-button1" href=""><button1 id="auth-button1" class="font-mreg font-bold text-white">LOGIN
+      
+          </button1>
+        </a>
+    
+          
+    
+        </nav> <!-- end #menu-nav-wrap -->
+    
+      </header> <!-- end header -->  
+
+      <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+      <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+      
+      
+      <script>
+      // Your web app's Firebase configuration
+      const firebaseConfig1 = {
+      apiKey: "AIzaSyBxG5qf6mb8E_-b2TeXlRNseMZ26L9DRYg",
+      authDomain: "trendscores-df341.firebaseapp.com",
+      projectId: "trendscores-df341",
+      databaseURL: "https://trendscores-df341-default-rtdb.firebaseio.com",
+      storageBucket: "trendscores-df341.appspot.com",
+      messagingSenderId: "565710392511",
+      appId: "1:565710392511:web:37349319364bba19b3ca0a",
+      measurementId: "G-8TVLFBWN63"
+      };
+      
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig1);
+      
+      
+      
+      
+      // Example: check if user is logged in
+      firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        console.log("Logged in as:", user.email);
+      } else {
+        console.log("Not logged in");
+      }
+      });
+      
+      
+      
+      </script>
+      <script>
+        const authButtonLink = document.getElementById("auth-button");
+        const authButton = authButtonLink.querySelector("button");
+      
+        // Wait for Firebase Auth state to change
+        firebase.auth().onAuthStateChanged((user) => {
+          if (user) {
+            // User is logged in - Update button text to 'Sign Out'
+            authButton.textContent = "SIGN OUT";
+            
+            // Make the button sign out when clicked
+            authButtonLink.href = "#";
+            authButton.onclick = () => {
+              firebase.auth().signOut().then(() => {
+                // Optionally reload the page after signing out
+                location.reload();
+              });
+            };
+          } else {
+            // User is not logged in - Update button text to 'Log In'
+            authButton.textContent = "ENTER";
+            
+            // When clicked, go to the login page
+            authButtonLink.href = "login.html"; // Change to your actual login page URL
+            authButton.onclick = null; // Remove any click action
+          }
+        });
+
+        const authButtonLink1 = document.getElementById("auth-button1");
+        const authButton1 = authButtonLink1.querySelector("button1");
+      
+        // Wait for Firebase Auth state to change
+        firebase.auth().onAuthStateChanged((user) => {
+          if (user) {
+            // User is logged in - Update button text to 'Sign Out'
+            authButton1.textContent = "SIGN OUT";
+            
+            // Make the button sign out when clicked
+            authButtonLink1.href = "#";
+            authButton1.onclick = () => {
+              firebase.auth().signOut().then(() => {
+                // Optionally reload the page after signing out
+                location.reload();
+              });
+            };
+          } else {
+            // User is not logged in - Update button text to 'Log In'
+            authButton1.textContent = "ENTER";
+            
+            // When clicked, go to the login page
+            authButtonLink1.href = "login.html"; // Change to your actual login page URL
+            authButton1.onclick = null; // Remove any click action
+          }
+        });
+
+        
+      </script>
+
+
+
+
 
 <body id="top">
 
@@ -718,24 +876,6 @@ color: white;
 
 	<!-- header 
    ================================================== -->
-<header class=" xl:hidden lg:hidden "> 
-
-   	
-<!--
-   	<div class="header-logo">
-
-	      <a href="index.html">CIV Capital</a>
-	   </div> 
-!-->
-
-		<a id="header-menu-trigger1" href="login.html">
-			
-			<span class="header-menu-text text-gray-900">Login</span>	
-			</a>	 		
-			
-		
-
-	</header> <!-- end header -->  
 
 
    <!-- home
