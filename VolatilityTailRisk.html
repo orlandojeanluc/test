@@ -1,0 +1,625 @@
+<link rel="stylesheet" href="public/styles.css">  
+
+<!DOCTYPE html>
+<!--[if IE 8 ]><html class="no-js oldie ie8" lang="en"> <![endif]-->
+<!--[if IE 9 ]><html class="no-js oldie ie9" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+
+   <!--- basic page needs
+   ================================================== -->
+   <meta charset="utf-8">
+  <title>Caltropia Research</title>
+  <meta name="description" content="">  
+  <meta name="author" content="">
+
+   <!-- mobile specific metas
+   ================================================== -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <!-- CSS
+   ================================================== -->
+
+
+<link rel="stylesheet" href="public/styles1.css"> 
+<link rel="stylesheet" href="css/fonts.css"> 
+
+<script src="js/jquery-2.1.3.min.js"></script>
+
+<script>
+      window.Promise ||
+        document.write(
+          '<script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js"><\/script>'
+        )
+      window.Promise ||
+        document.write(
+          '<script src="https://cdn.jsdelivr.net/npm/eligrey-classlist-js-polyfill@1.2.20171210/classList.min.js"><\/script>'
+        )
+      window.Promise ||
+        document.write(
+          '<script src="https://cdn.jsdelivr.net/npm/findindex_polyfill_mdn"><\/script>'
+        )
+    </script>
+
+
+    
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+   <!-- script
+   ================================================== -->
+
+   <!-- favicons
+  ================================================== -->
+  <style>
+      
+        #chart {
+      
+    }
+  </style>
+<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+</head>
+
+
+<header class="text-gray-600 body-font mt-6  w-full">
+  <div class=" ml-12 mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center mr-12  ">
+    <a class="flex title-font font-medium items-center text-gray-900 mb-4 md:mb-0 xl:-ml-6 lg:-ml-6 md:-ml-6 sm:-ml-0 xs:-ml-0 ">
+      
+      <h1 class=" title-font text-2xl text-white ">Caltropia Research</h1>
+    </a>
+
+    <nav class="md:ml-auto font-bold md:mr-auto flex flex-wrap items-center text-base justify-center text-white font-bold xl:flex lg:flex md:flex sm:hidden ">
+      
+      <a class="z-10 title-font mr-5 hover:white font-bold font-mreg "></a>
+
+          
+      <a class="mr-5 hover:text-white font-bold font-mreg"></a>
+      <a class="mr-5 hover:text-white font-bold font-mreg"></a>
+      <a class="mr-5 hover:text-white font-bold font-mreg"></a>
+    </nav>
+    <button class="inline-flex items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded-2xl text-base mt-4 md:mt-0 font-regular font-mreg">More Strats
+      <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 ml-1" viewBox="0 0 24 24">
+        <path d="M5 12h14M12 5l7 7-7 7"></path>
+      </svg>
+    </button>
+  </div>
+
+</header>
+
+
+<body class="bg-gradient-to-r from-blue-900 via-red-blue to-white-200 md:bg-gradient-to-r from-blue-900 via-red-blue to-white-200 ">
+
+<section class="text-gray-600 body-font xl:ml-0 lg:ml-0 md:ml-12 sm:ml-0">
+  
+  
+
+
+
+  <div class="container mx-auto flex py-24 md:flex-row flex-col items-center ">
+
+    <div class="lg:max-w-lg lg:w-2/5 w-5/6 md:w-0 -mt-16 mb-12 hidden xl:hidden lg:hidden md:hidden sm:w-3/4">
+      <lottie-player class="object-cover" src="https://lottie.host/e538eaca-2eee-4136-b8ea-f2c3a378f6f6/JqV0Xv89Zl.json"
+  background="transparent"
+  speed="1"
+  style=" height: 500px"
+  loop
+  autoplay></lottie-player>
+    </div>
+
+    <div class="lg:flex-grow md:w-4/5 lg:pr-24 md:pr-16 flex flex-col md:items-start md:text-left mb-16 md:mb-0 items-center text-center">
+      <h1 class="title-font sm:text-3xl md:text-5xl  lg:text-5xl mb-4  text-white -mt-4  md:ml-0 lg:ml-0 xl:ml-0">Volatility Tail Risk
+
+      </h1>
+      <h1 class="mb-4 leading-relaxed text-gray-200  w-3/4">Portfolio Tail Risk Protection</h1>
+      <h1 class="title-font sm:text-3xl md:text-4xl  lg:text-4xl mb-8 text-white mt-8 ">Fund Facts
+        <span class="text-xs text-red-200">From 08/05 to Current on Monthly Data</span>
+      </h1>
+
+
+      <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 justify-items-center mt-6 px-4 ml-0 sm:-ml-4">
+        <div class="bg-gray-200 px-8 py-5 rounded-xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
+          <h2 class="font-bold text-xl text-gray-900 font-mreg">9.06%</h2>
+          <p class="font-mreg text-base">An Return</p>
+        </div>
+      
+        <div class="bg-gray-200 px-4 py-5 rounded-xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
+          <h2 class="font-bold text-xl text-gray-900 font-mreg">76.84%</h2>
+          <p class="font-mreg text-base">Volatility</p>
+        </div>
+      
+        <div class="bg-gray-200 px-4 py-5 rounded-xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
+          <h2  class="font-bold text-xl text-gray-900 font-mreg">-18.13%</h2>
+          <p class="font-mreg text-base">Drawdown</p>
+        </div>
+      
+        <div class="bg-gray-200 px-4 py-5 rounded-xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
+          <h2  class="font-bold text-xl text-gray-900 font-mreg">0.29</h2>
+          <p class="font-mreg text-base">Sharpe</p>
+        </div>
+        </div>
+
+
+      
+<!--
+
+-->
+<h1 class="title-font sm:text-3xl md:text-4xl  lg:text-4xl mb-2 text-gray-300 mt-10">Current Allocation
+
+      </h1>
+
+      <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 justify-items-center mt-6 px-4 ml-0 sm:-ml-4">
+        <div class="bg-gray-200 px-8 py-5 rounded-xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
+          <h2 class="font-bold text-xl text-gray-900 font-mreg">0%</h2>
+          <p class="font-mreg text-base">VX Options</p>
+        </div>
+
+        </div>
+        
+        
+ 
+
+    </div>
+
+    <div class="lg:max-w-lg lg:w-1/3 w-5/6 md:w-0 mt-16 hidden md:block">
+      <lottie-player class="object-cover" src="https://lottie.host/e538eaca-2eee-4136-b8ea-f2c3a378f6f6/JqV0Xv89Zl.json"
+  background="transparent"
+  speed="1"
+  style=" height: 500px"
+  loop
+  autoplay></lottie-player>
+    </div>
+  </div>
+
+  <div class="items-center flex justify-center -mt-32 md:-mt-16 mb-12">
+    <button class="shadow-lg relative font-mreg font-bold rounded-full sm:w-3/4 md:w-1/2 lg:w-1/3 xl:w-1/5 inline bg-gray-700 border-solid border-white  text-white font-semibold rounded-lg px-4 py-3 pl-6 pr-6 mt-6 md:mt-16  md:ml-12 lg:ml-12 xl:ml-12 text-lg">Methodology</button>
+  </div>    
+
+    <style>
+      h1, h2, h3, h4, h5, h6,
+.h01, .h02, .h03, .h04, .h05, .h06 {
+font-family: "librebaskerville-regular", sans-serif;
+color: #151515;
+font-style: bold;
+text-rendering: optimizeLegibility;
+
+}
+    </style>
+
+
+<section class="lg:ml-0 md:-ml-12" style="background-color: #F7F6F2;">
+<div class="container mx-auto flex py-24 md:flex-row flex-col items-center xl:pl-0 lg:pl-0 md:pl-12 sm:pl-0 ">
+    <div class="lg:flex-grow md:w-4/5 lg:pr-24 md:pr-16 flex flex-col md:items-start md:text-left sm:w-5/6 md:mb-0 items-center text-center">
+      <h1 class="title-font sm:text-3xl md:text-4xl  lg:text-4xl mb-4 text-black -mt-4  md:ml-0 lg:ml-0 xl:ml-0" >Volatility Tail Risk
+
+      </h1>
+
+      <p class="text-black font-mreg text-lg w-full font-bold"></p>
+
+      <h1 class="title-font sm:text-4xl text-3xl mb-8  text-black mt-8  ">Historical Performance
+
+      </h1>
+
+
+      <div class=" inline bg-white w-full rounded-3xl items-center justify-center object-center">
+
+
+      <div class="w-full " id="chart4" style="background-color: #F7F6F2;"></div>
+
+
+    </div>
+
+    </div>
+
+
+
+<div class="lg:flex-grow md:w-4/5 lg:pr-24 md:pr-16 flex flex-col md:items-start md:text-left mb-16 sm:w-5/6 md:mb-0 items-center text-center">
+      <h1 class="title-font sm:text-5xl text-3xl mb-6 xl:mb-6 lg:mb-6 md:mb-8 sm:mb-6  text-white -mt-12  md:ml-0 lg:ml-0 xl:ml-0 transparent invisible ">Caltropia
+
+      </h1>
+
+      
+      <h1 class="title-font sm:text-4xl text-3xl xl:mb-8 lg:mb-16 md:mb-8 sm:mb-8  text-black mt-12 sm:mt-12 md:mt-0 lg:mt-12 xl:mt-12">Annual Returns
+
+      </h1>
+
+
+      <div class=" inline bg-white w-full rounded-3xl items-center justify-center object-center">
+
+
+      <div class="w-full " id="chart1" style="background-color: #F7F6F2;"></div>
+
+
+    </div>
+
+    </div>
+
+
+  </div>
+
+    <!-- Centering wrapper -->
+<div class="w-full flex justify-center" style="background-color: #F7F6F2;">
+  
+  <div class="bg-white w-full max-w-4xl rounded-3xl px-4" style="background-color: #F7F6F2;">
+    <h1 class="title-font sm:text-4xl text-3xl xl:mb-8 lg:mb-16 md:mb-8 sm:mb-8 text-black -mt-8 text-center">Monthly Returns
+
+    </h1>
+    <p class="font-mreg flex text-center text-gray-800 text-lg mb-2 mt-6"></p>
+    <div class="mb-16" id="chart7" style="background-color: #F7F6F2;"></div>
+  </div>
+</div>
+
+</section>
+
+<section class="text-gray-600 body-font xl:ml-0 lg:ml-0 md:ml-12 sm:ml-0">
+  
+  
+
+
+
+  <div class="container mx-auto flex py-24 md:flex-row flex-col items-center ">
+
+    <div class="lg:max-w-lg lg:w-2/5 w-5/6 md:w-0 -mt-16 mb-12 xl:hidden lg:hidden md:hidden sm:w-3/4">
+      <img class="object-cover object-center hidden rounded-2xl md:-ml-20" alt="hero" src="images/world4.svg">
+    </div>
+
+    <div class="lg:flex-grow md:w-4/5 lg:pr-24 md:pr-16 flex flex-col md:items-start md:text-left mb-16 md:mb-0 items-center text-center">
+      <h1 class="title-font sm:text-3xl md:text-5xl  lg:text-5xl mb-4 font-bold text-white -mt-4 font-mreg md:ml-0 lg:ml-0 xl:ml-0">
+
+      </h1>
+      
+      <h1 class="title-font sm:text-3xl md:text-4xl  lg:text-4xl mb-8 font-bold text-white mt-8 font-mreg ">How to Trade
+        
+      </h1>
+
+
+      <div class="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-4 gap-4 justify-items-center mt-6 px-4 ml-0 sm:-ml-4">
+        <div class="bg-gray-200 px-8 py-5 rounded-xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
+          <h2 class="font-bold text-xl text-gray-900 font-mreg">Long Only</h2>
+          <p class="font-mreg text-base">Postion</p>
+        </div>
+      
+        <div class="bg-gray-200 px-4 py-5 rounded-xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
+          <h2 class="font-bold text-xl text-gray-900 font-mreg">Daily For Signal</h2>
+          <p class="font-mreg text-base">Trade Freq</p>
+        </div>
+      
+        <div class="bg-gray-200 px-4 py-5 rounded-xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
+          <h2  class="font-bold text-xl text-gray-900 font-mreg">30d Options</h2>
+          <p class="font-mreg text-base">Options</p>
+        </div>
+      
+        <div class="bg-gray-200 px-4 py-5 rounded-xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
+          <h2  class="font-bold text-xl text-gray-900 font-mreg">Options</h2>
+          <p class="font-mreg text-base">Asset Type</p>
+        </div>
+
+        <div class="bg-gray-200 px-4 py-5 rounded-xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
+          <h2  class="font-bold text-xl text-gray-900 font-mreg">3-6 Months</h2>
+          <p class="font-mreg text-base">Option Expiry</p>
+        </div>
+
+        </div>
+
+
+
+
+      <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
+    
+        const firebaseConfig = {
+          apiKey: "AIzaSyBxG5qf6mb8E_-b2TeXlRNseMZ26L9DRYg",
+          authDomain: "trendscores-df341.firebaseapp.com",
+          projectId: "trendscores-df341",
+          storageBucket: "trendscores-df341.appspot.com",
+          messagingSenderId: "565710392511",
+          appId: "1:565710392511:web:37349319364bba19b3ca0a",
+          measurementId: "G-8TVLFBWN63",
+          databaseURL: "https://trendscores-df341-default-rtdb.firebaseio.com"
+        };
+    
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+    
+        const monthlyRef = ref(db, "volTailRiskPerf");
+
+get(monthlyRef).then(snapshot => {
+  const data = snapshot.val();
+  if (!data) return;
+
+  const sorted = Object.entries(data).sort(([a], [b]) => new Date(a) - new Date(b));
+  const categories = sorted.map(([date]) =>
+    new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'short' })
+  );
+  const series1 = sorted.map(([, values]) => values[0]);
+  const series2 = sorted.map(([, values]) => values[1]);
+
+  const options = {
+    chart: {
+      fontFamily: 'montserrat-regular, sans-serif',
+      type: 'area',
+      height: 450,
+      toolbar: { show: false },
+      zoom: { enabled: false },
+      animations: {
+        enabled: true,
+        easing: 'easeinout',
+        speed: 800
+      }
+    },
+    stroke: {
+      curve: 'smooth',
+      width: 3
+    },
+    dataLabels: {
+      enabled: false
+    },
+    title: {
+      text: "",
+      align: 'center',
+      style: {
+        fontSize: '22px',
+        fontWeight: 'bold',
+        color: '#111827',
+        fontFamily: 'montserrat-regular, sans-serif'
+      }
+    },
+    xaxis: {
+      categories,
+      labels: {
+        show: false,
+        rotate: -45,
+        style: {
+          fontSize: '12px',
+          colors: '#4B5563'
+        }
+      }
+    },
+    yaxis: {
+      labels: {
+        formatter: function (val) {
+          return val.toFixed(2);
+        },
+        style: {
+          colors: '#4B5563',
+          fontSize: '12px'
+        }
+      },
+      title: {
+        text: '',
+        style: {
+          color: '#374151',
+          fontWeight: 500
+        }
+      }
+    },
+    grid: {
+      borderColor: '#E5E7EB',
+      show: false,
+      row: { colors: ['#F9FAFB', 'transparent'], opacity: 0.5 }
+    },
+    colors: [],
+    fill: {
+      type: "gradient",
+      gradient: {
+        shadeIntensity: 1,
+        opacityFrom: 0.4,
+        opacityTo: 0.1,
+        stops: [0, 90, 100]
+      }
+    },
+    markers: {
+      size: 0,
+      strokeWidth: 2,
+      strokeColors: "#fff",
+      hover: { size: 6 }
+    },
+    tooltip: {
+      theme: "light",
+      x: { format: 'MMM yyyy' }
+    },
+    series: [
+      { name: "Caltropia", data: series1 }
+
+    ]
+  };
+
+  const chart = new ApexCharts(document.querySelector("#chart4"), options);
+  chart.render();
+}).catch(err => console.error("Data fetch error:", err));
+
+
+const refPath = ref(db, "yearlyVolTailRiskPerf");
+
+get(refPath).then(snapshot => {
+  const data = snapshot.val();
+  if (!data) return console.error("No data found.");
+
+  // Convert and sort by parsed date keys
+  const sorted = Object.entries(data).sort(([a], [b]) => new Date(a) - new Date(b));
+
+  // Extract values
+  const years = sorted.map(([dateStr]) => {
+    const year = new Date(dateStr).getFullYear();
+    return "'" + year.toString().slice(-2);
+  });
+
+  const caltropia = sorted.map(([, values]) => values[0]);
+  const sp500 = sorted.map(([, values]) => values[1]);
+
+  // Now use in ApexCharts
+  const options = {
+    series: [
+      { name: 'Caltropia', data: caltropia }
+
+    ],
+    chart: {
+      fontFamily: 'montserrat-regular, sans-serif',
+      type: 'bar',
+  height: 450,
+  toolbar: {
+    show: false // this disables the entire menu and removes the icon
+  }
+},
+    xaxis: {
+      categories: years
+    },
+    yaxis: {
+  title: {
+    text: ''
+  },
+  labels: {
+    formatter: function (val) {
+      return val.toFixed(2); // or .toFixed(2) if you want 2 decimal places
+    }
+  }
+},
+    grid: {
+              borderColor: '#E5E7EB',
+              show: false,
+              row: { colors: ['#F9FAFB', 'transparent'], opacity: 0.5 }
+            },
+    tooltip: {
+      y: {
+        formatter: val => val.toFixed(2) + " %"
+      }
+    },
+    fill: { opacity: 1 },
+    plotOptions: {
+      bar: {
+        horizontal: false,
+        columnWidth: '55%',
+        borderRadius: 10
+      }
+    },
+    dataLabels: { enabled: false },
+    stroke: {
+      show: true,
+      width: 2,
+      colors: ['transparent']
+    }
+  };
+
+  const chartEl = document.querySelector("#chart1");
+  if (chartEl) {
+    const chart = new ApexCharts(chartEl, options);
+    chart.render();
+  } else {
+    console.error("Element #chart1 not found.");
+  }
+}).catch(err => console.error("Error fetching Firebase data:", err));
+
+
+const returnsRef = ref(db, "monthlyVolTailRiskPerf");
+
+get(returnsRef).then(snapshot => {
+  const data = snapshot.val();
+  if (!data) return;
+
+  const monthMap = {
+    "01": "Jan", "02": "Feb", "03": "Mar", "04": "Apr",
+    "05": "May", "06": "Jun", "07": "Jul", "08": "Aug",
+    "09": "Sep", "10": "Oct", "11": "Nov", "12": "Dec"
+  };
+
+  const allMonths = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const structured = {};
+
+  // Step 1: Parse and organize values into year → month → value
+  Object.entries(data).forEach(([date, value]) => {
+    const jsDate = new Date(date);
+    const year = jsDate.getFullYear();
+    const monthIndex = String(jsDate.getMonth() + 1).padStart(2, "0");
+    const monthLabel = monthMap[monthIndex];
+
+    const numeric = parseFloat(Array.isArray(value) ? value[0] : value);
+    if (!isNaN(numeric) && isFinite(numeric)) {
+      if (!structured[year]) structured[year] = {};
+      structured[year][monthLabel] = parseFloat(numeric.toFixed(2));
+    }
+  });
+
+  // Step 2: Ensure each row (year) uses all months in correct order
+  const series = Object.entries(structured)
+    .sort(([a], [b]) => parseInt(a) - parseInt(b))
+    .map(([year, monthlyData]) => ({
+      name: year,
+      data: allMonths.map(month => ({
+        x: month,
+        y: monthlyData[month] ?? null
+      }))
+    }));
+
+  const options = {
+    chart: {
+      fontFamily: 'montserrat-regular, sans-serif',
+      height: 600,
+      type: 'heatmap',
+      
+      toolbar: { show: false }
+    },
+    plotOptions: {
+      heatmap: {
+        shadeIntensity: 0.5,
+        colorScale: {
+          ranges: [
+          { from: -100, to: -5, name: 'Very Negative', color: '#dc2626' },  // darker red
+    { from: -5, to: 0, name: 'Slight Negative', color: '#f87171' },   // medium red
+    { from: 0, to: 5, name: 'Slight Positive', color: '#6ee7b7' },    // medium green
+    { from: 5, to: 100, name: 'Very Positive', color: '#16a34a' }
+          ]
+        }
+      }
+    },
+
+    dataLabels: {
+  enabled: true,
+  style: {
+    fontWeight: 'bold',
+    fontSize: window.innerWidth < 600 ? '8px' :
+              window.innerWidth < 900 ? '10px' : '12px'
+  }
+},
+    
+    xaxis: {
+      type: 'category',
+      categories: allMonths,
+      labels: {
+        style: {
+          fontSize: '12px'
+        }
+      }
+    },
+    yaxis: {
+      title: { text: "" },
+      labels: {
+        style: { fontSize: '12px' }
+      }
+    },
+    tooltip: {
+      y: {
+        formatter: val => val !== null ? val.toFixed(2) + " %" : "No Data"
+      }
+    },
+    series: series
+  };
+
+  const chart = new ApexCharts(document.querySelector("#chart7"), options);
+  chart.render();
+}).catch(err => console.error("Firebase error:", err));
+
+</script>
+
+
+
+</section>
+
+
+</body>
+
+
+
+</html>
+
+
+
+
+
