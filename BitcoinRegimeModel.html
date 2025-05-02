@@ -501,7 +501,7 @@ get(monthlyRef).then(snapshot => {
     },
     series: [
       { name: "Caltropia", data: series1 },
-      { name: "GLD", data: series2 }
+      { name: "BTC", data: series2 }
     ]
   };
 
@@ -532,7 +532,7 @@ get(refPath).then(snapshot => {
   const options = {
     series: [
       { name: 'Caltropia', data: caltropia },
-      { name: 'GLD', data: sp500 }
+      { name: 'BTC', data: sp500 }
     ],
     chart: {
       fontFamily: 'montserrat-regular, sans-serif',
@@ -592,7 +592,7 @@ get(refPath).then(snapshot => {
 }).catch(err => console.error("Error fetching Firebase data:", err));
 
 // add the gold historical allocs here 
-const allocationsRef = ref(db, "monthlygoldRegimesAllocs");
+const allocationsRef = ref(db, "bitcoinRegimesHistAllocs");
 
 get(allocationsRef).then(snapshot => {
   const data = snapshot.val();
@@ -705,7 +705,7 @@ get(allocationsRef).then(snapshot => {
   chart.render();
 
 
-  const returnsRef = ref(db, "monthlygoldRegimesPerf");
+  const returnsRef = ref(db, "bitcoinRegimesMonthlyPerf");
 
 get(returnsRef).then(snapshot => {
   const data = snapshot.val();
