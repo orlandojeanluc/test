@@ -1,0 +1,3329 @@
+<!DOCTYPE html>
+<!--[if IE 8 ]><html class="no-js oldie ie8" lang="en"> <![endif]-->
+<!--[if IE 9 ]><html class="no-js oldie ie9" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+
+   <!--- basic page needs
+   ================================================== -->
+   <meta charset="utf-8">
+	<title>Caltropia Research</title>
+	<meta name="description" content="">  
+	<meta name="author" content="">
+
+   <!-- mobile specific metas
+   ================================================== -->
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+ 	<!-- CSS
+   ================================================== -->
+   <link rel="stylesheet" href="css/base.css">
+   <link rel="stylesheet" href="css/vendor.css">  
+   <link rel="stylesheet" href="css/main.css">  
+   <link rel="stylesheet" href="public/styles.css">  
+   <!-- script
+   ================================================== -->
+	<script src="js/modernizr.js"></script>
+	<script src="js/pace.min.js"></script>
+
+   <!-- favicons
+	================================================== -->
+	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+	<link rel="icon" href="favicon.ico" type="image/x-icon">
+
+	 <style>
+      
+        #chart {
+      max-width: 1250px;
+      margin: 35px auto;
+      margin-top: -10em;
+      color: #000;
+    }
+     
+body section {
+  display: block;
+}
+body h1,
+body h2,
+body h3,
+body h4,
+body h5,
+body h6,
+body ul,
+body li {
+  margin: 0;
+  padding: 0;
+}
+
+body li {
+  list-style-type: none;
+}
+body a {
+  text-decoration: none;
+}
+.bg-wrapper {
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8));
+}
+.section-header {
+  padding-top: 5.625em;
+  text-align: center;
+}
+.section-header h3 {
+  margin-bottom: 0.5em;
+}
+.section-header .line-red {
+  margin: 2.5em auto 2.9375em auto;
+}
+.line-red {
+  display: block;
+  width: 4em;
+  height: 0.1875em;
+  margin: 0 auto;
+  background: #f38181;
+}
+/* Main Header Styles */
+.main-header {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  font-family: Montserrat, sans-serif;
+  color: #fff;
+  background: transparent;
+}
+.main-header .header-wrapper {
+  display: block;
+  width: 70%;
+  margin: 0 auto;
+  padding-top: 1em;
+}
+.main-header .header-wrapper .main-logo {
+  float: left;
+  font-weight: 700;
+  font-size: 1.875em;
+}
+.main-header .header-wrapper .main-menu {
+  float: right;
+  text-align: center;
+}
+.main-header .header-wrapper .main-menu li {
+  display: inline-block;
+  padding: 0.75em 1.875em;
+}
+.main-header .header-wrapper .main-menu li a {
+  padding-bottom: 0.75em;
+  text-transform: uppercase;
+  color: #fff;
+  font-size: 0.875em;
+}
+.main-header .header-wrapper .main-menu li a:hover {
+  color: #fce38a;
+  border-bottom: 0.1875em solid #000;
+  transition: 0.1s;
+}
+.main-header .header-wrapper .main-menu li a span {
+  font-size: 1.2em;
+}
+.main-header .header-wrapper .main-menu li:last-child {
+  padding: 0.75em 0;
+}
+.main-header .header-wrapper .main-menu li:nth-child(6) a:hover,
+.main-header .header-wrapper .main-menu li:last-child a:hover {
+  border: none;
+}
+/* Section-1 Styles */
+#section-1 {
+
+  height: 38em;
+  color: #fff;
+  background-color: #f1f3f8;
+}
+#section-1 .content-slider {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+#section-1 .content-slider input {
+  display: none;
+}
+#section-1 .content-slider .slider {
+  position: relative;
+  width: inherit;
+  height: inherit;
+  overflow: hidden;
+}
+#section-1 .content-slider .slider .banner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  z-index: 0;
+  width: inherit;
+  height: inherit;
+  text-align: center;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  transition: all 0.5s ease;
+}
+#section-1 .content-slider .slider .banner .banner-inner-wrapper {
+  height: 100%;
+  padding-top: 6em;
+
+  box-sizing: border-box;
+}
+#section-1 .content-slider .slider .banner .banner-inner-wrapper h2 {
+  padding-bottom: 0.3em;
+  font-family: 'Kaushan Script', cursive;
+  font-weight: 400;
+  font-size: 2.5em;
+  text-transform: none;
+}
+#section-1 .content-slider .slider .banner .banner-inner-wrapper h1 {
+  font-size: 6em;
+  line-height: 95%;
+}
+#section-1 .content-slider .slider .banner .banner-inner-wrapper .line {
+  display: block;
+  width: 4em;
+  height: 0.1875em;
+  margin: 2.5em auto;
+  background: #fff;
+}
+#section-1 .content-slider .slider .banner .banner-inner-wrapper .learn-more-button {
+  padding-bottom: 5em;
+  z-index: 15 !important;
+}
+#section-1 .content-slider .slider .banner .banner-inner-wrapper .learn-more-button a {
+  padding: 0.5em 2em;
+  text-align: center;
+  font-family: Montserrat, sans-serif;
+  font-size: 0.875em;
+  color: #fff;
+  text-transform: uppercase;
+  border: 0.1875em solid #fff;
+}
+#section-1 .content-slider .slider .banner .banner-inner-wrapper .learn-more-button a:hover {
+  color: #fff;
+  border-color: #fff;
+  transition: 0.3s;
+}
+#section-1 .content-slider .slider #top-banner-1 {
+  background: url('') no-repeat center center;
+  background-size: cover;
+}
+#section-1 .content-slider .slider #top-banner-2 {
+  background: url('') no-repeat center center;
+  background-size: cover;
+}
+#section-1 .content-slider .slider #top-banner-3 {
+  background: url('') no-repeat center center;
+  background-size: cover;
+}
+#section-1 .content-slider .slider #top-banner-4 {
+  background: url('') no-repeat center center;
+  background-size: cover;
+}
+#section-1 .content-slider nav {
+  position: absolute;
+  bottom: 0.5em;
+  width: 100%;
+  z-index: 10;
+  text-align: center;
+
+}
+#section-1 .content-slider nav .controls {
+  display: block;
+  width: 70%;
+  margin: 0 auto;
+  font-family: Montserrat, sans-serif;
+  color: #000;
+  margin-top: -27em;
+}
+#section-1 .content-slider nav .controls label {
+  position: relative;
+  display: inline-block;
+  width: 20%;
+  height: 3.1em;
+  overflow: hidden;
+  margin: 0 1em;
+  padding-top: 1em;
+  text-align: left;
+  text-transform: uppercase;
+  font-family: Montserrat, sans-serif;
+  font-size: 1em;
+  color: #000;
+  font-weight: 400;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+#section-1 .content-slider nav .controls label .progressbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 100%;
+  background: #f6eac5;
+  z-index: 100;
+}
+#section-1 .content-slider nav .controls label .progressbar .progressbar-fill {
+  position: inherit;
+  width: inherit;
+  height: inherit;
+  margin-left: -100%;
+  background: #e88382;
+}
+#section-1 .content-slider nav .controls label span {
+  font-size: 1.4em;
+  font-weight: 700;
+}
+#section-1 .content-slider nav .controls label:hover {
+  color: #e88382;
+}
+#section-1 .content-slider #banner1:checked ~ .slider #top-banner-1,
+#section-1 .content-slider #banner2:checked ~ .slider #top-banner-2,
+#section-1 .content-slider #banner3:checked ~ .slider #top-banner-3,
+#section-1 .content-slider #banner4:checked ~ .slider #top-banner-4 {
+  opacity: 1;
+  z-index: 1;
+}
+#section-1 .content-slider #banner1:checked ~ nav label:nth-of-type(1),
+#section-1 .content-slider #banner2:checked ~ nav label:nth-of-type(2),
+#section-1 .content-slider #banner3:checked ~ nav label:nth-of-type(3),
+#section-1 .content-slider #banner4:checked ~ nav label:nth-of-type(4) {
+  cursor: default;
+  color: #000;
+  transition: all 0.5s;
+}
+#section-1 .content-slider #banner1:checked ~ nav label:nth-of-type(1) .progressbar,
+#section-1 .content-slider #banner2:checked ~ nav label:nth-of-type(2) .progressbar,
+#section-1 .content-slider #banner3:checked ~ nav label:nth-of-type(3) .progressbar,
+#section-1 .content-slider #banner4:checked ~ nav label:nth-of-type(4) .progressbar {
+  background: #fff;
+}
+#section-1 .content-slider #banner1:checked ~ nav label:nth-of-type(1) .progressbar-fill,
+#section-1 .content-slider #banner2:checked ~ nav label:nth-of-type(2) .progressbar-fill,
+#section-1 .content-slider #banner3:checked ~ nav label:nth-of-type(3) .progressbar-fill,
+#section-1 .content-slider #banner4:checked ~ nav label:nth-of-type(4) .progressbar-fill {
+  animation: progressBarFill 5s linear;
+}
+/* Animations */
+@keyframes progressBarFill {
+  from {
+    margin-left: -100%;
+  }
+  to {
+    margin-left: 0;
+  }
+}
+/* Media Queries */
+@media only screen and (min-width: 1920px) {
+  body {
+    font-size: 22px;
+  }
+  .main-header .header-wrapper {
+    width: 57%;
+  }
+  #section-1 {
+    height: 65em;
+  }
+  #section-1 .content-slider .slider .banner .banner-inner-wrapper {
+    padding-top: 12em;
+  }
+}
+@media only screen and (max-width: 1919px) {
+  body {
+    font-size: 20px;
+  }
+  .main-header .header-wrapper {
+    width: 60%;
+  }
+  #section-1 {
+    height: 65em;
+  }
+  #section-1 .content-slider .slider .banner .banner-inner-wrapper {
+    padding-top: 11em;
+  }
+}
+@media only screen and (max-width: 1680px) {
+  body {
+    font-size: 18px;
+  }
+  .main-header .header-wrapper {
+    width: 65%;
+  }
+  #section-1 {
+    height: 65em;
+  }
+  #section-1 .content-slider .slider .banner .banner-inner-wrapper {
+    padding-top: 9em;
+  }
+}
+@media only screen and (max-width: 1366px) {
+  body {
+    font-size: 16px;
+  }
+  #section-1 {
+    height: 65em;
+  }
+
+  .main-header .header-wrapper {
+    width: 70%;
+  }
+}
+@media only screen and (max-width: 1120px) {
+  .main-header .header-wrapper .main-menu li {
+    padding: 0.75em 1.4em;
+  }
+  #section-1 {
+    height: 65em;
+  }
+  #section-1 .content-slider nav {
+    bottom: -0.2em;
+  }
+  #section-1 .content-slider .slider .banner .banner-inner-wrapper {
+    padding-top: 7em;
+  }
+  #section-1 .content-slider .slider .banner .banner-inner-wrapper .line {
+    margin: 2em auto;
+  }
+}
+@media only screen and (max-width: 1024px) {
+  body {
+    font-size: 14px;
+  }
+  .main-header .header-wrapper .main-menu li {
+    padding: 0.75em 1.3em;
+  }
+  #section-1 .content-slider nav {
+    bottom: 0;
+  }
+  #section-1 .content-slider nav .controls {
+    width: 80%;
+  }
+}
+@media only screen and (max-width: 860px) {
+  .main-header .header-wrapper .main-menu li {
+    padding: 0.75em 0.9em;
+  }
+  #section-1 {
+    height: 65em;
+  }
+  #section-1 .content-slider nav {
+    bottom: -1em;
+  }
+  #section-1 .content-slider nav .controls {
+    width: 90%;
+  }
+  #section-1 .content-slider .slider .banner .banner-inner-wrapper h2 {
+    font-size: 2em;
+  }
+  #section-1 .content-slider .slider .banner .banner-inner-wrapper h1 {
+    font-size: 4.5em;
+  }
+  #section-1 .content-slider .slider .banner .banner-inner-wrapper {
+    padding-top: 5em;
+  }
+}
+@media only screen and (max-width: 768px) {
+  .main-header .header-wrapper .main-menu li {
+    padding: 0.75em 0.5em;
+  }
+  #section-1 {
+    height: 65em;
+  }
+  #section-1 .content-slider nav .controls {
+    width: 100%;
+  }
+  #section-1 .content-slider nav .controls label {
+    width: 19%;
+    font-size: 0.8em;
+  }
+  #section-1 .content-slider .slider .banner .banner-inner-wrapper .line {
+    margin: 1.7em auto;
+  }
+}
+@media only screen and (max-width: 650px) {
+  .main-header .header-wrapper {
+    width: 95%;
+  }
+
+}
+@media only screen and (max-width: 480px) {
+  .main-header .header-wrapper {
+    width: 100%;
+  }
+  .main-header .header-wrapper .main-logo {
+    display: none;
+  }
+  .main-header .header-wrapper .main-menu li {
+    padding: 0.2em 0.3em;
+  }
+  .main-header .header-wrapper .main-menu li:last-child,
+  .main-header .header-wrapper .main-menu li:nth-child(6) {
+    padding: 0.2em 0.7em;
+  }
+  #section-1 {
+    height: 65em;
+  }
+  #section-1 .content-slider nav {
+    bottom: -0.5em;
+  }
+  #section-1 .content-slider nav .controls label {
+    width: 40%;
+    font-size: 0.7em;
+  }
+  #section-1 .content-slider .slider .banner .banner-inner-wrapper h2 {
+    font-size: 1.5em;
+  }
+  #section-1 .content-slider .slider .banner .banner-inner-wrapper h1 {
+    font-size: 3em;
+  }
+  #section-1 .content-slider .slider .banner .banner-inner-wrapper .line {
+    margin: 1.7em auto;
+  }
+}
+
+
+
+@media only screen and (max-width: 375px) {
+  .main-header .header-wrapper {
+    width: 100%;
+  }
+  .main-header .header-wrapper .main-logo {
+    display: none;
+  }
+  .main-header .header-wrapper .main-menu li {
+    padding: 0.2em 0.3em;
+  }
+  .main-header .header-wrapper .main-menu li:last-child,
+  .main-header .header-wrapper .main-menu li:nth-child(6) {
+    padding: 0.2em 0.7em;
+  }
+  #section-1 {
+    height: 65em;
+  }
+  #section-1 .content-slider nav {
+    bottom: -3.5em;
+  }
+  #section-1 .content-slider nav .controls label {
+    width: 40%;
+    font-size: 0.7em;
+  }
+  #section-1 .content-slider .slider .banner .banner-inner-wrapper h2 {
+    font-size: 1.5em;
+  }
+  #section-1 .content-slider .slider .banner .banner-inner-wrapper h1 {
+    font-size: 3em;
+  }
+  #section-1 .content-slider .slider .banner .banner-inner-wrapper .line {
+    margin: 1.7em auto;
+  }
+}
+
+@media only screen and (max-width: 450px) {
+  .main-header .header-wrapper {
+    width: 100%;
+  }
+  .main-header .header-wrapper .main-logo {
+    display: none;
+  }
+  .main-header .header-wrapper .main-menu li {
+    padding: 0.2em 0.3em;
+  }
+  .main-header .header-wrapper .main-menu li:last-child,
+  .main-header .header-wrapper .main-menu li:nth-child(6) {
+    padding: 0.2em 0.7em;
+  }
+  #section-1 {
+    height: 65em;
+  }
+  #section-1 .content-slider nav {
+    bottom: -5.5em;
+  }
+
+
+  #section-1 .content-slider nav .controls label {
+    width: 40%;
+    font-size: 0.7em;
+  }
+  #section-1 .content-slider .slider .banner .banner-inner-wrapper h2 {
+    font-size: 1.5em;
+  }
+  #section-1 .content-slider .slider .banner .banner-inner-wrapper h1 {
+    font-size: 3em;
+  }
+  #section-1 .content-slider .slider .banner .banner-inner-wrapper .line {
+    margin: 1.7em auto;
+  }
+
+  #progress {
+  	display: none;
+  }
+}
+#progress {
+	/* DO A ROTATE FOR NEGATIVE VALS */
+}
+
+
+     #card {
+
+      max-width: 250px;
+      margin: 5px auto;
+      padding: 0px;
+      text-align: center;
+
+
+
+
+
+    }
+
+
+    .metrics {
+    	padding-top: 20px;
+    	padding-bottom: 20px;
+    }
+
+    #yearly {
+      max-width: 1250px;
+      margin: 35px auto;
+      color: #000;
+    }
+      
+   
+
+    .num {
+    	color: #ffd36b;
+    }
+
+    .newButton {
+    	background: transparent !important;
+  border: 3px solid #fff;
+  line-height: 4.8rem;
+color: white;
+
+
+    }
+
+    .color1 {
+    	color: #ECB365;
+    }
+
+    #linkTwo {
+      /*color: #fff;*/
+    }
+
+
+    </style>
+
+    <script>
+      window.Promise ||
+        document.write(
+          '<script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js"><\/script>'
+        )
+      window.Promise ||
+        document.write(
+          '<script src="https://cdn.jsdelivr.net/npm/eligrey-classlist-js-polyfill@1.2.20171210/classList.min.js"><\/script>'
+        )
+      window.Promise ||
+        document.write(
+          '<script src="https://cdn.jsdelivr.net/npm/findindex_polyfill_mdn"><\/script>'
+        )
+    </script>
+
+    
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <!-- Firebase App (core) -->
+    <script type="module">
+      // Import Firebase modules
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+      import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-analytics.js";
+      import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
+      import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+      
+    
+      // Firebase config
+      const firebaseConfig = {
+        apiKey: "AIzaSyBxG5qf6mb8E_-b2TeXlRNseMZ26L9DRYg",
+        authDomain: "trendscores-df341.firebaseapp.com",
+        projectId: "trendscores-df341",
+        storageBucket: "trendscores-df341.appspot.com",
+        messagingSenderId: "565710392511",
+        appId: "1:565710392511:web:37349319364bba19b3ca0a",
+        measurementId: "G-8TVLFBWN63",
+        databaseURL: "https://trendscores-df341-default-rtdb.firebaseio.com"
+      };
+    
+      // Initialize Firebase services
+      const app = initializeApp(firebaseConfig);
+      const analytics = getAnalytics(app);
+      const db = getDatabase(app);
+      const auth = getAuth(app);
+    
+      // Auth check
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          populateTickerData(); // Run only if logged in
+        } else {
+          window.location.href = "signup.html"; // Or wherever your signup page is
+        }
+      });
+    
+      const tickers = ["GLD", "TLT", "EWJ", "EEM", "EMB", "IEF", "IEV", "SPY", "USO", "FXY", "FXF", "FXE", "FXC", "CPER", "SLV", "CORN", "SOYB", "WEAT", "CANE", "UNG", "MCHI", "FXA", "FXB", "PALL", "UGA"];
+    
+      function populateTickerData() {
+        tickers.forEach(ticker => {
+          const tickerRef = ref(db, "stocks/" + ticker);
+          get(tickerRef).then(snapshot => {
+            const data = snapshot.val();
+            if (!data) return;
+    
+            document.getElementById(`${ticker}-shortTermTrend`).textContent = data.shortTermTrend;
+            document.getElementById(`${ticker}-shortTermStrength`).textContent = data.shortTermStrength;
+            document.getElementById(`${ticker}-intermTrend`).textContent = data.intermTrend;
+            document.getElementById(`${ticker}-intermStrength`).textContent = data.intermStrength;
+            document.getElementById(`${ticker}-breakoutAndDown`).textContent = data.breakoutAndDown;
+            document.getElementById(`${ticker}-meanReversion`).textContent = data.meanReversion;
+          }).catch(error => {
+            console.error("Error fetching data for", ticker, error);
+          });
+        });
+      }
+
+
+      
+
+    </script>
+
+
+    
+
+</head>
+
+<header id="HEAAD" class="text-white body-font hidden md:block fixed">
+  <div class=" mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
+    <a href="index.html" class="flex title-font font-medium items-center  mb-4 md:mb-0">
+      <!--
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-10 h-10 text-white p-2 bg-indigo-500 rounded-full" viewBox="0 0 24 24">
+        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+      </svg>
+      !-->
+      <span id="CivHeader" class="animate-intro ml-12 text-4xl font-mreg font-bold tracking-widest mr-4 text-gray-900">C A L T R O P I A</span>
+    </a>
+    <nav class="md:mr-auto md:ml-4 md:py-1 md:pl-4  flex flex-wrap items-center text-base justify-center">
+  <a href="Strategies.html" class="animate-intro ml-12 mr-12  font-mreg font-bold tracking-widest text-2xl text-gray-900 mb-4 sm:mb-0">ABOUT US</a>
+
+
+<a href="Strategies.html" class="animate-intro mr-12  font-mreg font-bold tracking-widest text-2xl text-gray-900 mb-4 sm:mb-0">STRATEGIES</a>
+<a id="trend-link" href="#" class="animate-intro mr-12  font-mreg font-bold tracking-widest text-2xl text-gray-900 ml-12 sm:ml-0">TREND SCORES</a>
+
+<a id="macro-link" href="#" class="animate-intro mr-12  font-mreg font-bold tracking-widest text-2xl text-gray-900 ">MACRO REGIMES</a>
+ <!--     <a id="linkTwoThree" class="mr-12  font-mreg font-bold tracking-widest text-2xl">PERFORMANCE</a>
+!-->
+    </nav>
+    <a id="auth-button" href="#">
+      <button class="hover:bg-transparent hover:animate-ping no-underline hover:underline inline-flex items-center py-1 px-3 rounded text-base hidden sm:hidden lg:block mt-4 md:mt-0 font-mreg font-bold tracking-widest text-2xl text-gray-900">
+        ENTER
+      </button>
+    </a>
+  </div>
+</header> 
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+
+
+<script>
+// Your web app's Firebase configuration
+const firebaseConfig1 = {
+apiKey: "AIzaSyBxG5qf6mb8E_-b2TeXlRNseMZ26L9DRYg",
+authDomain: "trendscores-df341.firebaseapp.com",
+projectId: "trendscores-df341",
+databaseURL: "https://trendscores-df341-default-rtdb.firebaseio.com",
+storageBucket: "trendscores-df341.appspot.com",
+messagingSenderId: "565710392511",
+appId: "1:565710392511:web:37349319364bba19b3ca0a",
+measurementId: "G-8TVLFBWN63"
+};
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig1);
+
+
+
+
+// Example: check if user is logged in
+firebase.auth().onAuthStateChanged(user => {
+if (user) {
+  console.log("Logged in as:", user.email);
+} else {
+  console.log("Not logged in");
+}
+});
+
+
+
+</script>
+<script>
+  const authButtonLink = document.getElementById("auth-button");
+  const authButton = authButtonLink.querySelector("button");
+
+  // Wait for Firebase Auth state to change
+  firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+      // User is logged in - Update button text to 'Sign Out'
+      authButton.textContent = "SIGN OUT";
+      
+      // Make the button sign out when clicked
+      authButtonLink.href = "#";
+      authButton.onclick = () => {
+        firebase.auth().signOut().then(() => {
+          // Optionally reload the page after signing out
+          location.reload();
+        });
+      };
+    } else {
+      // User is not logged in - Update button text to 'Log In'
+      authButton.textContent = "ENTER";
+      
+      // When clicked, go to the login page
+      authButtonLink.href = "login.html"; // Change to your actual login page URL
+      authButton.onclick = null; // Remove any click action
+    }
+  });
+</script>
+
+<body id="top">
+
+  
+
+
+
+	<!-- header 
+   ================================================== -->
+<header class=" xl:hidden lg:hidden "> 
+
+   	
+<!--
+   	<div class="header-logo">
+
+	      <a href="index.html">CIV Capital</a>
+	   </div> 
+!-->
+
+
+			
+
+			
+			<a class="-mt-8" id="header-menu-trigger" href="#0">
+		 	<span class="header-menu-text"></span>
+
+		  	<span class="animate-intro header-menu-icon"></span>
+
+		</a> 
+
+		<nav id="menu-nav-wrap">
+
+			<a href="#0" class="close-button mt-16" title="close"><span>Close</span></a>	
+
+	   	<h3 class="text-gray-900">Caltropia Research</h3>  
+
+			<ul class="nav-list">
+				<li class="current"><a class="smoothscroll" href="#home" title="">Home</a></li>
+				<li><a class="smoothscroll" href="#about" title="">About Us</a></li>
+				<li><a class="smoothscroll" href="#services" title="">Our Approach</a></li>
+				<li><a class="smoothscroll" href="#portfolio" title="">Performance</a></li>
+				<li><a class="smoothscroll" href="#contact" title="">Contact</a></li>						
+			</ul>	
+
+
+
+			
+
+		</nav> <!-- end #menu-nav-wrap -->
+
+	</header> <!-- end header -->  
+
+
+   <!-- home
+   ================================================== -->
+   <section style="background-color: #F7F6F2;">
+    <div class="container mx-auto flex flex-col items-center justify-center text-center max-w-screen-lg py-24 px-4 hidden sm:block">
+      <h1 class="title-font text-6xl sm:text-6xl mb-12 text-blue-900 mt-24 sm:mt-18">Caltropia Trend</h1>
+      <h1 class="mb-8 leading-relaxed w-11/12 text-3xl text-blue-900 ">
+        Uncover Our Trend, Strength, Mean Reversion and Breakout Signals
+      </h1>
+      <div class="grid grid-cols-3 sm:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-4 justify-items-center mt-6">
+  
+        
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-8">
+          <a href="SPDailyRebalance.html"><lottie-player src="https://lottie.host/3b3eb2e9-166c-4db1-8e7a-7f9c190827b3/Tl1qtmzuDT.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
+          <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+      
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          <a href="SPDailyAgg.html"><lottie-player src="https://lottie.host/cbf00dda-9441-4450-ad84-e38f38bf2cd2/GwVr07ZmOB.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
+          <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          <a href="BondRegimeModel.html"><lottie-player src="https://lottie.host/e4048809-83e2-4045-b124-cd2394d18e23/nGCgcZM5Xd.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
+          <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          <a href="SPDailyRebalance.html"><lottie-player src="https://lottie.host/3b3eb2e9-166c-4db1-8e7a-7f9c190827b3/Tl1qtmzuDT.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
+          <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          <a href="SPDailyAgg.html"><lottie-player src="https://lottie.host/cbf00dda-9441-4450-ad84-e38f38bf2cd2/GwVr07ZmOB.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
+          <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-8">
+          <a href="BondRegimeModel.html"><lottie-player src="https://lottie.host/e4048809-83e2-4045-b124-cd2394d18e23/nGCgcZM5Xd.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
+          <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          <a href="SPDailyRebalance.html"><lottie-player src="https://lottie.host/3b3eb2e9-166c-4db1-8e7a-7f9c190827b3/Tl1qtmzuDT.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
+          <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+      
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          <a href="SPDailyAgg.html"><lottie-player src="https://lottie.host/cbf00dda-9441-4450-ad84-e38f38bf2cd2/GwVr07ZmOB.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
+          <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          <a href="BondRegimeModel.html"><lottie-player src="https://lottie.host/e4048809-83e2-4045-b124-cd2394d18e23/nGCgcZM5Xd.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
+          <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          <a href="SPDailyRebalance.html"><lottie-player src="https://lottie.host/3b3eb2e9-166c-4db1-8e7a-7f9c190827b3/Tl1qtmzuDT.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
+          <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          <a href="ManagedFuturesEqualWeight.html"><lottie-player src="https://lottie.host/203c044c-7eaf-4b66-a536-ad687de22646/chA27dhCm9.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
+          <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        
+
+  <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+    <lottie-player src="https://lottie.host/203c044c-7eaf-4b66-a536-ad687de22646/chA27dhCm9.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player>
+    <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+  </div>
+  <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+    <lottie-player src="https://lottie.host/30b17b6e-2eec-41ba-acc7-2d8b9872a929/fVaXpUKwVx.json" background="transparent" speed="1" loop autoplay style="width: 100px; height: 100px;"></lottie-player>
+    <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+  </div>
+  <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+    <lottie-player src="https://lottie.host/203c044c-7eaf-4b66-a536-ad687de22646/chA27dhCm9.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player>
+    <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+  </div>
+  <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+    <lottie-player src="https://lottie.host/203c044c-7eaf-4b66-a536-ad687de22646/chA27dhCm9.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player>
+    <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+  </div>
+  
+  <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+    <a href="SPDailyRebalance.html"><lottie-player src="https://lottie.host/3b3eb2e9-166c-4db1-8e7a-7f9c190827b3/Tl1qtmzuDT.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
+    <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+  </div>
+
+  <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+    <a href="SPDailyAgg.html"><lottie-player src="https://lottie.host/cbf00dda-9441-4450-ad84-e38f38bf2cd2/GwVr07ZmOB.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
+    <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+  </div>
+  <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-8">
+    <a href="BondRegimeModel.html"><lottie-player src="https://lottie.host/e4048809-83e2-4045-b124-cd2394d18e23/nGCgcZM5Xd.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
+    <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+  </div>
+  <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+    <a href="SPDailyRebalance.html"><lottie-player src="https://lottie.host/3b3eb2e9-166c-4db1-8e7a-7f9c190827b3/Tl1qtmzuDT.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
+    <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+  </div>
+  <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+    <a href="SPDailyAgg.html"><lottie-player src="https://lottie.host/cbf00dda-9441-4450-ad84-e38f38bf2cd2/GwVr07ZmOB.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
+    <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+  </div>
+  <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+    <a href="BondRegimeModel.html"><lottie-player src="https://lottie.host/e4048809-83e2-4045-b124-cd2394d18e23/nGCgcZM5Xd.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
+    <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+  </div>
+  <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+    <a href="SPDailyRebalance.html"><lottie-player src="https://lottie.host/3b3eb2e9-166c-4db1-8e7a-7f9c190827b3/Tl1qtmzuDT.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
+    <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+  </div>
+
+  <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+    <a href="SPDailyAgg.html"><lottie-player src="https://lottie.host/cbf00dda-9441-4450-ad84-e38f38bf2cd2/GwVr07ZmOB.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
+    <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+  </div>
+  <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-8">
+    <a href="BondRegimeModel.html"><lottie-player src="https://lottie.host/e4048809-83e2-4045-b124-cd2394d18e23/nGCgcZM5Xd.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
+    <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+  </div>
+  <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+    <a href="SPDailyRebalance.html"><lottie-player src="https://lottie.host/3b3eb2e9-166c-4db1-8e7a-7f9c190827b3/Tl1qtmzuDT.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
+    <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+  </div>
+  
+
+  
+      </div>
+    </div>
+
+    <div class="container mx-auto flex flex-col items-center justify-center text-center max-w-screen-lg py-24 px-4 block sm:hidden">
+      <h1 class="title-font text-6xl sm:text-6xl mb-12 text-blue-900 mt-24 sm:mt-24">Caltropia Trend</h1>
+      <h2 class="mb-8 leading-relaxed w-11/12 text-2xl text-blue-900">
+        Uncover Our Trend, Strength, Mean Reversion and Breakout Signals
+      </h2>
+      <div class="grid grid-cols-5 sm:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-4 justify-items-center mt-6">
+  
+        
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          <a href="SPDailyRebalance.html"><lottie-player src="https://lottie.host/3b3eb2e9-166c-4db1-8e7a-7f9c190827b3/Tl1qtmzuDT.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
+          <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+      
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          <a href="SPDailyAgg.html"><lottie-player src="https://lottie.host/cbf00dda-9441-4450-ad84-e38f38bf2cd2/GwVr07ZmOB.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
+          <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          <a href="BondRegimeModel.html"><lottie-player src="https://lottie.host/e4048809-83e2-4045-b124-cd2394d18e23/nGCgcZM5Xd.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
+          <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          <a href="SPDailyRebalance.html"><lottie-player src="https://lottie.host/3b3eb2e9-166c-4db1-8e7a-7f9c190827b3/Tl1qtmzuDT.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
+          <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          <a href="SPDailyAgg.html"><lottie-player src="https://lottie.host/cbf00dda-9441-4450-ad84-e38f38bf2cd2/GwVr07ZmOB.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
+          <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          <a href="BondRegimeModel.html"><lottie-player src="https://lottie.host/e4048809-83e2-4045-b124-cd2394d18e23/nGCgcZM5Xd.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
+          <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          <a href="SPDailyRebalance.html"><lottie-player src="https://lottie.host/3b3eb2e9-166c-4db1-8e7a-7f9c190827b3/Tl1qtmzuDT.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
+          <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+      
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          <a href="SPDailyAgg.html"><lottie-player src="https://lottie.host/cbf00dda-9441-4450-ad84-e38f38bf2cd2/GwVr07ZmOB.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
+          <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          <a href="BondRegimeModel.html"><lottie-player src="https://lottie.host/e4048809-83e2-4045-b124-cd2394d18e23/nGCgcZM5Xd.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
+          <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          <a href="SPDailyRebalance.html"><lottie-player src="https://lottie.host/3b3eb2e9-166c-4db1-8e7a-7f9c190827b3/Tl1qtmzuDT.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
+          <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          <a href="ManagedFuturesEqualWeight.html"><lottie-player src="https://lottie.host/203c044c-7eaf-4b66-a536-ad687de22646/chA27dhCm9.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
+          <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        
+
+  <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+    <lottie-player src="https://lottie.host/203c044c-7eaf-4b66-a536-ad687de22646/chA27dhCm9.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player>
+    <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+  </div>
+  <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+    <lottie-player src="https://lottie.host/30b17b6e-2eec-41ba-acc7-2d8b9872a929/fVaXpUKwVx.json" background="transparent" speed="1" loop autoplay style="width: 100px; height: 100px;"></lottie-player>
+    <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+  </div>
+  <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+    <lottie-player src="https://lottie.host/203c044c-7eaf-4b66-a536-ad687de22646/chA27dhCm9.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player>
+    <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+  </div>
+  <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+    <lottie-player src="https://lottie.host/203c044c-7eaf-4b66-a536-ad687de22646/chA27dhCm9.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player>
+    <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+  </div>
+  
+  <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+    <a href="SPDailyRebalance.html"><lottie-player src="https://lottie.host/3b3eb2e9-166c-4db1-8e7a-7f9c190827b3/Tl1qtmzuDT.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
+    <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+  </div>
+
+  <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+    <a href="SPDailyAgg.html"><lottie-player src="https://lottie.host/cbf00dda-9441-4450-ad84-e38f38bf2cd2/GwVr07ZmOB.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
+    <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+  </div>
+  <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+    <a href="BondRegimeModel.html"><lottie-player src="https://lottie.host/e4048809-83e2-4045-b124-cd2394d18e23/nGCgcZM5Xd.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
+    <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+  </div>
+  <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+    <a href="SPDailyRebalance.html"><lottie-player src="https://lottie.host/3b3eb2e9-166c-4db1-8e7a-7f9c190827b3/Tl1qtmzuDT.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
+    <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+  </div>
+  <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+    <a href="SPDailyAgg.html"><lottie-player src="https://lottie.host/cbf00dda-9441-4450-ad84-e38f38bf2cd2/GwVr07ZmOB.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
+    <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+  </div>
+  <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+    <a href="BondRegimeModel.html"><lottie-player src="https://lottie.host/e4048809-83e2-4045-b124-cd2394d18e23/nGCgcZM5Xd.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
+    <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+  </div>
+  <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+    <a href="SPDailyRebalance.html"><lottie-player src="https://lottie.host/3b3eb2e9-166c-4db1-8e7a-7f9c190827b3/Tl1qtmzuDT.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
+    <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+  </div>
+
+  <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+    <a href="SPDailyAgg.html"><lottie-player src="https://lottie.host/cbf00dda-9441-4450-ad84-e38f38bf2cd2/GwVr07ZmOB.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
+    <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+  </div>
+  <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+    <a href="BondRegimeModel.html"><lottie-player src="https://lottie.host/e4048809-83e2-4045-b124-cd2394d18e23/nGCgcZM5Xd.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
+    <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+  </div>
+  <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+    <a href="SPDailyRebalance.html"><lottie-player src="https://lottie.host/3b3eb2e9-166c-4db1-8e7a-7f9c190827b3/Tl1qtmzuDT.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
+    <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+  </div>
+  
+
+  
+      </div>
+    </div>
+  </section>
+   
+  <section class="bg-white">
+    <div class="container mx-auto flex flex-col items-center justify-center text-center max-w-screen-lg py-24 px-4 ">
+
+      <div class="grid grid-cols-7 sm:grid-cols-7 lg:grid-cols-7 gap-4 sm:gap-4 justify-items-center mt-6">
+  
+        
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-8">
+          <a href="SPDailyRebalance.html"></a>
+          <h2 class="font-bold text-base sm:text-2xl text-gray-900 font-mreg mt-2 text-center">Asset</h2>
+        </div>
+      
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 class="font-bold text-base sm:text-2xl text-gray-900 font-mreg mt-2 text-center">Short Term Trend</h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 class="font-bold text-base sm:text-2xl text-gray-900 font-mreg mt-2 text-center">Short Term Strength</h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 class="font-bold text-base sm:text-2xl text-gray-900 font-mreg mt-2 text-center">Interm Trend</h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 class="font-bold text-base sm:text-2xl text-gray-900 font-mreg mt-2 text-center">Interm Trend Strength</h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-8">
+          
+          <h2 class="font-bold text-base sm:text-2xl text-gray-900 font-mreg mt-2 text-center">Mean Reversion</h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 class="font-bold text-base sm:text-2xl text-gray-900 font-mreg mt-2 text-center">Breakout or Down</h2>
+        </div>
+
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-8">
+          <a href="SPDailyRebalance.html"></a>
+          <h2 class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center">GLD</h2>
+        </div>
+      
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="GLD-shortTermTrend" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="GLD-shortTermStrength" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="GLD-intermTrend" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="GLD-intermStrength" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-8">
+          
+          <h2  id="GLD-meanReversion" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="GLD-breakoutAndDown" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-8">
+          <a href="SPDailyRebalance.html"></a>
+          <h2 class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center">TLT</h2>
+        </div>
+      
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="TLT-shortTermTrend" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="TLT-shortTermStrength" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="TLT-intermTrend" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="TLT-intermStrength" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-8">
+          
+          <h2  id="TLT-meanReversion" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="TLT-breakoutAndDown" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-8">
+          <a href="SPDailyRebalance.html"></a>
+          <h2 class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center">EWJ</h2>
+        </div>
+      
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="EWJ-shortTermTrend" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="EWJ-shortTermStrength" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="EWJ-intermTrend" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="EWJ-intermStrength" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-8">
+          
+          <h2  id="EWJ-meanReversion" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="EWJ-breakoutAndDown" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-8">
+          <a href="SPDailyRebalance.html"></a>
+          <h2 class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center">EEM</h2>
+        </div>
+      
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="EEM-shortTermTrend" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="EEM-shortTermStrength" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="EEM-intermTrend" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="EEM-intermStrength" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-8">
+          
+          <h2  id="EEM-meanReversion" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="EEM-breakoutAndDown" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+  
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-8">
+          <a href="SPDailyRebalance.html"></a>
+          <h2 class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center">IEF</h2>
+        </div>
+      
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="IEF-shortTermTrend" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="IEF-shortTermStrength" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="IEF-intermTrend" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="IEF-intermStrength" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-8">
+          
+          <h2  id="IEF-meanReversion" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="IEF-breakoutAndDown" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-8">
+          <a href="SPDailyRebalance.html"></a>
+          <h2 class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center">IEV</h2>
+        </div>
+      
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="IEV-shortTermTrend" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="IEV-shortTermStrength" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="IEV-intermTrend" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="IEV-intermStrength" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-8">
+          
+          <h2  id="IEV-meanReversion" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="IEV-breakoutAndDown" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-8">
+          <a href="SPDailyRebalance.html"></a>
+          <h2 class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center">SPY</h2>
+        </div>
+      
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="SPY-shortTermTrend" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="SPY-shortTermStrength" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="SPY-intermTrend" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="SPY-intermStrength" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-8">
+          
+          <h2  id="SPY-meanReversion" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="SPY-breakoutAndDown" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-8">
+          <a href="SPDailyRebalance.html"></a>
+          <h2 class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center">USO</h2>
+        </div>
+      
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="USO-shortTermTrend" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="USO-shortTermStrength" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="USO-intermTrend" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="USO-intermStrength" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-8">
+          
+          <h2  id="USO-meanReversion" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="USO-breakoutAndDown" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-8">
+          <a href="SPDailyRebalance.html"></a>
+          <h2 class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center">FXY</h2>
+        </div>
+      
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="FXY-shortTermTrend" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="FXY-shortTermStrength" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="FXY-intermTrend" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="FXY-intermStrength" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-8">
+          
+          <h2  id="FXY-meanReversion" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="FXY-breakoutAndDown" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-8">
+          <a href="SPDailyRebalance.html"></a>
+          <h2 class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center">FXF</h2>
+        </div>
+      
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="FXF-shortTermTrend" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="FXF-shortTermStrength" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="FXF-intermTrend" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="FXF-intermStrength" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-8">
+          
+          <h2  id="FXF-meanReversion" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="FXF-breakoutAndDown" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-8">
+          <a href="SPDailyRebalance.html"></a>
+          <h2 class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center">FXE</h2>
+        </div>
+      
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="FXE-shortTermTrend" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="FXE-shortTermStrength" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="FXE-intermTrend" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="FXE-intermStrength" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-8">
+          
+          <h2  id="FXE-meanReversion" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="FXE-breakoutAndDown" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-8">
+          <a href="SPDailyRebalance.html"></a>
+          <h2 class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center">FXB</h2>
+        </div>
+      
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="FXB-shortTermTrend" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="FXB-shortTermStrength" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="FXB-intermTrend" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="FXB-intermStrength" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-8">
+          
+          <h2  id="FXB-meanReversion" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="FXB-breakoutAndDown" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+  
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-8">
+          <a href="SPDailyRebalance.html"></a>
+          <h2 class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center">FXC</h2>
+        </div>
+      
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="FXC-shortTermTrend" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="FXC-shortTermStrength" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="FXC-intermTrend" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="FXC-intermStrength" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-8">
+          
+          <h2  id="FXC-meanReversion" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="FXC-breakoutAndDown" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-8">
+          <a href="SPDailyRebalance.html"></a>
+          <h2 class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center">CPER</h2>
+        </div>
+      
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="CPER-shortTermTrend" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="CPER-shortTermStrength" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="CPER-intermTrend" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="CPER-intermStrength" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-8">
+          
+          <h2  id="CPER-meanReversion" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="CPER-breakoutAndDown" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-8">
+          <a href="SPDailyRebalance.html"></a>
+          <h2 class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center">SLV</h2>
+        </div>
+      
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="SLV-shortTermTrend" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="SLV-shortTermStrength" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="SLV-intermTrend" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="SLV-intermStrength" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-8">
+          
+          <h2  id="SLV-meanReversion" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="SLV-breakoutAndDown" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-8">
+          <a href="SPDailyRebalance.html"></a>
+          <h2 class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center">CORN</h2>
+        </div>
+      
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="CORN-shortTermTrend" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="CORN-shortTermStrength" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="CORN-intermTrend" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="CORN-intermStrength" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-8">
+          
+          <h2  id="CORN-meanReversion" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="CORN-breakoutAndDown" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-8">
+          <a href="SPDailyRebalance.html"></a>
+          <h2 class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center">SOYB</h2>
+        </div>
+      
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="SOYB-shortTermTrend" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="SOYB-shortTermStrength" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="SOYB-intermTrend" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="SOYB-intermStrength" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-8">
+          
+          <h2  id="SOYB-meanReversion" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="SOYB-breakoutAndDown" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-8">
+          <a href="SPDailyRebalance.html"></a>
+          <h2 class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center">WEAT</h2>
+        </div>
+      
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="WEAT-shortTermTrend" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="WEAT-shortTermStrength" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="WEAT-intermTrend" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="WEAT-intermStrength" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-8">
+          
+          <h2  id="WEAT-meanReversion" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="WEAT-breakoutAndDown" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-8">
+          <a href="SPDailyRebalance.html"></a>
+          <h2 class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center">CANE</h2>
+        </div>
+      
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="CANE-shortTermTrend" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="CANE-shortTermStrength" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="CANE-intermTrend" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="CANE-intermStrength" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-8">
+          
+          <h2  id="CANE-meanReversion" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="CANE-breakoutAndDown" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-8">
+          <a href="SPDailyRebalance.html"></a>
+          <h2 class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center">UNG</h2>
+        </div>
+      
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="UNG-shortTermTrend" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="UNG-shortTermStrength" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="UNG-intermTrend" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="UNG-intermStrength" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-8">
+          
+          <h2  id="UNG-meanReversion" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="UNG-breakoutAndDown" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-8">
+          <a href="SPDailyRebalance.html"></a>
+          <h2 class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center">FXI</h2>
+        </div>
+      
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="MCHI-shortTermTrend" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="MCHI-shortTermStrength" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="MCHI-intermTrend" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="MCHI-intermStrength" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-8">
+          
+          <h2  id="MCHI-meanReversion" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="MCHI-breakoutAndDown" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-8">
+          <a href="SPDailyRebalance.html"></a>
+          <h2 class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center">FXA</h2>
+        </div>
+      
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="FXA-shortTermTrend" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="FXA-shortTermStrength" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="FXA-intermTrend" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="FXA-intermStrength" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-8">
+          
+          <h2  id="FXA-meanReversion" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="FXA-breakoutAndDown" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+
+
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-8">
+          <a href="SPDailyRebalance.html"></a>
+          <h2 class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center">UGA</h2>
+        </div>
+      
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="UGA-shortTermTrend" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="UGA-shortTermStrength" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="UGA-intermTrend" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="UGA-intermStrength" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-8">
+          
+          <h2  id="UGA-meanReversion" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="UGA-breakoutAndDown" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-8">
+          <a href="SPDailyRebalance.html"></a>
+          <h2 class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center">PALL</h2>
+        </div>
+      
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="PALL-shortTermTrend" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="PALL-shortTermStrength" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="PALL-intermTrend" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="PALL-intermStrength" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-8">
+          
+          <h2  id="PALL-meanReversion" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          
+          <h2 id="PALL-breakoutAndDown" class="font-bold text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+
+
+
+      </div>
+    </div>
+
+    <div class="container mx-auto flex flex-col items-center justify-center text-center max-w-screen-lg py-24 px-4 block sm:hidden">
+      <h1 class="title-font text-6xl sm:text-6xl mb-12 text-blue-900 mt-24 sm:mt-24">Caltropia Trend</h1>
+      <h2 class="mb-8 leading-relaxed w-11/12 text-2xl text-blue-900">
+        Uncover Our Trend, Strength, Mean Reversion and Breakout Signals
+      </h2>
+      <div class="grid grid-cols-7 sm:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-4 justify-items-center mt-6">
+  
+        
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          <a href="SPDailyRebalance.html"><lottie-player src="https://lottie.host/3b3eb2e9-166c-4db1-8e7a-7f9c190827b3/Tl1qtmzuDT.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
+          <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+      
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          <a href="SPDailyAgg.html"><lottie-player src="https://lottie.host/cbf00dda-9441-4450-ad84-e38f38bf2cd2/GwVr07ZmOB.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
+          <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          <a href="BondRegimeModel.html"><lottie-player src="https://lottie.host/e4048809-83e2-4045-b124-cd2394d18e23/nGCgcZM5Xd.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
+          <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          <a href="SPDailyRebalance.html"><lottie-player src="https://lottie.host/3b3eb2e9-166c-4db1-8e7a-7f9c190827b3/Tl1qtmzuDT.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
+          <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          <a href="SPDailyAgg.html"><lottie-player src="https://lottie.host/cbf00dda-9441-4450-ad84-e38f38bf2cd2/GwVr07ZmOB.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
+          <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          <a href="BondRegimeModel.html"><lottie-player src="https://lottie.host/e4048809-83e2-4045-b124-cd2394d18e23/nGCgcZM5Xd.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
+          <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          <a href="SPDailyRebalance.html"><lottie-player src="https://lottie.host/3b3eb2e9-166c-4db1-8e7a-7f9c190827b3/Tl1qtmzuDT.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
+          <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+      
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          <a href="SPDailyAgg.html"><lottie-player src="https://lottie.host/cbf00dda-9441-4450-ad84-e38f38bf2cd2/GwVr07ZmOB.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
+          <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          <a href="BondRegimeModel.html"><lottie-player src="https://lottie.host/e4048809-83e2-4045-b124-cd2394d18e23/nGCgcZM5Xd.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
+          <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          <a href="SPDailyRebalance.html"><lottie-player src="https://lottie.host/3b3eb2e9-166c-4db1-8e7a-7f9c190827b3/Tl1qtmzuDT.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
+          <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        
+        <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+          <a href="ManagedFuturesEqualWeight.html"><lottie-player src="https://lottie.host/203c044c-7eaf-4b66-a536-ad687de22646/chA27dhCm9.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
+          <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+        </div>
+        
+
+  <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+    <lottie-player src="https://lottie.host/203c044c-7eaf-4b66-a536-ad687de22646/chA27dhCm9.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player>
+    <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+  </div>
+  <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+    <lottie-player src="https://lottie.host/30b17b6e-2eec-41ba-acc7-2d8b9872a929/fVaXpUKwVx.json" background="transparent" speed="1" loop autoplay style="width: 100px; height: 100px;"></lottie-player>
+    <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+  </div>
+  <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+    <lottie-player src="https://lottie.host/203c044c-7eaf-4b66-a536-ad687de22646/chA27dhCm9.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player>
+    <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+  </div>
+  <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+    <lottie-player src="https://lottie.host/203c044c-7eaf-4b66-a536-ad687de22646/chA27dhCm9.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player>
+    <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+  </div>
+  
+  <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+    <a href="SPDailyRebalance.html"><lottie-player src="https://lottie.host/3b3eb2e9-166c-4db1-8e7a-7f9c190827b3/Tl1qtmzuDT.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
+    <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+  </div>
+
+  <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+    <a href="SPDailyAgg.html"><lottie-player src="https://lottie.host/cbf00dda-9441-4450-ad84-e38f38bf2cd2/GwVr07ZmOB.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
+    <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+  </div>
+  <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+    <a href="BondRegimeModel.html"><lottie-player src="https://lottie.host/e4048809-83e2-4045-b124-cd2394d18e23/nGCgcZM5Xd.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
+    <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+  </div>
+  <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+    <a href="SPDailyRebalance.html"><lottie-player src="https://lottie.host/3b3eb2e9-166c-4db1-8e7a-7f9c190827b3/Tl1qtmzuDT.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
+    <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+  </div>
+  <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+    <a href="SPDailyAgg.html"><lottie-player src="https://lottie.host/cbf00dda-9441-4450-ad84-e38f38bf2cd2/GwVr07ZmOB.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
+    <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+  </div>
+  <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+    <a href="BondRegimeModel.html"><lottie-player src="https://lottie.host/e4048809-83e2-4045-b124-cd2394d18e23/nGCgcZM5Xd.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
+    <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+  </div>
+  <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+    <a href="SPDailyRebalance.html"><lottie-player src="https://lottie.host/3b3eb2e9-166c-4db1-8e7a-7f9c190827b3/Tl1qtmzuDT.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
+    <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+  </div>
+
+  <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+    <a href="SPDailyAgg.html"><lottie-player src="https://lottie.host/cbf00dda-9441-4450-ad84-e38f38bf2cd2/GwVr07ZmOB.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
+    <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+  </div>
+  <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+    <a href="BondRegimeModel.html"><lottie-player src="https://lottie.host/e4048809-83e2-4045-b124-cd2394d18e23/nGCgcZM5Xd.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
+    <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+  </div>
+  <div class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4">
+    <a href="SPDailyRebalance.html"><lottie-player src="https://lottie.host/3b3eb2e9-166c-4db1-8e7a-7f9c190827b3/Tl1qtmzuDT.json" background="transparent" speed="1" loop autoplay style="width: 50px; height: 50px;"></lottie-player></a>
+    <h2 class="font-bold text-lg text-gray-900 font-mreg mt-2 text-center"></h2>
+  </div>
+  
+
+  
+      </div>
+    </div>
+  </section>
+
+   <section class="bg-white">
+
+    <div class="container px-4 flex-grow w-full py-4 sm:py-16 mx-auto px-0">
+      
+      
+      
+      <div class="mx-auto w-full md:w-3/4 px-4">
+        <div class="container my-8">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-3xl font-mreg font-semibold mb-6 mt-6">
+    
+              
+            </h2>
+            
+          </div>
+          <div
+  id="scrollContainer"
+  class="relative flex flex-no-wrap scrolling-touch items-start sm:mb-0"
+>
+
+</div>
+          <h1 class="text-center text-2xl mb-4 text-6xl text-blue-900 mx-auto px-6 mb-16">Our Trend Signals</h1>                  
+                  <p1 class="text-center flex text-2xl mb-24 text-blue-900 mx-auto px-2">Leverage our Comprehensive Signal System That Identifies Trends, Captures Mean Reversions, and Spot Breakouts to Maximize Market Opportunities Across All Conditions.</p1>      
+        </div>
+        <!---->
+        
+    </div>
+    
+    <div class="relative overflow-x-auto shadow-xl sm:rounded-lg" >
+      <table class="w-full text-sm text-left rtl:text-right text-black dark:text-gray-400" >
+          <thead class=" text-black  bg-gray-50 dark:bg-gray-700 dark:text-gray-400 " >
+              <tr>
+                  <th scope="col" class="p-4" >
+                      <div class="flex items-center" >
+                          
+                          
+                      </div>
+                  </th>
+                  <th scope="col" class="sticky top-0  px-6 py-3 text-2xl text-3xl" >
+                      Ticker
+                  </th>
+                  <th scope="col" class=" px-6 py-3 text-3xl font-semibold">
+                    Asset
+                </th>
+                  <th scope="col" class=" px-6 py-3 text-3xl font-semibold" >
+                      Short Term Trend 
+                  </th>
+                  <th scope="col" class="px-6 py-3 text-2xl text-3xl font-semibold">
+                      Short Term Strength
+                  </th>
+                  <th scope="col" class="px-6 py-3 text-2xl text-3xl font-semibold">
+                      Interm Trend
+                  </th>
+                  <th scope="col" class="px-6 py-3 text-2xl text-3xl font-semibold">
+                      Interm Trend Strength
+                  </th>
+                  <th scope="col" class="px-6 py-3 text-2xl text-3xl font-semibold">
+                      Mean Reversion
+                  </th>
+                  <th scope="col" class="px-6 py-3 text-2xl text-3xl font-semibold">
+                      Breakout and Down
+                  </th>
+                  
+              </tr>
+          </thead>
+          
+          <tbody>
+              <tr id="GLD" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+                  <td class="w-4 p-4">
+                      <div class="flex items-center">
+                          
+                      </div>
+                  </td>
+                  <th scope="row" class="px-6 py-4  text-gray-900 whitespace-nowrap dark:text-white text-2xl text-2xl ">
+                      GC
+                  </th>
+                  <td class="px-6 py-4 text-2xl ">
+                      Gold
+                  </td>
+                  <td  class="px-6 py-4 text-2xl">
+                      
+                  </td>
+                  <td id="GLD-shortTermStrength" class="px-6 py-4 text-2xl">
+
+                  </td>
+                  <td  id="GLD-intermTrend" class="px-6 py-4 text-2xl">
+                      
+                  </td>
+                  <td  id="GLD-intermStrength" class="px-6 py-4 text-2xl">
+                      
+                  </td>
+                  <td  id="GLD-breakoutAndDown" class="px-6 py-4 text-2xl">
+
+                  </td>
+                  <td  id="GLD-meanReversion" class="px-6 py-4 text-2xl">
+
+                </td>
+                  
+              </tr>
+              <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+                  <td class="w-4 p-4">
+                      <div class="flex items-center">
+                          
+                      </div>
+                  </td>
+                  <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-2xl">
+                    ZB
+                                  </th>
+                  <td class="px-6 py-4 text-2xl">
+                      Ultra Bonds
+                  </td>
+                  <td  id="TLT-shortTermTrend" class="px-6 py-4 text-2xl">
+
+                  </td>
+                  <td id="TLT-shortTermStrength" class="px-6 py-4 text-2xl">
+                      
+                  </td>
+                  <td id="TLT-intermTrend" class="px-6 py-4 text-2xl">
+                      
+                  </td>
+                  <td id="TLT-intermStrength" class="px-6 py-4 text-2xl">
+                      
+                  </td>
+                  <td id="TLT-breakoutAndDown" class="px-6 py-4 text-2xl">
+
+                  </td>
+                  <td id="TLT-meanReversion" class="px-6 py-4 text-2xl">
+                    
+                </td>
+                  
+              </tr>
+              <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+                  <td class="w-4 p-4">
+                      <div class="flex items-center">
+                          
+                      </div>
+                  </td>
+                  <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-2xl">
+                    EWJ
+                  </th>
+                  <td class="px-6 py-4 text-2xl">
+                      Japan
+                  </td>
+                  <td id="EWJ-shortTermTrend" class="px-6 py-4 text-2xl">
+
+                  </td>
+                  <td id="EWJ-shortTermStrength" class="px-6 py-4 text-2xl">
+
+                  </td>
+                  <td id="EWJ-intermTrend" class="px-6 py-4 text-2xl">
+
+                  </td>
+                  <td id="EWJ-intermStrength" class="px-6 py-4 text-2xl">
+
+                  </td>
+                  <td id="EWJ-breakoutAndDown" class="px-6 py-4 text-2xl">
+
+                  </td>
+                  <td id="EWJ-meanReversion" class="px-6 py-4 text-2xl">
+
+                </td>
+                  
+              </tr>
+              <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+                  <td class="w-4 p-4">
+                      <div class="flex items-center">
+                          
+                      </div>
+                  </td>
+                  <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-2xl">
+                      EEM
+                  </th>
+                  <td class="px-6 py-4 text-2xl">
+                      Emerging
+                  </td>
+                  <td id="EEM-shortTermTrend" class="px-6 py-4 text-2xl">
+
+                  </td>
+                  <td id="EEM-shortTermStrength" class="px-6 py-4 text-2xl">
+
+                  </td>
+                  <td id="EEM-intermTrend" class="px-6 py-4 text-2xl">
+
+                  </td>
+                  <td id="EEM-intermStrength" class="px-6 py-4 text-2xl">
+
+                  </td>
+                  <td id="EEM-breakoutAndDown" class="px-6 py-4 text-2xl">
+
+                  </td>
+                  <td id="EEM-meanReversion" class="px-6 py-4 text-2xl">
+
+                </td>
+                  
+              </tr>
+              <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+                  <td class="w-4 p-4">
+                      <div class="flex items-center">
+                          
+                      </div>
+                  </td>
+                  <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-2xl">
+                      EMB
+                  </th>
+                  <td class="px-6 py-4 text-2xl">
+                      Emerging Bonds
+                  </td>
+                  <td id="EMB-shortTermTrend" class="px-6 py-4 text-2xl">
+
+                  </td>
+                  <td id="EMB-shortTermStrength" class="px-6 py-4 text-2xl">
+
+                  </td>
+                  <td id="EMB-intermTrend" class="px-6 py-4 text-2xl">
+
+                  </td>
+                  <td id="EMB-intermStrength" class="px-6 py-4 text-2xl">
+
+                  </td>
+                  <td id="EMB-breakoutAndDown" class="px-6 py-4 text-2xl">
+
+                  </td>
+                  <td id="EMB-meanReversion" class="px-6 py-4 text-2xl">
+
+                </td>
+                  
+              </tr>
+              <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+                  <td class="w-4 p-4">
+                      <div class="flex items-center">
+                          
+                      </div>
+                  </td>
+                  <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-2xl">
+                      ZN
+                  </th>
+                  <td class="px-6 py-4 text-2xl">
+                      10 Yr 
+                  </td>
+                  <td id="IEF-shortTermTrend" class="px-6 py-4 text-2xl">
+
+                  </td>
+                  <td id="IEF-shortTermStrength" class="px-6 py-4 text-2xl">
+
+                  </td>
+                  <td id="IEF-intermTrend" class="px-6 py-4 text-2xl">
+
+                  </td>
+                  <td id="IEF-intermStrength" class="px-6 py-4 text-2xl">
+
+                  </td>
+                  <td id="IEF-breakoutAndDown" class="px-6 py-4 text-2xl">
+
+                  </td>
+                  <td id="IEF-meanReversion" class="px-6 py-4 text-2xl">
+
+                </td>
+                  
+              </tr>
+              <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+                  <td class="w-4 p-4">
+                      <div class="flex items-center">
+                          
+                      </div>
+                  </td>
+                  <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-2xl">
+                      IEV
+                  </th>
+                  <td class="px-6 py-4 text-2xl">
+                      Europe
+                  </td>
+                  <td id="IEV-shortTermTrend" class="px-6 py-4 text-2xl">
+                    
+                  </td>
+                  <td id="IEV-shortTermStrength" class="px-6 py-4 text-2xl">
+                    
+                  </td>
+                  <td id="IEV-intermTrend" class="px-6 py-4 text-2xl">
+                    
+                  </td>
+                  <td id="IEV-intermStrength" class="px-6 py-4 text-2xl">
+                    
+                  </td>
+                  <td id="IEV-breakoutAndDown" class="px-6 py-4 text-2xl">
+                    
+                  </td>
+                  <td id="IEV-meanReversion" class="px-6 py-4 text-2xl">
+                    
+                </td>
+                  
+              </tr>
+              <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+                  <td class="w-4 p-4">
+                      <div class="flex items-center">
+                          
+                      </div>
+                  </td>
+                  <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-2xl">
+                      ES
+                  </th>
+                  <td class="px-6 py-4 text-2xl">
+                      S&P 500
+                  </td>
+                  <td id="SPY-shortTermTrend" class="px-6 py-4 text-2xl">
+
+                  </td>
+                  <td id="SPY-shortTermStrength" class="px-6 py-4 text-2xl">
+
+                  </td>
+                  <td id="SPY-intermTrend" class="px-6 py-4 text-2xl">
+
+                  </td>
+                  <td id="SPY-intermStrength" class="px-6 py-4 text-2xl">
+
+                  </td>
+                  <td id="SPY-breakoutAndDown" class="px-6 py-4 text-2xl">
+
+                  </td>
+                  <td id="SPY-meanReversion" class="px-6 py-4 text-2xl">
+
+                </td>
+                  
+              </tr>
+              
+              <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+                  <td class="w-4 p-4">
+                      <div class="flex items-center">
+                          
+                      </div>
+                  </td>
+                  <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-2xl">
+                      CL
+                  </th>
+                  <td class="px-6 py-4 text-2xl">
+                      Oil
+                  </td>
+                  <td id="USO-shortTermTrend" class="px-6 py-4 text-2xl">
+
+                  </td>
+                  <td id="USO-shortTermStrength" class="px-6 py-4 text-2xl">
+
+                  </td>
+                  <td id="USO-intermTrend" class="px-6 py-4 text-2xl">
+
+                  </td>
+                  <td id="USO-intermStrength" class="px-6 py-4 text-2xl">
+
+                  </td>
+
+                  <td id="USO-breakoutAndDown" class="px-6 py-4 text-2xl">
+
+                  </td>
+                  <td id="USO-meanReversion" class="px-6 py-4 text-2xl">
+
+                </td>
+                  
+              </tr>
+
+              <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+                  <td class="w-4 p-4">
+                      <div class="flex items-center">
+                          
+                      </div>
+                  </td>
+                  <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-2xl">
+                      6J
+                  </th>
+                  <td class="px-6 py-4 text-2xl">
+                      Yen
+                  </td>
+                  <td id="FXY-shortTermTrend" class="px-6 py-4 text-2xl">
+
+                  </td>
+                  <td id="FXY-shortTermStrength" class="px-6 py-4 text-2xl">
+
+                  </td>
+                  <td id="FXY-intermTrend" class="px-6 py-4 text-2xl">
+
+                  </td>
+                  <td id="FXY-intermStrength" class="px-6 py-4 text-2xl">
+
+                  </td>
+                  <td id="FXY-breakoutAndDown" class="px-6 py-4 text-2xl">
+
+                  </td>
+                  <td id="FXY-meanReversion" class="px-6 py-4 text-2xl">
+
+                </td>
+                  
+              </tr>
+              <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+                <td class="w-4 p-4">
+                    <div class="flex items-center">
+                        
+                    </div>
+                </td>
+                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-2xl">
+                    6F
+                </th>
+                <td class="px-6 py-4 text-2xl">
+                    Swiss Franc
+                </td>
+                <td id="FXF-shortTermTrend" class="px-6 py-4 text-2xl">
+
+                </td>
+                <td id="FXF-shortTermStrength" class="px-6 py-4 text-2xl">
+
+                </td>
+                <td id="FXF-intermTrend" class="px-6 py-4 text-2xl">
+
+                </td>
+                <td id="FXF-intermStrength" class="px-6 py-4 text-2xl">
+
+                </td>
+                <td id="FXF-breakoutAndDown" class="px-6 py-4 text-2xl">
+
+                </td>
+                <td id="FXF-meanReversion" class="px-6 py-4 text-2xl">
+
+              </td>
+                
+            </tr>
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+              <td class="w-4 p-4">
+                  <div class="flex items-center">
+                      
+                  </div>
+              </td>
+              <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-2xl">
+                  6E
+              </th>
+              <td class="px-6 py-4 text-2xl">
+                  Euro
+              </td>
+              <td id="FXE-shortTermTrend" class="px-6 py-4 text-2xl">
+
+              </td>
+              <td id="FXE-shortTermStrength" class="px-6 py-4 text-2xl">
+
+              </td>
+              <td id="FXE-intermTrend" class="px-6 py-4 text-2xl">
+
+              </td>
+              <td id="FXE-intermStrength" class="px-6 py-4 text-2xl">
+
+              </td>
+              <td id="FXE-breakoutAndDown" class="px-6 py-4 text-2xl">
+
+              </td>
+              <td id="FXE-meanReversion" class="px-6 py-4 text-2xl">
+
+            </td>
+              
+          </tr>
+
+          <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+            <td class="w-4 p-4">
+                <div class="flex items-center">
+                    
+                </div>
+            </td>
+            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-2xl">
+                6B
+            </th>
+            <td class="px-6 py-4 text-2xl">
+                Pound
+            </td>
+            <td id="FXB-shortTermTrend" class="px-6 py-4 text-2xl">
+
+            </td>
+            <td id="FXB-shortTermStrength" class="px-6 py-4 text-2xl">
+
+            </td>
+            <td id="FXB-intermTrend" class="px-6 py-4 text-2xl">
+
+            </td>
+            <td id="FXB-intermStrength" class="px-6 py-4 text-2xl">
+
+            </td>
+            <td id="FXB-breakoutAndDown" class="px-6 py-4 text-2xl">
+
+            </td>
+            <td id="FXB-meanReversion" class="px-6 py-4 text-2xl">
+
+          </td>
+            
+        </tr>
+
+          <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+            <td class="w-4 p-4">
+                <div class="flex items-center">
+                    
+                </div>
+            </td>
+            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-2xl">
+                6C
+            </th>
+            <td class="px-6 py-4 text-2xl">
+                Canada Dollar
+            </td>
+            <td id="FXC-shortTermTrend" class="px-6 py-4 text-2xl">
+
+            </td>
+            <td id="FXC-shortTermStrength" class="px-6 py-4 text-2xl">
+
+            </td>
+            <td id="FXC-intermTrend" class="px-6 py-4 text-2xl">
+
+            </td>
+            <td id="FXC-intermStrength" class="px-6 py-4 text-2xl">
+
+            </td>
+            <td id="FXC-breakoutAndDown" class="px-6 py-4 text-2xl">
+
+            </td>
+            <td id="FXC-meanReversion" class="px-6 py-4 text-2xl">
+
+          </td>
+        </tr>
+        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+          <td class="w-4 p-4">
+              <div class="flex items-center">
+                  
+              </div>
+          </td>
+          <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-2xl">
+              HG
+          </th>
+          <td class="px-6 py-4 text-2xl">
+              Copper
+          </td>
+          <td id="CPER-shortTermTrend" class="px-6 py-4 text-2xl">
+
+          </td>
+          <td id="CPER-shortTermStrength" class="px-6 py-4 text-2xl">
+
+          </td>
+          <td id="CPER-intermTrend" class="px-6 py-4 text-2xl">
+
+          </td>
+          <td id="CPER-intermStrength" class="px-6 py-4 text-2xl">
+
+          </td>
+          <td id="CPER-breakoutAndDown" class="px-6 py-4 text-2xl">
+
+          </td>
+          <td id="CPER-meanReversion" class="px-6 py-4 text-2xl">
+
+        </td>
+      </tr>
+      <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+        <td class="w-4 p-4">
+            <div class="flex items-center">
+                
+            </div>
+        </td>
+        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-2xl">
+            SI
+        </th>
+        <td class="px-6 py-4 text-2xl">
+            Silver
+        </td>
+        <td id="SLV-shortTermTrend" class="px-6 py-4 text-2xl">
+
+        </td>
+        <td id="SLV-shortTermStrength" class="px-6 py-4 text-2xl">
+
+        </td>
+        <td id="SLV-intermTrend" class="px-6 py-4 text-2xl">
+
+        </td>
+        <td id="SLV-intermStrength" class="px-6 py-4 text-2xl">
+
+        </td>
+        <td id="SLV-breakoutAndDown" class="px-6 py-4 text-2xl">
+
+        </td>
+        <td id="SLV-meanReversion" class="px-6 py-4 text-2xl">
+
+      </td>
+    </tr>
+    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+      <td class="w-4 p-4">
+          <div class="flex items-center">
+              
+          </div>
+      </td>
+      <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-2xl">
+          ZC
+      </th>
+      <td class="px-6 py-4 text-2xl">
+          Corn
+      </td>
+      <td id="CORN-shortTermTrend" class="px-6 py-4 text-2xl">
+
+      </td>
+      <td id="CORN-shortTermStrength" class="px-6 py-4 text-2xl">
+
+      </td>
+      <td id="CORN-intermTrend" class="px-6 py-4 text-2xl">
+
+      </td>
+      <td id="CORN-intermStrength" class="px-6 py-4 text-2xl">
+
+      </td>
+      <td id="CORN-breakoutAndDown" class="px-6 py-4 text-2xl">
+
+      </td>
+      <td id="CORN-meanReversion" class="px-6 py-4 text-2xl">
+
+    </td>
+  </tr>
+  <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+    <td class="w-4 p-4">
+        <div class="flex items-center">
+            
+        </div>
+    </td>
+    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-2xl">
+        ZS
+    </th>
+    <td class="px-6 py-4 text-2xl">
+        Soybean
+    </td>
+    <td id="SOYB-shortTermTrend" class="px-6 py-4 text-2xl">
+
+    </td>
+    <td id="SOYB-shortTermStrength" class="px-6 py-4 text-2xl">
+
+    </td>
+    <td id="SOYB-intermTrend" class="px-6 py-4 text-2xl">
+
+    </td>
+    <td id="SOYB-intermStrength" class="px-6 py-4 text-2xl">
+
+    </td>
+    <td id="SOYB-breakoutAndDown" class="px-6 py-4 text-2xl">
+
+    </td>
+    <td id="SOYB-meanReversion" class="px-6 py-4 text-2xl">
+
+  </td>
+</tr>
+<tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+  <td class="w-4 p-4">
+      <div class="flex items-center">
+          
+      </div>
+  </td>
+  <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-2xl">
+      ZW
+  </th>
+  <td class="px-6 py-4 text-2xl">
+      Wheat
+  </td>
+  <td id="WEAT-shortTermTrend" class="px-6 py-4 text-2xl">
+
+  </td>
+  <td id="WEAT-shortTermStrength" class="px-6 py-4 text-2xl">
+
+  </td>
+  <td id="WEAT-intermTrend" class="px-6 py-4 text-2xl">
+
+  </td>
+  <td id="WEAT-intermStrength" class="px-6 py-4 text-2xl">
+
+  </td>
+  <td id="WEAT-breakoutAndDown" class="px-6 py-4 text-2xl">
+
+  </td>
+  <td id="WEAT-meanReversion" class="px-6 py-4 text-2xl">
+
+</td>
+</tr>
+<tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+  <td class="w-4 p-4">
+      <div class="flex items-center">
+          
+      </div>
+  </td>
+  <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-2xl">
+      SB
+  </th>
+  <td class="px-6 py-4 text-2xl">
+      Sugar
+  </td>
+  <td id="CANE-shortTermTrend" class="px-6 py-4 text-2xl">
+
+  </td>
+  <td id="CANE-shortTermStrength" class="px-6 py-4 text-2xl">
+
+  </td>
+  <td id="CANE-intermTrend" class="px-6 py-4 text-2xl">
+
+  </td>
+  <td id="CANE-intermStrength" class="px-6 py-4 text-2xl">
+
+  </td>
+  <td id="CANE-breakoutAndDown" class="px-6 py-4 text-2xl">
+
+  </td>
+  <td id="CANE-meanReversion" class="px-6 py-4 text-2xl">
+
+</td>
+</tr>
+<tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+  <td class="w-4 p-4">
+      <div class="flex items-center">
+          
+      </div>
+  </td>
+  <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-2xl">
+      NG
+  </th>
+  <td class="px-6 py-4 text-2xl">
+      Nat Gas
+  </td>
+  <td id="UNG-shortTermTrend" class="px-6 py-4 text-2xl">
+
+  </td>
+  <td id="UNG-shortTermStrength" class="px-6 py-4 text-2xl">
+
+  </td>
+  <td id="UNG-intermTrend" class="px-6 py-4 text-2xl">
+
+  </td>
+  <td id="UNG-intermStrength" class="px-6 py-4 text-2xl">
+
+  </td>
+  <td id="UNG-breakoutAndDown" class="px-6 py-4 text-2xl">
+
+  </td>
+  <td id="UNG-meanReversion" class="px-6 py-4 text-2xl">
+
+</td>
+</tr>
+<tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+  <td class="w-4 p-4">
+      <div class="flex items-center">
+          
+      </div>
+  </td>
+  <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-2xl">
+      FXI
+  </th>
+  <td class="px-6 py-4 text-2xl">
+      China
+  </td>
+  <td id="MCHI-shortTermTrend" class="px-6 py-4 text-2xl">
+
+  </td>
+  <td id="MCHI-shortTermStrength" class="px-6 py-4 text-2xl">
+
+  </td>
+  <td id="MCHI-intermTrend" class="px-6 py-4 text-2xl">
+
+  </td>
+  <td id="MCHI-intermStrength" class="px-6 py-4 text-2xl">
+
+  </td>
+  <td id="MCHI-breakoutAndDown" class="px-6 py-4 text-2xl">
+
+  </td>
+  <td id="MCHI-meanReversion" class="px-6 py-4 text-2xl">
+
+</td>
+</tr>
+<tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+  <td class="w-4 p-4">
+      <div class="flex items-center">
+          
+      </div>
+  </td>
+  <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-2xl">
+      6A
+  </th>
+  <td class="px-6 py-4 text-2xl">
+      Aussie Dollar
+  </td>
+  <td id="FXA-shortTermTrend" class="px-6 py-4 text-2xl">
+
+  </td>
+  <td id="FXA-shortTermStrength" class="px-6 py-4 text-2xl">
+
+  </td>
+  <td id="FXA-intermTrend" class="px-6 py-4 text-2xl">
+
+  </td>
+  <td id="FXA-intermStrength" class="px-6 py-4 text-2xl">
+
+  </td>
+  <td id="FXA-breakoutAndDown" class="px-6 py-4 text-2xl">
+
+  </td>
+  <td id="FXA-meanReversion" class="px-6 py-4 text-2xl">
+
+</td>
+</tr>
+<tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+  <td class="w-4 p-4">
+      <div class="flex items-center">
+          
+      </div>
+  </td>
+  <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-2xl">
+      RB
+  </th>
+  <td class="px-6 py-4 text-2xl">
+      RB Gas
+  </td>
+  <td id="UGA-shortTermTrend" class="px-6 py-4 text-2xl">
+
+  </td>
+  <td id="UGA-shortTermStrength" class="px-6 py-4 text-2xl">
+
+  </td>
+  <td id="UGA-intermTrend" class="px-6 py-4 text-2xl">
+
+  </td>
+  <td id="UGA-intermStrength" class="px-6 py-4 text-2xl">
+
+  </td>
+  <td id="UGA-breakoutAndDown" class="px-6 py-4 text-2xl">
+
+  </td>
+  <td id="UGA-meanReversion" class="px-6 py-4 text-2xl">
+
+</td>
+</tr>
+
+<tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+  <td class="w-4 p-4">
+      <div class="flex items-center">
+          
+      </div>
+  </td>
+  <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-2xl">
+      PA
+  </th>
+  <td class="px-6 py-4 text-2xl">
+      Palladium
+  </td>
+  <td id="PALL-shortTermTrend" class="px-6 py-4 text-2xl">
+
+  </td>
+  <td id="PALL-shortTermStrength" class="px-6 py-4 text-2xl">
+
+  </td>
+  <td id="PALL-intermTrend" class="px-6 py-4 text-2xl">
+
+  </td>
+  <td id="PALL-intermStrength" class="px-6 py-4 text-2xl">
+
+  </td>
+  <td id="PALL-breakoutAndDown" class="px-6 py-4 text-2xl">
+
+  </td>
+  <td id="PALL-meanReversion" class="px-6 py-4 text-2xl">
+
+</td>
+</tr>
+
+          </tbody>
+          
+      </table>
+     
+  </div>
+  
+
+
+    </section>
+
+    
+
+    <section class="" style="background-color: #F7F6F2;">
+
+      <div class="container px-4 flex-grow w-full py-4 sm:py-0 mx-auto px-0  ">
+        
+        <h1
+          class="text-center text-6xl font-mreg font-semibold text-blue-900 mx-auto px-2"
+        >
+          
+        </h1>
+        <p1 class="text-center text-2xl mb-4 text-blue-900 mx-auto px-2"></p1>
+        <h1 class="text-center text-2xl mb-4 text-6xl text-blue-900 mx-auto px-6 mb-16 mt-32">Explore our models based on these signals</h1>                  
+                  <p1 class="text-center flex text-2xl mb-24 text-blue-900 mx-auto px-2">Engineered for resilience, our robust portfolios minimize risk through smart diversification and are optimized for long-term growth. Swipe to learn more</p1>      
+        <div class="mx-auto w-full md:w-2/3 px-4">
+          <div class="container my-8">
+            <div class="flex justify-between items-center ">
+              <h2 class="text-3xl font-mreg font-semibold ">
+      
+                
+              </h2>
+              
+            </div>
+
+            <style>
+              .custom-scrollbar-hide::-webkit-scrollbar {
+                display: none;
+              }
+              .custom-scrollbar-hide {
+                -ms-overflow-style: none;  /* IE and Edge */
+                scrollbar-width: none;     /* Firefox */
+              }
+            </style>
+            
+            <div class="overflow-x-auto custom-scrollbar-hide">
+              <!-- your content here -->
+            </div>
+            <div
+              id="scrollContainer"
+              class="flex flex-no-wrap overflow-x-scroll custom-scrollbar-hide scrolling-touch items-start -mt-12 mb-32"
+            >
+              <div
+                class="flex-none w-2/3 md:w-1/3 mr-8   rounded-xl"
+              >
+                <a href="ManagedFuturesEqualWeight.html" class="space-y-4">
+                  <div class="aspect-w-16 aspect-h-9">
+                    
+                    
+                    <div  class="object-cover shadow-md hover:shadow-xl rounded-3xl">
+      
+                      <img class="object-cover hover:shadow-xl rounded-3xl" src="IMG1365.png" style=" height: 300px" alt="">
+      
+                    </div>
+      
+                    
+                  </div>
+                  <div class="px-4 py-2">
+                    <div class="text-lg leading-6 font-medium space-y-1">
+                      <h3 class="font-semibold text-gray-800 text-4xl mb-2 mt-12">
+                        Managed Futures Trend
+                      </h3>
+                    </div>
+                    <div class="text-2xl">
+                      <p class="font-mreg font-large">
+                        
+                      </p>
+      
+                      <p class="font-medium text-sm text-indigo-600 mt-2">
+                        <span class="text-indigo-600"></span>
+                      </p>
+                    </div>
+                  </div>
+                </a>
+              </div>
+              <div
+                class="flex-none w-2/3 md:w-1/3 mr-8 md:pb-4  rounded-lg"
+              >
+                <a href="BondRegimeModel.html" class="space-y-4">
+                  <div class="aspect-w-16 aspect-h-9">
+      
+                      <div class="object-cover shadow-md hover:shadow-xl rounded-3xl">
+                        <img class="object-cover hover:shadow-xl rounded-3xl" src="IMG0018.jpeg" style=" height: 300px" alt="">
+                        </div>
+
+                  </div>
+                  <div class="px-4 py-2">
+                    <div class="text-lg leading-6 font-medium space-y-1">
+                      <h3 class="font-semibold text-gray-800 text-4xl mb-2 mt-12">
+                        Bond Regimes
+                      </h3>
+                    </div>
+                    <div class="text-lg">
+                      <p class="font-mreg font-medium">
+                        
+                      </p>
+                      <p class="font-medium text-sm text-indigo-600 mt-2">
+                        <span class="text-indigo-600"></span>
+                      </p>
+                    </div>
+                  </div>
+                </a>
+              </div>
+              <div
+                class="flex-none w-2/3 md:w-1/3 mr-8 md:pb-4  rounded-lg"
+              >
+                <a href="#" class="space-y-4">
+                  <div class="aspect-w-16 aspect-h-9">
+      
+                    <div class="object-cover shadow-md hover:shadow-xl rounded-3xl">
+                     <!--add this object cover to fix on mobile and keep the height in style but delete the width--> <img class="object-cover hover:shadow-xl rounded-3xl" src="IMG1364.png" style=" height: 300px" alt="">
+                    </div>
+                      
+                  </div>
+                  <div class="px-4 py-2">
+                    <div class="text-lg leading-6 font-medium space-y-1">
+                      <h3 class="font-semibold text-gray-800 text-4xl mb-2 mt-12">
+                        Macro Long Only
+                      </h3>
+                    </div>
+                    <div class="text-lg">
+                      <p class="font-mreg font-medium">
+                        
+                      </p>
+                      <p class="font-medium text-sm text-indigo-600 mt-2">
+                        <span class="text-indigo-600"></span>
+                      </p>
+                    </div>
+                  </div>
+                </a>
+              </div>
+              
+            </div>
+          </div>
+          <!---->
+          <h1 class="text-center text-2xl mb-4 text-6xl text-blue-900 mx-auto px-6">Browse our other investment catagories</h1>                  
+                  <p1 class="text-center text-xl mb-12 text-blue-900 mx-auto flex px-2">Our robust portfolios are systemically designed to minimize risk through diversification and are optimized for long-term wealth — Swipe Below to Discover</p1>      
+                  <div
+              id="scrollContainer"
+              class="flex flex-no-wrap overflow-x-scroll custom-scrollbar-hide scrolling-touch items-start "
+            >
+              <div
+                class="flex-none w-2/3 md:w-1/3 mr-8   rounded-xl"
+              >
+                <a href="#" class="space-y-4">
+                  <div class="aspect-w-16 aspect-h-9">
+                    
+                    
+                    <div  class="object-cover shadow-md hover:shadow-xl rounded-3xl">
+      
+                      <img class="object-cover hover:shadow-xl rounded-3xl" src="purp.png" style=" height: 100px" alt="">
+      
+                    </div>
+      
+                    
+                  </div>
+                  <div class="px-4 py-2">
+                    <div class="text-lg leading-6 font-medium space-y-1">
+                      <h3 class="font-semibold text-gray-800 text-4xl mb-2 ">
+                        Managed Futures Trend
+                      </h3>
+                    </div>
+                    <div class="text-2xl">
+                      <p class="font-mreg font-large">
+                       
+                      </p>
+      
+                      <p class="font-medium text-sm text-indigo-600 mt-2">
+                        <span class="text-indigo-600"></span>
+                      </p>
+                    </div>
+                  </div>
+                </a>
+              </div>
+              <div
+                class="flex-none w-2/3 md:w-1/3 mr-8 md:pb-4  rounded-lg"
+              >
+                <a href="#" class="space-y-4">
+                  <div class="aspect-w-16 aspect-h-9">
+      
+                      <div class="object-cover shadow-md hover:shadow-xl rounded-3xl">
+                        <img class="object-cover hover:shadow-xl rounded-3xl" src="purp.png" style=" height: 100px" alt="">
+                        </div>
+
+                  </div>
+                  <div class="px-4 py-2">
+                    <div class="text-lg leading-6 font-medium space-y-1">
+                      <h3 class="font-semibold text-gray-800 text-4xl mb-2 ">
+                        Long/Short Equity
+                      </h3>
+                    </div>
+                    <div class="text-lg">
+                      <p class="font-mreg font-medium">
+                        
+                      </p>
+                      <p class="font-medium text-sm text-indigo-600 mt-2">
+                        <span class="text-indigo-600"></span>
+                      </p>
+                    </div>
+                  </div>
+                </a>
+              </div>
+              <div
+                class="flex-none w-2/3 md:w-1/3 mr-8 md:pb-4  rounded-lg"
+              >
+                <a href="#" class="space-y-4">
+                  <div class="aspect-w-16 aspect-h-9">
+      
+                    <div class="object-cover shadow-md hover:shadow-xl rounded-3xl">
+                     <!--add this object cover to fix on mobile and keep the height in style but delete the width--> <img class="object-cover hover:shadow-xl rounded-3xl" src="purp.png" style=" height: 100px" alt="">
+                    </div>
+                      
+                  </div>
+                  <div class="px-4 py-2">
+                    <div class="text-lg leading-6 font-medium space-y-1">
+                      <h3 class="font-semibold text-gray-800 text-4xl mb-2 ">
+                        Core Equity
+                      </h3>
+                    </div>
+                    <div class="text-lg">
+                      <p class="font-mreg font-medium">
+                        
+                      </p>
+                      <p class="font-medium text-sm text-indigo-600 mt-2">
+                        <span class="text-indigo-600"></span>
+                      </p>
+                    </div>
+                  </div>
+                </a>
+              </div>
+              <div
+                class="flex-none w-2/3 md:w-1/3 mr-8 md:pb-4  rounded-lg"
+              >
+                <a href="#" class="space-y-4">
+                  <div class="aspect-w-16 aspect-h-9">
+      
+                    <div class="object-cover shadow-md hover:shadow-xl rounded-3xl">
+                     <!--add this object cover to fix on mobile and keep the height in style but delete the width--> <img class="object-cover hover:shadow-xl rounded-3xl" src="purp.png" style=" height: 100px" alt="">
+                    </div>
+                      
+                  </div>
+                  <div class="px-4 py-2">
+                    <div class="text-lg leading-6 font-medium space-y-1">
+                      <h3 class="font-semibold text-gray-800 text-4xl mb-2 ">
+                        Managed Futures Trend
+                      </h3>
+                    </div>
+                    <div class="text-lg">
+                      <p class="font-mreg font-medium">
+                        
+                      </p>
+                      <p class="font-medium text-sm text-indigo-600 mt-2">
+                        <span class="text-indigo-600"></span>
+                      </p>
+                    </div>
+                  </div>
+                </a>
+              </div>
+              <div
+                class="flex-none w-2/3 md:w-1/3 mr-8 md:pb-4  rounded-lg"
+              >
+                <a href="#" class="space-y-4">
+                  <div class="aspect-w-16 aspect-h-9">
+      
+                    <div class="object-cover shadow-md hover:shadow-xl rounded-3xl">
+                     <!--add this object cover to fix on mobile and keep the height in style but delete the width--> <img class="object-cover hover:shadow-xl rounded-3xl" src="purp.png" style=" height: 100px" alt="">
+                    </div>
+                      
+                  </div>
+                  <div class="px-4 py-2">
+                    <div class="text-lg leading-6 font-medium space-y-1">
+                      <h3 class="font-semibold text-gray-800 text-4xl mb-2">
+                        Volatility
+                      </h3>
+                    </div>
+                    <div class="text-lg">
+                      <p class="font-mreg font-medium">
+                        
+                      </p>
+                      <p class="font-medium text-sm text-indigo-600 mt-2">
+                        <span class="text-indigo-600"></span>
+                      </p>
+                    </div>
+                  </div>
+                </a>
+              </div>
+              <div
+                class="flex-none w-2/3 md:w-1/3 mr-8 md:pb-4  rounded-lg"
+              >
+                <a href="#" class="space-y-4">
+                  <div class="aspect-w-16 aspect-h-9">
+      
+                    <div class="object-cover shadow-md hover:shadow-xl rounded-3xl">
+                     <!--add this object cover to fix on mobile and keep the height in style but delete the width--> <img class="object-cover hover:shadow-xl rounded-3xl" src="purp.png" style=" height: 100px" alt="">
+                    </div>
+                      
+                  </div>
+                  <div class="px-4 py-2">
+                    <div class="text-lg leading-6 font-medium space-y-1">
+                      <h3 class="font-semibold text-gray-800 text-4xl mb-2">
+                        Crypto
+                      </h3>
+                    </div>
+                    <div class="text-lg">
+                      <p class="font-mreg font-medium">
+                        
+                      </p>
+                      <p class="font-medium text-sm text-indigo-600 mt-2">
+                        <span class="text-indigo-600"></span>
+                      </p>
+                    </div>
+                  </div>
+                </a>
+              </div>
+              <div
+                class="flex-none w-2/3 md:w-1/3 mr-8 md:pb-4  rounded-lg"
+              >
+                <a href="#" class="space-y-4">
+                  <div class="aspect-w-16 aspect-h-9">
+      
+                    <div class="object-cover shadow-md hover:shadow-xl rounded-3xl">
+                     <!--add this object cover to fix on mobile and keep the height in style but delete the width--> <img class="object-cover hover:shadow-xl rounded-3xl" src="purp.png" style=" height: 100px" alt="">
+                    </div>
+                      
+                  </div>
+                  <div class="px-4 py-2">
+                    <div class="text-lg leading-6 font-medium space-y-1">
+                      <h3 class="font-semibold text-gray-800 text-4xl mb-2 ">
+                        Bonds
+                      </h3>
+                    </div>
+                    <div class="text-lg">
+                      <p class="font-mreg font-medium">
+                        
+                      </p>
+                      <p class="font-medium text-sm text-indigo-600 mt-2">
+                        <span class="text-indigo-600"></span>
+                      </p>
+                    </div>
+                  </div>
+                </a>
+              </div>
+              <div
+                class="flex-none w-2/3 md:w-1/3 mr-8 md:pb-4  rounded-lg"
+              >
+                <a href="#" class="space-y-4">
+                  <div class="aspect-w-16 aspect-h-9">
+      
+                    <div class="object-cover shadow-md hover:shadow-xl rounded-3xl">
+                     <!--add this object cover to fix on mobile and keep the height in style but delete the width--> <img class="object-cover hover:shadow-xl rounded-3xl" src="purp.png" style=" height: 100px" alt="">
+                    </div>
+                      
+                  </div>
+                  <div class="px-4 py-2">
+                    <div class="text-lg leading-6 font-medium space-y-1">
+                      <h3 class="font-semibold text-gray-800 text-4xl mb-2 ">
+                        International
+                      </h3>
+                    </div>
+                    <div class="text-lg">
+                      <p class="font-mreg font-medium">
+                        
+                      </p>
+                      <p class="font-medium text-sm text-indigo-600 mt-2 mb-32">
+                        <span class="text-indigo-600"></span>
+                      </p>
+                    </div>
+                  </div>
+                </a>
+              </div>
+              <div
+                class="flex-none w-2/3 md:w-1/3 mr-8 md:pb-4  rounded-lg"
+              >
+                <a href="#" class="space-y-4">
+                  <div class="aspect-w-16 aspect-h-9">
+      
+                    <div class="object-cover shadow-md hover:shadow-xl rounded-3xl">
+                     <!--add this object cover to fix on mobile and keep the height in style but delete the width--> <img class="object-cover hover:shadow-xl rounded-3xl" src="purp.png" style=" height: 100px" alt="">
+                    </div>
+                      
+                  </div>
+                  <div class="px-4 py-2">
+                    <div class="text-lg leading-6 font-medium space-y-1">
+                      <h3 class="font-semibold text-gray-800 text-4xl mb-2 ">
+                        View All
+                      </h3>
+                    </div>
+                    <div class="text-lg">
+                      <p class="font-mreg font-medium">
+                        
+                      </p>
+                      <p class="font-medium text-sm text-indigo-600 mt-2 mb-32">
+                        <span class="text-indigo-600"></span>
+                      </p>
+                    </div>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+      </div>
+      
+      </section>
+
+
+    
+
+
+		
+
+		<div class="scrolldown text-gray-900 hidden sm:block">
+			<a href="#about" class="scroll-icon smoothscroll text-gray-900">		
+		   	Scroll Down		   	
+		   	<i class="fa fa-long-arrow-right" aria-hidden="true"></i>
+			</a>
+		</div>			
+   
+
+
+
+  
+  
+
+
+   <!-- about
+   ================================================== -->
+   
+   </style>
+   
+
+
+      <div id="go-top">
+		   <a class="smoothscroll" title="Back to Top" href="#top">
+		   	<i class="fa fa-long-arrow-up" aria-hidden="true"></i>
+		   </a>
+		</div>		
+   </footer>
+
+   
+
+  
+   <script src="js/jquery-2.1.3.min.js"></script>
+   <script src="js/plugins.js"></script>
+   <script src="js/main.js"></script>
+   
+
+<script>
+      var a = $("#HEAAD").offset().top;
+
+$(document).scroll(function(){
+    if($(this).scrollTop() > 600)
+    {   
+       $('#HEAAD').css({"background":"#fff"});
+       $('#linkTwo').css({"color":"#000"});
+       $('#CivHeader').css({"color":"#0D4C92"});
+       $('#linkTwoOne').css({"color":"#000"});
+       $('#linkTwoTwo').css({"color":"#000"});
+       $('#linkTwoThree').css({"color":"#000"});
+       $('#LogB').css({"color":"#0D4C92"});
+    } else {
+       $('#HEAAD').css({"background":"transparent"});
+       $('#linkTwo').css({"color":"#000"});
+       $('#CivHeader').css({"color":"#000"});
+       $('#linkTwoOne').css({"color":"#000"});
+       $('#linkTwoTwo').css({"color":"#000"});
+       $('#linkTwoThree').css({"color":"#000"});
+       $('#LogB').css({"color":"#000"});
+    }
+    
+});
+    </script>
+
+
+</body>
+
+</html>
