@@ -1,3 +1,6 @@
+<html class="h-full">
+
+
 <link rel="stylesheet" href="public/styles.css">  
 
 <!DOCTYPE html>
@@ -12,10 +15,11 @@
   <title>Caltropia Research</title>
   <meta name="description" content="">  
   <meta name="author" content="">
-
+    
    <!-- mobile specific metas
    ================================================== -->
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
   <!-- CSS
    ================================================== -->
@@ -23,6 +27,10 @@
 
 <link rel="stylesheet" href="public/styles1.css"> 
 <link rel="stylesheet" href="css/fonts.css"> 
+
+
+
+
 
 <script src="js/jquery-2.1.3.min.js"></script>
 
@@ -40,6 +48,57 @@
           '<script src="https://cdn.jsdelivr.net/npm/findindex_polyfill_mdn"><\/script>'
         )
     </script>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+  import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
+  
+  // ✅ Initialize Firebase
+  const firebaseConfig1 = {
+    apiKey: "AIzaSyBxG5qf6mb8E_-b2TeXlRNseMZ26L9DRYg",
+    authDomain: "trendscores-df341.firebaseapp.com",
+    databaseURL: "https://trendscores-df341-default-rtdb.firebaseio.com",
+    projectId: "trendscores-df341",
+    storageBucket: "trendscores-df341.appspot.com",
+    messagingSenderId: "565710392511",
+    appId: "1:565710392511:web:37349319364bba19b3ca0a",
+    measurementId: "G-8TVLFBWN63"
+  };
+  
+  const app1 = initializeApp(firebaseConfig1); // ✅ Call this first
+  const db1 = getDatabase(app1); // ✅ Pass the app to getDatabase()
+  
+  // ✅ Your populate function
+  function populateManagedFuturesWeights() {
+    const tickers = ["es", "sb", "hg", "gc", "zc", "cl", "zn", "6b", "6e", "6j", "ng"];
+  
+    get(child(ref(db1), "managedFuturesEw")).then(snapshot => {
+      if (snapshot.exists()) {
+        const data = snapshot.val();
+  
+        tickers.forEach(ticker => {
+          if (data[ticker]) {
+            const weight = data[ticker].Weight;
+            const weightPercent = (weight * 100).toFixed(1) + "%";
+            document.getElementById(`${ticker}-weight`).textContent = weightPercent;
+          }
+        });
+      } else {
+        console.log("No data found in managedFuturesEw.");
+      }
+    }).catch(error => {
+      console.error("Error fetching weights:", error);
+    });
+  }
+  
+  // ✅ Call on page load
+  window.onload = () => {
+  
+    populateManagedFuturesWeights();
+  };
+  
+  </script>
+
 
 
     
@@ -62,8 +121,8 @@
 <header class="text-gray-600 body-font mt-6  w-full">
   <div class=" ml-12 mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center mr-12  ">
     <a class="flex title-font font-medium items-center text-gray-900 mb-4 md:mb-0 xl:-ml-6 lg:-ml-6 md:-ml-6 sm:-ml-0 xs:-ml-0 ">
-      <a href="index.html">
-      <h1 class=" title-font text-2xl text-white ">Caltropia Research</h1></a>
+      
+      <a href="index.html"><h1 class=" title-font text-2xl text-white ">Caltropia Research</h1></a>
     </a>
 
     <nav class="md:ml-auto font-bold md:mr-auto flex flex-wrap items-center text-base justify-center text-white font-bold xl:flex lg:flex md:flex sm:hidden ">
@@ -75,8 +134,7 @@
       <a class="mr-5 hover:text-white font-bold font-mreg"></a>
       <a class="mr-5 hover:text-white font-bold font-mreg"></a>
     </nav>
-    <a href="StrategiesGrid.html">
-    <button class="inline-flex items-center border-0 py-1 px-3 focus:outline-none rounded-2xl text-base mt-4 md:mt-0 font-regular font-mreg text-white">More Strats
+    <a href="StrategiesGrid.html"><button class="inline-flex items-center border-0 py-1 px-3 focus:outline-none  rounded-2xl text-base mt-4 md:mt-0 font-regular font-mreg  text-white">More Strats
       <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 ml-1" viewBox="0 0 24 24">
         <path d="M5 12h14M12 5l7 7-7 7"></path>
       </svg>
@@ -86,7 +144,7 @@
 </header>
 
 
-<body class="bg-gradient-to-r from-blue-900 via-red-blue to-gray-900 md:bg-gradient-to-r from-blue-900 via-red-blue to-white-200 ">
+<body class="min-h-full bg-gradient-to-r from-gray-900 via-[#7e9fd4] to-gray-600 pt-[env(safe-area-inset-top)]">
 
 <section class="text-gray-600 body-font xl:ml-0 lg:ml-0 md:ml-12 sm:ml-0">
   
@@ -96,71 +154,121 @@
 
   <div class="container mx-auto flex py-24 md:flex-row flex-col items-center ">
 
-    <div class="lg:max-w-lg lg:w-2/5 w-5/6 md:w-0 -mt-16 mb-12 hidden xl:hidden lg:hidden md:hidden sm:w-3/4">
-      <lottie-player class="object-cover" src="https://lottie.host/e538eaca-2eee-4136-b8ea-f2c3a378f6f6/JqV0Xv89Zl.json"
-  background="transparent"
-  speed="1"
-  style=" height: 500px"
-  loop
-  autoplay></lottie-player>
-    </div>
+    
 
     <div class="lg:flex-grow md:w-4/5 lg:pr-24 md:pr-16 flex flex-col md:items-start md:text-left mb-16 md:mb-0 items-center text-center">
-      <h1 class="title-font sm:text-3xl md:text-5xl  lg:text-5xl mb-4  text-white -mt-4  md:ml-0 lg:ml-0 xl:ml-0">Volatility Tail Risk
+      <h1 class="title-font sm:text-3xl md:text-5xl  lg:text-5xl mb-4  text-white -mt-16 md:-mt-4  md:ml-0 lg:ml-0 xl:ml-0">Sector Regime Model
 
       </h1>
-      <h1 class="mb-4 leading-relaxed text-gray-200  w-3/4">A volatility tail risk strategy that systematically buys VIX call options to provide cost effective protection when volatility spikes to protect your portfolio from outsized losses</h1>
+      <h1 class="mb-4 leading-relaxed text-gray-200  w-11/12  sm:text-sm md:text-base  lg:text-base">Long certain sectors during specific market regimes in which those sectors outperform and have no allocation to those that underperform the market in those regimes</h1>
       <h1 class="title-font sm:text-3xl md:text-4xl  lg:text-4xl mb-4 text-white mt-8 ">Fund Facts
         
       </h1>
-      <h1 class="text-xs text-red-200 mb-4">From 08/05 to Current on Monthly Data. Updated when Traded</h1>
+      <h1 class="text-xs text-red-200 ">From 06/11 to Current on Daily Data Updated Fri</h1>
+
 
       <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 justify-items-center mt-6 px-4 ml-0 md:-ml-4">
         <div class="bg-gray-200 px-6 py-5 rounded-xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
-          <h2 class="font-bold text-xl text-gray-900 font-mreg">9.06%</h2>
-          <p class="font-mreg text-base">An Return</p>
+          <h2 class="font-bold text-xl text-gray-900 font-mreg">7.04%</h2>
+          <p class="font-mreg">An Return</p>
         </div>
       
         <div class="bg-gray-200 px-4 py-5 rounded-xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
-          <h2 class="font-bold text-xl text-gray-900 font-mreg">76.84%</h2>
-          <p class="font-mreg text-base">Volatility</p>
+          <h2 class="font-bold text-xl text-gray-900 font-mreg">5.54%</h2>
+          <p class="font-mreg">Volatility</p>
         </div>
       
         <div class="bg-gray-200 px-4 py-5 rounded-xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
-          <h2  class="font-bold text-xl text-gray-900 font-mreg">-18.13%</h2>
-          <p class="font-mreg text-base">Drawdown</p>
+          <h2  class="font-bold text-xl text-gray-900 font-mreg">-4.65%</h2>
+          <p class="font-mreg">Drawdown</p>
         </div>
       
         <div class="bg-gray-200 px-4 py-5 rounded-xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
-          <h2  class="font-bold text-xl text-gray-900 font-mreg">0.29</h2>
-          <p class="font-mreg text-base">Sharpe</p>
+          <h2  class="font-bold text-xl text-gray-900 font-mreg">0.95</h2>
+          <p class="font-mreg">Sharpe</p>
         </div>
         </div>
 
 
-      
-<!--
+      <h1 class="title-font sm:text-3xl md:text-4xl  lg:text-4xl mb-2 text-white mt-12 ">Benchmark Facts
 
--->
+      </h1>
+
+
+      <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 justify-items-center mt-6 px-4 ml-0 sm:-ml-4">
+        <div class="bg-gray-200 px-6 py-5 rounded-xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
+          <h2 class="font-bold text-xl text-gray-900 font-mreg">-3.01%</h2>
+          <p class="font-mreg">An Return</p>
+        </div>
+      
+        <div class="bg-gray-200 px-4 py-5 rounded-xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
+          <h2 class="font-bold text-xl text-gray-900 font-mreg">10.82%</h2>
+          <p class="font-mreg">Volatility</p>
+        </div>
+      
+        <div class="bg-gray-200 px-4 py-5 rounded-xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
+          <h2  class="font-bold text-xl text-gray-900 font-mreg">-12.65%</h2>
+          <p class="font-mreg">Drawdown</p>
+        </div>
+      
+        <div class="bg-gray-200 px-4 py-5 rounded-xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
+          <h2  class="font-bold text-xl text-gray-900 font-mreg">-0.75</h2>
+          <p class="font-mreg">Sharpe</p>
+        </div>
+        </div>
+      
 <h1 class="title-font sm:text-3xl md:text-4xl  lg:text-4xl mb-2 text-white mt-10">Current Allocation
 
       </h1>
 
-      <div class="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-1 gap-4 justify-items-center mt-6 px-4 ml-0 md:-ml-4">
-        <div class="bg-gray-200 px-6 py-5 rounded-xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
-          <h2 class="font-bold text-xl text-gray-900 font-mreg">Soon</h2>
-          <p class="font-mreg text-base">VX Options</p>
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 justify-items-center mt-6 px-4 ml-0 md:-ml-4">
+        <div class="bg-gray-200 px-12 py-5 rounded-xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
+          <h2 id="" class="font-bold text-xl text-gray-900 font-mreg">0%</h2>
+          <p class="font-mreg">XLK</p>
+        </div>
+      
+        <div class="bg-gray-200 px-4 py-5 rounded-xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
+          <h2 id="" class="font-bold text-xl text-gray-900 font-mreg">0%</h2>
+          <p class="font-mreg">XLI</p>
+        </div>
+      
+        <div class="bg-gray-200 px-4 py-5 rounded-xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
+          <h2 id="" class="font-bold text-xl text-gray-900 font-mreg">0%</h2>
+          <p class="font-mreg">XLP</p>
+        </div>
+      
+       
+      
+        <div class="bg-gray-200 px-4 py-5 rounded-xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
+          <h2 id="6e-weight" class="font-bold text-xl text-gray-900 font-mreg">0%</h2>
+          <p class="font-mreg">IYR</p>
+        </div>
+      
+        <div class="bg-gray-200 px-4 py-5 rounded-xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
+          <h2 id="6j-weight" class="font-bold text-xl text-gray-900 font-mreg">0%</h2>
+          <p class="font-mreg">XLV</p>
+        </div>
+      
+        <div class="bg-gray-200 px-4 py-5 rounded-xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
+          <h2 id="ng-weight" class="font-bold text-xl text-gray-900 font-mreg">0%</h2>
+          <p class="font-mreg">XLU</p>
         </div>
 
+        <div class="bg-gray-200 px-4 py-5 rounded-xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
+          <h2 id="ng-weight" class="font-bold text-xl text-gray-900 font-mreg">0%</h2>
+          <p class="font-mreg">XLF</p>
         </div>
-        
-        
- 
+        <div class="bg-gray-200 px-4 py-5 rounded-xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
+          <h2 id="ng-weight" class="font-bold text-xl text-gray-900 font-mreg">0%</h2>
+          <p class="font-mreg">XLY</p>
+        </div>
+      </div>
+         
 
     </div>
 
     <div class="lg:max-w-lg lg:w-1/3 w-5/6 md:w-0 mt-16 hidden md:block">
-      <lottie-player class="object-cover" src="https://lottie.host/e1713160-829d-4db5-a4a2-7f5c46f71b51/ugTIUilkCD.json"
+      <lottie-player class="object-cover" src="https://lottie.host/59b25b24-6f30-4aac-9df2-e9b595cea5ac/hYk12Hh3oN.json"
   background="transparent"
   speed="1"
   style=" height: 500px"
@@ -168,11 +276,23 @@
   autoplay></lottie-player>
     </div>
   </div>
+
+
+
 <!--
-  <div class="items-center flex justify-center -mt-32 md:-mt-16 mb-12">
-    <button class="shadow-lg relative font-mreg font-bold rounded-full sm:w-3/4 md:w-1/2 lg:w-1/3 xl:w-1/5 inline bg-gray-700 border-solid border-white  text-white font-semibold rounded-lg px-4 py-3 pl-6 pr-6 mt-6 md:mt-16  md:ml-12 lg:ml-12 xl:ml-12 text-lg">Methodology</button>
-  </div>    
+
+<div class="items-center flex justify-center -mt-16 mb-12">
+  <button class="shadow-lg relative font-mreg font-bold rounded-full sm:w-3/4 md:w-1/2 lg:w-1/3 xl:w-1/5 inline bg-gray-700 border-solid border-white  text-white font-semibold rounded-lg px-4 py-3 pl-6 pr-6 mt-6 md:mt-16  md:ml-12 lg:ml-12 xl:ml-12 text-lg">Methodology</button>
+    </div>  
 -->
+
+  
+  
+
+
+
+  
+
     <style>
       h1, h2, h3, h4, h5, h6,
 .h01, .h02, .h03, .h04, .h05, .h06 {
@@ -182,27 +302,37 @@ font-style: bold;
 text-rendering: optimizeLegibility;
 
 }
+
+
+
+
     </style>
 
+    
 
-<section class="lg:ml-0 md:-ml-12" style="background-color: #F7F6F2;">
+
+
+
+
+<section class=" lg:ml-0 md:-ml-12" style="background-color: #F7F6F2;">
 <div class="container mx-auto flex py-24 md:flex-row flex-col items-center xl:pl-0 lg:pl-0 md:pl-12 sm:pl-0 ">
     <div class="lg:flex-grow md:w-4/5 lg:pr-24 md:pr-16 flex flex-col md:items-start md:text-left sm:w-5/6 md:mb-0 items-center text-center">
-      <h1 class="title-font sm:text-3xl md:text-4xl  lg:text-4xl mb-4 text-black -mt-4  md:ml-0 lg:ml-0 xl:ml-0" >Volatility Tail Risk
+      <h1 class="title-font sm:text-3xl md:text-4xl  lg:text-4xl mb-4 text-black -mt-4  md:ml-0 lg:ml-0 xl:ml-0" >Sector Regime Model
 
       </h1>
 
       <p class="text-black font-mreg text-lg w-full font-bold"></p>
 
-      <h1 class="title-font sm:text-4xl text-3xl mb-8  text-black mt-8  ">Historical Performance
+      <h1 class="title-font sm:text-4xl text-3xl mb-2  text-black mt-8  ">Historical Performance
 
       </h1>
 
 
-      <div class=" inline bg-white w-full rounded-3xl items-center justify-center object-center">
+
+      <div class=" inline w-full rounded-3xl items-center justify-center object-center">
 
 
-      <div class="w-full " id="chart4" style="background-color: #F7F6F2;"></div>
+      <div class="w-full " id="chart4"></div>
 
 
     </div>
@@ -217,15 +347,15 @@ text-rendering: optimizeLegibility;
       </h1>
 
       
-      <h1 class="title-font sm:text-4xl text-3xl xl:mb-8 lg:mb-16 md:mb-8 sm:mb-8  text-black mt-12 sm:mt-12 md:mt-0 lg:mt-12 xl:mt-12">Annual Returns
+      <h1 class="title-font sm:text-4xl text-3xl xl:mb-8 lg:mb-16 md:mb-8 sm:mb-8  text-black mt-0 md:mt-16">Annual Returns
 
       </h1>
 
 
-      <div class=" inline bg-white w-full rounded-3xl items-center justify-center object-center">
+      <div class=" inline w-full rounded-3xl items-center justify-center object-center">
 
 
-      <div class="w-full " id="chart1" style="background-color: #F7F6F2;"></div>
+      <div class="w-full " id="chart1"></div>
 
 
     </div>
@@ -236,14 +366,14 @@ text-rendering: optimizeLegibility;
   </div>
 
     <!-- Centering wrapper -->
-<div class="w-full flex justify-center" style="background-color: #F7F6F2;">
+<div class="w-full flex justify-center">
   
-  <div class="bg-white w-full max-w-4xl rounded-3xl px-4" style="background-color: #F7F6F2;">
-    <h1 class="title-font sm:text-4xl text-3xl xl:mb-8 lg:mb-16 md:mb-8 sm:mb-8 text-black -mt-8 text-center">Monthly Returns
+  <div class=" w-full max-w-4xl rounded-3xl px-4">
+    <h1 class="title-font sm:text-4xl text-3xl xl:mb-8 lg:mb-16 md:mb-8 sm:mb-8 text-black -mt-24 md:mt-6 text-center">Monthly Returns
 
     </h1>
     <p class="font-mreg flex text-center text-gray-800 text-lg mb-2 mt-6"></p>
-    <div class="mb-16" id="chart7" style="background-color: #F7F6F2;"></div>
+    <div class="mb-16 " id="chart7" style="background-color: #F7F6F2;"></div>
   </div>
 </div>
 
@@ -258,7 +388,7 @@ text-rendering: optimizeLegibility;
   <div class="container mx-auto flex py-24 md:flex-row flex-col items-center ">
 
     <div class="lg:max-w-lg lg:w-2/5 w-5/6 md:w-0 -mt-16 mb-12 xl:hidden lg:hidden md:hidden sm:w-3/4">
-      <img class="object-cover object-center hidden rounded-2xl md:-ml-20" alt="hero" src="images/world4.svg">
+      <img class="object-cover object-center rounded-2xl md:-ml-20" alt="" src="">
     </div>
 
     <div class="lg:flex-grow md:w-4/5 lg:pr-24 md:pr-16 flex flex-col md:items-start md:text-left mb-16 md:mb-0 items-center text-center">
@@ -266,40 +396,38 @@ text-rendering: optimizeLegibility;
 
       </h1>
       
-      <h1 class="title-font sm:text-3xl md:text-4xl  lg:text-4xl mb-8 font-bold text-white mt-8 font-mreg ">How to Trade
+      <h1 class="title-font sm:text-3xl md:text-4xl  lg:text-4xl mb-8 font-bold text-white mt-8 ">How to Trade
         
       </h1>
 
 
-      <div class="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-4 gap-4 justify-items-center mt-6 px-4 ml-0 md:-ml-4">
+      <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 justify-items-center mt-6 px-4 ml-0 md:-ml-4">
         <div class="bg-gray-200 px-8 py-5 rounded-xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
           <h2 class="font-bold text-xl text-gray-900 font-mreg">Long Only</h2>
-          <p class="font-mreg text-base">Postion</p>
+          <p class="font-mreg">Position</p>
         </div>
       
         <div class="bg-gray-200 px-4 py-5 rounded-xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
-          <h2 class="font-bold text-xl text-gray-900 font-mreg">Daily For Signal</h2>
-          <p class="font-mreg text-base">Trade Freq</p>
+          <h2 class="font-bold text-xl text-gray-900 font-mreg">Could be Daily</h2>
+          <p class="font-mreg">Trade Freq</p>
         </div>
       
         <div class="bg-gray-200 px-4 py-5 rounded-xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
-          <h2  class="font-bold text-xl text-gray-900 font-mreg">30d Options</h2>
-          <p class="font-mreg text-base">Options</p>
+          <h2  class="font-bold text-xl text-gray-900 font-mreg">1x</h2>
+          <p class="font-mreg">Leverage</p>
         </div>
       
         <div class="bg-gray-200 px-4 py-5 rounded-xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
-          <h2  class="font-bold text-xl text-gray-900 font-mreg">Options</h2>
-          <p class="font-mreg text-base">Asset Type</p>
+          <h2  class="font-bold text-xl text-gray-900 font-mreg">ETF's</h2>
+          <p class="font-mreg">Asset Type</p>
         </div>
-
         <div class="bg-gray-200 px-4 py-5 rounded-xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
-          <h2  class="font-bold text-xl text-gray-900 font-mreg">3-6 Months</h2>
-          <p class="font-mreg text-base">Option Expiry</p>
+          <h2  class="font-bold text-xl text-gray-900 font-mreg">3:50PM Daily</h2>
+          <p class="font-mreg">Rebalance</p>
+        </div>
         </div>
 
-        </div>
-
-
+    
 
 
       <script type="module">
@@ -320,7 +448,7 @@ text-rendering: optimizeLegibility;
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
     
-        const monthlyRef = ref(db, "volTailRiskPerf");
+        const monthlyRef = ref(db, "ewmanagedfuturesperf");
 
 get(monthlyRef).then(snapshot => {
   const data = snapshot.val();
@@ -332,11 +460,13 @@ get(monthlyRef).then(snapshot => {
   );
   const series1 = sorted.map(([, values]) => values[0]);
   const series2 = sorted.map(([, values]) => values[1]);
+  const series3 = sorted.map(([, values]) => values[2]);
 
   const options = {
     chart: {
       fontFamily: 'montserrat-regular, sans-serif',
       type: 'area',
+      background: 'transparent',
       height: 450,
       toolbar: { show: false },
       zoom: { enabled: false },
@@ -418,7 +548,9 @@ get(monthlyRef).then(snapshot => {
       x: { format: 'MMM yyyy' }
     },
     series: [
-      { name: "Caltropia", data: series1 }
+      { name: "Caltropia", data: series1 },
+      { name: "DBMF", data: series2 },
+      { name: "CTA", data: series3 }
 
     ]
   };
@@ -428,7 +560,7 @@ get(monthlyRef).then(snapshot => {
 }).catch(err => console.error("Data fetch error:", err));
 
 
-const refPath = ref(db, "yearlyVolTailRiskPerf");
+const refPath = ref(db, "ewmanagedfuturesyearlyperf");
 
 get(refPath).then(snapshot => {
   const data = snapshot.val();
@@ -455,6 +587,7 @@ get(refPath).then(snapshot => {
     chart: {
       fontFamily: 'montserrat-regular, sans-serif',
       type: 'bar',
+      background: 'transparent',
   height: 450,
   toolbar: {
     show: false // this disables the entire menu and removes the icon
@@ -488,7 +621,7 @@ get(refPath).then(snapshot => {
       bar: {
         horizontal: false,
         columnWidth: '55%',
-        borderRadius: 4
+        borderRadius: 10
       }
     },
     dataLabels: { enabled: false },
@@ -509,7 +642,104 @@ get(refPath).then(snapshot => {
 }).catch(err => console.error("Error fetching Firebase data:", err));
 
 
-const returnsRef = ref(db, "monthlyVolTailRiskPerf");
+const allocationsRef = ref(db, "BondRegimeHistAlloc");
+
+get(allocationsRef).then(snapshot => {
+  const data = snapshot.val();
+  if (!data) return;
+
+  const sorted = Object.entries(data).sort(([a], [b]) => new Date(a) - new Date(b));
+  const dates = sorted.map(([date]) =>
+    new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'short' })
+  );
+  const values = sorted.map(([, value]) => value * 100); // convert to percentage
+
+  const options = {
+    chart: {
+      fontFamily: 'montserrat-regular, sans-serif',
+      type: 'line',
+      background: 'transparent',
+      height: 450,
+      toolbar: { show: false },
+      zoom: { enabled: false },
+      animations: {
+        enabled: true,
+        easing: 'easeinout',
+        speed: 800
+      }
+    },
+    stroke: {
+      curve: 'smooth',
+      width: 3
+    },
+    dataLabels: { enabled: false },
+    title: {
+      text: "",
+      align: 'center',
+      style: {
+        fontSize: '22px',
+        fontWeight: 'bold',
+        color: '#111827'
+      }
+    },
+    xaxis: {
+      categories: dates,
+      labels: {
+        rotate: -45,
+        style: {
+          fontSize: '0.1px',
+          colors: '#4B5563'
+        }
+      }
+    },
+    yaxis: {
+      labels: {
+        formatter: function (val) {
+          return parseFloat(val.toFixed(1)); // clean 1 decimal max
+        },
+        style: {
+          colors: '#4B5563',
+          fontSize: '12px'
+        }
+      },
+      title: {
+        text: 'Allocation (%)',
+        style: {
+          color: '#374151',
+          fontWeight: 500
+        }
+      }
+    },
+    grid: { show: false },
+    colors: ['#3b82f6'],
+    fill: {
+      type: "solid",
+      colors: ['#3b82f6']
+    },
+    markers: {
+      size: 0,
+      strokeWidth: 2,
+      strokeColors: "#fff",
+      hover: { size: 6 }
+    },
+    tooltip: {
+      theme: "light",
+      y: {
+        formatter: val => val.toFixed(1) + " %"
+      }
+    },
+    series: [{
+      name: 'Allocation %',
+      data: values
+    }]
+  };
+
+  const chart = new ApexCharts(document.querySelector("#chart5"), options);
+  chart.render();
+});
+
+
+const returnsRef = ref(db, "ewmanagedfuturesmonthlyperf");
 
 get(returnsRef).then(snapshot => {
   const data = snapshot.val();
@@ -552,6 +782,7 @@ get(returnsRef).then(snapshot => {
   const options = {
     chart: {
       fontFamily: 'montserrat-regular, sans-serif',
+      background: 'transparent',
       height: 600,
       type: 'heatmap',
       
@@ -559,12 +790,12 @@ get(returnsRef).then(snapshot => {
     },
     plotOptions: {
       heatmap: {
-        shadeIntensity: 0.5,
+        shadeIntensity: 0.8,
         colorScale: {
           ranges: [
           { from: -100, to: -5, name: 'Very Negative', color: '#dc2626' },  // darker red
     { from: -5, to: 0, name: 'Slight Negative', color: '#f87171' },   // medium red
-    { from: 0, to: 5, name: 'Slight Positive', color: '#6ee7b7' },    // medium green
+    { from: 0, to: 5, name: 'Slight Positive', color: '#1ee7b7' },    // medium green
     { from: 5, to: 100, name: 'Very Positive', color: '#16a34a' }
           ]
         }
@@ -624,7 +855,7 @@ get(returnsRef).then(snapshot => {
     </h1>
     <p1 class="text-center text-2xl mb-4 text-blue-900 mx-auto px-2"></p1>
     <h1 class="text-center text-2xl mb-4 text-4xl text-blue-900 mx-auto px-6 mb-8 mt-16">Investment Approach</h1>                  
-              <h1 class="text-center flex text-sm mb-24 text-blue-900  px-2 leading-loose text-center">A volatility tail risk strategy that systematically buys VIX call options to provide cost effective protection when volatility spikes to protect your portfolio from outsized losses. We are trying to protect against true tail risk scenarios, not just random Volatility Spikes.</h1>      
+              <h1 class="text-center flex text-sm mb-24 text-blue-900 mx-auto px-2 leading-loose ">Our Sector Regime Model identifies prevailing market regimes and allocates across up to eight sectors based on regime signals. By analyzing a broad set of macro and market indicators the model adjusts sector exposures to manage risk and adapt return potential across varying environments.</h1>      
     <div class="mx-auto w-full md:w-2/3 px-4">
       <div class="container my-8">
         <div class="flex justify-between items-center ">
@@ -632,7 +863,7 @@ get(returnsRef).then(snapshot => {
   
             
           </h2>
-          <h1 class="text-center text-2xl mb-4 text-3xl text-blue-900 mx-auto px-6 mb-24">Why Invest In Caltropia's Volatility Tail Risk</h1>
+          <h1 class="text-center text-2xl mb-4 text-3xl text-blue-900 mx-auto px-6 mb-24">Why Invest In Caltropia's Sector Regime Model</h1>
         </div>
 
         <style>
@@ -659,10 +890,17 @@ get(returnsRef).then(snapshot => {
 
               <div class="aspect-w-16 aspect-h-9">
                 
-                
+                <div class="object-cover shadow-md hover:shadow-xl rounded-3xl">
+                  <lottie-player class="object-cover" src="https://lottie.host/5a4a1438-a294-444d-851c-07083d72b797/3miin6kpl5.json"
+    background="transparent"
+    speed="1"
+    style=" height: 200px"
+    loop
+    autoplay></lottie-player>
+                 </div>
                 <div  class="object-cover shadow-md hover:shadow-xl rounded-3xl">
   
-                  
+  
   
                 </div>
   
@@ -670,13 +908,13 @@ get(returnsRef).then(snapshot => {
               </div>
               <div class="px-4 py-2">
                 <div class="text-lg leading-6 font-medium space-y-1">
-                  <h3 class="font-semibold text-gray-800 text-2xl mb-2 mt-6">
-                   <span class=" text-3xl text-gray-900 leading-relaxed">1. </span> Diversification Benefit
+                  <h3 class=" text-gray-800 text-2xl mb-2 mt-6">
+                   <span class=" text-3xl text-gray-900 leading-relaxed">1. </span> Multi-Signal Precision
                   </h3>
                   
                 </div>
                 <div class="text-2xl">
-                  <h1 class=" text-gray-800 text-sm mb-2 mt-6 mb-32 leading-loose">Volatility strategies often have low or negative correlation with traditional equity and fixed income portfolios, helping smooth overall portfolio returns</h1>
+                  <h1 class=" text-gray-800 text-sm mb-2 mt-6 mb-32 leading-loose">By focusing solely on multi regime signals, the strategy adapts to evolving market environments, providing a comprehensive, forward looking framework that goes beyond simple trend following to refine portfolio decisions</h1>
                   <p class="font-mreg font-large">
                     
                   </p>
@@ -688,7 +926,41 @@ get(returnsRef).then(snapshot => {
               </div>
 
           </div>
-          
+          <div
+            class="flex-none w-2/3 md:w-1/3 mr-8 md:pb-4  rounded-lg"
+          >
+
+              <div class="aspect-w-16 aspect-h-9">
+                <div class="object-cover shadow-md hover:shadow-xl rounded-3xl">
+                  <lottie-player class="object-cover" src="https://lottie.host/d6076e77-1425-4992-b7db-a5d9346ca9cb/0q2KiNETqv.json"
+    background="transparent"
+    speed="1"
+    style=" height: 200px"
+    loop
+    autoplay></lottie-player>
+                 </div>
+                  <div class="object-cover shadow-md hover:shadow-xl rounded-3xl">
+                    
+                    </div>
+
+              </div>
+              <div class="px-4 py-2">
+                <div class="text-lg leading-6 font-medium space-y-1">
+                  <h3 class="font-semibold text-gray-800 text-2xl mb-2 mt-6">
+                    <span class="  text-3xl text-gray-900 leading-relaxed">2. </span> Broad Diversification</h3>
+                </div>
+                <div class="text-lg">
+                  <h1 class=" text-gray-800 text-sm mb-2 mt-6 mb-32 leading-loose">Equal weighting across multiple sectors reduces concentration risk and provides exposure to the sectors to best perform during specific market regimes, improving resilience across different market cycles.</h1>
+                  <p class="font-mreg font-medium">
+                    
+                  </p>
+                  <p class="font-medium text-sm text-indigo-600 mt-2">
+                    <span class="text-indigo-600"></span>
+                  </p>
+                </div>
+              </div>
+
+          </div>
           <div
             class="flex-none w-2/3 md:w-1/3 mr-8 md:pb-4  rounded-lg"
           >
@@ -696,18 +968,26 @@ get(returnsRef).then(snapshot => {
               <div class="aspect-w-16 aspect-h-9">
   
                 <div class="object-cover shadow-md hover:shadow-xl rounded-3xl">
-                 
+                  <lottie-player class="object-cover" src="https://lottie.host/da049647-a20f-468e-ad36-b5fc9b32221b/gRXujXNuTR.json"
+    background="transparent"
+    speed="1"
+    style=" height: 200px"
+    loop
+    autoplay></lottie-player>
+                 </div>
+                <div class="object-cover shadow-md hover:shadow-xl rounded-3xl">
+                 <!--add this object cover to fix on mobile and keep the height in style but delete the width--> 
                 </div>
                   
               </div>
               <div class="px-4 py-2">
                 <div class="text-lg leading-6 font-medium space-y-1">
                   <h3 class="font-semibold text-gray-800 text-2xl mb-2 mt-6">
-                    <span class=" text-3xl text-gray-900 leading-relaxed">2. </span> Adaptive to Market Regimes
+                    <span class=" text-3xl text-gray-900 leading-relaxed">3. </span> Adaptive to Market Conditions
                   </h3>
                 </div>
                 <div class="text-lg">
-                  <h1 class=" text-gray-800 text-sm mb-2 mt-6 mb-32 leading-loose">Systematically integrating multiple models lets the strategy dynamically add exposure to volatility when expecting Tail Risk scenarios</h1>
+                  <h1 class=" text-gray-800 text-sm mb-2 mt-6 mb-32 leading-loose">The use of multiple regime signals signals allows the portfolio to dynamically adjust, participating in strong trends while staying responsive to reversals and regime shifts.</h1>
                   <p class="font-mreg font-medium">
                     
                   </p>
@@ -727,18 +1007,26 @@ get(returnsRef).then(snapshot => {
               <div class="aspect-w-16 aspect-h-9">
   
                 <div class="object-cover shadow-md hover:shadow-xl rounded-3xl">
-                 
+                  <lottie-player class="object-cover" src="https://lottie.host/65ed74f1-4e4f-4cce-8e61-fcc57c0fe81c/ObOUsU0kgw.json"
+    background="transparent"
+    speed="1"
+    style=" height: 200px"
+    loop
+    autoplay></lottie-player>
+                 </div>
+                <div class="object-cover shadow-md hover:shadow-xl rounded-3xl">
+                 <!--add this object cover to fix on mobile and keep the height in style but delete the width--> 
                 </div>
                   
               </div>
               <div class="px-4 py-2">
-                <div class="text-lg leading-6 font-medium space-y-1">
+                <div class="text-lg leading-8 font-medium space-y-1">
                   <h3 class="font-semibold text-gray-800 text-2xl mb-2 mt-6">
-                    <span class="text-3xl text-gray-900 leading-relaxed">3. </span>Tail Risk Protection
+                    <span class="text-3xl text-gray-900 leading-relaxed">4. </span>Systematic, Disciplined Process
                   </h3>
                 </div>
                 <div class="text-lg">
-                  <h1 class=" text-gray-800 text-sm mb-2 mt-6 mb-32 leading-loose">The strategy aims to generate profits, during elevated market drawdowns where volatility spikes significantly</h1>
+                  <h1 class=" text-gray-800 text-sm mb-2 mt-6 mb-32 leading-loose">By relying on a transparent, rules-based methodology, the strategy removes emotion from investment decisions, promoting consistency, repeatability, and long-term compounding potential.</h1>
                   <p class="font-mreg font-medium">
                     
                   </p>
@@ -750,6 +1038,8 @@ get(returnsRef).then(snapshot => {
               
 
           </div>
+
+          
           
         </div>
       </div>
@@ -758,7 +1048,13 @@ get(returnsRef).then(snapshot => {
       </div>
   </div>
   
-  </section>
+
+  
+</section>
+
+     
+  
+
 
 </body>
 

@@ -99,7 +99,68 @@
   
   </script>
 
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <!-- Firebase App (core) -->
+    <script type="module">
+      // Import Firebase modules
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+      import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-analytics.js";
+      import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
+      import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+      
+    
+      // Firebase config
+      const firebaseConfig2 = {
+        apiKey: "AIzaSyBxG5qf6mb8E_-b2TeXlRNseMZ26L9DRYg",
+        authDomain: "trendscores-df341.firebaseapp.com",
+        projectId: "trendscores-df341",
+        storageBucket: "trendscores-df341.appspot.com",
+        messagingSenderId: "565710392511",
+        appId: "1:565710392511:web:37349319364bba19b3ca0a",
+        measurementId: "G-8TVLFBWN63",
+        databaseURL: "https://trendscores-df341-default-rtdb.firebaseio.com"
+      };
+    
+      // Initialize Firebase services
+      const app2 = initializeApp(firebaseConfig2);
+      const analytics = getAnalytics(app2);
+      const db2 = getDatabase(app2);
+      const auth = getAuth(app2);
+    
+      // Auth check
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          populateTickerData(); // Run only if logged in
+        } else {
+          window.location.href = "signup.html"; // Or wherever your signup page is
+        }
+      });
+    
+      const tickers = ["GLD", "TLT", "EWJ", "EEM", "EMB", "IEF", "IEV", "SPY", "USO", "FXY", "FXF", "FXE", "FXC", "CPER", "SLV", "CORN", "SOYB", "WEAT", "CANE", "UNG", "MCHI", "FXA", "FXB", "PALL", "UGA"];
+    
+      function populateTickerData() {
+        tickers.forEach(ticker => {
+          const tickerRef = ref(db2, "stocks/" + ticker);
+          get(tickerRef).then(snapshot => {
+            const data = snapshot.val();
+            if (!data) return;
+    
+            document.getElementById(`${ticker}-shortTermTrend`).textContent = data.shortTermTrend;
+            document.getElementById(`${ticker}-shortTermStrength`).textContent = data.shortTermStrength;
+            document.getElementById(`${ticker}-intermTrend`).textContent = data.intermTrend;
+            document.getElementById(`${ticker}-intermStrength`).textContent = data.intermStrength;
+            document.getElementById(`${ticker}-breakoutAndDown`).textContent = data.breakoutAndDown;
+            document.getElementById(`${ticker}-meanReversion`).textContent = data.meanReversion;
+          }).catch(error => {
+            console.error("Error fetching data for", ticker, error);
+          });
+        });
+      }
 
+
+      
+
+    </script>
 
     
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
@@ -122,7 +183,7 @@
   <div class=" ml-12 mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center mr-12  ">
     <a class="flex title-font font-medium items-center text-gray-900 mb-4 md:mb-0 xl:-ml-6 lg:-ml-6 md:-ml-6 sm:-ml-0 xs:-ml-0 ">
       
-      <a href="index.html"><h1 class=" title-font text-2xl text-white ">Caltropia Research</h1></a>
+      <h1 class=" title-font text-2xl text-white ">Caltropia Research</h1>
     </a>
 
     <nav class="md:ml-auto font-bold md:mr-auto flex flex-wrap items-center text-base justify-center text-white font-bold xl:flex lg:flex md:flex sm:hidden ">
@@ -134,17 +195,17 @@
       <a class="mr-5 hover:text-white font-bold font-mreg"></a>
       <a class="mr-5 hover:text-white font-bold font-mreg"></a>
     </nav>
-    <a href="StrategiesGrid.html"><button class="inline-flex items-center border-0 py-1 px-3 focus:outline-none  rounded-2xl text-base mt-4 md:mt-0 font-regular font-mreg text-white">More Strats
+    <button class="inline-flex items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded-2xl text-base mt-4 md:mt-0 font-regular font-mreg">More Signals
       <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 ml-1" viewBox="0 0 24 24">
         <path d="M5 12h14M12 5l7 7-7 7"></path>
       </svg>
-    </button></a>
+    </button>
   </div>
 
 </header>
 
 
-<body class="min-h-full bg-gradient-to-r from-gray-800 via-[#7e9fd4] to-gray-500 pt-[env(safe-area-inset-top)]">
+<body class="min-h-full bg-gradient-to-r from-gray-800 via-[#7e9fd4] to-gray-300 pt-[env(safe-area-inset-top)]">
 
 <section class="text-gray-600 body-font xl:ml-0 lg:ml-0 md:ml-12 sm:ml-0">
   
@@ -157,72 +218,66 @@
     
 
     <div class="lg:flex-grow md:w-4/5 lg:pr-24 md:pr-16 flex flex-col md:items-start md:text-left mb-16 md:mb-0 items-center text-center">
-      <h1 class="title-font sm:text-3xl md:text-5xl  lg:text-5xl mb-4  text-white -mt-16 md:-mt-4  md:ml-0 lg:ml-0 xl:ml-0">Managed Futures Equal Weight
+      <h1 class="title-font sm:text-3xl md:text-5xl  lg:text-5xl mb-4  text-white -mt-4  md:ml-0 lg:ml-0 xl:ml-0">Gold Signals Realtime and Historical
 
       </h1>
-      <h1 class="mb-4 leading-relaxed text-gray-200  w-11/12  sm:text-sm md:text-base  lg:text-base">A signal-driven managed futures strategy using trend, strength, mean reversion, and breakout/down models, equally weighted for balanced, systematic exposure across markets.</h1>
-      <h1 class="title-font sm:text-3xl md:text-4xl  lg:text-4xl mb-4 text-white mt-8 ">Fund Facts
+      <h1 class="mb-4 leading-relaxed text-gray-200  w-11/12  sm:text-sm md:text-base  lg:text-base">Realtime and Historical Trend, Mean Reversion and Breakout and Down Signals</h1>
+      <h1 class="title-font sm:text-3xl md:text-4xl  lg:text-4xl mb-4 text-white mt-8 ">Realtime Trend Signals
         
       </h1>
-      <h1 class="text-xs text-red-200 ">From 12/22 to Current. In Real Time, No Backtest</h1>
+      <h1 class="text-xs text-red-200 ">Updated at 3:50PM Est Daily</h1>
 
 
-      <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 justify-items-center mt-6 px-4 ml-0 md:-ml-4">
-        <div class="bg-gray-200 px-6 py-5 rounded-xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
-          <h2 class="font-bold text-xl text-gray-900 font-mreg">7.04%</h2>
-          <p class="font-mreg">An Return</p>
+      <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 justify-items-center mt-6 px-4 md:-ml-4">
+        <div  class="bg-gray-200 px-8 py-5 rounded-xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
+          <h2 id="GLD-shortTermTrend" class="font-bold text-xl text-gray-900 font-mreg"></h2>
+          <p class="font-mreg">Short Term Trend</p>
         </div>
       
         <div class="bg-gray-200 px-4 py-5 rounded-xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
-          <h2 class="font-bold text-xl text-gray-900 font-mreg">5.54%</h2>
-          <p class="font-mreg">Volatility</p>
+          <h2 id="GLD-shortTermStrength" class="font-bold text-xl text-gray-900 font-mreg"></h2>
+          <p class="font-mreg">Short Term Strength</p>
         </div>
       
         <div class="bg-gray-200 px-4 py-5 rounded-xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
-          <h2  class="font-bold text-xl text-gray-900 font-mreg">-4.65%</h2>
-          <p class="font-mreg">Drawdown</p>
+          <h2 id="GLD-intermTrend" class="font-bold text-xl text-gray-900 font-mreg"></h2>
+          <p class="font-mreg">Intermediate Trend</p>
         </div>
       
         <div class="bg-gray-200 px-4 py-5 rounded-xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
-          <h2  class="font-bold text-xl text-gray-900 font-mreg">0.95</h2>
-          <p class="font-mreg">Sharpe</p>
+          <h2 id="GLD-intermStrength" class="font-bold text-xl text-gray-900 font-mreg"></h2>
+          <p class="font-mreg">Intermediate Strength</p>
         </div>
         </div>
 
 
-      <h1 class="title-font sm:text-3xl md:text-4xl  lg:text-4xl mb-2 text-white mt-12 ">Benchmark Facts
+      <h1 class="title-font sm:text-3xl md:text-4xl  lg:text-4xl mb-2 text-white mt-12 ">Realtime Mean Reversion and Breakout/Down
 
       </h1>
 
 
-      <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 justify-items-center mt-6 px-4 ml-0 md:-ml-4">
-        <div class="bg-gray-200 px-6 py-5 rounded-xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
-          <h2 class="font-bold text-xl text-gray-900 font-mreg">-3.01%</h2>
-          <p class="font-mreg">An Return</p>
+      <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 justify-items-center mt-6 px-4 md:-ml-4">
+        <div class="bg-gray-200 px-8 py-5 rounded-xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
+          <h2 id="GLD-meanReversion" class="font-bold text-xl text-gray-900 font-mreg"></h2>
+          <p class="font-mreg">Mean Reversion</p>
         </div>
       
         <div class="bg-gray-200 px-4 py-5 rounded-xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
-          <h2 class="font-bold text-xl text-gray-900 font-mreg">10.82%</h2>
-          <p class="font-mreg">Volatility</p>
+          <h2 id="GLD-breakoutAndDown" class="font-bold text-xl text-gray-900 font-mreg"></h2>
+          <p class="font-mreg">Breakout/Down Signal</p>
         </div>
       
-        <div class="bg-gray-200 px-4 py-5 rounded-xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
-          <h2  class="font-bold text-xl text-gray-900 font-mreg">-12.65%</h2>
-          <p class="font-mreg">Drawdown</p>
+        
         </div>
-      
-        <div class="bg-gray-200 px-4 py-5 rounded-xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
-          <h2  class="font-bold text-xl text-gray-900 font-mreg">-0.75</h2>
-          <p class="font-mreg">Sharpe</p>
-        </div>
-        </div>
+
+        <!--
       
 <h1 class="title-font sm:text-3xl md:text-4xl  lg:text-4xl mb-2 text-white mt-10">Current Allocation
 
       </h1>
 
-      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 justify-items-center mt-6 px-4 ml-0 md:-ml-4">
-        <div class="bg-gray-200 px-6 py-5 rounded-xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 justify-items-center mt-6 px-4 ml-0 sm:-ml-4">
+        <div class="bg-gray-200 px-4 py-5 rounded-xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
           <h2 id="es-weight" class="font-bold text-xl text-gray-900 font-mreg">-4.6%</h2>
           <p class="font-mreg">ES</p>
         </div>
@@ -277,7 +332,7 @@
           <p class="font-mreg">NG</p>
         </div>
       </div>
-         
+         -->
 
     </div>
 
@@ -293,12 +348,12 @@
 
 
 
-<!--
+
 
 <div class="items-center flex justify-center -mt-16 mb-12">
   <button class="shadow-lg relative font-mreg font-bold rounded-full sm:w-3/4 md:w-1/2 lg:w-1/3 xl:w-1/5 inline bg-gray-700 border-solid border-white  text-white font-semibold rounded-lg px-4 py-3 pl-6 pr-6 mt-6 md:mt-16  md:ml-12 lg:ml-12 xl:ml-12 text-lg">Methodology</button>
     </div>  
--->
+
 
   
   
@@ -331,22 +386,22 @@ text-rendering: optimizeLegibility;
 <section class=" lg:ml-0 md:-ml-12" style="background-color: #F7F6F2;">
 <div class="container mx-auto flex py-24 md:flex-row flex-col items-center xl:pl-0 lg:pl-0 md:pl-12 sm:pl-0 ">
     <div class="lg:flex-grow md:w-4/5 lg:pr-24 md:pr-16 flex flex-col md:items-start md:text-left sm:w-5/6 md:mb-0 items-center text-center">
-      <h1 class="title-font sm:text-3xl md:text-4xl  lg:text-4xl mb-4 text-black -mt-4  md:ml-0 lg:ml-0 xl:ml-0" >Managed Futures Equal Weight
+      <h1 class="title-font sm:text-3xl md:text-4xl  lg:text-4xl mb-4 text-black -mt-4  md:ml-0 lg:ml-0 xl:ml-0" >Gold Realtime/Historical Signals
 
       </h1>
 
       <p class="text-black font-mreg text-lg w-full font-bold"></p>
 
-      <h1 class="title-font sm:text-4xl text-3xl mb-2  text-black mt-8  ">Historical Performance
+      <h1 class="title-font sm:text-3xl text-3xl mb-4  text-black mt-8  ">Short Term Trend Scores
 
       </h1>
-      <p class="text-black font-mreg text-xs w-full font-bold">Not Dividend Adjusted</p>
+      <p class="text-black font-mreg text-xs w-full font-bold"></p>
 
 
       <div class=" inline w-full rounded-3xl items-center justify-center object-center">
 
 
-      <div class="w-full " id="chart4"></div>
+      <div class="w-full " id="chart11"></div>
 
 
     </div>
@@ -355,41 +410,129 @@ text-rendering: optimizeLegibility;
 
 
 
-<div class="lg:flex-grow md:w-4/5 lg:pr-24 md:pr-16 flex flex-col md:items-start md:text-left mb-16 sm:w-5/6 md:mb-0 items-center text-center">
-      <h1 class="title-font sm:text-5xl text-3xl mb-6 xl:mb-6 lg:mb-6 md:mb-8 sm:mb-6  text-white -mt-12  md:ml-0 lg:ml-0 xl:ml-0 transparent invisible ">Caltropia
 
-      </h1>
-
-      
-      <h1 class="title-font sm:text-4xl text-3xl xl:mb-8 lg:mb-16 md:mb-8 sm:mb-8  text-black mt-0 md:mt-24">Annual Returns
-
-      </h1>
-
-
-      <div class=" inline w-full rounded-3xl items-center justify-center object-center">
-
-
-      <div class="w-full " id="chart1"></div>
-
-
-    </div>
-
-    </div>
 
 
   </div>
+
+  <div class="container mx-auto flex py-0 md:flex-row flex-col items-center xl:pl-0 lg:pl-0 md:pl-12 sm:pl-0 -mt-12">
+    <div class="lg:flex-grow md:w-4/5 lg:pr-24 md:pr-16 flex flex-col md:items-start md:text-left sm:w-5/6 md:mb-0 items-center text-center">
+      
+
+      <p class="text-black font-mreg text-lg w-full font-bold"></p>
+
+      <h1 class="title-font sm:text-3xl text-3xl mb-4  text-black mt-8  ">Intermediate Term Trend Scores
+
+      </h1>
+      <p class="text-black font-mreg text-xs w-full font-bold"></p>
+
+
+      <div class=" inline w-full rounded-3xl items-center justify-center object-center">
+
+
+      <div class="w-full " id="chart10"></div>
+
+
+    </div>
+
+    </div>
+
+
+
+
+
+
+  </div>  
+
+  <div class="container mx-auto flex py-0 md:flex-row flex-col items-center xl:pl-0 lg:pl-0 md:pl-12 sm:pl-0 mt-12">
+    <div class="lg:flex-grow md:w-4/5 lg:pr-24 md:pr-16 flex flex-col md:items-start md:text-left sm:w-5/6 md:mb-0 items-center text-center">
+      
+
+      <p class="text-black font-mreg text-lg w-full font-bold"></p>
+
+      <h1 class="title-font sm:text-3xl text-3xl mb-4  text-black mt-8  ">Short Term Trend Strengths
+
+      </h1>
+      <p class="text-black font-mreg text-xs w-full font-bold"></p>
+
+
+      <div class=" inline w-full rounded-3xl items-center justify-center object-center">
+
+
+      <div class="w-full " id="chart12"></div>
+
+
+    </div>
+
+    </div>
+
+
+
+
+
+
+  </div>  
+
+
+  <div class="container mx-auto flex py-0 md:flex-row flex-col items-center xl:pl-0 lg:pl-0 md:pl-12 sm:pl-0 mt-12">
+    <div class="lg:flex-grow md:w-4/5 lg:pr-24 md:pr-16 flex flex-col md:items-start md:text-left sm:w-5/6 md:mb-0 items-center text-center">
+      
+
+      <p class="text-black font-mreg text-lg w-full font-bold"></p>
+
+      <h1 class="title-font sm:text-3xl text-3xl mb-4  text-black mt-8  ">Interm Term Trend Strengths
+
+      </h1>
+      <p class="text-black font-mreg text-xs w-full font-bold"></p>
+
+
+      <div class=" inline w-full rounded-3xl items-center justify-center object-center">
+
+
+      <div class="w-full " id="chart13"></div>
+
+
+    </div>
+
+    </div>
+
+
+
+
+
+
+  </div>   
+
+  <div class="container mx-auto flex py-0 md:flex-row flex-col items-center xl:pl-0 lg:pl-0 md:pl-12 sm:pl-0 mt-12">
+    <div class="lg:flex-grow md:w-4/5 lg:pr-24 md:pr-16 flex flex-col md:items-start md:text-left sm:w-5/6 md:mb-0 items-center text-center">
+      
+
+      <p class="text-black font-mreg text-lg w-full font-bold"></p>
+
+      <h1 class="title-font sm:text-3xl text-3xl mb-4  text-black mt-8  ">Aggregate Mean Reversion Scores
+
+      </h1>
+      <p class="text-black font-mreg text-xs w-full font-bold"></p>
+
+
+      <div class=" inline w-full rounded-3xl items-center justify-center object-center">
+
+
+      <div class="w-full " id="chart14"></div>
+
+
+    </div>
+
+    </div>
+
+
+
+
+
+
+  </div>   
 
     <!-- Centering wrapper -->
-<div class="w-full flex justify-center">
-  
-  <div class=" w-full max-w-4xl rounded-3xl px-4">
-    <h1 class="title-font sm:text-4xl text-3xl xl:mb-8 lg:mb-16 md:mb-8 sm:mb-8 text-black -mt-24 md:mt-6 text-center">Monthly Returns
-
-    </h1>
-    <p class="font-mreg flex text-center text-gray-800 text-lg mb-2 mt-6"></p>
-    <div class="mb-16 " id="chart7" style="background-color: #F7F6F2;"></div>
-  </div>
-</div>
 
 </section>
 
@@ -572,6 +715,652 @@ get(monthlyRef).then(snapshot => {
   const chart = new ApexCharts(document.querySelector("#chart4"), options);
   chart.render();
 }).catch(err => console.error("Data fetch error:", err));
+
+// 1) CONFIG
+const FIREBASE_URL = 'https://trendscores-df341-default-rtdb.firebaseio.com/';
+    
+    /**
+     * Fetches the time-series for one ticker and renders an ApexChart
+     * @param {string} ticker e.g. "FXY"
+     */
+    async function renderChart(ticker) {
+      // 2) GET data from RTDB
+      const resp = await fetch(
+        `${FIREBASE_URL}HistoricalWeeklyTrendScores/${encodeURIComponent("GLD")}.json`
+      );
+      if (!resp.ok) {
+        console.error(`Failed to fetch ${ticker}`, resp.statusText);
+        return;
+      }
+      const json = await resp.json();
+      if (!json) {
+        console.warn(`No data found for ${ticker}`);
+        return;
+      }
+      
+      // 3) TRANSFORM { "2025-05-25": 0.123, ... } → [ { x: Date, y: Number }, … ]
+      const seriesData = Object.entries(json)
+        .map(([dateStr, val]) => ({
+          x: new Date(dateStr), 
+          y: Number(val)
+        }))
+        .sort((a, b) => a.x - b.x);
+      
+      // 4) CHART OPTIONS
+      const options = {
+        chart: {
+          fontFamily: 'montserrat-regular, sans-serif',
+      type: 'line',
+      background: 'transparent',
+      height: 450,
+      toolbar: { show: false },
+      zoom: { enabled: false },
+      animations: {
+        enabled: true,
+        easing: 'easeinout',
+        speed: 800
+      }
+        },
+
+        stroke: {
+      curve: 'smooth',
+      width: 3
+    },
+        series: [{
+          name: ticker,
+          data: seriesData
+        }],
+        xaxis: {
+          type: 'datetime',
+          labels: { datetimeUTC: false }
+        },
+        yaxis: {
+          title: { text: 'Trend Score' }
+        },
+        title: {
+          text: `Historical Weekly Trend Scores: ${ticker}`,
+          align: 'center'
+        },
+        colors: [],
+    
+    markers: {
+      size: 0,
+      strokeWidth: 2,
+      strokeColors: "#fff",
+      hover: { size: 6 }
+    },
+
+    title: {
+      text: "",
+      align: 'center',
+      style: {
+        fontSize: '22px',
+        fontWeight: 'bold',
+        color: '#111827',
+        fontFamily: 'montserrat-regular, sans-serif'
+      }
+    },
+
+    yaxis: {
+      labels: {
+        formatter: function (val) {
+          return val.toFixed(2);
+        },
+        style: {
+          colors: '#4B5563',
+          fontSize: '12px'
+        }
+      },
+      title: {
+        text: '',
+        style: {
+          color: '#374151',
+          fontWeight: 500
+        }
+      }
+    },
+    grid: {
+      borderColor: '#E5E7EB',
+      show: false,
+      row: { colors: ['#F9FAFB', 'transparent'], opacity: 0.5 }
+    },
+
+        tooltip: {
+          x: { format: 'yyyy-MM-dd' }
+        }
+      };
+      
+      // 5) RENDER (or update) your chart
+      // if you want to update an existing chart, keep a reference and call chart.updateOptions()
+      const chartEl = document.querySelector('#chart10');
+      chartEl.innerHTML = ''; // clear old
+      const chart = new ApexCharts(chartEl, options);
+      chart.render();
+    }
+    
+    // Example: render for FXY on load
+    document.addEventListener('DOMContentLoaded', () => {
+      renderChart('GLD');
+    });
+
+///////
+
+// 1) CONFIG
+const FIREBASE_URL1 = 'https://trendscores-df341-default-rtdb.firebaseio.com/';
+    
+    /**
+     * Fetches the time-series for one ticker and renders an ApexChart
+     * @param {string} ticker e.g. "FXY"
+     */
+    async function renderChart1(ticker) {
+      // 2) GET data from RTDB
+      const resp = await fetch(
+        `${FIREBASE_URL1}HistoricalDailyTrendScores/${encodeURIComponent("GLD")}.json`
+      );
+      if (!resp.ok) {
+        console.error(`Failed to fetch ${ticker}`, resp.statusText);
+        return;
+      }
+      const json = await resp.json();
+      if (!json) {
+        console.warn(`No data found for ${ticker}`);
+        return;
+      }
+      
+      // 3) TRANSFORM { "2025-05-25": 0.123, ... } → [ { x: Date, y: Number }, … ]
+      const seriesData = Object.entries(json)
+        .map(([dateStr, val]) => ({
+          x: new Date(dateStr), 
+          y: Number(val)
+        }))
+        .sort((a, b) => a.x - b.x);
+      
+      // 4) CHART OPTIONS
+      const options = {
+        chart: {
+          fontFamily: 'montserrat-regular, sans-serif',
+      type: 'line',
+      background: 'transparent',
+      height: 450,
+      toolbar: { show: false },
+      zoom: { enabled: false },
+      animations: {
+        enabled: true,
+        easing: 'easeinout',
+        speed: 800
+      }
+        },
+
+        stroke: {
+      curve: 'smooth',
+      width: 3
+    },
+        series: [{
+          name: ticker,
+          data: seriesData
+        }],
+        xaxis: {
+          type: 'datetime',
+          labels: { datetimeUTC: false }
+        },
+        yaxis: {
+          title: { text: 'Trend Score' }
+        },
+        title: {
+          text: `Historical Weekly Trend Scores: ${ticker}`,
+          align: 'center'
+        },
+        colors: [],
+    
+    markers: {
+      size: 0,
+      strokeWidth: 2,
+      strokeColors: "#fff",
+      hover: { size: 6 }
+    },
+
+    title: {
+      text: "",
+      align: 'center',
+      style: {
+        fontSize: '22px',
+        fontWeight: 'bold',
+        color: '#111827',
+        fontFamily: 'montserrat-regular, sans-serif'
+      }
+    },
+
+    yaxis: {
+      labels: {
+        formatter: function (val) {
+          return val.toFixed(2);
+        },
+        style: {
+          colors: '#4B5563',
+          fontSize: '12px'
+        }
+      },
+      title: {
+        text: '',
+        style: {
+          color: '#374151',
+          fontWeight: 500
+        }
+      }
+    },
+    grid: {
+      borderColor: '#E5E7EB',
+      show: false,
+      row: { colors: ['#F9FAFB', 'transparent'], opacity: 0.5 }
+    },
+
+        tooltip: {
+          x: { format: 'yyyy-MM-dd' }
+        }
+      };
+      
+      // 5) RENDER (or update) your chart
+      // if you want to update an existing chart, keep a reference and call chart.updateOptions()
+      const chartEl = document.querySelector('#chart11');
+      chartEl.innerHTML = ''; // clear old
+      const chart = new ApexCharts(chartEl, options);
+      chart.render();
+    }
+    
+    // Example: render for FXY on load
+    document.addEventListener('DOMContentLoaded', () => {
+      renderChart1('GLD');
+    });
+
+
+///////
+
+// 1) CONFIG
+const FIREBASE_URL2 = 'https://trendscores-df341-default-rtdb.firebaseio.com/';
+    
+    /**
+     * Fetches the time-series for one ticker and renders an ApexChart
+     * @param {string} ticker e.g. "FXY"
+     */
+    async function renderChart2(ticker) {
+      // 2) GET data from RTDB
+      const resp = await fetch(
+        `${FIREBASE_URL2}HistoricalDailyTrendStrengths/${encodeURIComponent("GLD")}.json`
+      );
+      if (!resp.ok) {
+        console.error(`Failed to fetch ${ticker}`, resp.statusText);
+        return;
+      }
+      const json = await resp.json();
+      if (!json) {
+        console.warn(`No data found for ${ticker}`);
+        return;
+      }
+      
+      // 3) TRANSFORM { "2025-05-25": 0.123, ... } → [ { x: Date, y: Number }, … ]
+      const seriesData = Object.entries(json)
+        .map(([dateStr, val]) => ({
+          x: new Date(dateStr), 
+          y: Number(val)
+        }))
+        .sort((a, b) => a.x - b.x);
+      
+      // 4) CHART OPTIONS
+      const options = {
+        chart: {
+          fontFamily: 'montserrat-regular, sans-serif',
+      type: 'line',
+      background: 'transparent',
+      height: 450,
+      toolbar: { show: false },
+      zoom: { enabled: false },
+      animations: {
+        enabled: true,
+        easing: 'easeinout',
+        speed: 800
+      }
+        },
+
+        stroke: {
+      curve: 'smooth',
+      width: 3
+    },
+        series: [{
+          name: ticker,
+          data: seriesData
+        }],
+        xaxis: {
+          type: 'datetime',
+          labels: { datetimeUTC: false }
+        },
+        yaxis: {
+          title: { text: 'Trend Score' }
+        },
+        title: {
+          text: `Historical Weekly Trend Scores: ${ticker}`,
+          align: 'center'
+        },
+        colors: [],
+    
+    markers: {
+      size: 0,
+      strokeWidth: 2,
+      strokeColors: "#fff",
+      hover: { size: 6 }
+    },
+
+    title: {
+      text: "",
+      align: 'center',
+      style: {
+        fontSize: '22px',
+        fontWeight: 'bold',
+        color: '#111827',
+        fontFamily: 'montserrat-regular, sans-serif'
+      }
+    },
+
+    yaxis: {
+      labels: {
+        formatter: function (val) {
+          return val.toFixed(2);
+        },
+        style: {
+          colors: '#4B5563',
+          fontSize: '12px'
+        }
+      },
+      title: {
+        text: '',
+        style: {
+          color: '#374151',
+          fontWeight: 500
+        }
+      }
+    },
+    grid: {
+      borderColor: '#E5E7EB',
+      show: false,
+      row: { colors: ['#F9FAFB', 'transparent'], opacity: 0.5 }
+    },
+
+        tooltip: {
+          x: { format: 'yyyy-MM-dd' }
+        }
+      };
+      
+      // 5) RENDER (or update) your chart
+      // if you want to update an existing chart, keep a reference and call chart.updateOptions()
+      const chartEl = document.querySelector('#chart12');
+      chartEl.innerHTML = ''; // clear old
+      const chart = new ApexCharts(chartEl, options);
+      chart.render();
+    }
+    
+    // Example: render for FXY on load
+    document.addEventListener('DOMContentLoaded', () => {
+      renderChart2('GLD');
+    });
+
+
+///////
+
+// 1) CONFIG
+const FIREBASE_URL3 = 'https://trendscores-df341-default-rtdb.firebaseio.com/';
+    
+    /**
+     * Fetches the time-series for one ticker and renders an ApexChart
+     * @param {string} ticker e.g. "FXY"
+     */
+    async function renderChart3(ticker) {
+      // 2) GET data from RTDB
+      const resp = await fetch(
+        `${FIREBASE_URL3}HistoricalWeeklyTrendStrengths/${encodeURIComponent("GLD")}.json`
+      );
+      if (!resp.ok) {
+        console.error(`Failed to fetch ${ticker}`, resp.statusText);
+        return;
+      }
+      const json = await resp.json();
+      if (!json) {
+        console.warn(`No data found for ${ticker}`);
+        return;
+      }
+      
+      // 3) TRANSFORM { "2025-05-25": 0.123, ... } → [ { x: Date, y: Number }, … ]
+      const seriesData = Object.entries(json)
+        .map(([dateStr, val]) => ({
+          x: new Date(dateStr), 
+          y: Number(val)
+        }))
+        .sort((a, b) => a.x - b.x);
+      
+      // 4) CHART OPTIONS
+      const options = {
+        chart: {
+          fontFamily: 'montserrat-regular, sans-serif',
+      type: 'line',
+      background: 'transparent',
+      height: 450,
+      toolbar: { show: false },
+      zoom: { enabled: false },
+      animations: {
+        enabled: true,
+        easing: 'easeinout',
+        speed: 800
+      }
+        },
+
+        stroke: {
+      curve: 'smooth',
+      width: 3
+    },
+        series: [{
+          name: ticker,
+          data: seriesData
+        }],
+        xaxis: {
+          type: 'datetime',
+          labels: { datetimeUTC: false }
+        },
+        yaxis: {
+          title: { text: 'Trend Score' }
+        },
+        title: {
+          text: `Historical Weekly Trend Scores: ${ticker}`,
+          align: 'center'
+        },
+        colors: [],
+    
+    markers: {
+      size: 0,
+      strokeWidth: 2,
+      strokeColors: "#fff",
+      hover: { size: 6 }
+    },
+
+    title: {
+      text: "",
+      align: 'center',
+      style: {
+        fontSize: '22px',
+        fontWeight: 'bold',
+        color: '#111827',
+        fontFamily: 'montserrat-regular, sans-serif'
+      }
+    },
+
+    yaxis: {
+      labels: {
+        formatter: function (val) {
+          return val.toFixed(2);
+        },
+        style: {
+          colors: '#4B5563',
+          fontSize: '12px'
+        }
+      },
+      title: {
+        text: '',
+        style: {
+          color: '#374151',
+          fontWeight: 500
+        }
+      }
+    },
+    grid: {
+      borderColor: '#E5E7EB',
+      show: false,
+      row: { colors: ['#F9FAFB', 'transparent'], opacity: 0.5 }
+    },
+
+        tooltip: {
+          x: { format: 'yyyy-MM-dd' }
+        }
+      };
+      
+      // 5) RENDER (or update) your chart
+      // if you want to update an existing chart, keep a reference and call chart.updateOptions()
+      const chartEl = document.querySelector('#chart13');
+      chartEl.innerHTML = ''; // clear old
+      const chart = new ApexCharts(chartEl, options);
+      chart.render();
+    }
+    
+    // Example: render for FXY on load
+    document.addEventListener('DOMContentLoaded', () => {
+      renderChart3('GLD');
+    });
+
+
+///////
+
+// 1) CONFIG
+const FIREBASE_URL4 = 'https://trendscores-df341-default-rtdb.firebaseio.com/';
+    
+    /**
+     * Fetches the time-series for one ticker and renders an ApexChart
+     * @param {string} ticker e.g. "FXY"
+     */
+    async function renderChart4(ticker) {
+      // 2) GET data from RTDB
+      const resp = await fetch(
+        `${FIREBASE_URL4}TotalMeanReversionScores/${encodeURIComponent("GLD")}.json`
+      );
+      if (!resp.ok) {
+        console.error(`Failed to fetch ${ticker}`, resp.statusText);
+        return;
+      }
+      const json = await resp.json();
+      if (!json) {
+        console.warn(`No data found for ${ticker}`);
+        return;
+      }
+      
+      // 3) TRANSFORM { "2025-05-25": 0.123, ... } → [ { x: Date, y: Number }, … ]
+      const seriesData = Object.entries(json)
+        .map(([dateStr, val]) => ({
+          x: new Date(dateStr), 
+          y: Number(val)
+        }))
+        .sort((a, b) => a.x - b.x);
+      
+      // 4) CHART OPTIONS
+      const options = {
+        chart: {
+          fontFamily: 'montserrat-regular, sans-serif',
+      type: 'line',
+      background: 'transparent',
+      height: 450,
+      toolbar: { show: false },
+      zoom: { enabled: false },
+      animations: {
+        enabled: true,
+        easing: 'easeinout',
+        speed: 800
+      }
+        },
+
+        stroke: {
+      curve: 'smooth',
+      width: 3
+    },
+        series: [{
+          name: ticker,
+          data: seriesData
+        }],
+        xaxis: {
+          type: 'datetime',
+          labels: { datetimeUTC: false }
+        },
+        yaxis: {
+          title: { text: 'Trend Score' }
+        },
+        title: {
+          text: `Historical Weekly Trend Scores: ${ticker}`,
+          align: 'center'
+        },
+        colors: [],
+    
+    markers: {
+      size: 0,
+      strokeWidth: 2,
+      strokeColors: "#fff",
+      hover: { size: 6 }
+    },
+
+    title: {
+      text: "",
+      align: 'center',
+      style: {
+        fontSize: '22px',
+        fontWeight: 'bold',
+        color: '#111827',
+        fontFamily: 'montserrat-regular, sans-serif'
+      }
+    },
+
+    yaxis: {
+      labels: {
+        formatter: function (val) {
+          return val.toFixed(2);
+        },
+        style: {
+          colors: '#4B5563',
+          fontSize: '12px'
+        }
+      },
+      title: {
+        text: '',
+        style: {
+          color: '#374151',
+          fontWeight: 500
+        }
+      }
+    },
+    grid: {
+      borderColor: '#E5E7EB',
+      show: false,
+      row: { colors: ['#F9FAFB', 'transparent'], opacity: 0.5 }
+    },
+
+        tooltip: {
+          x: { format: 'yyyy-MM-dd' }
+        }
+      };
+      
+      // 5) RENDER (or update) your chart
+      // if you want to update an existing chart, keep a reference and call chart.updateOptions()
+      const chartEl = document.querySelector('#chart14');
+      chartEl.innerHTML = ''; // clear old
+      const chart = new ApexCharts(chartEl, options);
+      chart.render();
+    }
+    
+    // Example: render for FXY on load
+    document.addEventListener('DOMContentLoaded', () => {
+      renderChart4('GLD');
+    });    
 
 
 const refPath = ref(db, "ewmanagedfuturesyearlyperf");
@@ -1051,46 +1840,6 @@ get(returnsRef).then(snapshot => {
               </div>
               
 
-          </div>
-
-          <div
-            class="flex-none w-2/3 md:w-1/3 mr-8 md:pb-4  rounded-lg"
-          >
-
-              <div class="aspect-w-16 aspect-h-9">
-  
-                <div class="object-cover shadow-md hover:shadow-xl rounded-3xl">
-                  <a href="ManagedFuturesComparisons.html">
-                  <lottie-player class="object-cover" src="https://lottie.host/59724aa7-85ca-44a1-98b4-03a1578f463c/UzlJIAIu2x.json"
-    background="transparent"
-    speed="1"
-    style=" height: 200px"
-    loop
-    autoplay></lottie-player>
-                 </div>
-                <div class="object-cover shadow-md hover:shadow-xl rounded-3xl">
-                 <!--add this object cover to fix on mobile and keep the height in style but delete the width--> 
-                </div>
-                  
-              </div>
-              <div class="px-4 py-2">
-                <div class="text-lg leading-8 font-medium space-y-1">
-                  <h3 class="font-semibold text-gray-800 text-2xl mb-2 mt-6">
-                    <span class="text-3xl text-gray-900 leading-relaxed">5. </span>Compare Our Managed Futures Strategies
-                  </h3>
-                </div>
-                <div class="text-lg">
-                  <h1 class=" text-gray-800 text-sm mb-2 mt-6 mb-32 leading-loose">At Caltropia Research, we offer two distinct managed futures strategies, both designed to capitalize on markets trends, strength, mean reversion, and breakout/down signals, but each optimized through a different portfolio construction approach</h1>
-                  <p class="font-mreg font-medium">
-                    
-                  </p>
-                  <p class="font-medium text-sm text-indigo-600 mt-2">
-                    <span class="text-indigo-600"></span>
-                  </p>
-                </div>
-              </div>
-              
-            </a>
           </div>
           
         </div>

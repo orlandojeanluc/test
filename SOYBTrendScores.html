@@ -1,0 +1,1864 @@
+<html class="h-full">
+
+
+<link rel="stylesheet" href="public/styles.css">  
+
+<!DOCTYPE html>
+<!--[if IE 8 ]><html class="no-js oldie ie8" lang="en"> <![endif]-->
+<!--[if IE 9 ]><html class="no-js oldie ie9" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+
+   <!--- basic page needs
+   ================================================== -->
+   <meta charset="utf-8">
+  <title>Caltropia Research</title>
+  <meta name="description" content="">  
+  <meta name="author" content="">
+    
+   <!-- mobile specific metas
+   ================================================== -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+  <!-- CSS
+   ================================================== -->
+
+
+<link rel="stylesheet" href="public/styles1.css"> 
+<link rel="stylesheet" href="css/fonts.css"> 
+
+
+
+
+
+<script src="js/jquery-2.1.3.min.js"></script>
+
+<script>
+      window.Promise ||
+        document.write(
+          '<script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js"><\/script>'
+        )
+      window.Promise ||
+        document.write(
+          '<script src="https://cdn.jsdelivr.net/npm/eligrey-classlist-js-polyfill@1.2.20171210/classList.min.js"><\/script>'
+        )
+      window.Promise ||
+        document.write(
+          '<script src="https://cdn.jsdelivr.net/npm/findindex_polyfill_mdn"><\/script>'
+        )
+    </script>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+  import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
+  
+  // ✅ Initialize Firebase
+  const firebaseConfig1 = {
+    apiKey: "AIzaSyBxG5qf6mb8E_-b2TeXlRNseMZ26L9DRYg",
+    authDomain: "trendscores-df341.firebaseapp.com",
+    databaseURL: "https://trendscores-df341-default-rtdb.firebaseio.com",
+    projectId: "trendscores-df341",
+    storageBucket: "trendscores-df341.appspot.com",
+    messagingSenderId: "565710392511",
+    appId: "1:565710392511:web:37349319364bba19b3ca0a",
+    measurementId: "G-8TVLFBWN63"
+  };
+  
+  const app1 = initializeApp(firebaseConfig1); // ✅ Call this first
+  const db1 = getDatabase(app1); // ✅ Pass the app to getDatabase()
+  
+  // ✅ Your populate function
+  function populateManagedFuturesWeights() {
+    const tickers = ["es", "sb", "hg", "gc", "zc", "cl", "zn", "6b", "6e", "6j", "ng"];
+  
+    get(child(ref(db1), "managedFuturesEw")).then(snapshot => {
+      if (snapshot.exists()) {
+        const data = snapshot.val();
+  
+        tickers.forEach(ticker => {
+          if (data[ticker]) {
+            const weight = data[ticker].Weight;
+            const weightPercent = (weight * 100).toFixed(1) + "%";
+            document.getElementById(`${ticker}-weight`).textContent = weightPercent;
+          }
+        });
+      } else {
+        console.log("No data found in managedFuturesEw.");
+      }
+    }).catch(error => {
+      console.error("Error fetching weights:", error);
+    });
+  }
+  
+  // ✅ Call on page load
+  window.onload = () => {
+  
+    populateManagedFuturesWeights();
+  };
+  
+  </script>
+
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <!-- Firebase App (core) -->
+    <script type="module">
+      // Import Firebase modules
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+      import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-analytics.js";
+      import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
+      import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+      
+    
+      // Firebase config
+      const firebaseConfig2 = {
+        apiKey: "AIzaSyBxG5qf6mb8E_-b2TeXlRNseMZ26L9DRYg",
+        authDomain: "trendscores-df341.firebaseapp.com",
+        projectId: "trendscores-df341",
+        storageBucket: "trendscores-df341.appspot.com",
+        messagingSenderId: "565710392511",
+        appId: "1:565710392511:web:37349319364bba19b3ca0a",
+        measurementId: "G-8TVLFBWN63",
+        databaseURL: "https://trendscores-df341-default-rtdb.firebaseio.com"
+      };
+    
+      // Initialize Firebase services
+      const app2 = initializeApp(firebaseConfig2);
+      const analytics = getAnalytics(app2);
+      const db2 = getDatabase(app2);
+      const auth = getAuth(app2);
+    
+      // Auth check
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          populateTickerData(); // Run only if logged in
+        } else {
+          window.location.href = "signup.html"; // Or wherever your signup page is
+        }
+      });
+    
+      const tickers = ["SOYB", "SOYB", "SOYB", "SOYB", "SOYB", "SOYB", "SOYB", "SOYB", "SOYB", "SOYB", "SOYB", "SOYB", "SOYB", "SOYB", "SOYB", "SOYB", "SOYB", "WEAT", "CANE", "UNG", "MCHI", "FXA", "FXB", "PALL", "UGA"];
+    
+      function populateTickerData() {
+        tickers.forEach(ticker => {
+          const tickerRef = ref(db2, "stocks/" + ticker);
+          get(tickerRef).then(snapshot => {
+            const data = snapshot.val();
+            if (!data) return;
+    
+            document.getElementById(`${ticker}-shortTermTrend`).textContent = data.shortTermTrend;
+            document.getElementById(`${ticker}-shortTermStrength`).textContent = data.shortTermStrength;
+            document.getElementById(`${ticker}-intermTrend`).textContent = data.intermTrend;
+            document.getElementById(`${ticker}-intermStrength`).textContent = data.intermStrength;
+            document.getElementById(`${ticker}-breakoutAndDown`).textContent = data.breakoutAndDown;
+            document.getElementById(`${ticker}-meanReversion`).textContent = data.meanReversion;
+          }).catch(error => {
+            console.error("Error fetching data for", ticker, error);
+          });
+        });
+      }
+
+
+      
+
+    </script>
+
+    
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+   <!-- script
+   ================================================== -->
+
+   <!-- favicons
+  ================================================== -->
+  <style>
+      
+        #chart {
+      
+    }
+  </style>
+<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+</head>
+
+
+<header class="text-gray-600 body-font mt-6  w-full">
+  <div class=" ml-12 mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center mr-12  ">
+    <a class="flex title-font font-medium items-center text-gray-900 mb-4 md:mb-0 xl:-ml-6 lg:-ml-6 md:-ml-6 sm:-ml-0 xs:-ml-0 ">
+      
+      <h1 class=" title-font text-2xl text-white ">Caltropia Research</h1>
+    </a>
+
+    <nav class="md:ml-auto font-bold md:mr-auto flex flex-wrap items-center text-base justify-center text-white font-bold xl:flex lg:flex md:flex sm:hidden ">
+      
+      <a class="z-10 title-font mr-5 hover:white font-bold font-mreg "></a>
+
+          
+      <a class="mr-5 hover:text-white font-bold font-mreg"></a>
+      <a class="mr-5 hover:text-white font-bold font-mreg"></a>
+      <a class="mr-5 hover:text-white font-bold font-mreg"></a>
+    </nav>
+    <button class="inline-flex items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded-2xl text-base mt-4 md:mt-0 font-regular font-mreg">More Signals
+      <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 ml-1" viewBox="0 0 24 24">
+        <path d="M5 12h14M12 5l7 7-7 7"></path>
+      </svg>
+    </button>
+  </div>
+
+</header>
+
+
+<body class="min-h-full bg-gradient-to-r from-gray-800 via-[#7e9fd4] to-gray-300 pt-[env(safe-area-inset-top)]">
+
+<section class="text-gray-600 body-font xl:ml-0 lg:ml-0 md:ml-12 sm:ml-0">
+  
+  
+
+
+
+  <div class="container mx-auto flex py-24 md:flex-row flex-col items-center ">
+
+    
+
+    <div class="lg:flex-grow md:w-4/5 lg:pr-24 md:pr-16 flex flex-col md:items-start md:text-left mb-16 md:mb-0 items-center text-center">
+      <h1 class="title-font sm:text-3xl md:text-5xl  lg:text-5xl mb-4  text-white -mt-4  md:ml-0 lg:ml-0 xl:ml-0">Soybean Signals Realtime and Historical
+
+      </h1>
+      <h1 class="mb-4 leading-relaxed text-gray-200  w-11/12  sm:text-sm md:text-base  lg:text-base">Realtime and Historical Trend, Mean Reversion and Breakout and Down Signals</h1>
+      <h1 class="title-font sm:text-3xl md:text-4xl  lg:text-4xl mb-4 text-white mt-8 ">Realtime Trend Signals
+        
+      </h1>
+      <h1 class="text-xs text-red-200 ">Updated at 3:50PM Est Daily</h1>
+
+
+      <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 justify-items-center mt-6 px-4 md:-ml-4">
+        <div  class="bg-gray-200 px-8 py-5 rounded-xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
+          <h2 id="SOYB-shortTermTrend" class="font-bold text-xl text-gray-900 font-mreg"></h2>
+          <p class="font-mreg">Short Term Trend</p>
+        </div>
+      
+        <div class="bg-gray-200 px-4 py-5 rounded-xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
+          <h2 id="SOYB-shortTermStrength" class="font-bold text-xl text-gray-900 font-mreg"></h2>
+          <p class="font-mreg">Short Term Strength</p>
+        </div>
+      
+        <div class="bg-gray-200 px-4 py-5 rounded-xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
+          <h2 id="SOYB-intermTrend" class="font-bold text-xl text-gray-900 font-mreg"></h2>
+          <p class="font-mreg">Intermediate Trend</p>
+        </div>
+      
+        <div class="bg-gray-200 px-4 py-5 rounded-xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
+          <h2 id="SOYB-intermStrength" class="font-bold text-xl text-gray-900 font-mreg"></h2>
+          <p class="font-mreg">Intermediate Strength</p>
+        </div>
+        </div>
+
+
+      <h1 class="title-font sm:text-3xl md:text-4xl  lg:text-4xl mb-2 text-white mt-12 ">Realtime Mean Reversion and Breakout/Down
+
+      </h1>
+
+
+      <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 justify-items-center mt-6 px-4 md:-ml-4">
+        <div class="bg-gray-200 px-8 py-5 rounded-xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
+          <h2 id="SOYB-meanReversion" class="font-bold text-xl text-gray-900 font-mreg"></h2>
+          <p class="font-mreg">Mean Reversion</p>
+        </div>
+      
+        <div class="bg-gray-200 px-4 py-5 rounded-xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
+          <h2 id="SOYB-breakoutAndDown" class="font-bold text-xl text-gray-900 font-mreg"></h2>
+          <p class="font-mreg">Breakout/Down Signal</p>
+        </div>
+      
+        
+        </div>
+
+        <!--
+      
+<h1 class="title-font sm:text-3xl md:text-4xl  lg:text-4xl mb-2 text-white mt-10">Current Allocation
+
+      </h1>
+
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 justify-items-center mt-6 px-4 ml-0 sm:-ml-4">
+        <div class="bg-gray-200 px-4 py-5 rounded-xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
+          <h2 id="es-weight" class="font-bold text-xl text-gray-900 font-mreg">-4.6%</h2>
+          <p class="font-mreg">ES</p>
+        </div>
+      
+        <div class="bg-gray-200 px-4 py-5 rounded-xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
+          <h2 id="sb-weight" class="font-bold text-xl text-gray-900 font-mreg">-15.0%</h2>
+          <p class="font-mreg">SB</p>
+        </div>
+      
+        <div class="bg-gray-200 px-4 py-5 rounded-xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
+          <h2 id="hg-weight" class="font-bold text-xl text-gray-900 font-mreg">6.1%</h2>
+          <p class="font-mreg">HG</p>
+        </div>
+      
+        <div class="bg-gray-200 px-4 py-5 rounded-xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
+          <h2 id="gc-weight" class="font-bold text-xl text-gray-900 font-mreg">13.5%</h2>
+          <p class="font-mreg">GC</p>
+        </div>
+      
+        <div class="bg-gray-200 px-4 py-5 rounded-xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
+          <h2 id="zc-weight" class="font-bold text-xl text-gray-900 font-mreg">11.4%</h2>
+          <p class="font-mreg">ZC</p>
+        </div>
+      
+        <div class="bg-gray-200 px-4 py-5 rounded-xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
+          <h2 id="cl-weight" class="font-bold text-xl text-gray-900 font-mreg">-11.1%</h2>
+          <p class="font-mreg">CL</p>
+        </div>
+      
+        <div class="bg-gray-200 px-4 py-5 rounded-xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
+          <h2 id="zn-weight" class="font-bold text-xl text-gray-900 font-mreg">0.4%</h2>
+          <p class="font-mreg">ZN</p>
+        </div>
+      
+        <div class="bg-gray-200 px-4 py-5 rounded-xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
+          <h2 id="6b-weight" class="font-bold text-xl text-gray-900 font-mreg">13.9%</h2>
+          <p class="font-mreg">6B</p>
+        </div>
+      
+        <div class="bg-gray-200 px-4 py-5 rounded-xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
+          <h2 id="6e-weight" class="font-bold text-xl text-gray-900 font-mreg">13.6%</h2>
+          <p class="font-mreg">6E</p>
+        </div>
+      
+        <div class="bg-gray-200 px-4 py-5 rounded-xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
+          <h2 id="6j-weight" class="font-bold text-xl text-gray-900 font-mreg">13.9%</h2>
+          <p class="font-mreg">6J</p>
+        </div>
+      
+        <div class="bg-gray-200 px-4 py-5 rounded-xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
+          <h2 id="ng-weight" class="font-bold text-xl text-gray-900 font-mreg">-2.9%</h2>
+          <p class="font-mreg">NG</p>
+        </div>
+      </div>
+         -->
+
+    </div>
+
+    <div class="lg:max-w-lg lg:w-1/3 w-5/6 md:w-0 mt-16 hidden md:block">
+      <lottie-player class="object-cover" src="https://lottie.host/3e0c1b93-21d3-4d00-891f-c478771aa179/VCVZoHuIBK.json"
+  background="transparent"
+  speed="1"
+  style=" height: 500px"
+  loop
+  autoplay></lottie-player>
+    </div>
+  </div>
+
+
+
+
+
+<div class="items-center flex justify-center -mt-16 mb-12">
+  <button class="shadow-lg relative font-mreg font-bold rounded-full sm:w-3/4 md:w-1/2 lg:w-1/3 xl:w-1/5 inline bg-gray-700 border-solid border-white  text-white font-semibold rounded-lg px-4 py-3 pl-6 pr-6 mt-6 md:mt-16  md:ml-12 lg:ml-12 xl:ml-12 text-lg">Methodology</button>
+    </div>  
+
+
+  
+  
+
+
+
+  
+
+    <style>
+      h1, h2, h3, h4, h5, h6,
+.h01, .h02, .h03, .h04, .h05, .h06 {
+font-family: "librebaskerville-regular", sans-serif;
+color: #151515;
+font-style: bold;
+text-rendering: optimizeLegibility;
+
+}
+
+
+
+
+    </style>
+
+    
+
+
+
+
+
+<section class=" lg:ml-0 md:-ml-12" style="background-color: #F7F6F2;">
+<div class="container mx-auto flex py-24 md:flex-row flex-col items-center xl:pl-0 lg:pl-0 md:pl-12 sm:pl-0 ">
+    <div class="lg:flex-grow md:w-4/5 lg:pr-24 md:pr-16 flex flex-col md:items-start md:text-left sm:w-5/6 md:mb-0 items-center text-center">
+      <h1 class="title-font sm:text-3xl md:text-4xl  lg:text-4xl mb-4 text-black -mt-4  md:ml-0 lg:ml-0 xl:ml-0" >SOYB Realtime/Historical Signals
+
+      </h1>
+
+      <p class="text-black font-mreg text-lg w-full font-bold"></p>
+
+      <h1 class="title-font sm:text-3xl text-3xl mb-4  text-black mt-8  ">Short Term Trend Scores
+
+      </h1>
+      <p class="text-black font-mreg text-xs w-full font-bold"></p>
+
+
+      <div class=" inline w-full rounded-3xl items-center justify-center object-center">
+
+
+      <div class="w-full " id="chart11"></div>
+
+
+    </div>
+
+    </div>
+
+
+
+
+
+
+  </div>
+
+  <div class="container mx-auto flex py-0 md:flex-row flex-col items-center xl:pl-0 lg:pl-0 md:pl-12 sm:pl-0 -mt-12">
+    <div class="lg:flex-grow md:w-4/5 lg:pr-24 md:pr-16 flex flex-col md:items-start md:text-left sm:w-5/6 md:mb-0 items-center text-center">
+      
+
+      <p class="text-black font-mreg text-lg w-full font-bold"></p>
+
+      <h1 class="title-font sm:text-3xl text-3xl mb-4  text-black mt-8  ">Intermediate Term Trend Scores
+
+      </h1>
+      <p class="text-black font-mreg text-xs w-full font-bold"></p>
+
+
+      <div class=" inline w-full rounded-3xl items-center justify-center object-center">
+
+
+      <div class="w-full " id="chart10"></div>
+
+
+    </div>
+
+    </div>
+
+
+
+
+
+
+  </div>  
+
+  <div class="container mx-auto flex py-0 md:flex-row flex-col items-center xl:pl-0 lg:pl-0 md:pl-12 sm:pl-0 mt-12">
+    <div class="lg:flex-grow md:w-4/5 lg:pr-24 md:pr-16 flex flex-col md:items-start md:text-left sm:w-5/6 md:mb-0 items-center text-center">
+      
+
+      <p class="text-black font-mreg text-lg w-full font-bold"></p>
+
+      <h1 class="title-font sm:text-3xl text-3xl mb-4  text-black mt-8  ">Short Term Trend Strengths
+
+      </h1>
+      <p class="text-black font-mreg text-xs w-full font-bold"></p>
+
+
+      <div class=" inline w-full rounded-3xl items-center justify-center object-center">
+
+
+      <div class="w-full " id="chart12"></div>
+
+
+    </div>
+
+    </div>
+
+
+
+
+
+
+  </div>  
+
+
+  <div class="container mx-auto flex py-0 md:flex-row flex-col items-center xl:pl-0 lg:pl-0 md:pl-12 sm:pl-0 mt-12">
+    <div class="lg:flex-grow md:w-4/5 lg:pr-24 md:pr-16 flex flex-col md:items-start md:text-left sm:w-5/6 md:mb-0 items-center text-center">
+      
+
+      <p class="text-black font-mreg text-lg w-full font-bold"></p>
+
+      <h1 class="title-font sm:text-3xl text-3xl mb-4  text-black mt-8  ">Interm Term Trend Strengths
+
+      </h1>
+      <p class="text-black font-mreg text-xs w-full font-bold"></p>
+
+
+      <div class=" inline w-full rounded-3xl items-center justify-center object-center">
+
+
+      <div class="w-full " id="chart13"></div>
+
+
+    </div>
+
+    </div>
+
+
+
+
+
+
+  </div>   
+
+  <div class="container mx-auto flex py-0 md:flex-row flex-col items-center xl:pl-0 lg:pl-0 md:pl-12 sm:pl-0 mt-12">
+    <div class="lg:flex-grow md:w-4/5 lg:pr-24 md:pr-16 flex flex-col md:items-start md:text-left sm:w-5/6 md:mb-0 items-center text-center">
+      
+
+      <p class="text-black font-mreg text-lg w-full font-bold"></p>
+
+      <h1 class="title-font sm:text-3xl text-3xl mb-4  text-black mt-8  ">Aggregate Mean Reversion Scores
+
+      </h1>
+      <p class="text-black font-mreg text-xs w-full font-bold"></p>
+
+
+      <div class=" inline w-full rounded-3xl items-center justify-center object-center">
+
+
+      <div class="w-full mb-16 " id="chart14"></div>
+
+
+    </div>
+
+    </div>
+
+
+
+
+
+
+  </div>   
+
+    <!-- Centering wrapper -->
+
+</section>
+
+<section class="text-gray-600 body-font xl:ml-0 lg:ml-0 md:ml-12 sm:ml-0">
+  
+  
+
+
+
+  <div class="container mx-auto flex py-24 md:flex-row flex-col items-center ">
+
+    <div class="lg:max-w-lg lg:w-2/5 w-5/6 md:w-0 -mt-16 mb-12 xl:hidden lg:hidden md:hidden sm:w-3/4">
+      <img class="object-cover object-center rounded-2xl md:-ml-20" alt="" src="">
+    </div>
+
+    <div class="lg:flex-grow md:w-4/5 lg:pr-24 md:pr-16 flex flex-col md:items-start md:text-left mb-16 md:mb-0 items-center text-center">
+      <h1 class="title-font sm:text-3xl md:text-5xl  lg:text-5xl mb-4 font-bold text-white -mt-4 font-mreg md:ml-0 lg:ml-0 xl:ml-0">
+
+      </h1>
+      
+      <h1 class="title-font sm:text-3xl md:text-4xl  lg:text-4xl mb-8 font-bold text-white mt-0 ">How to Trade
+        
+      </h1>
+
+
+      <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 justify-items-center mt-6 px-4 ml-0 md:-ml-4">
+        
+        
+      
+        <div class="bg-gray-200 px-4 py-5 rounded-xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
+          <a href="ManagedFuturesEqualWeight">
+          <h2 class="font-bold text-xl text-gray-900 font-mreg">EW Man Futures</h2>
+        </a>
+          <p class="font-mreg">Strategies</p>
+        </div>
+      
+        <div class="bg-gray-200 px-4 py-5 rounded-xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
+          <a href="ManagedFuturesEqualWeight">
+          <h2  class="font-bold text-xl text-gray-900 font-mreg">Managed Futures</h2>
+        </a>
+          <p class="font-mreg">Strategies</p>
+        </div>
+      
+        
+        </div>
+
+    
+
+
+      <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
+    
+        const firebaseConfig = {
+          apiKey: "AIzaSyBxG5qf6mb8E_-b2TeXlRNseMZ26L9DRYg",
+          authDomain: "trendscores-df341.firebaseapp.com",
+          projectId: "trendscores-df341",
+          storageBucket: "trendscores-df341.appspot.com",
+          messagingSenderId: "565710392511",
+          appId: "1:565710392511:web:37349319364bba19b3ca0a",
+          measurementId: "G-8TVLFBWN63",
+          databaseURL: "https://trendscores-df341-default-rtdb.firebaseio.com"
+        };
+    
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+    
+        const monthlyRef = ref(db, "ewmanagedfuturesperf");
+
+get(monthlyRef).then(snapshot => {
+  const data = snapshot.val();
+  if (!data) return;
+
+  const sorted = Object.entries(data).sort(([a], [b]) => new Date(a) - new Date(b));
+  const categories = sorted.map(([date]) =>
+    new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'short' })
+  );
+  const series1 = sorted.map(([, values]) => values[0]);
+  const series2 = sorted.map(([, values]) => values[1]);
+  const series3 = sorted.map(([, values]) => values[2]);
+
+  const options = {
+    chart: {
+      fontFamily: 'montserrat-regular, sans-serif',
+      type: 'area',
+      background: 'transparent',
+      height: 450,
+      toolbar: { show: false },
+      zoom: { enabled: false },
+      animations: {
+        enabled: true,
+        easing: 'easeinout',
+        speed: 800
+      }
+    },
+    stroke: {
+      curve: 'smooth',
+      width: 3
+    },
+    dataLabels: {
+      enabled: false
+    },
+    title: {
+      text: "",
+      align: 'center',
+      style: {
+        fontSize: '22px',
+        fontWeight: 'bold',
+        color: '#111827',
+        fontFamily: 'montserrat-regular, sans-serif'
+      }
+    },
+    xaxis: {
+      categories,
+      labels: {
+        show: false,
+        rotate: -45,
+        style: {
+          fontSize: '12px',
+          colors: '#4B5563'
+        }
+      }
+    },
+    yaxis: {
+      labels: {
+        formatter: function (val) {
+          return val.toFixed(2);
+        },
+        style: {
+          colors: '#4B5563',
+          fontSize: '12px'
+        }
+      },
+      title: {
+        text: '',
+        style: {
+          color: '#374151',
+          fontWeight: 500
+        }
+      }
+    },
+    grid: {
+      borderColor: '#E5E7EB',
+      show: false,
+      row: { colors: ['#F9FAFB', 'transparent'], opacity: 0.5 }
+    },
+    colors: [],
+    fill: {
+      type: "gradient",
+      gradient: {
+        shadeIntensity: 1,
+        opacityFrom: 0.4,
+        opacityTo: 0.1,
+        stops: [0, 90, 100]
+      }
+    },
+    markers: {
+      size: 0,
+      strokeWidth: 2,
+      strokeColors: "#fff",
+      hover: { size: 6 }
+    },
+    tooltip: {
+      theme: "light",
+      x: { format: 'MMM yyyy' }
+    },
+    series: [
+      { name: "Caltropia", data: series1 },
+      { name: "DBMF", data: series2 },
+      { name: "CTA", data: series3 }
+
+    ]
+  };
+
+  const chart = new ApexCharts(document.querySelector("#chart4"), options);
+  chart.render();
+}).catch(err => console.error("Data fetch error:", err));
+
+// 1) CONFIG
+const FIREBASE_URL = 'https://trendscores-df341-default-rtdb.firebaseio.com/';
+    
+    /**
+     * Fetches the time-series for one ticker and renders an ApexChart
+     * @param {string} ticker e.g. "SOYB"
+     */
+    async function renderChart(ticker) {
+      // 2) GET data from RTDB
+      const resp = await fetch(
+        `${FIREBASE_URL}HistoricalWeeklyTrendScores/${encodeURIComponent("SOYB")}.json`
+      );
+      if (!resp.ok) {
+        console.error(`Failed to fetch ${ticker}`, resp.statusText);
+        return;
+      }
+      const json = await resp.json();
+      if (!json) {
+        console.warn(`No data found for ${ticker}`);
+        return;
+      }
+      
+      // 3) TRANSFORM { "2025-05-25": 0.123, ... } → [ { x: Date, y: Number }, … ]
+      const seriesData = Object.entries(json)
+        .map(([dateStr, val]) => ({
+          x: new Date(dateStr), 
+          y: Number(val)
+        }))
+        .sort((a, b) => a.x - b.x);
+      
+      // 4) CHART OPTIONS
+      const options = {
+        chart: {
+          fontFamily: 'montserrat-regular, sans-serif',
+      type: 'line',
+      background: 'transparent',
+      height: 450,
+      toolbar: { show: false },
+      zoom: { enabled: false },
+      animations: {
+        enabled: true,
+        easing: 'easeinout',
+        speed: 800
+      }
+        },
+
+        stroke: {
+      curve: 'smooth',
+      width: 3
+    },
+        series: [{
+          name: ticker,
+          data: seriesData
+        }],
+        xaxis: {
+          type: 'datetime',
+          labels: { datetimeUTC: false }
+        },
+        yaxis: {
+          title: { text: 'Trend Score' }
+        },
+        title: {
+          text: `Historical Weekly Trend Scores: ${ticker}`,
+          align: 'center'
+        },
+        colors: [],
+    
+    markers: {
+      size: 0,
+      strokeWidth: 2,
+      strokeColors: "#fff",
+      hover: { size: 6 }
+    },
+
+    title: {
+      text: "",
+      align: 'center',
+      style: {
+        fontSize: '22px',
+        fontWeight: 'bold',
+        color: '#111827',
+        fontFamily: 'montserrat-regular, sans-serif'
+      }
+    },
+
+    yaxis: {
+      labels: {
+        formatter: function (val) {
+          return val.toFixed(2);
+        },
+        style: {
+          colors: '#4B5563',
+          fontSize: '12px'
+        }
+      },
+      title: {
+        text: '',
+        style: {
+          color: '#374151',
+          fontWeight: 500
+        }
+      }
+    },
+    grid: {
+      borderColor: '#E5E7EB',
+      show: false,
+      row: { colors: ['#F9FAFB', 'transparent'], opacity: 0.5 }
+    },
+
+        tooltip: {
+          x: { format: 'yyyy-MM-dd' }
+        }
+      };
+      
+      // 5) RENDER (or update) your chart
+      // if you want to update an existing chart, keep a reference and call chart.updateOptions()
+      const chartEl = document.querySelector('#chart10');
+      chartEl.innerHTML = ''; // clear old
+      const chart = new ApexCharts(chartEl, options);
+      chart.render();
+    }
+    
+    // Example: render for SOYB on load
+    document.addEventListener('DOMContentLoaded', () => {
+      renderChart('SOYB');
+    });
+
+///////
+
+// 1) CONFIG
+const FIREBASE_URL1 = 'https://trendscores-df341-default-rtdb.firebaseio.com/';
+    
+    /**
+     * Fetches the time-series for one ticker and renders an ApexChart
+     * @param {string} ticker e.g. "SOYB"
+     */
+    async function renderChart1(ticker) {
+      // 2) GET data from RTDB
+      const resp = await fetch(
+        `${FIREBASE_URL1}HistoricalDailyTrendScores/${encodeURIComponent("SOYB")}.json`
+      );
+      if (!resp.ok) {
+        console.error(`Failed to fetch ${ticker}`, resp.statusText);
+        return;
+      }
+      const json = await resp.json();
+      if (!json) {
+        console.warn(`No data found for ${ticker}`);
+        return;
+      }
+      
+      // 3) TRANSFORM { "2025-05-25": 0.123, ... } → [ { x: Date, y: Number }, … ]
+      const seriesData = Object.entries(json)
+        .map(([dateStr, val]) => ({
+          x: new Date(dateStr), 
+          y: Number(val)
+        }))
+        .sort((a, b) => a.x - b.x);
+      
+      // 4) CHART OPTIONS
+      const options = {
+        chart: {
+          fontFamily: 'montserrat-regular, sans-serif',
+      type: 'line',
+      background: 'transparent',
+      height: 450,
+      toolbar: { show: false },
+      zoom: { enabled: false },
+      animations: {
+        enabled: true,
+        easing: 'easeinout',
+        speed: 800
+      }
+        },
+
+        stroke: {
+      curve: 'smooth',
+      width: 3
+    },
+        series: [{
+          name: ticker,
+          data: seriesData
+        }],
+        xaxis: {
+          type: 'datetime',
+          labels: { datetimeUTC: false }
+        },
+        yaxis: {
+          title: { text: 'Trend Score' }
+        },
+        title: {
+          text: `Historical Weekly Trend Scores: ${ticker}`,
+          align: 'center'
+        },
+        colors: [],
+    
+    markers: {
+      size: 0,
+      strokeWidth: 2,
+      strokeColors: "#fff",
+      hover: { size: 6 }
+    },
+
+    title: {
+      text: "",
+      align: 'center',
+      style: {
+        fontSize: '22px',
+        fontWeight: 'bold',
+        color: '#111827',
+        fontFamily: 'montserrat-regular, sans-serif'
+      }
+    },
+
+    yaxis: {
+      labels: {
+        formatter: function (val) {
+          return val.toFixed(2);
+        },
+        style: {
+          colors: '#4B5563',
+          fontSize: '12px'
+        }
+      },
+      title: {
+        text: '',
+        style: {
+          color: '#374151',
+          fontWeight: 500
+        }
+      }
+    },
+    grid: {
+      borderColor: '#E5E7EB',
+      show: false,
+      row: { colors: ['#F9FAFB', 'transparent'], opacity: 0.5 }
+    },
+
+        tooltip: {
+          x: { format: 'yyyy-MM-dd' }
+        }
+      };
+      
+      // 5) RENDER (or update) your chart
+      // if you want to update an existing chart, keep a reference and call chart.updateOptions()
+      const chartEl = document.querySelector('#chart11');
+      chartEl.innerHTML = ''; // clear old
+      const chart = new ApexCharts(chartEl, options);
+      chart.render();
+    }
+    
+    // Example: render for SOYB on load
+    document.addEventListener('DOMContentLoaded', () => {
+      renderChart1('SOYB');
+    });
+
+
+///////
+
+// 1) CONFIG
+const FIREBASE_URL2 = 'https://trendscores-df341-default-rtdb.firebaseio.com/';
+    
+    /**
+     * Fetches the time-series for one ticker and renders an ApexChart
+     * @param {string} ticker e.g. "SOYB"
+     */
+    async function renderChart2(ticker) {
+      // 2) GET data from RTDB
+      const resp = await fetch(
+        `${FIREBASE_URL2}HistoricalDailyTrendStrengths/${encodeURIComponent("SOYB")}.json`
+      );
+      if (!resp.ok) {
+        console.error(`Failed to fetch ${ticker}`, resp.statusText);
+        return;
+      }
+      const json = await resp.json();
+      if (!json) {
+        console.warn(`No data found for ${ticker}`);
+        return;
+      }
+      
+      // 3) TRANSFORM { "2025-05-25": 0.123, ... } → [ { x: Date, y: Number }, … ]
+      const seriesData = Object.entries(json)
+        .map(([dateStr, val]) => ({
+          x: new Date(dateStr), 
+          y: Number(val)
+        }))
+        .sort((a, b) => a.x - b.x);
+      
+      // 4) CHART OPTIONS
+      const options = {
+        chart: {
+          fontFamily: 'montserrat-regular, sans-serif',
+      type: 'line',
+      background: 'transparent',
+      height: 450,
+      toolbar: { show: false },
+      zoom: { enabled: false },
+      animations: {
+        enabled: true,
+        easing: 'easeinout',
+        speed: 800
+      }
+        },
+
+        stroke: {
+      curve: 'smooth',
+      width: 3
+    },
+        series: [{
+          name: ticker,
+          data: seriesData
+        }],
+        xaxis: {
+          type: 'datetime',
+          labels: { datetimeUTC: false }
+        },
+        yaxis: {
+          title: { text: 'Trend Score' }
+        },
+        title: {
+          text: `Historical Weekly Trend Scores: ${ticker}`,
+          align: 'center'
+        },
+        colors: [],
+    
+    markers: {
+      size: 0,
+      strokeWidth: 2,
+      strokeColors: "#fff",
+      hover: { size: 6 }
+    },
+
+    title: {
+      text: "",
+      align: 'center',
+      style: {
+        fontSize: '22px',
+        fontWeight: 'bold',
+        color: '#111827',
+        fontFamily: 'montserrat-regular, sans-serif'
+      }
+    },
+
+    yaxis: {
+      labels: {
+        formatter: function (val) {
+          return val.toFixed(2);
+        },
+        style: {
+          colors: '#4B5563',
+          fontSize: '12px'
+        }
+      },
+      title: {
+        text: '',
+        style: {
+          color: '#374151',
+          fontWeight: 500
+        }
+      }
+    },
+    grid: {
+      borderColor: '#E5E7EB',
+      show: false,
+      row: { colors: ['#F9FAFB', 'transparent'], opacity: 0.5 }
+    },
+
+        tooltip: {
+          x: { format: 'yyyy-MM-dd' }
+        }
+      };
+      
+      // 5) RENDER (or update) your chart
+      // if you want to update an existing chart, keep a reference and call chart.updateOptions()
+      const chartEl = document.querySelector('#chart12');
+      chartEl.innerHTML = ''; // clear old
+      const chart = new ApexCharts(chartEl, options);
+      chart.render();
+    }
+    
+    // Example: render for SOYB on load
+    document.addEventListener('DOMContentLoaded', () => {
+      renderChart2('SOYB');
+    });
+
+
+///////
+
+// 1) CONFIG
+const FIREBASE_URL3 = 'https://trendscores-df341-default-rtdb.firebaseio.com/';
+    
+    /**
+     * Fetches the time-series for one ticker and renders an ApexChart
+     * @param {string} ticker e.g. "SOYB"
+     */
+    async function renderChart3(ticker) {
+      // 2) GET data from RTDB
+      const resp = await fetch(
+        `${FIREBASE_URL3}HistoricalWeeklyTrendStrengths/${encodeURIComponent("SOYB")}.json`
+      );
+      if (!resp.ok) {
+        console.error(`Failed to fetch ${ticker}`, resp.statusText);
+        return;
+      }
+      const json = await resp.json();
+      if (!json) {
+        console.warn(`No data found for ${ticker}`);
+        return;
+      }
+      
+      // 3) TRANSFORM { "2025-05-25": 0.123, ... } → [ { x: Date, y: Number }, … ]
+      const seriesData = Object.entries(json)
+        .map(([dateStr, val]) => ({
+          x: new Date(dateStr), 
+          y: Number(val)
+        }))
+        .sort((a, b) => a.x - b.x);
+      
+      // 4) CHART OPTIONS
+      const options = {
+        chart: {
+          fontFamily: 'montserrat-regular, sans-serif',
+      type: 'line',
+      background: 'transparent',
+      height: 450,
+      toolbar: { show: false },
+      zoom: { enabled: false },
+      animations: {
+        enabled: true,
+        easing: 'easeinout',
+        speed: 800
+      }
+        },
+
+        stroke: {
+      curve: 'smooth',
+      width: 3
+    },
+        series: [{
+          name: ticker,
+          data: seriesData
+        }],
+        xaxis: {
+          type: 'datetime',
+          labels: { datetimeUTC: false }
+        },
+        yaxis: {
+          title: { text: 'Trend Score' }
+        },
+        title: {
+          text: `Historical Weekly Trend Scores: ${ticker}`,
+          align: 'center'
+        },
+        colors: [],
+    
+    markers: {
+      size: 0,
+      strokeWidth: 2,
+      strokeColors: "#fff",
+      hover: { size: 6 }
+    },
+
+    title: {
+      text: "",
+      align: 'center',
+      style: {
+        fontSize: '22px',
+        fontWeight: 'bold',
+        color: '#111827',
+        fontFamily: 'montserrat-regular, sans-serif'
+      }
+    },
+
+    yaxis: {
+      labels: {
+        formatter: function (val) {
+          return val.toFixed(2);
+        },
+        style: {
+          colors: '#4B5563',
+          fontSize: '12px'
+        }
+      },
+      title: {
+        text: '',
+        style: {
+          color: '#374151',
+          fontWeight: 500
+        }
+      }
+    },
+    grid: {
+      borderColor: '#E5E7EB',
+      show: false,
+      row: { colors: ['#F9FAFB', 'transparent'], opacity: 0.5 }
+    },
+
+        tooltip: {
+          x: { format: 'yyyy-MM-dd' }
+        }
+      };
+      
+      // 5) RENDER (or update) your chart
+      // if you want to update an existing chart, keep a reference and call chart.updateOptions()
+      const chartEl = document.querySelector('#chart13');
+      chartEl.innerHTML = ''; // clear old
+      const chart = new ApexCharts(chartEl, options);
+      chart.render();
+    }
+    
+    // Example: render for SOYB on load
+    document.addEventListener('DOMContentLoaded', () => {
+      renderChart3('SOYB');
+    });
+
+
+///////
+
+// 1) CONFIG
+const FIREBASE_URL4 = 'https://trendscores-df341-default-rtdb.firebaseio.com/';
+    
+    /**
+     * Fetches the time-series for one ticker and renders an ApexChart
+     * @param {string} ticker e.g. "SOYB"
+     */
+    async function renderChart4(ticker) {
+      // 2) GET data from RTDB
+      const resp = await fetch(
+        `${FIREBASE_URL4}TotalMeanReversionScores/${encodeURIComponent("SOYB")}.json`
+      );
+      if (!resp.ok) {
+        console.error(`Failed to fetch ${ticker}`, resp.statusText);
+        return;
+      }
+      const json = await resp.json();
+      if (!json) {
+        console.warn(`No data found for ${ticker}`);
+        return;
+      }
+      
+      // 3) TRANSFORM { "2025-05-25": 0.123, ... } → [ { x: Date, y: Number }, … ]
+      const seriesData = Object.entries(json)
+        .map(([dateStr, val]) => ({
+          x: new Date(dateStr), 
+          y: Number(val)
+        }))
+        .sort((a, b) => a.x - b.x);
+      
+      // 4) CHART OPTIONS
+      const options = {
+        chart: {
+          fontFamily: 'montserrat-regular, sans-serif',
+      type: 'line',
+      background: 'transparent',
+      height: 450,
+      toolbar: { show: false },
+      zoom: { enabled: false },
+      animations: {
+        enabled: true,
+        easing: 'easeinout',
+        speed: 800
+      }
+        },
+
+        stroke: {
+      curve: 'smooth',
+      width: 3
+    },
+        series: [{
+          name: ticker,
+          data: seriesData
+        }],
+        xaxis: {
+          type: 'datetime',
+          labels: { datetimeUTC: false }
+        },
+        yaxis: {
+          title: { text: 'Trend Score' }
+        },
+        title: {
+          text: `Historical Weekly Trend Scores: ${ticker}`,
+          align: 'center'
+        },
+        colors: [],
+    
+    markers: {
+      size: 0,
+      strokeWidth: 2,
+      strokeColors: "#fff",
+      hover: { size: 6 }
+    },
+
+    title: {
+      text: "",
+      align: 'center',
+      style: {
+        fontSize: '22px',
+        fontWeight: 'bold',
+        color: '#111827',
+        fontFamily: 'montserrat-regular, sans-serif'
+      }
+    },
+
+    yaxis: {
+      labels: {
+        formatter: function (val) {
+          return val.toFixed(2);
+        },
+        style: {
+          colors: '#4B5563',
+          fontSize: '12px'
+        }
+      },
+      title: {
+        text: '',
+        style: {
+          color: '#374151',
+          fontWeight: 500
+        }
+      }
+    },
+    grid: {
+      borderColor: '#E5E7EB',
+      show: false,
+      row: { colors: ['#F9FAFB', 'transparent'], opacity: 0.5 }
+    },
+
+        tooltip: {
+          x: { format: 'yyyy-MM-dd' }
+        }
+      };
+      
+      // 5) RENDER (or update) your chart
+      // if you want to update an existing chart, keep a reference and call chart.updateOptions()
+      const chartEl = document.querySelector('#chart14');
+      chartEl.innerHTML = ''; // clear old
+      const chart = new ApexCharts(chartEl, options);
+      chart.render();
+    }
+    
+    // Example: render for SOYB on load
+    document.addEventListener('DOMContentLoaded', () => {
+      renderChart4('SOYB');
+    });    
+
+
+const refPath = ref(db, "ewmanagedfuturesyearlyperf");
+
+get(refPath).then(snapshot => {
+  const data = snapshot.val();
+  if (!data) return console.error("No data found.");
+
+  // Convert and sort by parsed date keys
+  const sorted = Object.entries(data).sort(([a], [b]) => new Date(a) - new Date(b));
+
+  // Extract values
+  const years = sorted.map(([dateStr]) => {
+    const year = new Date(dateStr).getFullYear();
+    return "'" + year.toString().slice(-2);
+  });
+
+  const caltropia = sorted.map(([, values]) => values[0]);
+  const sp500 = sorted.map(([, values]) => values[1]);
+
+  // Now use in ApexCharts
+  const options = {
+    series: [
+      { name: 'Caltropia', data: caltropia }
+
+    ],
+    chart: {
+      fontFamily: 'montserrat-regular, sans-serif',
+      type: 'bar',
+      background: 'transparent',
+  height: 450,
+  toolbar: {
+    show: false // this disables the entire menu and removes the icon
+  }
+},
+    xaxis: {
+      categories: years
+    },
+    yaxis: {
+  title: {
+    text: ''
+  },
+  labels: {
+    formatter: function (val) {
+      return val.toFixed(2); // or .toFixed(2) if you want 2 decimal places
+    }
+  }
+},
+    grid: {
+              borderColor: '#E5E7EB',
+              show: false,
+              row: { colors: ['#F9FAFB', 'transparent'], opacity: 0.5 }
+            },
+    tooltip: {
+      y: {
+        formatter: val => val.toFixed(2) + " %"
+      }
+    },
+    fill: { opacity: 1 },
+    plotOptions: {
+      bar: {
+        horizontal: false,
+        columnWidth: '55%',
+        borderRadius: 10
+      }
+    },
+    dataLabels: { enabled: false },
+    stroke: {
+      show: true,
+      width: 2,
+      colors: ['transparent']
+    }
+  };
+
+  const chartEl = document.querySelector("#chart1");
+  if (chartEl) {
+    const chart = new ApexCharts(chartEl, options);
+    chart.render();
+  } else {
+    console.error("Element #chart1 not found.");
+  }
+}).catch(err => console.error("Error fetching Firebase data:", err));
+
+
+const allocationsRef = ref(db, "BondRegimeHistAlloc");
+
+get(allocationsRef).then(snapshot => {
+  const data = snapshot.val();
+  if (!data) return;
+
+  const sorted = Object.entries(data).sort(([a], [b]) => new Date(a) - new Date(b));
+  const dates = sorted.map(([date]) =>
+    new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'short' })
+  );
+  const values = sorted.map(([, value]) => value * 100); // convert to percentage
+
+  const options = {
+    chart: {
+      fontFamily: 'montserrat-regular, sans-serif',
+      type: 'line',
+      background: 'transparent',
+      height: 450,
+      toolbar: { show: false },
+      zoom: { enabled: false },
+      animations: {
+        enabled: true,
+        easing: 'easeinout',
+        speed: 800
+      }
+    },
+    stroke: {
+      curve: 'smooth',
+      width: 3
+    },
+    dataLabels: { enabled: false },
+    title: {
+      text: "",
+      align: 'center',
+      style: {
+        fontSize: '22px',
+        fontWeight: 'bold',
+        color: '#111827'
+      }
+    },
+    xaxis: {
+      categories: dates,
+      labels: {
+        rotate: -45,
+        style: {
+          fontSize: '0.1px',
+          colors: '#4B5563'
+        }
+      }
+    },
+    yaxis: {
+      labels: {
+        formatter: function (val) {
+          return parseFloat(val.toFixed(1)); // clean 1 decimal max
+        },
+        style: {
+          colors: '#4B5563',
+          fontSize: '12px'
+        }
+      },
+      title: {
+        text: 'Allocation (%)',
+        style: {
+          color: '#374151',
+          fontWeight: 500
+        }
+      }
+    },
+    grid: { show: false },
+    colors: ['#3b82f6'],
+    fill: {
+      type: "solid",
+      colors: ['#3b82f6']
+    },
+    markers: {
+      size: 0,
+      strokeWidth: 2,
+      strokeColors: "#fff",
+      hover: { size: 6 }
+    },
+    tooltip: {
+      theme: "light",
+      y: {
+        formatter: val => val.toFixed(1) + " %"
+      }
+    },
+    series: [{
+      name: 'Allocation %',
+      data: values
+    }]
+  };
+
+  const chart = new ApexCharts(document.querySelector("#chart5"), options);
+  chart.render();
+});
+
+
+const returnsRef = ref(db, "ewmanagedfuturesmonthlyperf");
+
+get(returnsRef).then(snapshot => {
+  const data = snapshot.val();
+  if (!data) return;
+
+  const monthMap = {
+    "01": "Jan", "02": "Feb", "03": "Mar", "04": "Apr",
+    "05": "May", "06": "Jun", "07": "Jul", "08": "Aug",
+    "09": "Sep", "10": "Oct", "11": "Nov", "12": "Dec"
+  };
+
+  const allMonths = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const structured = {};
+
+  // Step 1: Parse and organize values into year → month → value
+  Object.entries(data).forEach(([date, value]) => {
+    const jsDate = new Date(date);
+    const year = jsDate.getFullYear();
+    const monthIndex = String(jsDate.getMonth() + 1).padStart(2, "0");
+    const monthLabel = monthMap[monthIndex];
+
+    const numeric = parseFloat(Array.isArray(value) ? value[0] : value);
+    if (!isNaN(numeric) && isFinite(numeric)) {
+      if (!structured[year]) structured[year] = {};
+      structured[year][monthLabel] = parseFloat(numeric.toFixed(2));
+    }
+  });
+
+  // Step 2: Ensure each row (year) uses all months in correct order
+  const series = Object.entries(structured)
+    .sort(([a], [b]) => parseInt(a) - parseInt(b))
+    .map(([year, monthlyData]) => ({
+      name: year,
+      data: allMonths.map(month => ({
+        x: month,
+        y: monthlyData[month] ?? null
+      }))
+    }));
+
+  const options = {
+    chart: {
+      fontFamily: 'montserrat-regular, sans-serif',
+      background: 'transparent',
+      height: 600,
+      type: 'heatmap',
+      
+      toolbar: { show: false }
+    },
+    plotOptions: {
+      heatmap: {
+        shadeIntensity: 0.8,
+        colorScale: {
+          ranges: [
+          { from: -100, to: -5, name: 'Very Negative', color: '#dc2626' },  // darker red
+    { from: -5, to: 0, name: 'Slight Negative', color: '#f87171' },   // medium red
+    { from: 0, to: 5, name: 'Slight Positive', color: '#1ee7b7' },    // medium green
+    { from: 5, to: 100, name: 'Very Positive', color: '#16a34a' }
+          ]
+        }
+      }
+    },
+
+    dataLabels: {
+  enabled: true,
+  style: {
+    fontWeight: 'bold',
+    fontSize: window.innerWidth < 600 ? '8px' :
+              window.innerWidth < 900 ? '10px' : '12px'
+  }
+},
+    
+    xaxis: {
+      type: 'category',
+      categories: allMonths,
+      labels: {
+        style: {
+          fontSize: '12px'
+        }
+      }
+    },
+    yaxis: {
+      title: { text: "" },
+      labels: {
+        style: { fontSize: '12px' }
+      }
+    },
+    tooltip: {
+      y: {
+        formatter: val => val !== null ? val.toFixed(2) + " %" : "No Data"
+      }
+    },
+    series: series
+  };
+
+  const chart = new ApexCharts(document.querySelector("#chart7"), options);
+  chart.render();
+}).catch(err => console.error("Firebase error:", err));
+
+</script>
+
+
+
+</section>
+
+<section class="" style="background-color: #F7F6F2;">
+
+  <div class="container px-4 flex-grow w-full py-4 sm:py-0 mx-auto px-0  ">
+    
+    <h1
+      class="text-center text-6xl font-mreg font-semibold text-blue-900 mx-auto px-2"
+    >
+      
+    </h1>
+    <p1 class="text-center text-2xl mb-4 text-blue-900 mx-auto px-2"></p1>
+    <h1 class="text-center text-2xl mb-4 text-4xl text-blue-900 mx-auto px-6 mb-8 mt-16">Methodology Of Signals</h1>                  
+              <h1 class="text-center flex text-sm mb-24 text-blue-900 mx-auto px-2 leading-loose ">Showing favorable short- and intermediate-term trends, strong momentum, mean reversion potential, and breakout or breakdown signals. By combining multiple signals across timeframes and adding those signals within an Equal Weight Model, the signals seek to capture sustained trends while maintaining broad diversification and responsiveness to changing market conditions.</h1>      
+    <div class="mx-auto w-full md:w-2/3 px-4">
+      <div class="container my-8">
+        <div class="flex justify-between items-center ">
+          <h2 class="text-3xl font-mreg font-semibold ">
+  
+            
+          </h2>
+          <h1 class="text-center text-2xl mb-4 text-3xl text-blue-900 mx-auto px-6 mb-24">Why Use These Signals</h1>
+        </div>
+
+        <style>
+          .custom-scrollbar-hide::-webkit-scrollbar {
+            display: none;
+          }
+          .custom-scrollbar-hide {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;     /* Firefox */
+          }
+        </style>
+        
+        <div class="overflow-x-auto custom-scrollbar-hide">
+          
+          <!-- your content here -->
+        </div>
+        <div
+          id="scrollContainer"
+          class="flex flex-no-wrap overflow-x-scroll custom-scrollbar-hide scrolling-touch items-start -mt-12 mb-16"
+        >
+          <div
+            class="flex-none w-2/3 md:w-1/3 mr-8   rounded-xl"
+          >
+
+              <div class="aspect-w-16 aspect-h-9">
+                
+                <div class="object-cover shadow-md hover:shadow-xl rounded-3xl">
+                  <lottie-player class="object-cover" src="https://lottie.host/5a4a1438-a294-444d-851c-07083d72b797/3miin6kpl5.json"
+    background="transparent"
+    speed="1"
+    style=" height: 200px"
+    loop
+    autoplay></lottie-player>
+                 </div>
+                <div  class="object-cover shadow-md hover:shadow-xl rounded-3xl">
+  
+  
+  
+                </div>
+  
+                
+              </div>
+              <div class="px-4 py-2">
+                <div class="text-lg leading-6 font-medium space-y-1">
+                  <h3 class=" text-gray-800 text-2xl mb-2 mt-6">
+                   <span class=" text-3xl text-gray-900 leading-relaxed">1. </span> Multi-Signal Precision
+                  </h3>
+                  
+                </div>
+                <div class="text-2xl">
+                  <h1 class=" text-gray-800 text-sm mb-2 mt-6 mb-32 leading-loose">By combining trend direction, strength, mean reversion, and breakout signals, the strategy captures a more complete and nuanced view of market dynamics, enhancing decision making beyond simple trend following</h1>
+                  <p class="font-mreg font-large">
+                    
+                  </p>
+  
+                  <p class="font-medium text-sm text-indigo-600 mt-2">
+                    <span class="text-indigo-600"></span>
+                  </p>
+                </div>
+              </div>
+
+          </div>
+          <div
+            class="flex-none w-2/3 md:w-1/3 mr-8 md:pb-4  rounded-lg"
+          >
+
+              <div class="aspect-w-16 aspect-h-9">
+                <div class="object-cover shadow-md hover:shadow-xl rounded-3xl">
+                  <lottie-player class="object-cover" src="https://lottie.host/d6076e77-1425-4992-b7db-a5d9346ca9cb/0q2KiNETqv.json"
+    background="transparent"
+    speed="1"
+    style=" height: 200px"
+    loop
+    autoplay></lottie-player>
+                 </div>
+                  <div class="object-cover shadow-md hover:shadow-xl rounded-3xl">
+                    
+                    </div>
+
+              </div>
+              <div class="px-4 py-2">
+                <div class="text-lg leading-6 font-medium space-y-1">
+                  <h3 class="font-semibold text-gray-800 text-2xl mb-2 mt-6">
+                    <span class="  text-3xl text-gray-900 leading-relaxed">2. </span> Broad Diversification</h3>
+                </div>
+                <div class="text-lg">
+                  <h1 class=" text-gray-800 text-sm mb-2 mt-6 mb-32 leading-loose">Reduce or Increase concentration risk and provide exposure across a wide range of global markets, improving resilience across different market cycles.</h1>
+                  <p class="font-mreg font-medium">
+                    
+                  </p>
+                  <p class="font-medium text-sm text-indigo-600 mt-2">
+                    <span class="text-indigo-600"></span>
+                  </p>
+                </div>
+              </div>
+
+          </div>
+          <div
+            class="flex-none w-2/3 md:w-1/3 mr-8 md:pb-4  rounded-lg"
+          >
+
+              <div class="aspect-w-16 aspect-h-9">
+  
+                <div class="object-cover shadow-md hover:shadow-xl rounded-3xl">
+                  <lottie-player class="object-cover" src="https://lottie.host/da049647-a20f-468e-ad36-b5fc9b32221b/gRXujXNuTR.json"
+    background="transparent"
+    speed="1"
+    style=" height: 200px"
+    loop
+    autoplay></lottie-player>
+                 </div>
+                <div class="object-cover shadow-md hover:shadow-xl rounded-3xl">
+                 <!--add this object cover to fix on mobile and keep the height in style but delete the width--> 
+                </div>
+                  
+              </div>
+              <div class="px-4 py-2">
+                <div class="text-lg leading-6 font-medium space-y-1">
+                  <h3 class="font-semibold text-gray-800 text-2xl mb-2 mt-6">
+                    <span class=" text-3xl text-gray-900 leading-relaxed">3. </span> Adaptive to Market Conditions
+                  </h3>
+                </div>
+                <div class="text-lg">
+                  <h1 class=" text-gray-800 text-sm mb-2 mt-6 mb-32 leading-loose">The use of both short and intermediate term signals allows your portfolio to dynamically adjust, participating in strong trends while staying responsive to reversals, regime shifts and mean reversion.</h1>
+                  <p class="font-mreg font-medium">
+                    
+                  </p>
+                  <p class="font-medium text-sm text-indigo-600 mt-2">
+                    <span class="text-indigo-600"></span>
+                  </p>
+                </div>
+              </div>
+              
+
+          </div>
+          
+          <div
+            class="flex-none w-2/3 md:w-1/3 mr-8 md:pb-4  rounded-lg"
+          >
+
+              <div class="aspect-w-16 aspect-h-9">
+  
+                <div class="object-cover shadow-md hover:shadow-xl rounded-3xl">
+                  <lottie-player class="object-cover" src="https://lottie.host/65ed74f1-4e4f-4cce-8e61-fcc57c0fe81c/ObOUsU0kgw.json"
+    background="transparent"
+    speed="1"
+    style=" height: 200px"
+    loop
+    autoplay></lottie-player>
+                 </div>
+                <div class="object-cover shadow-md hover:shadow-xl rounded-3xl">
+                 <!--add this object cover to fix on mobile and keep the height in style but delete the width--> 
+                </div>
+                  
+              </div>
+              <div class="px-4 py-2">
+                <div class="text-lg leading-8 font-medium space-y-1">
+                  <h3 class="font-semibold text-gray-800 text-2xl mb-2 mt-6">
+                    <span class="text-3xl text-gray-900 leading-relaxed">4. </span>Systematic, Disciplined Process
+                  </h3>
+                </div>
+                <div class="text-lg">
+                  <h1 class=" text-gray-800 text-sm mb-2 mt-6 mb-32 leading-loose">By relying on a transparent, rules-based methodology, the signals remove emotion from investment decisions, promoting consistency, repeatability, and long-term compounding potential.</h1>
+                  <p class="font-mreg font-medium">
+                    
+                  </p>
+                  <p class="font-medium text-sm text-indigo-600 mt-2">
+                    <span class="text-indigo-600"></span>
+                  </p>
+                </div>
+              </div>
+              
+
+          </div>
+          
+        </div>
+      </div>
+      <!---->
+      
+      </div>
+  </div>
+  
+
+  
+</section>
+
+     
+  
+
+
+</body>
+
+
+
+</html>
+
+
+
+
+

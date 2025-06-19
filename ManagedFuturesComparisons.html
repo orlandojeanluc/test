@@ -1,0 +1,793 @@
+<link rel="stylesheet" href="public/styles.css">  
+
+<!DOCTYPE html>
+<!--[if IE 8 ]><html class="no-js oldie ie8" lang="en"> <![endif]-->
+<!--[if IE 9 ]><html class="no-js oldie ie9" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+
+   <!--- basic page needs
+   ================================================== -->
+   <meta charset="utf-8">
+  <title>Caltropia Research</title>
+  <meta name="description" content="">  
+  <meta name="author" content="">
+
+   <!-- mobile specific metas
+   ================================================== -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <!-- CSS
+   ================================================== -->
+
+
+<link rel="stylesheet" href="public/styles.css"> 
+<link rel="stylesheet" href="css/fonts.css">
+
+
+
+
+
+<script src="js/jquery-2.1.3.min.js"></script>
+
+<script>
+      window.Promise ||
+        document.write(
+          '<script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js"><\/script>'
+        )
+      window.Promise ||
+        document.write(
+          '<script src="https://cdn.jsdelivr.net/npm/eligrey-classlist-js-polyfill@1.2.20171210/classList.min.js"><\/script>'
+        )
+      window.Promise ||
+        document.write(
+          '<script src="https://cdn.jsdelivr.net/npm/findindex_polyfill_mdn"><\/script>'
+        )
+    </script>
+
+    
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+   <!-- script
+   ================================================== -->
+
+   <!-- favicons
+  ================================================== -->
+  <style>
+      
+        #chart {
+      
+    }
+  </style>
+
+</head>
+
+<header class="text-gray-600 body-font mt-6 w-full mb-0 sm:mb-12">
+  <div class="flex flex-col sm:flex-row items-center max-w-screen-xl mx-auto px-2 sm:-px-0 ml-0 sm:ml-8 ">
+
+    <!-- Logo -->
+    <a href="index.html" class="flex items-center justify-center sm:justify-start mb-4 sm:mb-0">
+      <h1 class="whitespace-nowrap font-bold text-2xl text-black font-mreg mr-0 sm:mr-12">C A L T R O P I A</h1>
+    </a>
+
+    <!-- Nav -->
+    <nav class="flex flex-col sm:flex-row sm:ml-8 sm:space-x-8 items-center text-center sm:text-left">
+      <a href="aboutUs.html" class="font-mreg font-bold tracking-widest text-base text-gray-900 mb-2 sm:mb-0">ABOUT US</a>
+      <a href="StrategiesGrid.html" class="font-mreg font-bold tracking-widest text-base text-gray-900 mb-2 sm:mb-0">STRATEGIES</a>
+      <a id="trend-link" href="#" class="font-mreg font-bold tracking-widest text-base text-gray-900 mb-2 sm:mb-0">TREND SCORES</a>
+      <a id="macro-link" href="#" class="font-mreg font-bold tracking-widest text-base text-gray-900">MACRO REGIMES</a>
+    </nav>
+
+  </div>
+</header>
+
+
+
+
+
+
+<body class="" style="background-color: #F7F6F2;">
+
+  <style>
+    h1, h2, h3, h4, h5, h6,
+.h01, .h02, .h03, .h04, .h05, .h06 {
+font-family: "librebaskerville-regular", sans-serif;
+color: #151515;
+font-style: bold;
+text-rendering: optimizeLegibility;
+
+}
+</style>
+
+<section class="text-gray-600 body-font ">
+
+  <div class="container px-5 xl:py-24 lg:py-24 md:py-24 py-16 mx-auto flex flex-col ">
+    
+    <div class="z-20 lg:w-4/6  mx-auto ">
+
+      <h1 class="z-20 justify-center items-center text-center lg:text-4xl xl:text-5xl md:text-4xl text-3xl text-black ">Managed Futures Trend</h1>
+      <h1 class="justify-center items-center text-center  text-lg sm:text-xl text-black pt-4 text-blue-800 xl:mb-4 lg:mb-4 md:mb-4 mb-0">Signal-driven managed futures strategies using trend, strength, mean reversion, and breakout/down models.</h1>
+      <div class="rounded-lg h-64 overflow-hidden ">
+        <!--https://assets6.lottiefiles.com/packages/lf20_8rkyiowr.json https://assets1.lottiefiles.com/packages/lf20_n9teq50f.json-->
+        <lottie-player src="https://assets6.lottiefiles.com/packages/lf20_8rkyiowr.json"  background="transparent"  speed="1"   loop  autoplay></lottie-player>
+      </div>
+      <div class="flex flex-col sm:flex-row mt-10">
+        <div class="sm:w-1/3 text-center sm:pr-8 sm:py-8">
+          
+          <div class="flex flex-col items-center text-center justify-center">
+            <h2 class="font-medium title-font mt-4 text-gray-900 text-lg font-mreg font-bold">Overview</h2>
+            <div class="w-12 h-1 bg-blue-700 rounded mt-2 mb-4"></div>
+            
+          </div>
+        </div>
+        <div class="sm:w-2/3 sm:pl-8 sm:py-8 sm:border-l border-blue-500 sm:border-t-0 border-t mt-4 pt-4 sm:mt-0 text-center sm:text-left">
+          <h1 class="leading-relaxed text-md mb-4  text-center text-justify text-black">At Caltropia Research, we offer two distinct managed futures strategies, both designed to capitalize on markets trends, strength, mean reversion, and breakout/down signals, but each optimized through a different portfolio construction approach.</h1>
+          <a class="text-blue-800 inline-flex items-center font-mreg font-bold">Learn More Below
+            
+          </a>
+        </div>
+      </div>
+
+    </div>
+    <div class="z-10 rounded-full xl:h-64 xl:w-64 lg:h-48 lg:w-48 md:h-64 md:w-64 h-16 w-16 flex bg-gradient-to-r from-blue-300 via-red-blue to-blue-100 absolute xl:-mt-16 lg:-mt-12 md:-mt-16 -mt-2 sm:-mt-4 xl:ml-32 lg:ml-32 md:ml-0 ml-4 "></div>
+  </div>
+</section>
+
+
+        <section class="z-20 flex flex-col items-center h-1/2 md:flex-row bg-white">
+            <div class="z-20 hidden w-full h-1/2  lg:block md:w-1/2 xl:w-1/2 -mt-48 mb-16">
+                <!--- image will be full height and occupy the whole with of this div.-->
+                <div class="z-20 object-cover w-full h-1/2 object-center justify-center items-center ml-24 ">
+                  <lottie-player   src="https://assets4.lottiefiles.com/packages/lf20_tr1pjkop.json"  background="transparent"  speed="1"  style="width: 350px; height: 350px;"  loop  autoplay ></lottie-player>
+                </div>
+            </div>
+            <div class="z-20 flex w-full h-100 px-6 bg-white md:max-w-md lg:max-w-full md:w-1/2 xl:w-1/2 lg:px-16 xl:px-12 items-left justify-left mr-0 sm:mr-24">
+                <div class="z-20 w-full h-3/4">
+                    
+                    <h1 class="z-20 mb-8 text-3xl font-bold tracking-tighter text-center text-black lg:text-left lg:text-5xl title-font mt-16 sm:mt-32">
+                       1: Caltropia Managed Futures Alpha.
+                    </h1>
+                    
+                    <h1 class="z-20 mb-8 text-base leading-relaxed text-center sm:text-left text-blue-800 lg:text-base ">
+                      This strategy employs a proprietary asset weighting algorithm that dynamically adjusts position sizes based on a blend of trend strength, signal reliability, and volatility normalization.
+
+                      
+                    </h1>
+
+                    <h1 class="z-20 mb-2 text-3xl tracking-tighter text-center text-black lg:text-left lg:text-4xl title-font mt-12 sm:mt-12">
+                      Methodology
+                   </h1>
+
+                    
+                    
+                    
+
+
+                    <div class="mx-auto w-full md:w-full px-0 mt-24">
+                      <div class="container my-8">
+                        <div class="flex justify-between items-center ">
+                          <h2 class="text-3xl font-mreg font-semibold ">
+                  
+                            
+                          </h2>
+                          
+                        </div>
+            
+                        <style>
+                          .custom-scrollbar-hide::-webkit-scrollbar {
+                            display: none;
+                          }
+                          .custom-scrollbar-hide {
+                            -ms-overflow-style: none;  /* IE and Edge */
+                            scrollbar-width: none;     /* Firefox */
+                          }
+                        </style>
+                        
+                        <div class="overflow-x-auto custom-scrollbar-hide">
+                          <!-- your content here -->
+                        </div>
+                        <div
+                          id="scrollContainer"
+                          class="flex flex-no-wrap overflow-x-scroll custom-scrollbar-hide scrolling-touch items-start -mt-12 mb-32"
+                        >
+                          <div
+                            class="flex-none w-2/3 md:w-1/3 mr-8   rounded-xl"
+                          >
+
+                              <div class="aspect-w-16 aspect-h-9">
+                                
+                                <div class="object-cover shadow-md hover:shadow-xl rounded-3xl">
+                                  <lottie-player class="object-cover" src="https://lottie.host/5a4a1438-a294-444d-851c-07083d72b797/3miin6kpl5.json"
+                    background="transparent"
+                    speed="1"
+                    style=" height: 300px"
+                    loop
+                    autoplay></lottie-player>
+                                 </div>
+                                
+                                <div  class="object-cover shadow-md hover:shadow-xl rounded-3xl">
+                  
+                  
+                  
+                                </div>
+                  
+                                
+                              </div>
+                              <div class="px-4 py-2">
+                                <div class="text-lg leading-12 font-medium space-y-1">
+                                  <h1 class=" text-black text-2xl mb-2 mt-6 font-bold tracking-tighter mb-6">
+                                   <span class="text-3xl">1.</span> Signal Inputs
+                                  </h1>
+                                  <h1 class=" text-black text-base mb-2 mt-8 tracking-tighter">
+                                    Short and intermediate term trend, strength ratings, mean reversion triggers, and breakout/down events.
+                                  </h1>
+                                </div>
+                                <div class="text-2xl">
+                                  <p class="font-mreg font-large">
+                                    
+                                  </p>
+                  
+                                  <p class="font-medium text-sm text-indigo-600 mt-2">
+                                    <span class="text-indigo-600"></span>
+                                  </p>
+                                </div>
+                              </div>
+                            </a>
+                          </div>
+                          <div
+                            class="flex-none w-2/3 md:w-1/3 mr-8 md:pb-4  rounded-lg"
+                          >
+
+                              <div class="aspect-w-16 aspect-h-9">
+                  
+                                <div class="object-cover shadow-md hover:shadow-xl rounded-3xl">
+                                  <lottie-player class="object-cover" src="https://lottie.host/d6076e77-1425-4992-b7db-a5d9346ca9cb/0q2KiNETqv.json"
+                    background="transparent"
+                    speed="1"
+                    style=" height: 300px"
+                    loop
+                    autoplay></lottie-player>
+                                 </div>
+
+                                  <div class="object-cover shadow-md hover:shadow-xl rounded-3xl">
+                                    
+                                    </div>
+            
+                              </div>
+                              <div class="px-4 py-2">
+                                <div class="text-lg leading-12 font-medium space-y-1">
+                                  <h1 class=" text-black text-2xl mb-2 mt-6 font-bold tracking-tighter mb-6">
+                                    <span class="text-3xl">2.</span> Weighting's:
+                                  </h1>
+                                  <h1 class=" text-black text-base mb-2 mt-8 tracking-tighter">
+                                    Custom algorithm prioritizes assets showing stronger trend persistence, higher breakout probability, and optimal risk-adjusted characteristics.
+                                  </h1>
+                                </div>
+                                <div class="text-lg">
+                                  <p class="font-mreg font-medium">
+                                    
+                                  </p>
+                                  <p class="font-medium text-sm text-indigo-600 mt-2">
+                                    <span class="text-indigo-600"></span>
+                                  </p>
+                                </div>
+                              </div>
+                            </a>
+                          </div>
+                          <div
+                            class="flex-none w-2/3 md:w-1/3 mr-8 md:pb-4  rounded-lg"
+                          >
+
+                              <div class="aspect-w-16 aspect-h-9">
+                  
+                                <div class="object-cover shadow-md hover:shadow-xl rounded-3xl">
+                                  <lottie-player class="object-cover" src="https://lottie.host/65ed74f1-4e4f-4cce-8e61-fcc57c0fe81c/ObOUsU0kgw.json"
+                    background="transparent"
+                    speed="1"
+                    style=" height: 300px"
+                    loop
+                    autoplay></lottie-player>
+                                 </div>
+                                
+                                <div class="object-cover shadow-md hover:shadow-xl rounded-3xl">
+                                 
+                                </div>
+                                  
+                              </div>
+                              <div class="px-4 py-2">
+                                <div class="text-lg leading-12 font-medium space-y-1">
+                                  <h1 class=" text-black text-2xl mb-2 mt-6 font-bold tracking-tighter mb-6">
+                                    <span class="text-3xl">3.</span> Objective:
+                                  </h1>
+                                  <h1 class=" text-black text-base mb-2 mt-8 tracking-tighter">
+                                    Maximize overall strategy conviction by overweighting assets with the most statistically favorable conditions while maintaining diversified exposure.
+                                  </h1>
+                                </div>
+                                <div class="text-lg">
+                                  <p class="font-mreg font-medium">
+                                    
+                                  </p>
+                                  <p class="font-medium text-sm text-indigo-600 mt-2">
+                                    <span class="text-indigo-600"></span>
+                                  </p>
+                                </div>
+                              </div>
+                            </a>
+                          </div>
+                          <div
+                            class="flex-none w-2/3 md:w-1/3 mr-8 md:pb-4  rounded-lg"
+                          >
+
+                              <div class="aspect-w-16 aspect-h-9">
+                  
+
+                                <div class="object-cover shadow-md hover:shadow-xl rounded-3xl">
+                                  <lottie-player class="object-cover" src="https://lottie.host/da049647-a20f-468e-ad36-b5fc9b32221b/gRXujXNuTR.json"
+                    background="transparent"
+                    speed="1"
+                    style=" height: 300px"
+                    loop
+                    autoplay></lottie-player>
+                                 </div>
+
+                                <div class="object-cover shadow-md hover:shadow-xl rounded-3xl">
+                                 
+                                </div>
+                                  
+                              </div>
+                              <div class="px-4 py-2">
+                                <div class="text-lg leading-12 font-medium space-y-1">
+                                  <h1 class=" text-black text-2xl mb-2 mt-6 font-bold tracking-tighter mb-6">
+                                    <span class="text-3xl">4.</span> Rebalance:
+                                  </h1>
+                                  <h1 class=" text-black text-base mb-2 mt-8 tracking-tighter">
+                                    Dynamic; adjusted based on real-time signal shifts and volatility scaling.
+                                  </h1>
+                                </div>
+                                <div class="text-lg">
+                                  <p class="font-mreg font-medium">
+                                    
+                                  </p>
+                                  <p class="font-medium text-sm text-indigo-600 mt-2">
+                                    <span class="text-indigo-600"></span>
+                                  </p>
+                                </div>
+                              </div>
+                            </a>
+                          </div>
+                          <!--End Cards -->
+
+                          
+                          
+                        </div>
+                        <h1 class="z-20 mb-8 text-3xl font-bold tracking-tighter text-center text-black lg:text-left lg:text-4xl title-font -mt-24 sm:-mt-16">
+                          Who's This For?
+                       </h1>
+                       
+                       <h1 class="z-20 mb-24 sm:mb-48 text-base leading-relaxed text-center sm:text-left text-gray-900 lg:text-1xl ">
+                         This strategy employs a proprietary asset weighting algorithm that dynamically adjusts position sizes based on a blend of trend strength, signal reliability, and volatility normalization.
+   
+                         
+                       </h1>
+                      </div>
+                      </div>
+
+                </div>
+                <div class="z-10 rounded-full xl:h-64 xl:w-64 lg:h-48 lg:w-48 md:h-64 md:w-64 h-16 w-16 flex bg-gradient-to-r from-blue-300 via-red-blue to-blue-100 absolute mt-12 sm:mt-12 xl:-ml-12 lg:ml-24 md:ml-0  "></div>
+            </div>
+
+          
+        </section>
+
+         <section class=" flex flex-wrap items-center h-1/2" style="background-color: #F7F6F2;">
+            <div class=" container w-full h-1/2 md:w-1/2" style="background-color: #F7F6F2;">
+                <div class=" mx-5 lg:ml-24 ">
+                    
+                    <div class=" flex mt-24 sm:mt-32 font-light text-gray-500">
+                      <div class="z-10 rounded-full xl:h-64 xl:w-64 lg:h-48 lg:w-48 md:h-64 md:w-64 h-16 w-16 flex bg-gradient-to-r from-blue-300 via-red-blue to-blue-100 absolute -mt-2 sm:-mt-8 -ml-2 sm:-ml-12"></div>
+                      <div class="z-20 pr-4">
+
+                            <h1 class="z-20 mb-8 text-3xl font-bold tracking-tighter text-center text-black lg:text-left lg:text-5xl title-font mt-0 sm:mt-12">
+                              2: Caltropia Managed Futures Hybrid Equal Weight
+                            </h1>
+
+                            <h1 class="z-20 mb-8 text-base leading-relaxed text-center sm:text-left text-blue-800 lg:text-base ">
+                              This strategy employs a proprietary asset weighting algorithm that dynamically adjusts position sizes based on a blend of trend strength, signal reliability, and volatility normalization.
+        
+                              
+                            </h1>
+
+                            <h1 class="z-20 mb-2 text-3xl tracking-tighter text-center text-black lg:text-left lg:text-4xl title-font mt-12 sm:mt-12">
+                              Methodology
+                           </h1>
+                            
+                        </div>
+                        
+                    </div>
+                    <div class="mx-auto w-full md:w-full px-0 mt-24">
+                      <div class="container my-8">
+                        <div class="flex justify-between items-center ">
+                          <h2 class="text-3xl font-mreg font-semibold ">
+                  
+                            
+                          </h2>
+                          
+                        </div>
+            
+                        <style>
+                          .custom-scrollbar-hide::-webkit-scrollbar {
+                            display: none;
+                          }
+                          .custom-scrollbar-hide {
+                            -ms-overflow-style: none;  /* IE and Edge */
+                            scrollbar-width: none;     /* Firefox */
+                          }
+                        </style>
+                        
+                        <div class="overflow-x-auto custom-scrollbar-hide">
+                          <!-- your content here -->
+                        </div>
+                        <div
+                          id="scrollContainer"
+                          class="flex flex-no-wrap overflow-x-scroll custom-scrollbar-hide scrolling-touch items-start -mt-12 mb-32"
+                        >
+                          <div
+                            class="flex-none w-2/3 md:w-1/3 mr-8   rounded-xl"
+                          >
+
+                              <div class="aspect-w-16 aspect-h-9">
+                                
+                                <div class="object-cover shadow-md hover:shadow-xl rounded-3xl">
+                                  <lottie-player class="object-cover" src="https://lottie.host/5a4a1438-a294-444d-851c-07083d72b797/3miin6kpl5.json"
+                    background="transparent"
+                    speed="1"
+                    style=" height: 300px"
+                    loop
+                    autoplay></lottie-player>
+                                 </div>
+                                
+                                <div  class="object-cover shadow-md hover:shadow-xl rounded-3xl">
+                  
+                                  
+                  
+                                </div>
+                  
+                                
+                              </div>
+                              <div class="px-4 py-2">
+                                <div class="text-lg leading-12 font-medium space-y-1">
+                                  <h1 class=" text-black text-2xl mb-2 mt-6 font-bold tracking-tighter mb-6">
+                                   <span class="text-3xl">1.</span> Signal Inputs
+                                  </h1>
+                                  <h1 class=" text-black text-base mb-2 mt-8 tracking-tighter">
+                                    Identical — trend direction, strength scores, mean reversion factors, and breakout/down confirmations.
+                                  </h1>
+                                </div>
+                                <div class="text-2xl">
+                                  <p class="font-mreg font-large">
+                                    
+                                  </p>
+                  
+                                  <p class="font-medium text-sm text-indigo-600 mt-2">
+                                    <span class="text-indigo-600"></span>
+                                  </p>
+                                </div>
+                              </div>
+                            </a>
+                          </div>
+                          <div
+                            class="flex-none w-2/3 md:w-1/3 mr-8 md:pb-4  rounded-lg"
+                          >
+
+                              <div class="aspect-w-16 aspect-h-9">
+                  
+                                <div class="object-cover shadow-md hover:shadow-xl rounded-3xl">
+                                  <lottie-player class="object-cover" src="https://lottie.host/d6076e77-1425-4992-b7db-a5d9346ca9cb/0q2KiNETqv.json"
+                    background="transparent"
+                    speed="1"
+                    style=" height: 300px"
+                    loop
+                    autoplay></lottie-player>
+                                 </div>
+            
+                              </div>
+                              <div class="px-4 py-2">
+                                <div class="text-lg leading-12 font-medium space-y-1">
+                                  <h1 class=" text-black text-2xl mb-2 mt-6 font-bold tracking-tighter mb-6">
+                                    <span class="text-3xl">2.</span> Weighting's:
+                                  </h1>
+                                  <h1 class=" text-black text-base mb-2 mt-8 tracking-tighter">
+                                    Primarily equal-weighted across assets passing signal thresholds, with tilts toward stronger signals when appropriate.
+                                  </h1>
+                                </div>
+                                <div class="text-lg">
+                                  <p class="font-mreg font-medium">
+                                    
+                                  </p>
+                                  <p class="font-medium text-sm text-indigo-600 mt-2">
+                                    <span class="text-indigo-600"></span>
+                                  </p>
+                                </div>
+                              </div>
+                            </a>
+                          </div>
+                          <div
+                            class="flex-none w-2/3 md:w-1/3 mr-8 md:pb-4  rounded-lg"
+                          >
+
+                              <div class="aspect-w-16 aspect-h-9">
+                  
+                                
+
+                                <div class="object-cover shadow-md hover:shadow-xl rounded-3xl">
+                                 <!--add this object cover to fix on mobile and keep the height in style but delete the width--> <div class="object-cover shadow-md hover:shadow-xl rounded-3xl">
+                                  <lottie-player class="object-cover" src="https://lottie.host/65ed74f1-4e4f-4cce-8e61-fcc57c0fe81c/ObOUsU0kgw.json"
+                                  background="transparent"
+                                  speed="1"
+                                  style=" height: 300px"
+                                  loop
+                                  autoplay></lottie-player>
+                                               </div>
+                                </div>
+                                  
+                              </div>
+                              <div class="px-4 py-2">
+                                <div class="text-lg leading-12 font-medium space-y-1">
+                                  <h1 class=" text-black text-2xl mb-2 mt-6 font-bold tracking-tighter mb-6">
+                                    <span class="text-3xl">3.</span> Objective:
+                                  </h1>
+                                  <h1 class=" text-black text-base mb-2 mt-8 tracking-tighter">
+                                    Achieve broad diversification across asset classes while maintaining responsiveness to prevailing market trends.
+                                  </h1>
+                                </div>
+                                <div class="text-lg">
+                                  <p class="font-mreg font-medium">
+                                    
+                                  </p>
+                                  <p class="font-medium text-sm text-indigo-600 mt-2">
+                                    <span class="text-indigo-600"></span>
+                                  </p>
+                                </div>
+                              </div>
+                            </a>
+                          </div>
+                          <div
+                            class="flex-none w-2/3 md:w-1/3 mr-8 md:pb-4  rounded-lg"
+                          >
+
+                              <div class="aspect-w-16 aspect-h-9">
+                  
+                                <div class="object-cover shadow-md hover:shadow-xl rounded-3xl">
+                                 <!--add this object cover to fix on mobile and keep the height in style but delete the width--> <div class="object-cover shadow-md hover:shadow-xl rounded-3xl">
+                                  <lottie-player class="object-cover"  src="https://lottie.host/da049647-a20f-468e-ad36-b5fc9b32221b/gRXujXNuTR.json"
+                                  background="transparent"
+                                  speed="1"
+                                  style=" height: 300px"
+                                  loop
+                                  autoplay></lottie-player>
+                                               </div>
+                                </div>
+                                  
+                              </div>
+                              <div class="px-4 py-2">
+                                <div class="text-lg leading-12 font-medium space-y-1">
+                                  <h1 class=" text-black text-2xl mb-2 mt-6 font-bold tracking-tighter mb-6">
+                                    <span class="text-3xl">4.</span> Rebalance:
+                                  </h1>
+                                  <h1 class=" text-black text-base mb-2 mt-8 tracking-tighter">
+                                    Scheduled (e.g., weekly) with interim adjustments if extreme trend reversals occur.
+                                  </h1>
+                                </div>
+                                <div class="text-lg">
+                                  <p class="font-mreg font-medium">
+                                    
+                                  </p>
+                                  <p class="font-medium text-sm text-indigo-600 mt-2">
+                                    <span class="text-indigo-600"></span>
+                                  </p>
+                                </div>
+                              </div>
+                            </a>
+                          </div>
+                          <!--End Cards -->
+
+                          
+                          
+                        </div>
+                        <h1 class="z-20 mb-8 text-3xl font-bold tracking-tighter text-center text-black lg:text-left lg:text-4xl title-font -mt-24 sm:-mt-16">
+                          Who's This For?
+                       </h1>
+                       
+                       <h1 class="z-20 mb-12 sm:mb-12 text-base leading-relaxed text-center sm:text-left text-gray-900 lg:text-1xl ">
+                        Best suited for investors seeking broad exposure and balance, favoring diversification over heavy conviction tilts.
+   
+                         
+                       </h1>
+                       <div class="sm:text-left text-center">
+                        <a href="ManagedFuturesEqualWeight.html">
+                       <button class="mb-12 rounded-full bg-blue-900 w-1/4 text-white font-mreg font-bold pt-2 pb-2">Access</button></a>
+                      </div>
+                      </div>
+                      </div>
+                    
+
+                   
+
+                </div>
+                
+            </div>
+
+
+            <div class="z-20 hidden w-full h-1/2 bg-center bg-cover md:w-1/2 lg:block mb-16 -mt-18 -mr-64">
+                <!----Image will be full height/width-->
+
+                <lottie-player src="https://assets4.lottiefiles.com/packages/lf20_pepphvu9.json"  background="transparent"  speed="1"  style="margin-left: 50px; width: 650px; height: 650px;"  loop  autoplay></lottie-player>
+                
+            </div>
+            
+
+
+        </section>
+
+         
+
+        <section class="bg-white sm:bg-white">
+
+          <div class="container px-4 flex-grow w-full py-4 sm:py-16 mx-auto px-0 ">
+            
+            
+            <div class="mx-auto w-full md:w-3/4 px-4">
+              <div class="container my-8">
+                
+              
+                <h1 class="text-center text-3xl mb-4 sm:text-4xl text-black mx-auto px-6 mb-16 mt-16 sm:mt-12">Managed Futures Strategies Compared</h1>                  
+                <h1 class="text-center text-xl mb-4 text-sm text-blue-800 mx-auto px-6 mb-16">A Review of our Managed Futures Strategies</h1>                  
+                        
+              </div>
+              <!---->
+              
+          </div>
+          
+          <div class="relative overflow-x-auto shadow-xl sm:rounded-lg " >
+            <table class="w-full text-sm text-left rtl:text-right text-black dark:text-gray-400" >
+                <thead class=" text-black  bg-gray-50 dark:bg-gray-700 dark:text-gray-400 " >
+                    <tr>
+                        <th scope="col" class="p-4" >
+                            <div class="flex items-center" >
+                                
+                                
+                            </div>
+                        </th>
+                        <th scope="col" class="sticky top-0 px-2 py-2 sm:px-6 py-3 text-base sm:text-xl font-mreg" >
+                            Features
+                        </th>
+                        <th scope="col" class="px-6 py-2 sm:px-6 py-3 text-base sm:text-xl  font-mreg">
+                          Trend Alpha (Custom)
+                      </th>
+                        <th scope="col" class="px-6 py-2 sm:px-6 py-3 text-base sm:text-xl  font-mreg" >
+                            Hybrid Equal Weight
+                        </th>
+                        
+                        
+                    </tr>
+                </thead>
+                
+                <tbody>
+                    <tr id="GLD" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+                        <td class="w-4 p-4">
+                            <div class="flex items-center">
+                                
+                            </div>
+                        </td>
+                        <th scope="row" class="px-2 py-2 sm:px-6 py-3 text-base sm:text-lg  font-mreg">
+                          Weighting
+                        </th>
+                        <td class="px-6 py-3 sm:px-6 py-3 text-base sm:text-lg  font-mreg font-medium ">
+                          Proprietary Algorithm
+                        </td>
+                        <td id="GLD-shortTermTrend"  class="px-6 py-3 sm:px-6 py-3 text-base sm:text-lg  font-mreg font-medium ">
+                          Equal-Weight Hybrid
+                        </td>
+                       
+                        
+                    </tr>
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+                        <td class="w-4 p-4">
+                            <div class="flex items-center">
+                                
+                            </div>
+                        </td>
+                        <th scope="row" class="px-2 py-2 sm:px-6 py-3 text-base sm:text-lg  font-mreg">
+                          Flexibility
+                                        </th>
+                        <td class="px-6 py-3 sm:px-6 py-3 text-base sm:text-lg  font-mreg font-medium ">
+                            Highly Dynamic
+                        </td>
+                        <td  id="TLT-shortTermTrend" class="px-6 py-3 sm:px-6 py-3 text-base sm:text-lg  font-mreg font-medium ">
+                          Moderately Dynamic
+                        </td>
+                        
+                        
+                    </tr>
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+                        <td class="w-4 p-4">
+                            <div class="flex items-center">
+                                
+                            </div>
+                        </td>
+                        <th scope="row" class="px-2 py-2 sm:px-6 py-3 text-base sm:text-lg  font-mreg">
+                          Risk Scaling
+                        </th>
+                        <td class="px-6 py-3 sm:px-6 py-3 text-base sm:text-lg  font-mreg font-medium ">
+                          Volatility-Adjusted
+                        </td>
+                        <td id="EWJ-shortTermTrend" class="px-6 py-3 sm:px-6 py-3 text-base sm:text-lg  font-mreg font-medium ">
+                          Lighter Adjustments
+                        </td>
+                       
+                        
+                    </tr>
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+                        <td class="w-4 p-4">
+                            <div class="flex items-center">
+                                
+                            </div>
+                        </td>
+                        <th scope="row" class="px-2 py-2 sm:px-6 py-3 text-base sm:text-lg  font-mreg">
+                          Signal Inputs
+                        </th>
+                        <td class="px-6 py-3 sm:px-6 py-3 text-base sm:text-lg  font-mreg font-medium">
+                          Trend, Strength, Breakout/Down, Mean Reversion
+                        </td>
+                        <td id="EEM-shortTermTrend" class="px-6 py-3 sm:px-6 py-3 text-base sm:text-lg  font-mreg font-medium ">
+                          Same
+                        </td>
+                        
+                        
+                    </tr>
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+                        <td class="w-4 p-4">
+                            <div class="flex items-center">
+                                
+                            </div>
+                        </td>
+                        <th scope="row" class="px-2 py-2 sm:px-6 py-3 text-base sm:text-lg  font-mreg">
+                          Investor Profile
+                        </th>
+                        <td class="px-6 py-3 sm:px-6 py-3 text-base sm:text-lg  font-mreg font-medium ">
+                          Active Conviction Seekers
+                        </td>
+                        <td id="EMB-shortTermTrend" class="px-6 py-3 sm:px-6 py-3 text-base sm:text-lg  font-mreg font-medium ">
+                          Broad Diversification Seekers
+                        </td>
+                        
+                        
+                    </tr>
+                    
+      
+                </tbody>
+                
+            </table>
+           
+        </div>
+        
+        <div class="mb-32"></div>
+      
+          </section>
+
+        
+
+        
+
+<style>
+.hide-scroll-bar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.hide-scroll-bar::-webkit-scrollbar {
+  display: none;
+}
+</style>
+
+</body>
+
+<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
