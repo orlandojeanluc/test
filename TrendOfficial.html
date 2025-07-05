@@ -671,7 +671,7 @@ color: white;
         }
       });
     
-      const tickers = ["GLD", "TLT", "EWJ", "EEM", "EMB", "IEF", "IEV", "SPY", "USO", "FXY", "FXF", "FXE", "FXC", "CPER", "SLV", "CORN", "SOYB", "WEAT", "CANE", "UNG", "MCHI", "FXA", "FXB", "PALL", "UGA"];
+      const tickers = ["GLD", "TLT", "EWJ", "EEM", "EMB", "IEF", "IEV", "SPY", "USO", "FXY", "FXF", "FXE", "FXC", "CPER", "SLV", "CORN", "SOYB", "WEAT", "CANE", "UNG", "MCHI", "FXA", "FXB", "UGA"];
     
       function populateTickerData() {
         tickers.forEach(ticker => {
@@ -716,7 +716,7 @@ color: white;
   <a href="Strategies.html" class="animate-intro ml-12 mr-12  font-mreg font-bold tracking-widest text-2xl text-gray-900 mb-4 sm:mb-0">ABOUT US</a>
 
 
-<a href="Strategies.html" class="animate-intro mr-12  font-mreg font-bold tracking-widest text-2xl text-gray-900 mb-4 sm:mb-0">STRATEGIES</a>
+<a href="StrategiesGrid.html" class="animate-intro mr-12  font-mreg font-bold tracking-widest text-2xl text-gray-900 mb-4 sm:mb-0">STRATEGIES</a>
 <a id="trend-link" href="#" class="animate-intro mr-12  font-mreg font-bold tracking-widest text-2xl text-gray-900 ml-12 sm:ml-0">TREND SCORES</a>
 
 <a id="macro-link" href="#" class="animate-intro mr-12  font-mreg font-bold tracking-widest text-2xl text-gray-900 ">MACRO REGIMES</a>
@@ -1953,38 +1953,7 @@ if (user) {
         </div>
 
         <!--NEXT-->
-        <div class="bg-gray-900 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-8">
-          <a href="PALLTrendScores.html">
-          <h2 class="font-bold text-lg sm:text-2xl text-white font-mreg mt-2 text-center ">PALL</h2></a>
-        </div>
-      
-        <div id="PALL-shortTermTrend" class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4 font-bold text-lg sm:text-2xl text-gray-900 font-mreg text-center">
-          
-          <h2  class="font-bold text-lg sm:text-2xl text-gray-900 font-mreg mt-2 text-center "></h2>
-        </div>
-        <div id="PALL-shortTermStrength" class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4 font-bold text-lg sm:text-2xl text-gray-900 font-mreg text-center">
-          
-          <h2  class="font-bold text-lg sm:text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
-          
-        </div>
-        <div id="PALL-intermTrend" class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4 font-bold text-lg sm:text-2xl text-gray-900 font-mreg text-center">
-          
-          <h2  class="font-bold text-lg sm:text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
-        </div>
-        <div id="PALL-intermStrength" class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4 font-bold text-lg sm:text-2xl text-gray-900 font-mreg text-center">
-          
-          <h2  class="font-bold text-lg sm:text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
-
-          
-        </div>
-        <div id="PALL-meanReversion" class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4 font-bold text-lg sm:text-2xl text-gray-900 font-mreg text-center">
-          
-          <h2   class="font-bold text-lg sm:text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
-        </div>
-        <div id="PALL-breakoutAndDown" class="bg-gray-100 rounded-xl shadow-2xl w-full max-w-[150px] h-[160px] flex flex-col items-center justify-center overflow-hidden px-4 py-4 font-bold text-lg sm:text-2xl text-gray-900 font-mreg text-center">
-          
-          <h2  class="font-bold text-lg sm:text-2xl text-gray-900 font-mreg mt-2 text-center"></h2>
-        </div>
+        
 
         <script>
           function observeStrengthColor(id) {
@@ -2278,15 +2247,7 @@ if (user) {
           observeTrendColor("UGA-meanReversion");
           observeTrendColor("UGA-breakoutAndDown");
 
-           // Call for strength-based values
-           observeStrengthColor("PALL-shortTermStrength");
-          observeStrengthColor("PALL-intermStrength");
-        
-          // Call for trend-based numeric values
-          observeTrendColor("PALL-shortTermTrend");
-          observeTrendColor("PALL-intermTrend");
-          observeTrendColor("PALL-meanReversion");
-          observeTrendColor("PALL-breakoutAndDown");
+         
 
            
 
@@ -2302,7 +2263,7 @@ if (user) {
 
 
 
-    
+    <!--
 
     <section class="" style="background-color: #F7F6F2;">
 
@@ -2337,7 +2298,7 @@ if (user) {
             </style>
             
             <div class="overflow-x-auto custom-scrollbar-hide">
-              <!-- your content here -->
+
             </div>
 
             
@@ -2373,7 +2334,7 @@ if (user) {
                   Objective: To deliver systematic, uncorrelated returns through equal-weight exposure to a diversified set of trend-following managed futures programs across global asset classes
                 </p>
 
-                 <!--Start Column Stats-->
+
                  <div class="text-base sm:text-lg text-gray-700 mb-8 mt-8">
                   <div class="grid grid-cols-2 gap-y-4 gap-x-8">
                     
@@ -2403,9 +2364,9 @@ if (user) {
                 
                   </div>
                 </div>
-                <!--End Column Stats-->
 
-                <!-- Container for the Lottie button -->
+
+
                 <div class="mt-8 flex items-center space-x-2 -ml-4">
                   <div class="w-16 h-16 sm:w-16 sm:h-16">
                     <lottie-player
@@ -2421,7 +2382,7 @@ if (user) {
                     Explore
                   </a>
                 </div>
-                <!--End Lottie Button-->
+
 
               </div>
             </div>
@@ -2436,7 +2397,7 @@ if (user) {
 
               <div class="object-cover shadow-md hover:shadow-xl rounded-3xl">
                 <a href="BondRegimeModel.html">
-               <!--add this object cover to fix on mobile and keep the height in style but delete the width--> <lottie-player class="object-cover" src="https://lottie.host/27142975-725a-4b81-8a7b-345d9da78534/SDbfq53JLL.json"
+ <lottie-player class="object-cover" src="https://lottie.host/27142975-725a-4b81-8a7b-345d9da78534/SDbfq53JLL.json"
   background="transparent"
   speed="1"
   style=" height: 300px"
@@ -2456,7 +2417,7 @@ if (user) {
                   Objective: To dynamically allocate across fixed income exposures based on prevailing macro and market regimes, aiming to enhance risk-adjusted returns and mitigate drawdowns through systematic regime classification
                 </p>
                 
-                <!--Start Column Stats-->
+
                 <div class="text-base sm:text-lg text-gray-700 mb-8 mt-8">
                   <div class="grid grid-cols-2 gap-y-4 gap-x-8">
                 
@@ -2486,9 +2447,9 @@ if (user) {
                 
                   </div>
                 </div>
-                <!--End Column Stats-->
 
-                <!-- Container for the Lottie button -->
+
+
                 <div class="mt-8 flex items-center space-x-2 -ml-4">
                   <div class="w-16 h-16 sm:w-16 sm:h-16">
                     <lottie-player
@@ -2504,7 +2465,7 @@ if (user) {
                     Explore
                   </a>
                 </div>
-                <!--End Lottie Button-->
+
 
               </div>
             </div>
@@ -2519,7 +2480,7 @@ if (user) {
 
               <div class="object-cover shadow-md hover:shadow-xl rounded-3xl">
                 <a href="BondRegimeModel.html">
-               <!--add this object cover to fix on mobile and keep the height in style but delete the width--> <lottie-player class="object-cover" src="https://lottie.host/9a380f23-2715-4613-a3bd-0164c09d5dec/ebimdjAj1v.json"
+ <lottie-player class="object-cover" src="https://lottie.host/9a380f23-2715-4613-a3bd-0164c09d5dec/ebimdjAj1v.json"
   background="transparent"
   speed="1"
   style=" height: 300px"
@@ -2539,7 +2500,7 @@ if (user) {
                   Objective: To generate directional returns by allocating across global asset classes based on systematic macroeconomic signals, focusing on trend, growth, inflation, and policy dynamics within a long-only framework
                 </p>
                 
-                <!--Start Column Stats-->
+
                 <div class="text-base sm:text-lg text-gray-700 mb-8 mt-8">
                   <div class="grid grid-cols-2 gap-y-4 gap-x-8">
                 
@@ -2569,9 +2530,9 @@ if (user) {
                 
                   </div>
                 </div>
-                <!--End Column Stats-->
 
-                <!-- Container for the Lottie button -->
+
+
                 <div class="mt-8 flex items-center space-x-2 -ml-4">
                   <div class="w-16 h-16 sm:w-16 sm:h-16">
                     <lottie-player
@@ -2587,7 +2548,7 @@ if (user) {
                     Explore
                   </a>
                 </div>
-                <!--End Lottie Button-->
+
 
               </div>
             </div>
@@ -2597,7 +2558,7 @@ if (user) {
             </div>
           </div>
           
-          <!---->
+          
 
           <h1 class="text-center text-2xl mb-4 text-6xl text-blue-900 mx-auto px-6">Browse our other investment catagories</h1>                  
                   <p1 class="text-center text-xl mb-12 text-blue-900 mx-auto flex px-2">Our robust portfolios are systemically designed to minimize risk through diversification and are optimized for long-term wealth — Swipe Below to Discover</p1>      
@@ -2673,7 +2634,7 @@ if (user) {
                   <div class="aspect-w-16 aspect-h-9">
       
                     <div class="object-cover shadow-md hover:shadow-xl rounded-3xl">
-                     <!--add this object cover to fix on mobile and keep the height in style but delete the width--> <img class="object-cover hover:shadow-xl rounded-3xl" src="purp.png" style=" height: 100px" alt="">
+                     <img class="object-cover hover:shadow-xl rounded-3xl" src="purp.png" style=" height: 100px" alt="">
                     </div>
                       
                   </div>
@@ -2701,7 +2662,7 @@ if (user) {
                   <div class="aspect-w-16 aspect-h-9">
       
                     <div class="object-cover shadow-md hover:shadow-xl rounded-3xl">
-                     <!--add this object cover to fix on mobile and keep the height in style but delete the width--> <img class="object-cover hover:shadow-xl rounded-3xl" src="purp.png" style=" height: 100px" alt="">
+                    <img class="object-cover hover:shadow-xl rounded-3xl" src="purp.png" style=" height: 100px" alt="">
                     </div>
                       
                   </div>
@@ -2729,7 +2690,7 @@ if (user) {
                   <div class="aspect-w-16 aspect-h-9">
       
                     <div class="object-cover shadow-md hover:shadow-xl rounded-3xl">
-                     <!--add this object cover to fix on mobile and keep the height in style but delete the width--> <img class="object-cover hover:shadow-xl rounded-3xl" src="purp.png" style=" height: 100px" alt="">
+                      <img class="object-cover hover:shadow-xl rounded-3xl" src="purp.png" style=" height: 100px" alt="">
                     </div>
                       
                   </div>
@@ -2757,7 +2718,7 @@ if (user) {
                   <div class="aspect-w-16 aspect-h-9">
       
                     <div class="object-cover shadow-md hover:shadow-xl rounded-3xl">
-                     <!--add this object cover to fix on mobile and keep the height in style but delete the width--> <img class="object-cover hover:shadow-xl rounded-3xl" src="purp.png" style=" height: 100px" alt="">
+                     <img class="object-cover hover:shadow-xl rounded-3xl" src="purp.png" style=" height: 100px" alt="">
                     </div>
                       
                   </div>
@@ -2785,7 +2746,7 @@ if (user) {
                   <div class="aspect-w-16 aspect-h-9">
       
                     <div class="object-cover shadow-md hover:shadow-xl rounded-3xl">
-                     <!--add this object cover to fix on mobile and keep the height in style but delete the width--> <img class="object-cover hover:shadow-xl rounded-3xl" src="purp.png" style=" height: 100px" alt="">
+                     <img class="object-cover hover:shadow-xl rounded-3xl" src="purp.png" style=" height: 100px" alt="">
                     </div>
                       
                   </div>
@@ -2813,7 +2774,7 @@ if (user) {
                   <div class="aspect-w-16 aspect-h-9">
       
                     <div class="object-cover shadow-md hover:shadow-xl rounded-3xl">
-                     <!--add this object cover to fix on mobile and keep the height in style but delete the width--> <img class="object-cover hover:shadow-xl rounded-3xl" src="purp.png" style=" height: 100px" alt="">
+                    <img class="object-cover hover:shadow-xl rounded-3xl" src="purp.png" style=" height: 100px" alt="">
                     </div>
                       
                   </div>
@@ -2841,7 +2802,7 @@ if (user) {
                   <div class="aspect-w-16 aspect-h-9">
       
                     <div class="object-cover shadow-md hover:shadow-xl rounded-3xl">
-                     <!--add this object cover to fix on mobile and keep the height in style but delete the width--> <img class="object-cover hover:shadow-xl rounded-3xl" src="purp.png" style=" height: 100px" alt="">
+                   <img class="object-cover hover:shadow-xl rounded-3xl" src="purp.png" style=" height: 100px" alt="">
                     </div>
                       
                   </div>
@@ -2865,7 +2826,7 @@ if (user) {
             </div>
           </div>
       </div>
-      
+      -->
       </section>
 
 
@@ -2937,47 +2898,7 @@ $(document).scroll(function(){
 });
     </script>
 
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-  import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
 
-  const firebaseConfig2 = {
-    apiKey: "AIzaSyBxG5qf6mb8E_-b2TeXlRNseMZ26L9DRYg",
-    authDomain: "trendscores-df341.firebaseapp.com",
-    projectId: "trendscores-df341",
-    databaseURL: "https://trendscores-df341-default-rtdb.firebaseio.com",
-    storageBucket: "trendscores-df341.appspot.com",
-    messagingSenderId: "565710392511",
-    appId: "1:565710392511:web:37349319364bba19b3ca0a",
-    measurementId: "G-8TVLFBWN63"
-  };
-
-  const app1 = initializeApp(firebaseConfig2);
-  const db1 = getDatabase(app1);
-
-  const strategies = ["S&P 500 Daily Regime", "S&P 500 Dip Rip", "Bond Regime Model", "Relative Value Volatility", "Volatility Regimes", "Multi Strat Regimes", "Managed Futures Equal Weight", "Sector Regime Model", "Long Short Equity", "US Core Equity", "US Value Factor", "China Core Equity", "Volatility Tail Risk", "Bitcoin Regime Model", "Gold Regime Model"]; // Add strategy names exactly as in the sheet
-
-  function populateStrategyData() {
-    strategies.forEach(name => {
-      const cleanName = name.replace(/\s+/g, ''); // e.g. "Mean Reversion" → "MeanReversion"
-
-      get(child(ref(db1), `investmentStrategies/${name}`)).then((snapshot) => {
-        if (snapshot.exists()) {
-          const data = snapshot.val();
-
-          document.getElementById(`${cleanName}-YTD`).textContent = (data["YTD Return"] * 100).toFixed(2) + '%';
-          document.getElementById(`${cleanName}-CAGR`).textContent = (data["CAGR"] * 100).toFixed(2) + '%';
-          document.getElementById(`${cleanName}-Volatility`).textContent = (data["Volatility"] * 100).toFixed(2) + '%';
-          document.getElementById(`${cleanName}-Sharpe`).textContent = data["Sharpe"];
-          document.getElementById(`${cleanName}-MaxDD`).textContent = (data["Max DD"] * 100).toFixed(2) + '%';
-          
-        }
-      });
-    });
-  }
-
-  window.onload = populateStrategyData;
-</script>
 
 <script>
   firebase.auth().onAuthStateChanged((user) => {
