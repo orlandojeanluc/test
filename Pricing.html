@@ -669,14 +669,14 @@ color: white;
       <a href="aboutus.html" class="animate-intro ml-12 mr-12  font-mreg font-bold tracking-widest text-2xl text-gray-900 mb-4 sm:mb-0">ABOUT US</a>
 
 
-      <a href="Strategies.html" class="animate-intro mr-12  font-mreg font-bold tracking-widest text-2xl text-gray-900 mb-4 sm:mb-0">STRATEGIES</a>
+      <a href="StrategiesGrid.html" class="animate-intro mr-12  font-mreg font-bold tracking-widest text-2xl text-gray-900 mb-4 sm:mb-0">STRATEGIES</a>
       <a id="trend-link" href="#" class="animate-intro mr-12  font-mreg font-bold tracking-widest text-2xl text-gray-900 ml-12 sm:ml-0">TREND SCORES</a>
       
       <a id="macro-link" href="#" class="animate-intro mr-12  font-mreg font-bold tracking-widest text-2xl text-gray-900">MACRO REGIMES</a>
 <!--      <a id="linkTwoThree" class="mr-12  font-mreg font-bold tracking-widest text-2xl">PERFORMANCE</a>
 !-->
     </nav>
-    <a id="" href="login.html"><button id="LogB" class="hover:bg-transparent hover:animate-ping no-underline hover:underline inline-flex items-center  py-1 px-3  rounded text-base hidden sm:hidden lg:block mt-4 md:mt-0 font-mreg font-bold tracking-widest text-2xl text-gray-900">LOGIN
+    <a id="" href="signup.html"><button id="LogB" class="hover:bg-transparent hover:animate-ping no-underline hover:underline inline-flex items-center  py-1 px-3  rounded text-base hidden sm:hidden lg:block mt-4 md:mt-0 font-mreg font-bold tracking-widest text-2xl text-gray-900">LOGIN
       
     </button>
   </a>
@@ -685,6 +685,8 @@ color: white;
 
 
 </header> 
+
+
 
 <body id="top">
 
@@ -714,24 +716,30 @@ color: white;
 		</a> 
 
 		<nav id="menu-nav-wrap">
+    
+      <a href="#0" class="close-button mt-16" title="close"><span>Close</span></a>	
 
-			<a href="#0" class="close-button" title="close"><span>Close</span></a>	
+       <h3 class="text-gray-900">Caltropia Research</h3>  
 
-	   	<h3 class="text-gray-900">Caltropia Research</h3>  
+      <ul class="nav-list">
 
-			<ul class="nav-list">
-				<li class="current"><a class="smoothscroll" href="#home" title="">Home</a></li>
-				<li><a class="smoothscroll" href="#about" title="">About Us</a></li>
-				<li><a class="smoothscroll" href="#services" title="">Our Approach</a></li>
-				<li><a class="smoothscroll" href="#portfolio" title="">Performance</a></li>
-				<li><a class="smoothscroll" href="#contact" title="">Contact</a></li>						
-			</ul>	
+        <li class="current"><a href="index.html" title="">Home</a></li>
+        <li><a href="StrategiesGrid.html" title="">Strategies</a></li>
+        <li><a id="trend-link1"  href="#" title="">Trend Scores</a></li>
+        <li><a id="macro-link1" href="#" title="">Macro Regimes</a></li>
+        <li class="font-bold"><a href="Pricing.html" title="">Pricing</a></li>	
+        <li><a href="factors.html" title="">Factors</a></li>	
+        
 
+      </ul>	
+      <a id="auth-button1" href=""><button1 id="auth-button1" class="font-mreg font-bold text-white">LOGIN
+  
+      </button1>
+    </a>
 
+      
 
-			
-
-		</nav> <!-- end #menu-nav-wrap -->
+    </nav> <!-- end #menu-nav-wrap -->
 
 	</header> <!-- end header -->  
 
@@ -840,6 +848,7 @@ color: white;
     }
   });
 </script>
+
 
 
 </script>
@@ -1824,6 +1833,85 @@ $(document).scroll(function(){
     }
   });
 </script>
+
+<script>
+  firebase.auth().onAuthStateChanged((user) => {
+    const trendLink = document.getElementById("trend-link");
+    if (user) {
+      // User is logged in, link to actual page
+      trendLink.href = "TrendOfficial.html";
+    } else {
+      // Not logged in, link to sign up page
+      trendLink.href = "signup.html";
+    }
+  });
+</script>
+
+<script>
+firebase.auth().onAuthStateChanged((user) => {
+  const trendLink1 = document.getElementById("trend-link1");
+  if (user) {
+    // User is logged in, link to actual page
+    trendLink1.href = "TrendOfficial.html";
+  } else {
+    // Not logged in, link to sign up page
+    trendLink1.href = "signup.html";
+  }
+});
+</script>
+
+<script>
+firebase.auth().onAuthStateChanged((user) => {
+  const macroLink = document.getElementById("macro-link");
+  if (user) {
+    // User is logged in, link to actual page
+    macroLink.href = "Macro.html";
+  } else {
+    // Not logged in, link to sign up page
+    macroLink.href = "signupMacro.html";
+  }
+});
+</script>
+
+<script>
+firebase.auth().onAuthStateChanged((user) => {
+  const macroLink1 = document.getElementById("macro-link1");
+  if (user) {
+    // User is logged in, link to actual page
+    macroLink1.href = "Macro.html";
+  } else {
+    // Not logged in, link to sign up page
+    macroLink1.href = "signupMacro.html";
+  }
+});
+</script>
+
+<script>
+firebase.auth().onAuthStateChanged((user) => {
+  const managedFuturesLink = document.getElementById("managedFuturesEw");
+  if (user) {
+    // User is logged in, link to actual page
+    managedFuturesLink.href = "ManagedFuturesEqualWeight.html";
+  } else {
+    // Not logged in, link to sign up page
+    managedFuturesLink.href = "signupManagedFuturesEqualWeight.html";
+  }
+});
+</script>
+
+<script>
+firebase.auth().onAuthStateChanged((user) => {
+  const SPDailyRebalLink = document.getElementById("SPDailyRebalance");
+  if (user) {
+    // User is logged in, link to actual page
+    SPDailyRebalLink.href = "SPDailyRebalance.html";
+  } else {
+    // Not logged in, link to sign up page
+    SPDailyRebalLink.href = "signupSPDailyRebalance.html";
+  }
+});
+</script>
+
 
 
 </body>

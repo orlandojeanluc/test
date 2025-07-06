@@ -766,34 +766,6 @@ if (user) {
 
 
 </script>
-<script>
-  const authButtonLink = document.getElementById("auth-button");
-  const authButton = authButtonLink.querySelector("button");
-
-  // Wait for Firebase Auth state to change
-  firebase.auth().onAuthStateChanged((user) => {
-    if (user) {
-      // User is logged in - Update button text to 'Sign Out'
-      authButton.textContent = "SIGN OUT";
-      
-      // Make the button sign out when clicked
-      authButtonLink.href = "#";
-      authButton.onclick = () => {
-        firebase.auth().signOut().then(() => {
-          // Optionally reload the page after signing out
-          location.reload();
-        });
-      };
-    } else {
-      // User is not logged in - Update button text to 'Log In'
-      authButton.textContent = "ENTER";
-      
-      // When clicked, go to the login page
-      authButtonLink.href = "login.html"; // Change to your actual login page URL
-      authButton.onclick = null; // Remove any click action
-    }
-  });
-</script>
 
 <body id="top">
 
@@ -817,7 +789,7 @@ if (user) {
 			
 
 			
-			<a class="-mt-8" id="header-menu-trigger" href="#0">
+			<a class="-mt-4" id="header-menu-trigger" href="#0">
 		 	<span class="header-menu-text"></span>
 
 		  	<span class="animate-intro header-menu-icon"></span>
@@ -825,26 +797,89 @@ if (user) {
 		</a> 
 
 		<nav id="menu-nav-wrap">
+    
+      <a href="#0" class="close-button mt-16" title="close"><span>Close</span></a>	
 
-			<a href="#0" class="close-button mt-16" title="close"><span>Close</span></a>	
+       <h3 class="text-gray-900">Caltropia Research</h3>  
 
-	   	<h3 class="text-gray-900">Caltropia Research</h3>  
+      <ul class="nav-list">
 
-			<ul class="nav-list">
-				<li class="current"><a class="smoothscroll" href="#home" title="">Home</a></li>
-				<li><a class="smoothscroll" href="#about" title="">About Us</a></li>
-				<li><a class="smoothscroll" href="#services" title="">Our Approach</a></li>
-				<li><a class="smoothscroll" href="#portfolio" title="">Performance</a></li>
-				<li><a class="smoothscroll" href="#contact" title="">Contact</a></li>						
-			</ul>	
+        <li class="current"><a href="index.html" title="">Home</a></li>
+        <li><a href="#" title="">Strategies</a></li>
+        <li class="font-bold"><a href="#" title="">Trend Scores</a></li>
+        <li><a id="macro-link1" href="#" title="">Macro Regimes</a></li>
+        <li><a href="Pricing.html" title="">Pricing</a></li>	
+        <li><a href="factors.html" title="">Factors</a></li>	
+        
 
+      </ul>	
+      <a id="auth-button1" href=""><button1 id="auth-button1" class="font-mreg font-bold text-white">LOGIN
+  
+      </button1>
+    </a>
 
+      
 
-			
-
-		</nav> <!-- end #menu-nav-wrap -->
+    </nav> <!-- end #menu-nav-wrap -->
 
 	</header> <!-- end header -->  
+
+  <script>
+    const authButtonLink = document.getElementById("auth-button");
+    const authButton = authButtonLink.querySelector("button");
+  
+    // Wait for Firebase Auth state to change
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        // User is logged in - Update button text to 'Sign Out'
+        authButton.textContent = "SIGN OUT";
+        
+        // Make the button sign out when clicked
+        authButtonLink.href = "#";
+        authButton.onclick = () => {
+          firebase.auth().signOut().then(() => {
+            // Optionally reload the page after signing out
+            location.reload();
+          });
+        };
+      } else {
+        // User is not logged in - Update button text to 'Log In'
+        authButton.textContent = "ENTER";
+        
+        // When clicked, go to the login page
+        authButtonLink.href = "login.html"; // Change to your actual login page URL
+        authButton.onclick = null; // Remove any click action
+      }
+    });
+  
+    const authButtonLink1 = document.getElementById("auth-button1");
+          const authButton1 = authButtonLink1.querySelector("button1");
+        
+          // Wait for Firebase Auth state to change
+          firebase.auth().onAuthStateChanged((user) => {
+            if (user) {
+              // User is logged in - Update button text to 'Sign Out'
+              authButton1.textContent = "SIGN OUT";
+              
+              // Make the button sign out when clicked
+              authButtonLink1.href = "#";
+              authButton1.onclick = () => {
+                firebase.auth().signOut().then(() => {
+                  // Optionally reload the page after signing out
+                  location.reload();
+                });
+              };
+            } else {
+              // User is not logged in - Update button text to 'Log In'
+              authButton1.textContent = "ENTER";
+              
+              // When clicked, go to the login page
+              authButtonLink1.href = "login.html"; // Change to your actual login page URL
+              authButton1.onclick = null; // Remove any click action
+            }
+          });
+  </script>
+  
 
 
    <!-- home
@@ -2909,6 +2944,19 @@ $(document).scroll(function(){
     } else {
       // Not logged in, link to sign up page
       macroLink.href = "signup.html";
+    }
+  });
+</script>
+
+<script>
+  firebase.auth().onAuthStateChanged((user) => {
+    const macroLink1 = document.getElementById("macro-link1");
+    if (user) {
+      // User is logged in, link to actual page
+      macroLink1.href = "Macro.html";
+    } else {
+      // Not logged in, link to sign up page
+      macroLink1.href = "signupMacro.html";
     }
   });
 </script>

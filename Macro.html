@@ -774,8 +774,8 @@ color: #ECB365;
   <a href="Strategies.html" class="animate-intro ml-12 mr-12  font-mreg font-bold tracking-widest text-2xl text-gray-900 mb-4 sm:mb-0">ABOUT US</a>
 
 
-<a href="Strategies.html" class="animate-intro mr-12  font-mreg font-bold tracking-widest text-2xl text-gray-900 mb-4 sm:mb-0">STRATEGIES</a>
-<a id="trend-link" href="TrendOfficial.html" class="animate-intro mr-12  font-mreg font-bold tracking-widest text-2xl text-gray-900 ml-12 sm:ml-0">TREND SCORES</a>
+<a href="StrategiesGrid.html" class="animate-intro mr-12  font-mreg font-bold tracking-widest text-2xl text-gray-900 mb-4 sm:mb-0">STRATEGIES</a>
+<a id="trend-link" href="#" class="animate-intro mr-12  font-mreg font-bold tracking-widest text-2xl text-gray-900 ml-12 sm:ml-0">TREND SCORES</a>
 
 <a id="macro-link" href="#" class="animate-intro mr-12  font-mreg font-bold tracking-widest text-2xl text-gray-900 ">MACRO REGIMES</a>
  <!--     <a id="linkTwoThree" class="mr-12  font-mreg font-bold tracking-widest text-2xl">PERFORMANCE</a>
@@ -793,9 +793,72 @@ color: #ECB365;
 <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 
 
+
+
+<body id="top">
+
+  
+
+
+
+	<!-- header 
+   ================================================== -->
+<header class=" xl:hidden lg:hidden "> 
+
+   	
+<!--
+   	<div class="header-logo">
+
+	      <a href="index.html">CIV Capital</a>
+	   </div> 
+!-->
+
+
+			
+
+			
+			<a class="-mt-4" id="header-menu-trigger" href="#0">
+		 	<span class="header-menu-text"></span>
+
+		  	<span class="animate-intro header-menu-icon"></span>
+
+		</a> 
+
+		<nav id="menu-nav-wrap">
+    
+      <a href="#0" class="close-button mt-16" title="close"><span>Close</span></a>	
+
+       <h3 class="text-gray-900">Caltropia Research</h3>  
+
+      <ul class="nav-list">
+
+        <li class="current"><a href="index.html" title="">Home</a></li>
+        <li><a href="StrategiesGrid.html" title="">Strategies</a></li>
+        <li><a href="TrendOfficial.html" title="">Trend Scores</a></li>
+        <li class="font-bold"><a href="#" title="">Macro Regimes</a></li>
+        <li><a href="Pricing.html" title="">Pricing</a></li>	
+        <li><a href="factors.html" title="">Factors</a></li>	
+        
+
+      </ul>	
+      <a id="auth-button1" href=""><button1 id="auth-button1" class="font-mreg font-bold text-white">LOGIN
+  
+      </button1>
+    </a>
+
+      
+
+    </nav> <!-- end #menu-nav-wrap -->
+
+	</header> <!-- end header -->  
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+
+
 <script>
 // Your web app's Firebase configuration
-const firebaseConfig1 = {
+const firebaseConfig3 = {
 apiKey: "AIzaSyBxG5qf6mb8E_-b2TeXlRNseMZ26L9DRYg",
 authDomain: "trendscores-df341.firebaseapp.com",
 projectId: "trendscores-df341",
@@ -807,7 +870,7 @@ measurementId: "G-8TVLFBWN63"
 };
 
 // Initialize Firebase
-firebase.initializeApp(firebaseConfig1);
+firebase.initializeApp(firebaseConfig3);
 
 
 
@@ -851,6 +914,33 @@ if (user) {
       authButton.onclick = null; // Remove any click action
     }
   });
+
+  const authButtonLink1 = document.getElementById("auth-button1");
+          const authButton1 = authButtonLink1.querySelector("button1");
+        
+          // Wait for Firebase Auth state to change
+          firebase.auth().onAuthStateChanged((user) => {
+            if (user) {
+              // User is logged in - Update button text to 'Sign Out'
+              authButton1.textContent = "SIGN OUT";
+              
+              // Make the button sign out when clicked
+              authButtonLink1.href = "#";
+              authButton1.onclick = () => {
+                firebase.auth().signOut().then(() => {
+                  // Optionally reload the page after signing out
+                  location.reload();
+                });
+              };
+            } else {
+              // User is not logged in - Update button text to 'Log In'
+              authButton1.textContent = "ENTER";
+              
+              // When clicked, go to the login page
+              authButtonLink1.href = "login.html"; // Change to your actual login page URL
+              authButton1.onclick = null; // Remove any click action
+            }
+          });
 </script>
 
 
