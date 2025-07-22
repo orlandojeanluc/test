@@ -1,0 +1,164 @@
+
+
+
+
+/* ===================================================================
+ *  02. base style overrides - (_document-setup)
+ *
+ * ------------------------------------------------------------------- */
+html {
+
+}
+@media only screen and (max-width: 1024px) {
+  html {
+    font-size: 9.375px;
+  }
+}
+@media only screen and (max-width: 768px) {
+  html {
+    font-size: 10px;
+  }
+}
+@media only screen and (max-width: 400px) {
+  html {
+    font-size: 8.375px;
+  }
+}
+
+@media only screen and (max-width: 450px) {
+  html {
+    font-size: 9.075px;
+  }
+}
+
+
+
+@media only screen and (max-width: 375px) and (min-width: 375px)  {
+  html {
+    font-size: 9.075px;
+  }
+
+  h3 {
+    
+  }
+}
+
+html, body {
+  height: 100%;
+}
+
+
+
+
+
+/* ===================================================================
+ *  10. home - (_layout.scss)
+ * for hero image here
+ * ------------------------------------------------------------------- */
+#home {
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+  background-image: url(../images/12.mov);
+  
+  background-repeat: no-repeat;
+  background-position: center 30%;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  background-size: cover;
+
+  background-attachment: fixed;
+  min-height: 804px;
+  position: relative;
+}
+#home .overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: .05;
+  background-color: #000;
+}
+
+.home-content-table {
+  width: 100%;
+  height: 100%;
+  display: table;
+  position: relative;
+  text-align: center;
+}
+
+.home-content-tablecell {
+  display: table-cell;
+  vertical-align: middle;
+  z-index: 500;
+}
+.home-content-tablecell .row {
+  position: relative;
+  padding-top: 16.2rem;
+  padding-bottom: 15rem;
+}
+.home-content-tablecell h3 {
+  font-family: "montserrat-bold", sans-serif;
+  font-size: 2.2rem;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: .3rem;
+  margin: 0 0 .9rem 0;
+}
+.home-content-tablecell h1 {
+  font-family: "montserrat-bold", serif;
+  font-size: 9rem;
+  line-height: 1.133;
+  color: #FFFFFF;
+}
+.home-content-tablecell .more {
+  margin: 4.8rem 0 0 0;
+}
+.home-content-tablecell .more .button {
+  border-color: #FFFFFF;
+  color: #FFFFFF;
+}
+
+/* home social-list */
+.home-social-list {
+  position: absolute;
+  left: 48px;
+  bottom: 54px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 2.4rem;
+  line-height: 1.75;
+  text-align: center;
+}
+.home-social-list::before {
+  display: block;
+  content: "";
+  width: 2px;
+  height: 42px;
+  background-color: rgba(255, 255, 255, 0.3);
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 12px;
+}
+.home-social-list li {
+  padding-left: 0;
+}
+.home-social-list li a, .home-social-list li a:visited {
+  color: #FFFFFF;
+}
+.home-social-list li a:hover, 
+.home-social-list li a:focus, 
+.home-social-list li a:active {
+  color: #151515;
+}
+
+
+
+/* ------------------------------------------------------------------- 
+ * responsive:
+ * home section 
+ * ------------------------------------------------------------------- */
+ 

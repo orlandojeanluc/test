@@ -645,7 +645,7 @@ color: white;
 </head>
 
 
-<header id="HEAAD" class="text-white body-font fixed">
+<header id="HEAAD" class="text-white body-font fixed hidden md:block">
   
   <div class=" mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
     <a class="flex title-font font-medium items-center  mb-4 md:mb-0">
@@ -684,6 +684,55 @@ color: white;
 
   
 </header> 
+
+<!-- header 
+   ================================================== -->
+   <header class=" xl:hidden lg:hidden "> 
+
+   	
+    <!--
+         <div class="header-logo">
+    
+            <a href="index.html">CIV Capital</a>
+         </div> 
+    !-->
+    
+    
+          
+          <a id="header-menu-trigger" href="#0">
+           <span class="header-menu-text text-black">Menu</span>
+    
+            <span class="animate-intro header-menu-icon"></span>
+    
+        </a> 
+    
+        <nav id="menu-nav-wrap">
+    
+          <a href="#0" class="close-button mt-16" title="close"><span>Close</span></a>	
+    
+           <h3 class="text-gray-900">Caltropia Research</h3>  
+    
+          <ul class="nav-list">
+
+            <li class="font-bold"><a href="index.html" title="">Home</a></li>
+            <li class="current"><a href="StrategiesGrid.html" title="">Strategies</a></li>
+            <li><a id="trend-link1"  href="#" title="">Trend Scores</a></li>
+            <li><a id="macro-link1" href="#" title="">Macro Regimes</a></li>
+            <li><a href="Pricing.html" title="">Pricing</a></li>	
+            <li><a href="factors.html" title="">Factors</a></li>	
+            
+
+          </ul>	
+          <a id="auth-button2" href=""><button2 id="auth-button2" class="font-mreg font-bold text-white">LOGIN
+      
+          </button2>
+        </a>
+    
+          
+    
+        </nav> <!-- end #menu-nav-wrap -->
+    
+      </header> <!-- end header -->  
 
 <body id="top">
 
@@ -852,100 +901,98 @@ color: white;
 
 
     
-    <!-- Firebase App (the core Firebase SDK) -->
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-    
+   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+   
+   
+   <script>
+   // Your web app's Firebase configuration
+   const firebaseConfig = {
+   apiKey: "AIzaSyBxG5qf6mb8E_-b2TeXlRNseMZ26L9DRYg",
+   authDomain: "trendscores-df341.firebaseapp.com",
+   projectId: "trendscores-df341",
+   databaseURL: "https://trendscores-df341-default-rtdb.firebaseio.com",
+   storageBucket: "trendscores-df341.appspot.com",
+   messagingSenderId: "565710392511",
+   appId: "1:565710392511:web:37349319364bba19b3ca0a",
+   measurementId: "G-8TVLFBWN63"
+   };
+   
+   // Initialize Firebase
+   firebase.initializeApp(firebaseConfig);
+   
+   
+   
+   
+   // Example: check if user is logged in
+   firebase.auth().onAuthStateChanged(user => {
+   if (user) {
+     console.log("Logged in as:", user.email);
+   } else {
+     console.log("Not logged in");
+   }
+   });
+   
+   
+   
+   </script>
+   <script>
+     const authButtonLink = document.getElementById("auth-button");
+     const authButton = authButtonLink.querySelector("button");
+   
+     // Wait for Firebase Auth state to change
+     firebase.auth().onAuthStateChanged((user) => {
+       if (user) {
+         // User is logged in - Update button text to 'Sign Out'
+         authButton.textContent = "SIGN OUT";
+         
+         // Make the button sign out when clicked
+         authButtonLink.href = "#";
+         authButton.onclick = () => {
+           firebase.auth().signOut().then(() => {
+             // Optionally reload the page after signing out
+             location.reload();
+           });
+         };
+       } else {
+         // User is not logged in - Update button text to 'Log In'
+         authButton.textContent = "ENTER";
+         
+         // When clicked, go to the login page
+         authButtonLink.href = "login.html"; // Change to your actual login page URL
+         authButton.onclick = null; // Remove any click action
+       }
+     });
 
-<script>
-  // Your web app's Firebase configuration
-  const firebaseConfig = {
-    apiKey: "AIzaSyBxG5qf6mb8E_-b2TeXlRNseMZ26L9DRYg",
-    authDomain: "trendscores-df341.firebaseapp.com",
-    projectId: "trendscores-df341",
-    databaseURL: "https://trendscores-df341-default-rtdb.firebaseio.com",
-    storageBucket: "trendscores-df341.appspot.com",
-    messagingSenderId: "565710392511",
-    appId: "1:565710392511:web:37349319364bba19b3ca0a",
-    measurementId: "G-8TVLFBWN63"
-  };
+     const authButtonLink2 = document.getElementById("auth-button2");
+     const authButton2 = authButtonLink2.querySelector("button2");
+   
+     // Wait for Firebase Auth state to change
+     firebase.auth().onAuthStateChanged((user) => {
+       if (user) {
+         // User is logged in - Update button text to 'Sign Out'
+         authButton2.textContent = "SIGN OUT";
+         
+         // Make the button sign out when clicked
+         authButtonLink2.href = "#";
+         authButton2.onclick = () => {
+           firebase.auth().signOut().then(() => {
+             // Optionally reload the page after signing out
+             location.reload();
+           });
+         };
+       } else {
+         // User is not logged in - Update button text to 'Log In'
+         authButton2.textContent = "ENTER";
+         
+         // When clicked, go to the login page
+         authButtonLink2.href = "login.html"; // Change to your actual login page URL
+         authButton2.onclick = null; // Remove any click action
+       }
+     });
 
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-
-
-  
-
-  // Example: check if user is logged in
-  firebase.auth().onAuthStateChanged(user => {
-    if (user) {
-      console.log("Logged in as:", user.email);
-    } else {
-      console.log("Not logged in");
-    }
-  });
-
-
-
-  
-</script>
-<script>
-  const authButtonLink = document.getElementById("auth-button");
-  const authButton = authButtonLink.querySelector("button");
-
-  // Wait for Firebase Auth state to change
-  firebase.auth().onAuthStateChanged((user) => {
-    if (user) {
-      // User is logged in - Update button text to 'Sign Out'
-      authButton.textContent = "SIGN OUT";
-      
-      // Make the button sign out when clicked
-      authButtonLink.href = "#";
-      authButton.onclick = () => {
-        firebase.auth().signOut().then(() => {
-          // Optionally reload the page after signing out
-          location.reload();
-        });
-      };
-    } else {
-      // User is not logged in - Update button text to 'Log In'
-      authButton.textContent = "BECOME A CLIENT";
-      
-      // When clicked, go to the login page
-      authButtonLink.href = "signup.html"; // Change to your actual login page URL
-      authButton.onclick = null; // Remove any click action
-    }
-  });
-
-  const authButtonLink1 = document.getElementById("auth-button1");
-  const authButton1 = authButtonLink1.querySelector("button1");
-
-  // Wait for Firebase Auth state to change
-  firebase.auth().onAuthStateChanged((user) => {
-    if (user) {
-      // User is logged in - Update button text to 'Sign Out'
-      authButton1.textContent = "SIGN OUT";
-      
-      // Make the button sign out when clicked
-      authButtonLink1.href = "#";
-      authButton1.onclick = () => {
-        firebase.auth().signOut().then(() => {
-          // Optionally reload the page after signing out
-          location.reload();
-        });
-      };
-    } else {
-      // User is not logged in - Update button text to 'Log In'
-      authButton1.textContent = "BECOME A CLIENT";
-      
-      // When clicked, go to the login page
-      authButtonLink1.href = "signup.html"; // Change to your actual login page URL
-      authButton1.onclick = null; // Remove any click action
-    }
-  });
-
-
-</script>
+     
+   </script>
     
 
    
@@ -3071,6 +3118,21 @@ color: white;
 
 <script>
   firebase.auth().onAuthStateChanged((user) => {
+    const trendLink1 = document.getElementById("trend-link1");
+    if (user) {
+      // User is logged in, link to actual page
+      trendLink1.href = "TrendOfficial.html";
+    } else {
+      // Not logged in, link to sign up page
+      trendLink1.href = "signup.html";
+    }
+  });
+</script>
+
+
+
+<script>
+  firebase.auth().onAuthStateChanged((user) => {
     const macroLink = document.getElementById("macro-link");
     if (user) {
       // User is logged in, link to actual page
@@ -3078,6 +3140,19 @@ color: white;
     } else {
       // Not logged in, link to sign up page
       macroLink.href = "signupMacro.html";
+    }
+  });
+</script>
+
+<script>
+  firebase.auth().onAuthStateChanged((user) => {
+    const macroLink1 = document.getElementById("macro-link1");
+    if (user) {
+      // User is logged in, link to actual page
+      macroLink1.href = "Macro.html";
+    } else {
+      // Not logged in, link to sign up page
+      macroLink1.href = "signupMacro.html";
     }
   });
 </script>

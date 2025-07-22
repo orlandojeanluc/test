@@ -1326,12 +1326,7 @@ header .header-logo a {
 }
 
 
-#header-menu-trigger.opaque {
-  background-color: ;
-}
-#header-menu-trigger.opaque .header-menu-text {
-  background-color: #000000;
-}
+
 #header-menu-trigger:hover, #header-menu-trigger:focus {
   color: #FFFFFF;
 }
@@ -1379,7 +1374,7 @@ font-family: "montserrat-regular", sans-serif;
   display: block;
   height: 3px;
   width: 24px;
-  background-color: #000;
+  background-color: rgb(0, 0, 0);
   position: absolute;
   top: 50%;
   right: 9px;
@@ -1436,7 +1431,7 @@ font-family: "montserrat-regular", sans-serif;
   -webkit-transition: all 0.3s ease-in-out;
   -ms-transition: all 0.3s ease-in-out;
   transition: all 0.3s ease-in-out;
-  color: #000;
+  color: rgb(177, 40, 40);
 }
 
 
@@ -1446,7 +1441,7 @@ font-family: "montserrat-regular", sans-serif;
  * off-canvas menu - (_layout.scss) 
  * ------------------------------------------------------------------- */
 #menu-nav-wrap {
-  background: #16213e;
+  background: #11192e;
   color: rgba(255, 255, 255, 0.25);
   font-size: 1.5rem;
   line-height: 1.6;
@@ -1499,7 +1494,7 @@ font-family: "montserrat-regular", sans-serif;
   border-top: 1px dotted rgba(255, 255, 255, 0.03);
 }
 #menu-nav-wrap .nav-list li a {
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(255, 255, 255, 0.9);
   display: block;
 }
 #menu-nav-wrap .nav-list li a:hover, 
