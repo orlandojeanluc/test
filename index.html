@@ -675,10 +675,10 @@ color: white;
       <!-- <a id="linkTwoThree" class="mr-12  font-mreg font-bold tracking-widest text-2xl">PERFORMANCE</a>
 !-->
     </nav>
-    <a id="auth-button1" href="#">
-      <button1 class="hover:bg-transparent hover:animate-ping no-underline hover:underline inline-flex items-center py-1 px-3 rounded text-base hidden sm:hidden lg:block mt-4 md:mt-0 font-mreg font-bold tracking-widest text-2xl text-gray-900">
+    <a id="auth-button3" href="#">
+      <button3 class="hover:bg-transparent hover:animate-ping no-underline hover:underline inline-flex items-center py-1 px-3 rounded text-base hidden sm:hidden lg:block mt-4 md:mt-0 font-mreg font-bold tracking-widest text-2xl text-gray-900">
         ENTER
-      </button1>
+      </button3>
     </a>
   </div>
 
@@ -959,7 +959,7 @@ color: white;
          authButton.textContent = "ENTER";
          
          // When clicked, go to the login page
-         authButtonLink.href = "login.html"; // Change to your actual login page URL
+         authButtonLink.href = "signup.html"; // Change to your actual login page URL
          authButton.onclick = null; // Remove any click action
        }
      });
@@ -986,8 +986,35 @@ color: white;
          authButton2.textContent = "ENTER";
          
          // When clicked, go to the login page
-         authButtonLink2.href = "login.html"; // Change to your actual login page URL
+         authButtonLink2.href = "signup.html"; // Change to your actual login page URL
          authButton2.onclick = null; // Remove any click action
+       }
+     });
+
+     const authButtonLink3 = document.getElementById("auth-button3");
+     const authButton3 = authButtonLink3.querySelector("button3");
+   
+     // Wait for Firebase Auth state to change
+     firebase.auth().onAuthStateChanged((user) => {
+       if (user) {
+         // User is logged in - Update button text to 'Sign Out'
+         authButton3.textContent = "SIGN OUT";
+         
+         // Make the button sign out when clicked
+         authButtonLink3.href = "#";
+         authButton3.onclick = () => {
+           firebase.auth().signOut().then(() => {
+             // Optionally reload the page after signing out
+             location.reload();
+           });
+         };
+       } else {
+         // User is not logged in - Update button text to 'Log In'
+         authButton3.textContent = "ENTER";
+         
+         // When clicked, go to the login page
+         authButtonLink3.href = "signup.html"; // Change to your actual login page URL
+         authButton3.onclick = null; // Remove any click action
        }
      });
 
