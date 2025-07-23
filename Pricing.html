@@ -860,99 +860,86 @@ color: white;
 
     
 
-    <section class="">
-
-      <div class="w-full max-w-full px-0 py-4 sm:py-0">
-        
-        <h1 class="text-center text-5xl font-mreg font-semibold text-blue-900 mx-auto px-2 mb-16">Choose Your Plan</h1>
-        
+    <section>
+      <div class="mx-auto max-w-7xl px-8 py-12 md:px-24 py-12">
+        <h1 class="text-center text-5xl md:text-5xl font-mreg font-semibold text-blue-900 mb-12">
+          Choose Your Plan
+        </h1>
     
-        <div class="w-full px-0">
-          <div class="my-8">
+        <div class="grid gap-6 md:grid-cols-3 items-stretch justify-center">
     
-            <!-- FLEX GRID: SMALLER CARDS -->
-            <div class="flex flex-wrap justify-center gap-6 px-4">
-    
-              <!-- Base Plan -->
-              <div class="w-full md:w-1/4  rounded-xl">
-                <div class="px-3 py-6 bg-blue-200 rounded-3xl">
-                  <div class="text-base leading-6 font-medium space-y-4 mx-2">
-                    <h1 class="text-blue-900 text-5xl mb-2 font-semibold ml-4 mt-4">Base Plan</h1>
-                    <h2 class="font-semibold text-blue-700 text-3xl mb-12 ml-4">Free</h2>
-                    
-                    <ul class="text-gray-800 text-2xl font-mreg font-bold space-y-8 mt-4 ml-4">
-                      <li class="mt-8 leading-relaxed">- Trend Dashboard (Short and Interm Based Signals)</li>
-                      <li>- Breakout/Mean Reversion Signals</li>
-                      <li>- All Strategy Performance</li>
-                      <li>- EW Managed Futures Strategy <span class="text-blue-700 leading-relaxed">Limited Time Offer</span></li>
-                      <li>- S&P 500 Risk Strategy <span class="text-blue-700 leading-relaxed">Limited Time Offer</span></li>
-
-                    </ul>
-                  </div>
-                  <div class="text-center mb-4 mt-6">
-                    <a href="signup.html">
-                      <button class="rounded-full bg-blue-900 w-2/5 text-white text-xl font-mreg font-bold mt-12 mb-4">Join Now</button>
-                    </a>
-                  </div>
-                </div>
-              </div>
-    
-              <!-- Investor Plan -->
-              <div class="w-full md:w-1/4 rounded-xl">
-                <div class="px-3 py-6 bg-indigo-200 rounded-3xl">
-                  <div class="text-base leading-6 font-medium space-y-4 mx-2">
-                    <h1 class="text-indigo-900 text-5xl mb-2 font-semibold ml-4 mt-4">Investor Plan</h1>
-                    <h2 class="font-semibold text-indigo-800 text-3xl mb-12 ml-4">$100/Month</h2>
-                    <ul class="text-indigo-900 text-2xl font-mreg font-bold space-y-8 mt-4 ml-4">
-                      <li class="mt-8">- All in Base Plan, Plus</li>
-                      <li>- All Regime Model Strategies</li>
-                      <li>- Multi Strat Regime Model</li>
-                      <li>- Macro Regimes</li>
-                      <li>- EW Managed Futures Strategy</li>
-                      <li>- S&P 500 Risk Strategy</li>
-                      <li>- S&P 500 Dip/Rip Strategy</li>
-                      <li>- Factor Dashboard  <span class="text-indigo-700">Coming Soon</span></li>
-                    </ul>
-                  </div>
-                  <div class="text-center mb-4 mt-6">
-
-                      <button class="rounded-full bg-indigo-900 w-2/5 text-white text-xl font-mreg font-bold mt-12 mb-4">Coming Soon</button>
-
-                  </div>
-                </div>
-              </div>
-    
-              <!-- Allocator Plan -->
-              <div class="w-full md:w-1/4 rounded-xl">
-                <div class="px-3 py-6 bg-indigo-300 rounded-3xl">
-                  <div class="text-base leading-6 font-medium space-y-4 mx-2">
-                    <h1 class="text-indigo-900 text-5xl mb-2 font-semibold ml-4 mt-4">Allocator Plan</h1>
-                    <h2 class="font-semibold text-indigo-900 text-3xl mb-12 ml-4">$300/Month</h2>
-                    <ul class="text-indigo-900 text-2xl font-mreg font-bold space-y-8 mt-4 ml-4">
-                      <li class="mt-8">- All in Base and Investor Plans, Plus</li>
-                      <li>- Even Higher Alpha Strategies</li>
-                      <li>- Macro Long/Short Strategy</li>
-                      <li>- All Core Active Equity Based Strategies</li>
-                      <li>- All Long/Short Equity Books</li>
-                      <li>- All Volatility Based Strategies</li>
-                      <li>- Multi Strat Active Strategy</li>
-                      <li>- Managed Futures Strategy</li>
-                    </ul>
-                  </div>
-                  <div class="text-center mb-4 mt-6">
-
-                      <button class="rounded-full bg-indigo-900 w-2/5 text-white text-xl font-mreg font-bold mt-12 mb-4">Coming Soon</button>
-
-                  </div>
-                </div>
-              </div>
-              
-    
-            </div> <!-- end flex -->
+          <!-- Base -->
+          <div class="mx-auto w-full max-w-[480px] rounded-3xl bg-blue-200 p-6 flex flex-col">
+            <div class="flex-1">
+              <h2 class="text-blue-900 text-5xl font-semibold mb-4">Base Plan</h2>
+              <h3 class="text-blue-700 text-2xl font-semibold mb-6">Free</h3>
+              <ul class="text-gray-800 text-2xl font-mreg font-bold space-y-3">
+                <li>- Trend Dashboard (Short & Interm Signals)</li>
+                <li>- Breakout/Mean Reversion Signals</li>
+                <li>- All Strategy Performance</li>
+                <li>- EW Managed Futures Strategy <span class="text-blue-700">Limited Time Offer</span></li>
+                <li>- S&amp;P 500 Risk Strategy <span class="text-blue-700">Limited Time Offer</span></li>
+              </ul>
+            </div>
+            <div class="text-center mt-auto pt-6">
+              <a href="signup.html">
+                <button class="rounded-full bg-blue-900 px-8 py-2 text-white text-lg mt-6 mb-8 font-bold font-mreg font-bold">
+                  Join Now
+                </button>
+              </a>
+            </div>
           </div>
+    
+          <!-- Investor -->
+          <div class="mx-auto w-full max-w-[480px] rounded-3xl bg-indigo-200 p-6 flex flex-col">
+            <div class="flex-1">
+              <h2 class="text-indigo-900 text-5xl font-semibold mb-4">Investor Plan</h2>
+              <h3 class="text-indigo-800 text-2xl font-semibold mb-6">$100/Month</h3>
+              <ul class="text-indigo-900 text-2xl font-mreg font-bold space-y-3">
+                <li>- All in Base Plan, Plus</li>
+                <li>- All Regime Model Strategies</li>
+                <li>- Multi Strat Regime Model</li>
+                <li>- Macro Regimes</li>
+                <li>- EW Managed Futures Strategy</li>
+                <li>- S&amp;P 500 Risk Strategy</li>
+                <li>- S&amp;P 500 Dip/Rip Strategy</li>
+                <li>- Factor Dashboard <span class="text-indigo-700">Coming Soon</span></li>
+              </ul>
+            </div>
+            <div class="text-center mt-auto pt-6">
+              <button class="rounded-full bg-indigo-900 px-8 py-2 text-white text-lg mt-6 mb-8 font-bold font-mreg font-bold">
+                Coming Soon
+              </button>
+            </div>
+          </div>
+    
+          <!-- Allocator -->
+          <div class="mx-auto w-full max-w-[480px] rounded-3xl bg-indigo-300 p-6 flex flex-col">
+            <div class="flex-1">
+              <h2 class="text-indigo-900 text-5xl font-semibold mb-4">Allocator Plan</h2>
+              <h3 class="text-indigo-900 text-2xl font-semibold mb-6">$300/Month</h3>
+              <ul class="text-indigo-900 text-2xl font-mreg font-bold space-y-3">
+                <li>- All in Base and Investor Plans, Plus</li>
+                <li>- Even Higher Alpha Strategies</li>
+                <li>- Macro Long/Short Strategy</li>
+                <li>- All Core Active Equity Based Strategies</li>
+                <li>- All Long/Short Equity Books</li>
+                <li>- All Volatility Based Strategies</li>
+                <li>- Multi Strat Active Strategy</li>
+                <li>- Managed Futures Strategy</li>
+              </ul>
+            </div>
+            <div class="text-center mt-auto pt-6">
+              <button class="rounded-full bg-indigo-900 px-8 py-2 text-white text-lg font-bold font-mreg mt-6 mb-8 font-bold">
+                Coming Soon
+              </button>
+            </div>
+          </div>
+    
         </div>
       </div>
     </section>
+    
 
     <section class="py-8">
       <div class="w-full max-w-screen-xl mx-auto px-4 mb-32">
