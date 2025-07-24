@@ -584,7 +584,7 @@ text-rendering: optimizeLegibility;
     
 
 
-      <script type="module">
+    <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
         import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
     
@@ -603,6 +603,7 @@ text-rendering: optimizeLegibility;
         const db = getDatabase(app);
     
         const monthlyRef = ref(db, "ewmanagedfuturesperf");
+        const fticker = "WEAT";
 
 get(monthlyRef).then(snapshot => {
   const data = snapshot.val();
@@ -717,23 +718,17 @@ get(monthlyRef).then(snapshot => {
 const FIREBASE_URL = 'https://trendscores-df341-default-rtdb.firebaseio.com/';
     
     /**
-     * Fetches the time-series for one ticker and renders an ApexChart
-     * @param {string} ticker e.g. "WEAT"
+     * Fetches the time-series for one fticker and renders an ApexChart
+     * @param {string} fticker e.g. "CPER"
      */
-    async function renderChart(ticker) {
-      // 2) GET data from RTDB
-      const resp = await fetch(
-        `${FIREBASE_URL}HistoricalWeeklyTrendScores/${encodeURIComponent("WEAT")}.json`
-      );
-      if (!resp.ok) {
-        console.error(`Failed to fetch ${ticker}`, resp.statusText);
-        return;
-      }
-      const json = await resp.json();
-      if (!json) {
-        console.warn(`No data found for ${ticker}`);
-        return;
-      }
+    async function renderChart(fticker) {
+  // 2) GET data from RTDB via SDK (automatically sends your auth token)
+  const snap = await get(ref(db, `HistoricalWeeklyTrendScores/${fticker}`));
+  if (!snap.exists()) {
+    console.warn(`No data found for ${fticker}`);
+    return;
+  }
+  const json = snap.val();
       
       // 3) TRANSFORM { "2025-05-25": 0.123, ... } → [ { x: Date, y: Number }, … ]
        const seriesData = Object.entries(json)
@@ -790,7 +785,7 @@ const FIREBASE_URL = 'https://trendscores-df341-default-rtdb.firebaseio.com/';
       width: 3
     },
         series: [{
-          name: ticker,
+          name: fticker,
           data: seriesData
         }],
         xaxis: {
@@ -801,7 +796,7 @@ const FIREBASE_URL = 'https://trendscores-df341-default-rtdb.firebaseio.com/';
           title: { text: 'Trend Score' }
         },
         title: {
-          text: `Historical Weekly Trend Scores: ${ticker}`,
+          text: `Historical Weekly Trend Scores: ${fticker}`,
           align: 'center'
         },
         colors: [],
@@ -861,9 +856,9 @@ const FIREBASE_URL = 'https://trendscores-df341-default-rtdb.firebaseio.com/';
       chart.render();
     }
     
-    // Example: render for WEAT on load
+    // Example: render for CPER on load
     document.addEventListener('DOMContentLoaded', () => {
-      renderChart('WEAT');
+      renderChart(fticker);
     });
 
 ///////
@@ -872,23 +867,17 @@ const FIREBASE_URL = 'https://trendscores-df341-default-rtdb.firebaseio.com/';
 const FIREBASE_URL1 = 'https://trendscores-df341-default-rtdb.firebaseio.com/';
     
     /**
-     * Fetches the time-series for one ticker and renders an ApexChart
-     * @param {string} ticker e.g. "WEAT"
+     * Fetches the time-series for one fticker and renders an ApexChart
+     * @param {string} fticker e.g. "CPER"
      */
-    async function renderChart1(ticker) {
-      // 2) GET data from RTDB
-      const resp = await fetch(
-        `${FIREBASE_URL1}HistoricalDailyTrendScores/${encodeURIComponent("WEAT")}.json`
-      );
-      if (!resp.ok) {
-        console.error(`Failed to fetch ${ticker}`, resp.statusText);
-        return;
-      }
-      const json = await resp.json();
-      if (!json) {
-        console.warn(`No data found for ${ticker}`);
-        return;
-      }
+     async function renderChart1(fticker) {
+  const snap = await get(ref(db, `HistoricalDailyTrendScores/${fticker}`));
+  if (!snap.exists()) {
+    console.warn(`No data found for ${fticker}`);
+    return;
+  }
+  const json = snap.val();
+
       
       // 3) TRANSFORM { "2025-05-25": 0.123, ... } → [ { x: Date, y: Number }, … ]
        const seriesData = Object.entries(json)
@@ -945,7 +934,7 @@ const FIREBASE_URL1 = 'https://trendscores-df341-default-rtdb.firebaseio.com/';
       width: 3
     },
         series: [{
-          name: ticker,
+          name: fticker,
           data: seriesData
         }],
         xaxis: {
@@ -956,7 +945,7 @@ const FIREBASE_URL1 = 'https://trendscores-df341-default-rtdb.firebaseio.com/';
           title: { text: 'Trend Score' }
         },
         title: {
-          text: `Historical Weekly Trend Scores: ${ticker}`,
+          text: `Historical Weekly Trend Scores: ${fticker}`,
           align: 'center'
         },
         colors: [],
@@ -1016,9 +1005,9 @@ const FIREBASE_URL1 = 'https://trendscores-df341-default-rtdb.firebaseio.com/';
       chart.render();
     }
     
-    // Example: render for WEAT on load
+    // Example: render for CPER on load
     document.addEventListener('DOMContentLoaded', () => {
-      renderChart1('WEAT');
+      renderChart1(fticker);
     });
 
 
@@ -1028,23 +1017,16 @@ const FIREBASE_URL1 = 'https://trendscores-df341-default-rtdb.firebaseio.com/';
 const FIREBASE_URL2 = 'https://trendscores-df341-default-rtdb.firebaseio.com/';
     
     /**
-     * Fetches the time-series for one ticker and renders an ApexChart
-     * @param {string} ticker e.g. "WEAT"
+     * Fetches the time-series for one fticker and renders an ApexChart
+     * @param {string} fticker e.g. "CPER"
      */
-    async function renderChart2(ticker) {
-      // 2) GET data from RTDB
-      const resp = await fetch(
-        `${FIREBASE_URL2}HistoricalDailyTrendStrengths/${encodeURIComponent("WEAT")}.json`
-      );
-      if (!resp.ok) {
-        console.error(`Failed to fetch ${ticker}`, resp.statusText);
-        return;
-      }
-      const json = await resp.json();
-      if (!json) {
-        console.warn(`No data found for ${ticker}`);
-        return;
-      }
+     async function renderChart2(fticker) {
+  const snap = await get(ref(db, `HistoricalDailyTrendStrengths/${fticker}`));
+  if (!snap.exists()) {
+    console.warn(`No data found for ${fticker}`);
+    return;
+  }
+  const json = snap.val();
       
       // 3) TRANSFORM { "2025-05-25": 0.123, ... } → [ { x: Date, y: Number }, … ]
        const seriesData = Object.entries(json)
@@ -1101,7 +1083,7 @@ const FIREBASE_URL2 = 'https://trendscores-df341-default-rtdb.firebaseio.com/';
       width: 3
     },
         series: [{
-          name: ticker,
+          name: fticker,
           data: seriesData
         }],
         xaxis: {
@@ -1112,7 +1094,7 @@ const FIREBASE_URL2 = 'https://trendscores-df341-default-rtdb.firebaseio.com/';
           title: { text: 'Trend Score' }
         },
         title: {
-          text: `Historical Weekly Trend Scores: ${ticker}`,
+          text: `Historical Weekly Trend Scores: ${fticker}`,
           align: 'center'
         },
         colors: [],
@@ -1172,9 +1154,9 @@ const FIREBASE_URL2 = 'https://trendscores-df341-default-rtdb.firebaseio.com/';
       chart.render();
     }
     
-    // Example: render for WEAT on load
+    // Example: render for CPER on load
     document.addEventListener('DOMContentLoaded', () => {
-      renderChart2('WEAT');
+      renderChart2(fticker);
     });
 
 
@@ -1184,23 +1166,16 @@ const FIREBASE_URL2 = 'https://trendscores-df341-default-rtdb.firebaseio.com/';
 const FIREBASE_URL3 = 'https://trendscores-df341-default-rtdb.firebaseio.com/';
     
     /**
-     * Fetches the time-series for one ticker and renders an ApexChart
-     * @param {string} ticker e.g. "WEAT"
+     * Fetches the time-series for one fticker and renders an ApexChart
+     * @param {string} fticker e.g. "CPER"
      */
-    async function renderChart3(ticker) {
-      // 2) GET data from RTDB
-      const resp = await fetch(
-        `${FIREBASE_URL3}HistoricalWeeklyTrendStrengths/${encodeURIComponent("WEAT")}.json`
-      );
-      if (!resp.ok) {
-        console.error(`Failed to fetch ${ticker}`, resp.statusText);
-        return;
-      }
-      const json = await resp.json();
-      if (!json) {
-        console.warn(`No data found for ${ticker}`);
-        return;
-      }
+     async function renderChart3(fticker) {
+  const snap = await get(ref(db, `HistoricalWeeklyTrendStrengths/${fticker}`));
+  if (!snap.exists()) {
+    console.warn(`No data found for ${fticker}`);
+    return;
+  }
+  const json = snap.val();
       
       // 3) TRANSFORM { "2025-05-25": 0.123, ... } → [ { x: Date, y: Number }, … ]
        const seriesData = Object.entries(json)
@@ -1257,7 +1232,7 @@ const FIREBASE_URL3 = 'https://trendscores-df341-default-rtdb.firebaseio.com/';
       width: 3
     },
         series: [{
-          name: ticker,
+          name: fticker,
           data: seriesData
         }],
         xaxis: {
@@ -1268,7 +1243,7 @@ const FIREBASE_URL3 = 'https://trendscores-df341-default-rtdb.firebaseio.com/';
           title: { text: 'Trend Score' }
         },
         title: {
-          text: `Historical Weekly Trend Scores: ${ticker}`,
+          text: `Historical Weekly Trend Scores: ${fticker}`,
           align: 'center'
         },
         colors: [],
@@ -1328,9 +1303,9 @@ const FIREBASE_URL3 = 'https://trendscores-df341-default-rtdb.firebaseio.com/';
       chart.render();
     }
     
-    // Example: render for WEAT on load
+    // Example: render for CPER on load
     document.addEventListener('DOMContentLoaded', () => {
-      renderChart3('WEAT');
+      renderChart3(fticker);
     });
 
 
@@ -1340,23 +1315,16 @@ const FIREBASE_URL3 = 'https://trendscores-df341-default-rtdb.firebaseio.com/';
 const FIREBASE_URL4 = 'https://trendscores-df341-default-rtdb.firebaseio.com/';
     
     /**
-     * Fetches the time-series for one ticker and renders an ApexChart
-     * @param {string} ticker e.g. "WEAT"
+     * Fetches the time-series for one fticker and renders an ApexChart
+     * @param {string} fticker e.g. "CPER"
      */
-    async function renderChart4(ticker) {
-      // 2) GET data from RTDB
-      const resp = await fetch(
-        `${FIREBASE_URL4}TotalMeanReversionScores/${encodeURIComponent("WEAT")}.json`
-      );
-      if (!resp.ok) {
-        console.error(`Failed to fetch ${ticker}`, resp.statusText);
-        return;
-      }
-      const json = await resp.json();
-      if (!json) {
-        console.warn(`No data found for ${ticker}`);
-        return;
-      }
+     async function renderChart4(fticker) {
+  const snap = await get(ref(db, `TotalMeanReversionScores/${fticker}`));
+  if (!snap.exists()) {
+    console.warn(`No data found for ${fticker}`);
+    return;
+  }
+  const json = snap.val();
       
       // 3) TRANSFORM { "2025-05-25": 0.123, ... } → [ { x: Date, y: Number }, … ]
        const seriesData = Object.entries(json)
@@ -1413,7 +1381,7 @@ const FIREBASE_URL4 = 'https://trendscores-df341-default-rtdb.firebaseio.com/';
       width: 3
     },
         series: [{
-          name: ticker,
+          name: fticker,
           data: seriesData
         }],
         xaxis: {
@@ -1424,7 +1392,7 @@ const FIREBASE_URL4 = 'https://trendscores-df341-default-rtdb.firebaseio.com/';
           title: { text: 'Trend Score' }
         },
         title: {
-          text: `Historical Weekly Trend Scores: ${ticker}`,
+          text: `Historical Weekly Trend Scores: ${fticker}`,
           align: 'center'
         },
         colors: [],
@@ -1484,9 +1452,9 @@ const FIREBASE_URL4 = 'https://trendscores-df341-default-rtdb.firebaseio.com/';
       chart.render();
     }
     
-    // Example: render for WEAT on load
+    // Example: render for CPER on load
     document.addEventListener('DOMContentLoaded', () => {
-      renderChart4('WEAT');
+      renderChart4(fticker);
     });    
 
 
@@ -1769,7 +1737,6 @@ get(returnsRef).then(snapshot => {
 }).catch(err => console.error("Firebase error:", err));
 
 </script>
-
 
 
 </section>

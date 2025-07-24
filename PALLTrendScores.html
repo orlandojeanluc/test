@@ -582,7 +582,7 @@ text-rendering: optimizeLegibility;
     
 
 
-      <script type="module">
+    <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
         import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
     
@@ -601,6 +601,7 @@ text-rendering: optimizeLegibility;
         const db = getDatabase(app);
     
         const monthlyRef = ref(db, "ewmanagedfuturesperf");
+        const fticker = "PALL";
 
 get(monthlyRef).then(snapshot => {
   const data = snapshot.val();
@@ -715,31 +716,51 @@ get(monthlyRef).then(snapshot => {
 const FIREBASE_URL = 'https://trendscores-df341-default-rtdb.firebaseio.com/';
     
     /**
-     * Fetches the time-series for one ticker and renders an ApexChart
-     * @param {string} ticker e.g. "PALL"
+     * Fetches the time-series for one fticker and renders an ApexChart
+     * @param {string} fticker e.g. "CPER"
      */
-    async function renderChart(ticker) {
-      // 2) GET data from RTDB
-      const resp = await fetch(
-        `${FIREBASE_URL}HistoricalWeeklyTrendScores/${encodeURIComponent("PALL")}.json`
-      );
-      if (!resp.ok) {
-        console.error(`Failed to fetch ${ticker}`, resp.statusText);
-        return;
-      }
-      const json = await resp.json();
-      if (!json) {
-        console.warn(`No data found for ${ticker}`);
-        return;
-      }
+    async function renderChart(fticker) {
+  // 2) GET data from RTDB via SDK (automatically sends your auth token)
+  const snap = await get(ref(db, `HistoricalWeeklyTrendScores/${fticker}`));
+  if (!snap.exists()) {
+    console.warn(`No data found for ${fticker}`);
+    return;
+  }
+  const json = snap.val();
       
       // 3) TRANSFORM { "2025-05-25": 0.123, ... } → [ { x: Date, y: Number }, … ]
-      const seriesData = Object.entries(json)
-        .map(([dateStr, val]) => ({
-          x: new Date(dateStr), 
-          y: Number(val)
-        }))
-        .sort((a, b) => a.x - b.x);
+       const seriesData = Object.entries(json)
+        .map(([dateStr, val]) => {
+          const parts = dateStr.split(/[-\/]/);
+          let year, month, day;
+
+          // format "YYYY-MM-DD"?
+          if (parts[0].length === 4) {
+            year  = parseInt(parts[0], 10);
+            month = parseInt(parts[1], 10) - 1;
+            day   = parseInt(parts[2], 10);
+          }
+          // fallback "M/D/YYYY"
+          else if (parts[2] && parts[2].length === 4) {
+            month = parseInt(parts[0], 10) - 1;
+            day   = parseInt(parts[1], 10);
+            year  = parseInt(parts[2], 10);
+          }
+
+          if (isNaN(year) || isNaN(month) || isNaN(day)) {
+            console.warn('Skipping invalid date:', dateStr);
+            return null;
+          }
+          const utcMs = Date.UTC(year, month, day);
+          return [ utcMs, Number(val) ];
+        })
+        .filter(pt => pt && !isNaN(pt[1]))
+        .sort((a, b) => a[0] - b[0]);
+
+      console.log('Parsed sample:', seriesData.slice(0,5)
+        .map(pt => [ new Date(pt[0]).toISOString().slice(0,10), pt[1] ])
+      );
+
       
       // 4) CHART OPTIONS
       const options = {
@@ -762,7 +783,7 @@ const FIREBASE_URL = 'https://trendscores-df341-default-rtdb.firebaseio.com/';
       width: 3
     },
         series: [{
-          name: ticker,
+          name: fticker,
           data: seriesData
         }],
         xaxis: {
@@ -773,7 +794,7 @@ const FIREBASE_URL = 'https://trendscores-df341-default-rtdb.firebaseio.com/';
           title: { text: 'Trend Score' }
         },
         title: {
-          text: `Historical Weekly Trend Scores: ${ticker}`,
+          text: `Historical Weekly Trend Scores: ${fticker}`,
           align: 'center'
         },
         colors: [],
@@ -833,9 +854,9 @@ const FIREBASE_URL = 'https://trendscores-df341-default-rtdb.firebaseio.com/';
       chart.render();
     }
     
-    // Example: render for PALL on load
+    // Example: render for CPER on load
     document.addEventListener('DOMContentLoaded', () => {
-      renderChart('PALL');
+      renderChart(fticker);
     });
 
 ///////
@@ -844,31 +865,51 @@ const FIREBASE_URL = 'https://trendscores-df341-default-rtdb.firebaseio.com/';
 const FIREBASE_URL1 = 'https://trendscores-df341-default-rtdb.firebaseio.com/';
     
     /**
-     * Fetches the time-series for one ticker and renders an ApexChart
-     * @param {string} ticker e.g. "PALL"
+     * Fetches the time-series for one fticker and renders an ApexChart
+     * @param {string} fticker e.g. "CPER"
      */
-    async function renderChart1(ticker) {
-      // 2) GET data from RTDB
-      const resp = await fetch(
-        `${FIREBASE_URL1}HistoricalDailyTrendScores/${encodeURIComponent("PALL")}.json`
-      );
-      if (!resp.ok) {
-        console.error(`Failed to fetch ${ticker}`, resp.statusText);
-        return;
-      }
-      const json = await resp.json();
-      if (!json) {
-        console.warn(`No data found for ${ticker}`);
-        return;
-      }
+     async function renderChart1(fticker) {
+  const snap = await get(ref(db, `HistoricalDailyTrendScores/${fticker}`));
+  if (!snap.exists()) {
+    console.warn(`No data found for ${fticker}`);
+    return;
+  }
+  const json = snap.val();
+
       
       // 3) TRANSFORM { "2025-05-25": 0.123, ... } → [ { x: Date, y: Number }, … ]
-      const seriesData = Object.entries(json)
-        .map(([dateStr, val]) => ({
-          x: new Date(dateStr), 
-          y: Number(val)
-        }))
-        .sort((a, b) => a.x - b.x);
+       const seriesData = Object.entries(json)
+        .map(([dateStr, val]) => {
+          const parts = dateStr.split(/[-\/]/);
+          let year, month, day;
+
+          // format "YYYY-MM-DD"?
+          if (parts[0].length === 4) {
+            year  = parseInt(parts[0], 10);
+            month = parseInt(parts[1], 10) - 1;
+            day   = parseInt(parts[2], 10);
+          }
+          // fallback "M/D/YYYY"
+          else if (parts[2] && parts[2].length === 4) {
+            month = parseInt(parts[0], 10) - 1;
+            day   = parseInt(parts[1], 10);
+            year  = parseInt(parts[2], 10);
+          }
+
+          if (isNaN(year) || isNaN(month) || isNaN(day)) {
+            console.warn('Skipping invalid date:', dateStr);
+            return null;
+          }
+          const utcMs = Date.UTC(year, month, day);
+          return [ utcMs, Number(val) ];
+        })
+        .filter(pt => pt && !isNaN(pt[1]))
+        .sort((a, b) => a[0] - b[0]);
+
+      console.log('Parsed sample:', seriesData.slice(0,5)
+        .map(pt => [ new Date(pt[0]).toISOString().slice(0,10), pt[1] ])
+      );
+
       
       // 4) CHART OPTIONS
       const options = {
@@ -891,7 +932,7 @@ const FIREBASE_URL1 = 'https://trendscores-df341-default-rtdb.firebaseio.com/';
       width: 3
     },
         series: [{
-          name: ticker,
+          name: fticker,
           data: seriesData
         }],
         xaxis: {
@@ -902,7 +943,7 @@ const FIREBASE_URL1 = 'https://trendscores-df341-default-rtdb.firebaseio.com/';
           title: { text: 'Trend Score' }
         },
         title: {
-          text: `Historical Weekly Trend Scores: ${ticker}`,
+          text: `Historical Weekly Trend Scores: ${fticker}`,
           align: 'center'
         },
         colors: [],
@@ -962,9 +1003,9 @@ const FIREBASE_URL1 = 'https://trendscores-df341-default-rtdb.firebaseio.com/';
       chart.render();
     }
     
-    // Example: render for PALL on load
+    // Example: render for CPER on load
     document.addEventListener('DOMContentLoaded', () => {
-      renderChart1('PALL');
+      renderChart1(fticker);
     });
 
 
@@ -974,31 +1015,50 @@ const FIREBASE_URL1 = 'https://trendscores-df341-default-rtdb.firebaseio.com/';
 const FIREBASE_URL2 = 'https://trendscores-df341-default-rtdb.firebaseio.com/';
     
     /**
-     * Fetches the time-series for one ticker and renders an ApexChart
-     * @param {string} ticker e.g. "PALL"
+     * Fetches the time-series for one fticker and renders an ApexChart
+     * @param {string} fticker e.g. "CPER"
      */
-    async function renderChart2(ticker) {
-      // 2) GET data from RTDB
-      const resp = await fetch(
-        `${FIREBASE_URL2}HistoricalDailyTrendStrengths/${encodeURIComponent("PALL")}.json`
-      );
-      if (!resp.ok) {
-        console.error(`Failed to fetch ${ticker}`, resp.statusText);
-        return;
-      }
-      const json = await resp.json();
-      if (!json) {
-        console.warn(`No data found for ${ticker}`);
-        return;
-      }
+     async function renderChart2(fticker) {
+  const snap = await get(ref(db, `HistoricalDailyTrendStrengths/${fticker}`));
+  if (!snap.exists()) {
+    console.warn(`No data found for ${fticker}`);
+    return;
+  }
+  const json = snap.val();
       
       // 3) TRANSFORM { "2025-05-25": 0.123, ... } → [ { x: Date, y: Number }, … ]
-      const seriesData = Object.entries(json)
-        .map(([dateStr, val]) => ({
-          x: new Date(dateStr), 
-          y: Number(val)
-        }))
-        .sort((a, b) => a.x - b.x);
+       const seriesData = Object.entries(json)
+        .map(([dateStr, val]) => {
+          const parts = dateStr.split(/[-\/]/);
+          let year, month, day;
+
+          // format "YYYY-MM-DD"?
+          if (parts[0].length === 4) {
+            year  = parseInt(parts[0], 10);
+            month = parseInt(parts[1], 10) - 1;
+            day   = parseInt(parts[2], 10);
+          }
+          // fallback "M/D/YYYY"
+          else if (parts[2] && parts[2].length === 4) {
+            month = parseInt(parts[0], 10) - 1;
+            day   = parseInt(parts[1], 10);
+            year  = parseInt(parts[2], 10);
+          }
+
+          if (isNaN(year) || isNaN(month) || isNaN(day)) {
+            console.warn('Skipping invalid date:', dateStr);
+            return null;
+          }
+          const utcMs = Date.UTC(year, month, day);
+          return [ utcMs, Number(val) ];
+        })
+        .filter(pt => pt && !isNaN(pt[1]))
+        .sort((a, b) => a[0] - b[0]);
+
+      console.log('Parsed sample:', seriesData.slice(0,5)
+        .map(pt => [ new Date(pt[0]).toISOString().slice(0,10), pt[1] ])
+      );
+
       
       // 4) CHART OPTIONS
       const options = {
@@ -1021,7 +1081,7 @@ const FIREBASE_URL2 = 'https://trendscores-df341-default-rtdb.firebaseio.com/';
       width: 3
     },
         series: [{
-          name: ticker,
+          name: fticker,
           data: seriesData
         }],
         xaxis: {
@@ -1032,7 +1092,7 @@ const FIREBASE_URL2 = 'https://trendscores-df341-default-rtdb.firebaseio.com/';
           title: { text: 'Trend Score' }
         },
         title: {
-          text: `Historical Weekly Trend Scores: ${ticker}`,
+          text: `Historical Weekly Trend Scores: ${fticker}`,
           align: 'center'
         },
         colors: [],
@@ -1092,9 +1152,9 @@ const FIREBASE_URL2 = 'https://trendscores-df341-default-rtdb.firebaseio.com/';
       chart.render();
     }
     
-    // Example: render for PALL on load
+    // Example: render for CPER on load
     document.addEventListener('DOMContentLoaded', () => {
-      renderChart2('PALL');
+      renderChart2(fticker);
     });
 
 
@@ -1104,31 +1164,50 @@ const FIREBASE_URL2 = 'https://trendscores-df341-default-rtdb.firebaseio.com/';
 const FIREBASE_URL3 = 'https://trendscores-df341-default-rtdb.firebaseio.com/';
     
     /**
-     * Fetches the time-series for one ticker and renders an ApexChart
-     * @param {string} ticker e.g. "PALL"
+     * Fetches the time-series for one fticker and renders an ApexChart
+     * @param {string} fticker e.g. "CPER"
      */
-    async function renderChart3(ticker) {
-      // 2) GET data from RTDB
-      const resp = await fetch(
-        `${FIREBASE_URL3}HistoricalWeeklyTrendStrengths/${encodeURIComponent("PALL")}.json`
-      );
-      if (!resp.ok) {
-        console.error(`Failed to fetch ${ticker}`, resp.statusText);
-        return;
-      }
-      const json = await resp.json();
-      if (!json) {
-        console.warn(`No data found for ${ticker}`);
-        return;
-      }
+     async function renderChart3(fticker) {
+  const snap = await get(ref(db, `HistoricalWeeklyTrendStrengths/${fticker}`));
+  if (!snap.exists()) {
+    console.warn(`No data found for ${fticker}`);
+    return;
+  }
+  const json = snap.val();
       
       // 3) TRANSFORM { "2025-05-25": 0.123, ... } → [ { x: Date, y: Number }, … ]
-      const seriesData = Object.entries(json)
-        .map(([dateStr, val]) => ({
-          x: new Date(dateStr), 
-          y: Number(val)
-        }))
-        .sort((a, b) => a.x - b.x);
+       const seriesData = Object.entries(json)
+        .map(([dateStr, val]) => {
+          const parts = dateStr.split(/[-\/]/);
+          let year, month, day;
+
+          // format "YYYY-MM-DD"?
+          if (parts[0].length === 4) {
+            year  = parseInt(parts[0], 10);
+            month = parseInt(parts[1], 10) - 1;
+            day   = parseInt(parts[2], 10);
+          }
+          // fallback "M/D/YYYY"
+          else if (parts[2] && parts[2].length === 4) {
+            month = parseInt(parts[0], 10) - 1;
+            day   = parseInt(parts[1], 10);
+            year  = parseInt(parts[2], 10);
+          }
+
+          if (isNaN(year) || isNaN(month) || isNaN(day)) {
+            console.warn('Skipping invalid date:', dateStr);
+            return null;
+          }
+          const utcMs = Date.UTC(year, month, day);
+          return [ utcMs, Number(val) ];
+        })
+        .filter(pt => pt && !isNaN(pt[1]))
+        .sort((a, b) => a[0] - b[0]);
+
+      console.log('Parsed sample:', seriesData.slice(0,5)
+        .map(pt => [ new Date(pt[0]).toISOString().slice(0,10), pt[1] ])
+      );
+
       
       // 4) CHART OPTIONS
       const options = {
@@ -1151,7 +1230,7 @@ const FIREBASE_URL3 = 'https://trendscores-df341-default-rtdb.firebaseio.com/';
       width: 3
     },
         series: [{
-          name: ticker,
+          name: fticker,
           data: seriesData
         }],
         xaxis: {
@@ -1162,7 +1241,7 @@ const FIREBASE_URL3 = 'https://trendscores-df341-default-rtdb.firebaseio.com/';
           title: { text: 'Trend Score' }
         },
         title: {
-          text: `Historical Weekly Trend Scores: ${ticker}`,
+          text: `Historical Weekly Trend Scores: ${fticker}`,
           align: 'center'
         },
         colors: [],
@@ -1222,9 +1301,9 @@ const FIREBASE_URL3 = 'https://trendscores-df341-default-rtdb.firebaseio.com/';
       chart.render();
     }
     
-    // Example: render for PALL on load
+    // Example: render for CPER on load
     document.addEventListener('DOMContentLoaded', () => {
-      renderChart3('PALL');
+      renderChart3(fticker);
     });
 
 
@@ -1234,31 +1313,50 @@ const FIREBASE_URL3 = 'https://trendscores-df341-default-rtdb.firebaseio.com/';
 const FIREBASE_URL4 = 'https://trendscores-df341-default-rtdb.firebaseio.com/';
     
     /**
-     * Fetches the time-series for one ticker and renders an ApexChart
-     * @param {string} ticker e.g. "PALL"
+     * Fetches the time-series for one fticker and renders an ApexChart
+     * @param {string} fticker e.g. "CPER"
      */
-    async function renderChart4(ticker) {
-      // 2) GET data from RTDB
-      const resp = await fetch(
-        `${FIREBASE_URL4}TotalMeanReversionScores/${encodeURIComponent("PALL")}.json`
-      );
-      if (!resp.ok) {
-        console.error(`Failed to fetch ${ticker}`, resp.statusText);
-        return;
-      }
-      const json = await resp.json();
-      if (!json) {
-        console.warn(`No data found for ${ticker}`);
-        return;
-      }
+     async function renderChart4(fticker) {
+  const snap = await get(ref(db, `TotalMeanReversionScores/${fticker}`));
+  if (!snap.exists()) {
+    console.warn(`No data found for ${fticker}`);
+    return;
+  }
+  const json = snap.val();
       
       // 3) TRANSFORM { "2025-05-25": 0.123, ... } → [ { x: Date, y: Number }, … ]
-      const seriesData = Object.entries(json)
-        .map(([dateStr, val]) => ({
-          x: new Date(dateStr), 
-          y: Number(val)
-        }))
-        .sort((a, b) => a.x - b.x);
+       const seriesData = Object.entries(json)
+        .map(([dateStr, val]) => {
+          const parts = dateStr.split(/[-\/]/);
+          let year, month, day;
+
+          // format "YYYY-MM-DD"?
+          if (parts[0].length === 4) {
+            year  = parseInt(parts[0], 10);
+            month = parseInt(parts[1], 10) - 1;
+            day   = parseInt(parts[2], 10);
+          }
+          // fallback "M/D/YYYY"
+          else if (parts[2] && parts[2].length === 4) {
+            month = parseInt(parts[0], 10) - 1;
+            day   = parseInt(parts[1], 10);
+            year  = parseInt(parts[2], 10);
+          }
+
+          if (isNaN(year) || isNaN(month) || isNaN(day)) {
+            console.warn('Skipping invalid date:', dateStr);
+            return null;
+          }
+          const utcMs = Date.UTC(year, month, day);
+          return [ utcMs, Number(val) ];
+        })
+        .filter(pt => pt && !isNaN(pt[1]))
+        .sort((a, b) => a[0] - b[0]);
+
+      console.log('Parsed sample:', seriesData.slice(0,5)
+        .map(pt => [ new Date(pt[0]).toISOString().slice(0,10), pt[1] ])
+      );
+
       
       // 4) CHART OPTIONS
       const options = {
@@ -1281,7 +1379,7 @@ const FIREBASE_URL4 = 'https://trendscores-df341-default-rtdb.firebaseio.com/';
       width: 3
     },
         series: [{
-          name: ticker,
+          name: fticker,
           data: seriesData
         }],
         xaxis: {
@@ -1292,7 +1390,7 @@ const FIREBASE_URL4 = 'https://trendscores-df341-default-rtdb.firebaseio.com/';
           title: { text: 'Trend Score' }
         },
         title: {
-          text: `Historical Weekly Trend Scores: ${ticker}`,
+          text: `Historical Weekly Trend Scores: ${fticker}`,
           align: 'center'
         },
         colors: [],
@@ -1352,9 +1450,9 @@ const FIREBASE_URL4 = 'https://trendscores-df341-default-rtdb.firebaseio.com/';
       chart.render();
     }
     
-    // Example: render for PALL on load
+    // Example: render for CPER on load
     document.addEventListener('DOMContentLoaded', () => {
-      renderChart4('PALL');
+      renderChart4(fticker);
     });    
 
 

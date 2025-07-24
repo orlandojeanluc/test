@@ -450,419 +450,253 @@ text-rendering: optimizeLegibility;
     
 
 
-      <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
-    
-        const firebaseConfig = {
-          apiKey: "AIzaSyBxG5qf6mb8E_-b2TeXlRNseMZ26L9DRYg",
-          authDomain: "trendscores-df341.firebaseapp.com",
-          projectId: "trendscores-df341",
-          storageBucket: "trendscores-df341.appspot.com",
-          messagingSenderId: "565710392511",
-          appId: "1:565710392511:web:37349319364bba19b3ca0a",
-          measurementId: "G-8TVLFBWN63",
-          databaseURL: "https://trendscores-df341-default-rtdb.firebaseio.com"
-        };
-    
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
-    
-        const monthlyRef = ref(db, "ewmanagedfuturesperf");
-
-get(monthlyRef).then(snapshot => {
-  const data = snapshot.val();
-  if (!data) return;
-
-  const sorted = Object.entries(data).sort(([a], [b]) => new Date(a) - new Date(b));
-  const categories = sorted.map(([date]) =>
-    new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'short' })
-  );
-  const series1 = sorted.map(([, values]) => values[0]);
-  const series2 = sorted.map(([, values]) => values[1]);
-  const series3 = sorted.map(([, values]) => values[2]);
-  const series4 = sorted.map(([, values]) => values[3]);
-
-  const options = {
-    chart: {
-      fontFamily: 'montserrat-regular, sans-serif',
-      type: 'area',
-      background: 'transparent',
-      height: 450,
-      toolbar: { show: false },
-      zoom: { enabled: false },
-      animations: {
-        enabled: true,
-        easing: 'easeinout',
-        speed: 800
-      }
-    },
-    stroke: {
-      curve: 'smooth',
-      width: 2
-    },
-    dataLabels: {
-      enabled: false
-    },
-    title: {
-      text: "",
-      align: 'center',
-      style: {
-        fontSize: '22px',
-        fontWeight: 'bold',
-        color: '#111827',
-        fontFamily: 'montserrat-regular, sans-serif'
-      }
-    },
-    xaxis: {
-      categories,
-      labels: {
-        show: false,
-        rotate: -45,
-        style: {
-          fontSize: '12px',
-          colors: '#4B5563'
-        }
-      }
-    },
-    yaxis: {
-      labels: {
-        formatter: function (val) {
-          return val.toFixed(2);
-        },
-        style: {
-          colors: '#4B5563',
-          fontSize: '12px'
-        }
-      },
-      title: {
-        text: '',
-        style: {
-          color: '#374151',
-          fontWeight: 500
-        }
-      }
-    },
-    grid: {
-      borderColor: '#E5E7EB',
-      show: false,
-      row: { colors: ['#F9FAFB', 'transparent'], opacity: 0.5 }
-    },
-    colors: [],
-    fill: {
-      type: "gradient",
-      gradient: {
-        shadeIntensity: 1,
-        opacityFrom: 0.4,
-        opacityTo: 0.1,
-        stops: [0, 90, 100]
-      }
-    },
-    markers: {
-      size: 0,
-      strokeWidth: 2,
-      strokeColors: "#fff",
-      hover: { size: 6 }
-    },
-    tooltip: {
-      theme: "light",
-      x: { format: 'MMM yyyy' }
-    },
-    series: [
-      { name: "Caltropia", data: series1 },
-      { name: "AQMIX", data: series2 },
-      { name: "WTMF", data: series3 },
-      { name: "AHLYX", data: series4 }
-
-    ]
-  };
-
-  const chart = new ApexCharts(document.querySelector("#chart4"), options);
-  chart.render();
-}).catch(err => console.error("Data fetch error:", err));
-
-
-const refPath = ref(db, "ewmanagedfuturesyearlyperf");
-
-get(refPath).then(snapshot => {
-  const data = snapshot.val();
-  if (!data) return console.error("No data found.");
-
-  // Convert and sort by parsed date keys
-  const sorted = Object.entries(data).sort(([a], [b]) => new Date(a) - new Date(b));
-
-  // Extract values
-  const years = sorted.map(([dateStr]) => {
-    const year = new Date(dateStr).getFullYear();
-    return "'" + year.toString().slice(-2);
-  });
-
-  const caltropia = sorted.map(([, values]) => values[0]);
-  const sp500 = sorted.map(([, values]) => values[1]);
-
-  // Now use in ApexCharts
-  const options = {
-    series: [
-      { name: 'Caltropia', data: caltropia }
-
-    ],
-    chart: {
-      fontFamily: 'montserrat-regular, sans-serif',
-      type: 'bar',
-      background: 'transparent',
-      
-  height: 450,
-  toolbar: {
-    show: false // this disables the entire menu and removes the icon
-  }
-},
-    xaxis: {
-      categories: years
-    },
-    yaxis: {
-  title: {
-    text: ''
-  },
-  labels: {
-    formatter: function (val) {
-      return val.toFixed(2); // or .toFixed(2) if you want 2 decimal places
-    }
-  }
-},
-    grid: {
-              borderColor: '#E5E7EB',
-              show: false,
-              row: { colors: ['#F9FAFB', 'transparent'], opacity: 0.5 }
-            },
-    tooltip: {
-      y: {
-        formatter: val => val.toFixed(2) + " %"
-      }
-    },
-    fill: { opacity: 1 },
-    plotOptions: {
-      bar: {
-        horizontal: false,
-        columnWidth: '55%',
-        borderRadius: 10
-      }
-    },
-    dataLabels: { enabled: false },
-    stroke: {
-      show: true,
-      width: 2,
-      colors: ['transparent']
-    }
-  };
-
-  const chartEl = document.querySelector("#chart1");
-  if (chartEl) {
-    const chart = new ApexCharts(chartEl, options);
-    chart.render();
-  } else {
-    console.error("Element #chart1 not found.");
-  }
-}).catch(err => console.error("Error fetching Firebase data:", err));
-
-
-const allocationsRef = ref(db, "BondRegimeHistAlloc");
-
-get(allocationsRef).then(snapshot => {
-  const data = snapshot.val();
-  if (!data) return;
-
-  const sorted = Object.entries(data).sort(([a], [b]) => new Date(a) - new Date(b));
-  const dates = sorted.map(([date]) =>
-    new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'short' })
-  );
-  const values = sorted.map(([, value]) => value * 100); // convert to percentage
-
-  const options = {
-    chart: {
-      fontFamily: 'montserrat-regular, sans-serif',
-      type: 'line',
-      background: 'transparent',
-      height: 450,
-      toolbar: { show: false },
-      zoom: { enabled: false },
-      animations: {
-        enabled: true,
-        easing: 'easeinout',
-        speed: 800
-      }
-    },
-    stroke: {
-      curve: 'smooth',
-      width: 3
-    },
-    dataLabels: { enabled: false },
-    title: {
-      text: "",
-      align: 'center',
-      style: {
-        fontSize: '22px',
-        fontWeight: 'bold',
-        color: '#111827'
-      }
-    },
-    xaxis: {
-      categories: dates,
-      labels: {
-        rotate: -45,
-        style: {
-          fontSize: '0.1px',
-          colors: '#4B5563'
-        }
-      }
-    },
-    yaxis: {
-      labels: {
-        formatter: function (val) {
-          return parseFloat(val.toFixed(1)); // clean 1 decimal max
-        },
-        style: {
-          colors: '#4B5563',
-          fontSize: '12px'
-        }
-      },
-      title: {
-        text: 'Allocation (%)',
-        style: {
-          color: '#374151',
-          fontWeight: 500
-        }
-      }
-    },
-    grid: { show: false },
-    colors: ['#3b82f6'],
-    fill: {
-      type: "solid",
-      colors: ['#3b82f6']
-    },
-    markers: {
-      size: 0,
-      strokeWidth: 2,
-      strokeColors: "#fff",
-      hover: { size: 6 }
-    },
-    tooltip: {
-      theme: "light",
-      y: {
-        formatter: val => val.toFixed(1) + " %"
-      }
-    },
-    series: [{
-      name: 'Allocation %',
-      data: values
-    }]
-  };
-
-  const chart = new ApexCharts(document.querySelector("#chart5"), options);
-  chart.render();
-});
-
-
-const returnsRef = ref(db, "ewmanagedfuturesmonthlyperf");
-
-get(returnsRef).then(snapshot => {
-  const data = snapshot.val();
-  if (!data) return;
-
-  const monthMap = {
-    "01": "Jan", "02": "Feb", "03": "Mar", "04": "Apr",
-    "05": "May", "06": "Jun", "07": "Jul", "08": "Aug",
-    "09": "Sep", "10": "Oct", "11": "Nov", "12": "Dec"
-  };
-
-  const allMonths = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-  const structured = {};
-
-  // Step 1: Parse and organize values into year → month → value
-  Object.entries(data).forEach(([date, value]) => {
-    const jsDate = new Date(date);
-    const year = jsDate.getFullYear();
-    const monthIndex = String(jsDate.getMonth() + 1).padStart(2, "0");
-    const monthLabel = monthMap[monthIndex];
-
-    const numeric = parseFloat(Array.isArray(value) ? value[0] : value);
-    if (!isNaN(numeric) && isFinite(numeric)) {
-      if (!structured[year]) structured[year] = {};
-      structured[year][monthLabel] = parseFloat(numeric.toFixed(2));
-    }
-  });
-
-  // Step 2: Ensure each row (year) uses all months in correct order
-  const series = Object.entries(structured)
-    .sort(([a], [b]) => parseInt(a) - parseInt(b))
-    .map(([year, monthlyData]) => ({
-      name: year,
-      data: allMonths.map(month => ({
-        x: month,
-        y: monthlyData[month] ?? null
-      }))
-    }));
-
-  const options = {
-    chart: {
-      fontFamily: 'montserrat-regular, sans-serif',
-      background: 'transparent',
-      height: 600,
-      type: 'heatmap',
-      
-      toolbar: { show: false }
-    },
-    plotOptions: {
-      heatmap: {
-        shadeIntensity: 0.8,
-        colorScale: {
-          ranges: [
-          { from: -100, to: -5, name: 'Very Negative', color: '#dc2626' },  // darker red
-    { from: -5, to: 0, name: 'Slight Negative', color: '#f87171' },   // medium red
-    { from: 0, to: 5, name: 'Slight Positive', color: '#1ee7b7' },    // medium green
-    { from: 5, to: 100, name: 'Very Positive', color: '#16a34a' }
-          ]
-        }
-      }
-    },
-
-    dataLabels: {
-  enabled: true,
-  style: {
-    fontWeight: 'bold',
-    colors: ['#000'],
-    fontSize: window.innerWidth < 600 ? '8px' :
-              window.innerWidth < 900 ? '10px' : '12px'
-  }
-},
-    
-    xaxis: {
-      type: 'category',
-      categories: allMonths,
-      labels: {
-        style: {
-          fontSize: '12px'
-        }
-      }
-    },
-    yaxis: {
-      title: { text: "" },
-      labels: {
-        style: { fontSize: '12px' }
-      }
-    },
-    tooltip: {
-      y: {
-        formatter: val => val !== null ? val.toFixed(2) + " %" : "No Data"
-      }
-    },
-    series: series
-  };
-
-  const chart = new ApexCharts(document.querySelector("#chart7"), options);
-  chart.render();
-}).catch(err => console.error("Firebase error:", err));
-
-</script>
+        <script type="module">
+          import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+          import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-analytics.js";
+          import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
+          import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+        
+          // ─── Your Firebase config ─────────────────────────────────────────────────────
+          const firebaseConfig = {
+            apiKey: "AIzaSyBxG5qf6mb8E_-b2TeXlRNseMZ26L9DRYg",
+            authDomain: "trendscores-df341.firebaseapp.com",
+            databaseURL: "https://trendscores-df341-default-rtdb.firebaseio.com",
+            projectId: "trendscores-df341",
+            storageBucket: "trendscores-df341.appspot.com",
+            messagingSenderId: "565710392511",
+            appId: "1:565710392511:web:37349319364bba19b3ca0a",
+            measurementId: "G-8TVLFBWN63"
+          };
+        
+          // ─── Init Firebase (reuse if already) ─────────────────────────────────────────
+          const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+          getAnalytics(app);
+          const db   = getDatabase(app);
+          const auth = getAuth(app);
+        
+          // ─── Only render charts after you’re signed in ────────────────────────────────
+          onAuthStateChanged(auth, user => {
+            if (!user) {
+              window.location.href = "signup.html";
+              return;
+            }
+            renderManagedArea();
+            renderManagedYearlyBar();
+            renderRegimeAllocLine();
+            renderManagedPerfHeatmap();
+          });
+        
+          // ─── 1) Area chart: ewmanagedfuturesperf → #chart4 ────────────────────────────
+          async function renderManagedArea() {
+            try {
+              const snap = await get(ref(db, "ewmanagedfuturesperf"));
+              if (!snap.exists()) return;
+        
+              const data   = snap.val();
+              const sorted = Object.entries(data)
+                                   .sort(([a],[b]) => new Date(a) - new Date(b));
+              const categories = sorted.map(
+                ([d]) => new Date(d)
+                          .toLocaleDateString("en-US", { year:"numeric", month:"short" })
+              );
+              const series1 = sorted.map(([,v]) => v[0]);
+              const series2 = sorted.map(([,v]) => v[1]);
+              const series3 = sorted.map(([,v]) => v[2]);
+              const series4 = sorted.map(([,v]) => v[3]);
+        
+              const options = {
+                chart: {
+                  fontFamily: "montserrat-regular, sans-serif",
+                  type:        "area",
+                  background:  "transparent",
+                  height:      450,
+                  toolbar:     { show: false },
+                  zoom:        { enabled: false },
+                  animations:  { enabled:true, easing:"easeinout", speed:800 }
+                },
+                stroke:      { curve:"smooth", width:2 },
+                dataLabels:  { enabled:false },
+                title:       { text:"", align:"center", style:{ fontSize:"22px", fontWeight:"bold", color:"#111827" } },
+                xaxis:       { categories, labels:{ show:false, rotate:-45, style:{ fontSize:"12px", colors:"#4B5563" } } },
+                yaxis:       {
+                  labels: {
+                    formatter: val => val.toFixed(2),
+                    style:     { colors:"#4B5563", fontSize:"12px" }
+                  },
+                  title: { text:"", style:{ color:"#374151", fontWeight:500 } }
+                },
+                grid:        { borderColor:"#E5E7EB", show:false, row:{ colors:["#F9FAFB","transparent"], opacity:0.5 } },
+                colors:      [],
+                fill:        { type:"gradient", gradient:{ shadeIntensity:1, opacityFrom:0.4, opacityTo:0.1, stops:[0,90,100] } },
+                markers:     { size:0, strokeWidth:2, strokeColors:"#fff", hover:{ size:6 } },
+                tooltip:     { theme:"light", x:{ format:"MMM yyyy" } },
+                series: [
+                  { name:"Caltropia", data:series1 },
+                  { name:"AQMIX",     data:series2 },
+                  { name:"WTMF",      data:series3 },
+                  { name:"AHLYX",     data:series4 }
+                ]
+              };
+        
+              const el = document.querySelector("#chart4");
+              if (el) new ApexCharts(el, options).render();
+            } catch(err) {
+              console.error("Area chart error:", err);
+            }
+          }
+        
+          // ─── 2) Bar chart: ewmanagedfuturesyearlyperf → #chart1 ────────────────────────
+          async function renderManagedYearlyBar() {
+            try {
+              const snap = await get(ref(db, "ewmanagedfuturesyearlyperf"));
+              const data = snap.val();
+              if (!data) { console.error("No yearly data"); return; }
+        
+              const sorted = Object.entries(data)
+                                   .sort(([a],[b]) => new Date(a) - new Date(b));
+              const years   = sorted.map(
+                ([d]) => "'" + new Date(d).getFullYear().toString().slice(-2)
+              );
+              const series1 = sorted.map(([,v]) => v[0]);
+        
+              const options = {
+                series: [{ name:"Caltropia", data:series1 }],
+                chart:  {
+                  fontFamily: "montserrat-regular, sans-serif",
+                  type:        "bar",
+                  background:  "transparent",
+                  height:      450,
+                  toolbar:     { show:false }
+                },
+                xaxis:       { categories:years },
+                yaxis:       {
+                  title:  { text:"" },
+                  labels: { formatter: val => val.toFixed(2) }
+                },
+                grid:        { borderColor:"#E5E7EB", show:false, row:{ colors:["#F9FAFB","transparent"], opacity:0.5 } },
+                tooltip:     { y:{ formatter: val => val.toFixed(2) + " %" } },
+                fill:        { opacity:1 },
+                plotOptions: { bar:{ horizontal:false, columnWidth:"55%", borderRadius:10 } },
+                dataLabels:  { enabled:false },
+                stroke:      { show:true, width:2, colors:["transparent"] }
+              };
+        
+              const el = document.querySelector("#chart1");
+              if (el) new ApexCharts(el, options).render();
+            } catch(err) {
+              console.error("Yearly bar chart error:", err);
+            }
+          }
+        
+          // ─── 3) Line chart: BondRegimeHistAlloc → #chart5 ─────────────────────────────
+          async function renderRegimeAllocLine() {
+            try {
+              const snap = await get(ref(db, "BondRegimeHistAlloc"));
+              const data = snap.val();
+              if (!data) return;
+              const sorted = Object.entries(data)
+                                   .sort(([a],[b]) => new Date(a) - new Date(b));
+              const dates  = sorted.map(
+                ([d]) => new Date(d).toLocaleDateString("en-US",{ year:"numeric", month:"short" })
+              );
+              const values = sorted.map(([,v]) => v * 100);
+        
+              const options = {
+                chart: {
+                  fontFamily: "montserrat-regular, sans-serif",
+                  type:        "line",
+                  background:  "transparent",
+                  height:      450,
+                  toolbar:     { show:false },
+                  zoom:        { enabled:false },
+                  animations:  { enabled:true, easing:"easeinout", speed:800 }
+                },
+                stroke:      { curve:"smooth", width:3 },
+                dataLabels:  { enabled:false },
+                title:       { text:"", align:"center", style:{ fontSize:"22px", fontWeight:"bold", color:"#111827" }},
+                xaxis:       { categories:dates, labels:{ rotate:-45, style:{ fontSize:"0.1px", colors:"#4B5563" }}},
+                yaxis:       {
+                  labels: { formatter: val => parseFloat(val.toFixed(1)), style:{ colors:"#4B5563", fontSize:"12px" }},
+                  title:  { text:"Allocation (%)", style:{ color:"#374151", fontWeight:500 }}
+                },
+                grid:        { show:false },
+                colors:      ["#3b82f6"],
+                fill:        { type:"solid", colors:["#3b82f6"] },
+                markers:     { size:0, strokeWidth:2, strokeColors:"#fff", hover:{ size:6 }},
+                tooltip:     { theme:"light", y:{ formatter: v => v.toFixed(1) + " %" }},
+                series:     [{ name:"Allocation %", data:values }]
+              };
+        
+              const el = document.querySelector("#chart5");
+              if (el) new ApexCharts(el, options).render();
+            } catch(err) {
+              console.error("Alloc line chart error:", err);
+            }
+          }
+        
+          // ─── 4) Heatmap: ewmanagedfuturesmonthlyperf → #chart7 ────────────────────────
+          async function renderManagedPerfHeatmap() {
+            try {
+              const snap = await get(ref(db, "ewmanagedfuturesmonthlyperf"));
+              const data = snap.val();
+              if (!data) return;
+        
+              const monthMap = {
+                "01":"Jan","02":"Feb","03":"Mar","04":"Apr","05":"May","06":"Jun",
+                "07":"Jul","08":"Aug","09":"Sep","10":"Oct","11":"Nov","12":"Dec"
+              };
+              const allMonths = Object.values(monthMap);
+              const structured = {};
+        
+              Object.entries(data).forEach(([date,val]) => {
+                const d     = new Date(date);
+                const yr    = d.getFullYear();
+                const mIdx  = String(d.getMonth()+1).padStart(2,"0");
+                const mon   = monthMap[mIdx];
+                const num   = parseFloat(Array.isArray(val)? val[0] : val);
+                if (!isNaN(num) && isFinite(num)) {
+                  structured[yr] = structured[yr]||{};
+                  structured[yr][mon] = parseFloat(num.toFixed(2));
+                }
+              });
+        
+              const series = Object.entries(structured)
+                .sort(([a],[b]) => parseInt(a)-parseInt(b))
+                .map(([yr,md]) => ({
+                  name: yr,
+                  data: allMonths.map(m => ({ x:m, y: md[m] ?? null }))
+                }));
+        
+              const options = {
+                chart:        { fontFamily:"montserrat-regular, sans-serif", height:600, type:"heatmap", toolbar:{ show:false } },
+                plotOptions:  {
+                  heatmap: {
+                    shadeIntensity:0.8,
+                    colorScale:{
+                      ranges:[
+                        { from:-100, to:-5, name:"Very Negative", color:"#dc2626" },
+                        { from:-5, to:0,    name:"Slight Negative", color:"#f87171" },
+                        { from:0,  to:5,    name:"Slight Positive", color:"#1ee7b7" },
+                        { from:5,  to:100,  name:"Very Positive", color:"#16a34a" }
+                      ]
+                    }
+                  }
+                },
+                dataLabels:   { enabled:true, style:{ fontWeight:"bold", colors:["#000"], fontSize: window.innerWidth<600?"8px":window.innerWidth<900?"10px":"12px" }},
+                xaxis:        { type:"category", categories:allMonths, labels:{ style:{ fontSize:"12px" }}},
+                yaxis:        { title:{ text:"" }, labels:{ style:{ fontSize:"12px" }}},
+                tooltip:      { y:{ formatter: v=> v!==null? v.toFixed(2)+" %":"No Data" }},
+                series
+              };
+        
+              const el = document.querySelector("#chart7");
+              if (el) new ApexCharts(el, options).render();
+            } catch(err) {
+              console.error("Heatmap error:", err);
+            }
+          }
+        </script>
+        
 
 
 
