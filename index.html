@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <!--[if IE 8 ]><html class="no-js oldie ie8" lang="en"> <![endif]-->
 <!--[if IE 9 ]><html class="no-js oldie ie9" lang="en"> <![endif]-->
-<!--[if (gte IE 9)|!(IE)]><!--><html class="no-js" lang="en"> <!--<![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html class="no-js " lang="en"> <!--<![endif]-->
 <head>
 
    <!--- basic page needs
@@ -907,7 +907,7 @@ color: white;
    
    <script>
    // Your web app's Firebase configuration
-   const firebaseConfig = {
+   const firebaseConfig1 = {
    apiKey: "AIzaSyBxG5qf6mb8E_-b2TeXlRNseMZ26L9DRYg",
    authDomain: "trendscores-df341.firebaseapp.com",
    projectId: "trendscores-df341",
@@ -919,7 +919,7 @@ color: white;
    };
    
    // Initialize Firebase
-   firebase.initializeApp(firebaseConfig);
+   firebase.initializeApp(firebaseConfig1);
    
    
    
@@ -1239,7 +1239,7 @@ color: white;
   </h1>
   <p class="text-center text-2xl mb-4 text-blue-900 px-2 mt-12">Our robust portfolios are systemically designed to minimize risk and optimize risk adjusted returns<span class="ml-2 text-blue-800 font-bold hidden sm:block">— Swipe Below to Discover</span></p>
   <p class="text-center text-2xl mb-4 text-indigo-800 px-2 mt-6 font-bold">Enjoy Lifetime Access to Two Strategies, Free with Early Signup</p>
-  <p1 class="flex justify-center items-center text-xl mb-4 text-blue-800 px-2 mt-6 font-bold">Performance Metrics Below Updated Monthly</p1>
+  <p class="flex justify-center items-center text-xl mb-4 text-blue-800 px-2 mt-6 font-bold">Performance Metrics Below Updated Monthly</p>
   <div class="mx-auto w-full md:w-2/3 px-4">
     <div class="container my-8">
       <div class="flex justify-between items-center mb-4">
@@ -3271,46 +3271,72 @@ $(document).scroll(function(){
     </script>
 
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-  import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
+  import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+  import { getAnalytics }                from "https://www.gstatic.com/firebasejs/11.6.0/firebase-analytics.js";
+  import { getDatabase, ref, get }       from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
 
-  const firebaseConfig1 = {
-    apiKey: "AIzaSyBxG5qf6mb8E_-b2TeXlRNseMZ26L9DRYg",
-    authDomain: "trendscores-df341.firebaseapp.com",
-    projectId: "trendscores-df341",
-    databaseURL: "https://trendscores-df341-default-rtdb.firebaseio.com",
-    storageBucket: "trendscores-df341.appspot.com",
+  // ─── Your Firebase config ─────────────────────────────────────────────────────
+  const firebaseConfig = {
+    apiKey:            "AIzaSyBxG5qf6mb8E_-b2TeXlRNseMZ26L9DRYg",
+    authDomain:        "trendscores-df341.firebaseapp.com",
+    databaseURL:       "https://trendscores-df341-default-rtdb.firebaseio.com",
+    projectId:         "trendscores-df341",
+    storageBucket:     "trendscores-df341.appspot.com",
     messagingSenderId: "565710392511",
-    appId: "1:565710392511:web:37349319364bba19b3ca0a",
-    measurementId: "G-8TVLFBWN63"
+    appId:             "1:565710392511:web:37349319364bba19b3ca0a",
+    measurementId:     "G-8TVLFBWN63"
   };
 
-  const app = initializeApp(firebaseConfig1);
-  const db = getDatabase(app);
+  // ─── Init (or reuse) ───────────────────────────────────────────────────────────
+  const app   = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+  getAnalytics(app);
+  const db    = getDatabase(app);
+  const auth  = getAuth(app);
 
-  const strategies = ["S&P 500 Daily Regime", "S&P 500 Dip Rip", "Bond Regime Model", "Relative Value Volatility", "Volatility Regimes", "Multi Strat Regimes", "Managed Futures Equal Weight", "Sector Regime Model", "Long Short Equity", "US Core Equity", "US Value Factor", "China Core Equity", "Volatility Tail Risk", "Bitcoin Regime Model", "Gold Regime Model"]; // Add strategy names exactly as in the sheet
+  // ─── Strategy list & safe DOM updater ─────────────────────────────────────────
+  const strategies = [
+    "S&P 500 Daily Regime","S&P 500 Dip Rip","Bond Regime Model",
+    "Relative Value Volatility","Volatility Regimes","Multi Strat Regimes",
+    "Managed Futures Equal Weight","Sector Regime Model","Long Short Equity",
+    "US Core Equity","US Value Factor","China Core Equity",
+    "Volatility Tail Risk","Bitcoin Regime Model","Gold Regime Model"
+  ];
 
-  function populateStrategyData() {
-    strategies.forEach(name => {
-      const cleanName = name.replace(/\s+/g, ''); // e.g. "Mean Reversion" → "MeanReversion"
-
-      get(child(ref(db), `investmentStrategies/${name}`)).then((snapshot) => {
-        if (snapshot.exists()) {
-          const data = snapshot.val();
-
-          document.getElementById(`${cleanName}-YTD`).textContent = (data["YTD Return"] * 100).toFixed(2) + '%';
-          document.getElementById(`${cleanName}-CAGR`).textContent = (data["CAGR"] * 100).toFixed(2) + '%';
-          document.getElementById(`${cleanName}-Volatility`).textContent = (data["Volatility"] * 100).toFixed(2) + '%';
-          document.getElementById(`${cleanName}-Sharpe`).textContent = data["Sharpe"];
-          document.getElementById(`${cleanName}-MaxDD`).textContent = (data["Max DD"] * 100).toFixed(2) + '%';
-          
-        }
-      });
-    });
+  function update(id, text) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = text;
   }
 
-  window.onload = populateStrategyData;
+  // ─── Fetch & populate ─────────────────────────────────────────────────────────
+  async function populateStrategyData() {
+    for (const name of strategies) {
+      const clean = name.replace(/\s+/g, "");
+      try {
+        const snap = await get(ref(db, `investmentStrategies/${name}`));
+        if (!snap.exists()) continue;
+        const d = snap.val();
+        update(`${clean}-YTD`,        (d["YTD Return"]  * 100).toFixed(2) + "%");
+        update(`${clean}-CAGR`,       (d["CAGR"]        * 100).toFixed(2) + "%");
+        update(`${clean}-Volatility`, (d["Volatility"]  * 100).toFixed(2) + "%");
+        update(`${clean}-Sharpe`,     d["Sharpe"]);
+        update(`${clean}-MaxDD`,      (d["Max DD"]      * 100).toFixed(2) + "%");
+      } catch (err) {
+        console.error(`Error loading ${name}:`, err);
+      }
+    }
+  }
+
+  // ─── Only run after auth succeeds ──────────────────────────────────────────────
+  onAuthStateChanged(auth, user => {
+    if (!user) {
+      window.location.href = "signup.html";
+    } else {
+      populateStrategyData();
+    }
+  });
 </script>
+
 
 </body>
 
