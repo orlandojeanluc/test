@@ -170,27 +170,27 @@
       <h1 class="title-font sm:text-3xl md:text-4xl  lg:text-4xl mb-4 text-white mt-8 ">Fund Facts
         
       </h1>
-      <h1 class="text-xs text-red-200 ">From 12/22 to Current. In Real Time, No Backtest</h1>
+      <h1 class="text-xs text-red-200 ">From 07/15 to Current. Real Time, No Backtest</h1>
 
 
       <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 justify-items-center mt-6 px-4 ml-0 md:-ml-4">
         <div class="bg-gray-200 px-6 py-5 rounded-3xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
-          <h2 class="font-bold text-xl text-gray-900 font-mreg">7.04%</h2>
+          <h2 class="font-bold text-xl text-gray-900 font-mreg">1.76%</h2>
           <p class="font-mreg">An Return</p>
         </div>
       
         <div class="bg-gray-200 px-4 py-5 rounded-3xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
-          <h2 class="font-bold text-xl text-gray-900 font-mreg">5.54%</h2>
+          <h2 class="font-bold text-xl text-gray-900 font-mreg">7.38%</h2>
           <p class="font-mreg">Volatility</p>
         </div>
       
         <div class="bg-gray-200 px-4 py-5 rounded-3xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
-          <h2  class="font-bold text-xl text-gray-900 font-mreg">-4.65%</h2>
+          <h2  class="font-bold text-xl text-gray-900 font-mreg">-12.19%</h2>
           <p class="font-mreg">Drawdown</p>
         </div>
       
         <div class="bg-gray-200 px-4 py-5 rounded-3xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
-          <h2  class="font-bold text-xl text-gray-900 font-mreg">0.95</h2>
+          <h2  class="font-bold text-xl text-gray-900 font-mreg">0.06</h2>
           <p class="font-mreg">Sharpe</p>
         </div>
         </div>
@@ -203,22 +203,22 @@
 
       <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 justify-items-center mt-6 px-4 ml-0 md:-ml-4">
         <div class="bg-gray-200 px-6 py-5 rounded-3xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
-          <h2 class="font-bold text-xl text-gray-900 font-mreg">-3.01%</h2>
+          <h2 class="font-bold text-xl text-gray-900 font-mreg">1.09%</h2>
           <p class="font-mreg">An Return</p>
         </div>
       
         <div class="bg-gray-200 px-4 py-5 rounded-3xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
-          <h2 class="font-bold text-xl text-gray-900 font-mreg">10.82%</h2>
+          <h2 class="font-bold text-xl text-gray-900 font-mreg">10.02%</h2>
           <p class="font-mreg">Volatility</p>
         </div>
       
         <div class="bg-gray-200 px-4 py-5 rounded-3xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
-          <h2  class="font-bold text-xl text-gray-900 font-mreg">-12.65%</h2>
+          <h2  class="font-bold text-xl text-gray-900 font-mreg">-15.55%</h2>
           <p class="font-mreg">Drawdown</p>
         </div>
       
         <div class="bg-gray-200 px-4 py-5 rounded-3xl shadow-2xl hover:bg-blue-100 w-full max-w-[140px] text-center">
-          <h2  class="font-bold text-xl text-gray-900 font-mreg">-0.75</h2>
+          <h2  class="font-bold text-xl text-gray-900 font-mreg">-0.03</h2>
           <p class="font-mreg">Sharpe</p>
         </div>
         </div>
@@ -346,7 +346,7 @@ text-rendering: optimizeLegibility;
       <h1 class="title-font sm:text-4xl text-3xl mb-2  text-black mt-8  ">Historical Performance
 
       </h1>
-      <p class="text-black font-mreg text-xs w-full font-bold">Not Dividend Adjusted</p>
+
 
 
       <div class=" inline w-full rounded-3xl items-center justify-center object-center">
@@ -367,7 +367,7 @@ text-rendering: optimizeLegibility;
       </h1>
 
       
-      <h1 class="title-font sm:text-4xl text-3xl xl:mb-8 lg:mb-16 md:mb-8 sm:mb-8  text-black mt-0 md:mt-24">Annual Returns
+      <h1 class="title-font sm:text-4xl text-3xl xl:mb-8 lg:mb-16 md:mb-8 sm:mb-8  text-black mt-0 md:mt-24 pt-0 md:pt-6">Annual Returns
 
       </h1>
 
@@ -481,6 +481,7 @@ get(monthlyRef).then(snapshot => {
   const series1 = sorted.map(([, values]) => values[0]);
   const series2 = sorted.map(([, values]) => values[1]);
   const series3 = sorted.map(([, values]) => values[2]);
+  const series4 = sorted.map(([, values]) => values[3]);
 
   const options = {
     chart: {
@@ -569,8 +570,9 @@ get(monthlyRef).then(snapshot => {
     },
     series: [
       { name: "Caltropia", data: series1 },
-      { name: "DBMF", data: series2 },
-      { name: "CTA", data: series3 }
+      { name: "AQMIX", data: series2 },
+      { name: "WTMF", data: series3 },
+      { name: "AHLYX", data: series4 }
 
     ]
   };
