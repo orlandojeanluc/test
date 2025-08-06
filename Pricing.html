@@ -1679,64 +1679,7 @@ color: white;
   };
                   </script>
 
-<script type="module">
-  import { initializeApp }   from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-  import { getAuth }         from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-  import { getFirestore }    from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
-  import {
-    getStripePayments,
-    createCheckoutSession
-  } from "https://unpkg.com/@invertase/firestore-stripe-payments/dist/index.esm.js";
-
-  // 1) init Firebase
-  const firebaseConfig1 = { /* your config */ };
-  const app  = initializeApp(firebaseConfig1);
-  const auth = getAuth(app);
-  const db   = getFirestore(app);
-
-  // 2) init the Stripe Payments extension helper
-  const payments = getStripePayments(app, {
-    productsCollection:      "products",
-    customersCollection:     "customers",
-    pricesCollection:        "prices",
-    subscriptionsCollection: "subscriptions",
-    paymentsCollection:      "payments",
-  });
-
-  // 3) load Stripe.js
-  const stripe = Stripe("pk_test_51RDxhERpJyCs7b4pUKaesidvohq0sgrB19cImcXTokFkpT4ZrWVWA5YvhievAoHsVoIgBA1bIyPqcB3DfyP8sOwD00vOf6koK2");
-
-  // 4) wire up buttons
-  document.getElementById("subscribe-investor").addEventListener("click", async () => {
-    if (!auth.currentUser) return window.location.href = "login.html";
-    // price ID must match the one you seeded in Firestore
-    const priceId = "price_YOUR_INVESTOR_PRICE_ID";
-    const sessionRef = await createCheckoutSession(payments, {
-      price:       priceId,
-      success_url: window.location.origin + "/success.html",
-      cancel_url:  window.location.origin + "/Pricing.html",
-      mode:        "subscription"
-    });
-    const snap = await sessionRef.get();
-    const { sessionId } = snap.data();
-    await stripe.redirectToCheckout({ sessionId });
-  });
-
-  document.getElementById("subscribe-allocator").addEventListener("click", async () => {
-    if (!auth.currentUser) return window.location.href = "login.html";
-    const priceId = "price_YOUR_ALLOCATOR_PRICE_ID";
-    const sessionRef = await createCheckoutSession(payments, {
-      price:       priceId,
-      success_url: window.location.origin + "/success.html",
-      cancel_url:  window.location.origin + "/Pricing.html",
-      mode:        "subscription"
-    });
-    const snap = await sessionRef.get();
-    const { sessionId } = snap.data();
-    await stripe.redirectToCheckout({ sessionId });
-  });
-
-</script>                  
+                  
   <!--
   <div
   class="flex-none w-2/3 md:w-2/5 mr-8   rounded-xl "
@@ -1954,7 +1897,63 @@ firebase.auth().onAuthStateChanged((user) => {
 });
 </script>
 
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+  import { getAuth }       from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+  import { getFirestore }  from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+  import {
+    getStripePayments,
+    createCheckoutSession
+  } from "https://unpkg.com/@invertase/firestore-stripe-payments/dist/index.esm.js";
 
+  // 1) Init Firebase, Auth, Firestore
+  const firebaseConfig1 = { /* your config */ };
+  const app  = initializeApp(firebaseConfig1);
+  const auth = getAuth(app);
+  const db   = getFirestore(app);
+
+  // 2) Init the Stripe-Firebase extension helper
+  const payments = getStripePayments(app, {
+    productsCollection:      "products",
+    customersCollection:     "customers",
+    pricesCollection:        "prices",
+    subscriptionsCollection: "subscriptions",
+    paymentsCollection:      "payments",
+  });
+
+  // 3) Load Stripe.js
+  const stripe = Stripe("pk_test_51RDxhERpJyCs7b4pUKaesidvohq0sgrB19cImcXTokFkpT4ZrWVWA5YvhievAoHsVoIgBA1bIyPqcB3DfyP8sOwD00vOf6koK2");
+
+  // 4) Wire up the buttons (they now exist in the DOM)
+  document.getElementById("subscribe-investor").addEventListener("click", async () => {
+    if (!auth.currentUser) return window.location.href = "login.html";
+    const priceId = "price_YOUR_INVESTOR_PRICE_ID";
+    const sessionRef = await createCheckoutSession(payments, {
+      price:       priceId,
+      success_url: window.location.origin + "/success.html",
+      cancel_url:  window.location.origin + "/Pricing.html",
+      mode:        "subscription"
+    });
+    const snap = await sessionRef.get();
+    const { sessionId } = snap.data();
+    await stripe.redirectToCheckout({ sessionId });
+  });
+
+  document.getElementById("subscribe-allocator").addEventListener("click", async () => {
+    if (!auth.currentUser) return window.location.href = "login.html";
+    const priceId = "price_YOUR_ALLOCATOR_PRICE_ID";
+    const sessionRef = await createCheckoutSession(payments, {
+      price:       priceId,
+      success_url: window.location.origin + "/success.html",
+      cancel_url:  window.location.origin + "/Pricing.html",
+      mode:        "subscription"
+    });
+    const snap = await sessionRef.get();
+    const { sessionId } = snap.data();
+    await stripe.redirectToCheckout({ sessionId });
+  });
+</script>
+</body>
 
 </body>
 
