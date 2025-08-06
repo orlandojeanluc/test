@@ -940,27 +940,7 @@ color: white;
     
         </div>
       </div>
-      <script>
-        document.addEventListener('DOMContentLoaded', function () {
-          // INVESTOR button
-          const investBtn = document.getElementById('subscribe-investor');
-          if (investBtn) {
-            investBtn.addEventListener('click', function () {
-              // Replace with your real Stripe Checkout URL for the Investor plan:
-              window.location.href = 'https://checkout.stripe.com/pay/cs_test_a1b2c3d4';
-            });
-          }
-    
-          // ALLOCATOR button
-          const allocBtn = document.getElementById('subscribe-allocator');
-          if (allocBtn) {
-            allocBtn.addEventListener('click', function () {
-              // Replace with your real Stripe Checkout URL for the Allocator plan:
-              window.location.href = 'https://checkout.stripe.com/pay/cs_test_b1c2d3e4';
-            });
-          }
-        });
-      </script>
+      
     </section>
     
 
@@ -1918,31 +1898,31 @@ firebase.auth().onAuthStateChanged((user) => {
 });
 </script>
 
-  <!-- 1) Load Stripe.js first -->
-  <script src="https://js.stripe.com/v3/"></script>
+<!-- Load Stripe.js once -->
+<script src="https://js.stripe.com/v3/"></script>
 
-  <!-- 2) Your one module script -->
-  <script type="module">
-    import { initializeApp }       from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-    import { getAuth }             from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-    import { getFirestore }        from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
-    import {
-      getStripePayments,
-      loadProducts,
-      createCheckoutSession
-    } from "https://cdn.jsdelivr.net/npm/@invertase/firestore-stripe-payments@0.3.12/dist/index.esm.js";
+<!-- Dynamic Checkout‐Session wiring -->
+<script type="module">
+  import { initializeApp }       from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+  import { getAuth }             from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+  import { getFirestore }        from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+  import {
+    getStripePayments,
+    loadProducts,
+    createCheckoutSession
+  } from "https://cdn.jsdelivr.net/npm/@invertase/firestore-stripe-payments@0.3.12/dist/index.esm.js";
 
-    // 1) Initialize Firebase
-    const firebaseConfig1 = {
-      apiKey:    "AIzaSy…",
+  (async () => {
+    // 1) Init Firebase
+    const app  = initializeApp({
+      apiKey:    "AIzaSyBxG5qf6mb8E_-b2TeXlRNseMZ26L9DRYg",
       authDomain:"trendscores-df341.firebaseapp.com",
       projectId: "trendscores-df341",
-    };
-    const app  = initializeApp(firebaseConfig1);
-    const auth = getAuth(app);
-    const db   = getFirestore(app);
+    });
+    const auth     = getAuth(app);
+    const db       = getFirestore(app);
 
-    // 2) Init the Stripe-Firebase extension helper
+    // 2) Init the Stripe-Payments extension helper
     const payments = getStripePayments(app, {
       productsCollection:      "products",
       customersCollection:     "customers",
@@ -1958,40 +1938,41 @@ firebase.auth().onAuthStateChanged((user) => {
     const products = await loadProducts(payments);
     const investor = products.find(p => p.name === "Investor Plan");
     const allocator = products.find(p => p.name === "Allocator Plan");
-
     if (!investor || !allocator) {
-      console.error("Plans not found in Firestore:", products);
+      console.error("Plans not found!", products);
       return;
     }
+    const [investorPriceId]  = investor.prices.map(o=>o.id);
+    const [allocatorPriceId] = allocator.prices.map(o=>o.id);
 
-    const investorPriceId  = investor.prices[0].id;
-    const allocatorPriceId = allocator.prices[0].id;
-
-    // 5) Wire up the buttons
-    document.getElementById("subscribe-investor").addEventListener("click", async () => {
-      if (!auth.currentUser) return window.location.href = "login.html";
-      const sessionRef = await createCheckoutSession(payments, {
-        price:       investorPriceId,
-        success_url: window.location.origin + "/success.html",
-        cancel_url:  window.location.origin + "/Pricing.html",
-        mode:        "subscription"
+    // 5) Wire up your buttons to create dynamic sessions
+    document.getElementById("subscribe-investor")
+      .addEventListener("click", async () => {
+        if (!auth.currentUser) return window.location.href = "login.html";
+        const sessionRef = await createCheckoutSession(payments, {
+          price:       investorPriceId,
+          success_url: window.location.origin + "/success.html",
+          cancel_url:  window.location.origin + "/Pricing.html",
+          mode:        "subscription"
+        });
+        const { url } = (await sessionRef.get()).data();
+        window.location.href = url;
       });
-      const snap = await sessionRef.get();
-      await stripe.redirectToCheckout({ sessionId: snap.data().sessionId });
-    });
 
-    document.getElementById("subscribe-allocator").addEventListener("click", async () => {
-      if (!auth.currentUser) return window.location.href = "login.html";
-      const sessionRef = await createCheckoutSession(payments, {
-        price:       allocatorPriceId,
-        success_url: window.location.origin + "/success.html",
-        cancel_url:  window.location.origin + "/Pricing.html",
-        mode:        "subscription"
+    document.getElementById("subscribe-allocator")
+      .addEventListener("click", async () => {
+        if (!auth.currentUser) return window.location.href = "login.html";
+        const sessionRef = await createCheckoutSession(payments, {
+          price:       allocatorPriceId,
+          success_url: window.location.origin + "/success.html",
+          cancel_url:  window.location.origin + "/Pricing.html",
+          mode:        "subscription"
+        });
+        const { url } = (await sessionRef.get()).data();
+        window.location.href = url;
       });
-      const snap = await sessionRef.get();
-      await stripe.redirectToCheckout({ sessionId: snap.data().sessionId });
-    });
-  </script>
+  })();
+</script>
 </body>
 </html>
 
