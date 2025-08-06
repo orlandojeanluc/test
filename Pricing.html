@@ -909,7 +909,7 @@ color: white;
               </ul>
             </div>
             <div class="text-center mt-auto pt-6">
-              <button class="rounded-full bg-indigo-900 px-8 py-2 text-white text-lg mt-6 mb-8 font-bold font-mreg font-bold">
+              <button id="subscribe-investor" class="rounded-full bg-indigo-900 px-8 py-2 text-white text-lg mt-6 mb-8 font-bold font-mreg font-bold">
                 Coming Soon
               </button>
             </div>
@@ -932,7 +932,7 @@ color: white;
               </ul>
             </div>
             <div class="text-center mt-auto pt-6">
-              <button class="rounded-full bg-indigo-900 px-8 py-2 text-white text-lg font-bold font-mreg mt-6 mb-8 font-bold">
+              <button id="subscribe-allocator" class="rounded-full bg-indigo-900 px-8 py-2 text-white text-lg font-bold font-mreg mt-6 mb-8 font-bold">
                 Coming Soon
               </button>
             </div>
@@ -1299,8 +1299,18 @@ color: white;
                 </div>
               </div>
               <div class="h-16 flex items-center justify-center">
-                
+                <div class="relative w-10 h-10 flex items-center justify-center">
+                  <!-- Background Circle -->
+                  <div class="absolute w-full h-full rounded-full bg-indigo-400"></div>
+              
+                  <!-- Checkmark -->
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-indigo-900 relative z-10" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
               </div>
+              
               <div class="h-16 flex items-center justify-center">
                 <div class="relative w-10 h-10 flex items-center justify-center">
                   <!-- Background Circle -->
@@ -1668,6 +1678,65 @@ color: white;
     });
   };
                   </script>
+
+<script type="module">
+  import { initializeApp }   from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+  import { getAuth }         from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+  import { getFirestore }    from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+  import {
+    getStripePayments,
+    createCheckoutSession
+  } from "https://unpkg.com/@invertase/firestore-stripe-payments/dist/index.esm.js";
+
+  // 1) init Firebase
+  const firebaseConfig1 = { /* your config */ };
+  const app  = initializeApp(firebaseConfig1);
+  const auth = getAuth(app);
+  const db   = getFirestore(app);
+
+  // 2) init the Stripe Payments extension helper
+  const payments = getStripePayments(app, {
+    productsCollection:      "products",
+    customersCollection:     "customers",
+    pricesCollection:        "prices",
+    subscriptionsCollection: "subscriptions",
+    paymentsCollection:      "payments",
+  });
+
+  // 3) load Stripe.js
+  const stripe = Stripe("pk_test_51RDxhERpJyCs7b4pUKaesidvohq0sgrB19cImcXTokFkpT4ZrWVWA5YvhievAoHsVoIgBA1bIyPqcB3DfyP8sOwD00vOf6koK2");
+
+  // 4) wire up buttons
+  document.getElementById("subscribe-investor").addEventListener("click", async () => {
+    if (!auth.currentUser) return window.location.href = "login.html";
+    // price ID must match the one you seeded in Firestore
+    const priceId = "price_YOUR_INVESTOR_PRICE_ID";
+    const sessionRef = await createCheckoutSession(payments, {
+      price:       priceId,
+      success_url: window.location.origin + "/success.html",
+      cancel_url:  window.location.origin + "/Pricing.html",
+      mode:        "subscription"
+    });
+    const snap = await sessionRef.get();
+    const { sessionId } = snap.data();
+    await stripe.redirectToCheckout({ sessionId });
+  });
+
+  document.getElementById("subscribe-allocator").addEventListener("click", async () => {
+    if (!auth.currentUser) return window.location.href = "login.html";
+    const priceId = "price_YOUR_ALLOCATOR_PRICE_ID";
+    const sessionRef = await createCheckoutSession(payments, {
+      price:       priceId,
+      success_url: window.location.origin + "/success.html",
+      cancel_url:  window.location.origin + "/Pricing.html",
+      mode:        "subscription"
+    });
+    const snap = await sessionRef.get();
+    const { sessionId } = snap.data();
+    await stripe.redirectToCheckout({ sessionId });
+  });
+
+</script>                  
   <!--
   <div
   class="flex-none w-2/3 md:w-2/5 mr-8   rounded-xl "
@@ -1792,45 +1861,7 @@ $(document).scroll(function(){
     </script>
 
 
-<script>
-  // Use your Stripe public key here
-  const stripe = Stripe("pk_test_51RDxhERpJyCs7b4pUKaesidvohq0sgrB19cImcXTokFkpT4ZrWVWA5YvhievAoHsVoIgBA1bIyPqcB3DfyP8sOwD00vOf6koK2");
 
-  // Add event listeners for buttons
-  document.getElementById('subscribe-basic').addEventListener('click', async () => {
-    const { sessionId } = await createCheckoutSession('basic');
-    stripe.redirectToCheckout({ sessionId });
-  });
-
-  document.getElementById('subscribe-investor').addEventListener('click', async () => {
-    const { sessionId } = await createCheckoutSession('investor');
-    stripe.redirectToCheckout({ sessionId });
-  });
-
-  document.getElementById('subscribe-allocator').addEventListener('click', async () => {
-    const { sessionId } = await createCheckoutSession('allocator');
-    stripe.redirectToCheckout({ sessionId });
-  });
-
-  // Helper function to get sessionId (Mocking for this example)
-  async function createCheckoutSession(planId) {
-    let sessionUrl = '';
-    switch (planId) {
-      case 'basic':
-        sessionUrl = 'https://checkout.stripe.com/pay/cs_test_a1b2c3d4';
-        break;
-      case 'investor':
-        sessionUrl = 'https://checkout.stripe.com/pay/cs_test_b1c2d3e4';
-        break;
-      case 'allocator':
-        sessionUrl = 'https://checkout.stripe.com/pay/cs_test_c1d2e3f4';
-        break;
-      default:
-        throw new Error('Invalid plan');
-    }
-    return { sessionId: sessionUrl };  // Return mock sessionId
-  }
-</script>
 
 <script>
   firebase.auth().onAuthStateChanged((user) => {
