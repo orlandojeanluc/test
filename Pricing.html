@@ -940,6 +940,27 @@ color: white;
     
         </div>
       </div>
+      <script>
+        document.addEventListener('DOMContentLoaded', function () {
+          // INVESTOR button
+          const investBtn = document.getElementById('subscribe-investor');
+          if (investBtn) {
+            investBtn.addEventListener('click', function () {
+              // Replace with your real Stripe Checkout URL for the Investor plan:
+              window.location.href = 'https://checkout.stripe.com/pay/cs_test_a1b2c3d4';
+            });
+          }
+    
+          // ALLOCATOR button
+          const allocBtn = document.getElementById('subscribe-allocator');
+          if (allocBtn) {
+            allocBtn.addEventListener('click', function () {
+              // Replace with your real Stripe Checkout URL for the Allocator plan:
+              window.location.href = 'https://checkout.stripe.com/pay/cs_test_b1c2d3e4';
+            });
+          }
+        });
+      </script>
     </section>
     
 
