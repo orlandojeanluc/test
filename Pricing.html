@@ -1898,10 +1898,8 @@ firebase.auth().onAuthStateChanged((user) => {
 });
 </script>
 
-<!-- Load Stripe.js once -->
-<script src="https://js.stripe.com/v3/"></script>
 
-<!-- Dynamic Checkout‐Session wiring -->
+
 <script type="module">
   import { initializeApp }       from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
   import { getAuth }             from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
@@ -1910,19 +1908,19 @@ firebase.auth().onAuthStateChanged((user) => {
     getStripePayments,
     loadProducts,
     createCheckoutSession
-  } from "https://cdn.jsdelivr.net/npm/@invertase/firestore-stripe-payments@0.3.12/dist/index.esm.js";
+  } from "https://unpkg.com/@invertase/firestore-stripe-payments@latest/dist/index.esm.js?module";
 
   (async () => {
-    // 1) Init Firebase
-    const app  = initializeApp({
+    // 1) Firebase init
+    const app     = initializeApp({
       apiKey:    "AIzaSyBxG5qf6mb8E_-b2TeXlRNseMZ26L9DRYg",
       authDomain:"trendscores-df341.firebaseapp.com",
       projectId: "trendscores-df341",
     });
-    const auth     = getAuth(app);
-    const db       = getFirestore(app);
+    const auth    = getAuth(app);
+    const db      = getFirestore(app);
 
-    // 2) Init the Stripe-Payments extension helper
+    // 2) Stripe-Payments extension
     const payments = getStripePayments(app, {
       productsCollection:      "products",
       customersCollection:     "customers",
@@ -1931,10 +1929,10 @@ firebase.auth().onAuthStateChanged((user) => {
       paymentsCollection:      "payments",
     });
 
-    // 3) Init Stripe.js
+    // 3) Stripe.js
     const stripe = Stripe("pk_test_51RDxhERpJyCs7b4pUKaesidvohq0sgrB19cImcXTokFkpT4ZrWVWA5YvhievAoHsVoIgBA1bIyPqcB3DfyP8sOwD00vOf6koK2");
 
-    // 4) Pull your plans out of Firestore
+    // 4) Fetch your plans
     const products = await loadProducts(payments);
     const investor = products.find(p => p.name === "Investor Plan");
     const allocator = products.find(p => p.name === "Allocator Plan");
@@ -1942,10 +1940,10 @@ firebase.auth().onAuthStateChanged((user) => {
       console.error("Plans not found!", products);
       return;
     }
-    const [investorPriceId]  = investor.prices.map(o=>o.id);
-    const [allocatorPriceId] = allocator.prices.map(o=>o.id);
+    const [investorPriceId]  = investor.prices.map(o => o.id);
+    const [allocatorPriceId] = allocator.prices.map(o => o.id);
 
-    // 5) Wire up your buttons to create dynamic sessions
+    // 5) Wire up the buttons
     document.getElementById("subscribe-investor")
       .addEventListener("click", async () => {
         if (!auth.currentUser) return window.location.href = "login.html";
@@ -1973,6 +1971,8 @@ firebase.auth().onAuthStateChanged((user) => {
       });
   })();
 </script>
+</body>
+</html>
 </body>
 </html>
 
