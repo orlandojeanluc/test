@@ -1898,6 +1898,23 @@ firebase.auth().onAuthStateChanged((user) => {
 </script>
 
 <script type="module">
+  import { initializeApp }         from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+  import { getAuth }               from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+  import { getFirestore }          from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+- import {
+-   getStripePayments,
+-   loadProducts,
+-   createCheckoutSession
+- } from "https://unpkg.com/@invertase/firestore-stripe-payments/dist/index.esm.js";
++ import {
++   getStripePayments,
++   loadProducts,
++   createCheckoutSession
++ } from "https://cdn.jsdelivr.net/npm/@invertase/firestore-stripe-payments@0.3.12/dist/index.esm.js";
+  // …the rest of your init + button-wiring code…
+</script>
+
+<script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
   import { getAuth }       from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
   import { getFirestore }  from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
