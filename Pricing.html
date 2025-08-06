@@ -25,9 +25,10 @@
 
     // 3) Init Firebase
     const firebaseConfig = {
-      apiKey:    "YOUR_FIREBASE_API_KEY",
-      authDomain:"YOUR_FIREBASE_AUTH_DOMAIN",
-      projectId: "YOUR_FIREBASE_PROJECT_ID",
+     
+      apiKey:    "AIzaSyBxG5qf6mb8E_-b2TeXlRNseMZ26L9DRYg",
+      authDomain:"trendscores-df341.firebaseapp.com",
+      projectId: "trendscores-df341",
     };
     const app  = initializeApp(firebaseConfig);
     const auth = getAuth(app);
@@ -43,7 +44,7 @@
     });
 
     // 5) Init Stripe.js
-    const stripe = Stripe("pk_test_YOUR_STRIPE_PUBLISHABLE_KEY");
+    const stripe = Stripe("pk_test_51RDxhERpJyCs7b4pUKaesidvohq0sgrB19cImcXTokFkpT4ZrWVWA5YvhievAoHsVoIgBA1bIyPqcB3DfyP8sOwD00vOf6koK2");
 
     // 6) Hard-code your price IDs (from Stripe Dashboard → Products → Prices)
     const INVESTOR_PRICE_ID   = "price_XXXXXXXXXXXXXX"; 
