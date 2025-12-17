@@ -260,12 +260,15 @@
         <div class="bg-[#0a0a0a] border-b border-[#1a1a1a] px-4 py-2 flex flex-wrap items-center gap-4">
             <div class="flex items-center gap-2">
                 <span class="text-[#666] text-xs">SEARCH:</span>
-                <input type="text" id="search-input" class="px-2 py-1 text-xs w-32" placeholder="TICKER..."
-                    oninput="filterAssets()">
+                <input type="text" id="search-input"
+                    class="px-2 py-1 text-base md:text-xs w-32 bg-[#1a1a1a] border border-[#333] text-white focus:border-[#ff6600] outline-none"
+                    placeholder="TICKER..." oninput="filterAssets()">
             </div>
             <div class="flex items-center gap-2">
                 <span class="text-[#666] text-xs">SECTOR:</span>
-                <select id="sector-filter" class="px-2 py-1 text-xs" onchange="filterAssets()">
+                <select id="sector-filter"
+                    class="px-2 py-1 text-base md:text-xs bg-[#1a1a1a] border border-[#333] text-white outline-none"
+                    onchange="filterAssets()">
                     <option value="all">ALL</option>
                     <option value="Tech">TECH</option>
                     <option value="Finance">FINANCE</option>
