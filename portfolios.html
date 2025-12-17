@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caltropia | Investment Portfolios</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        mono: ['"JetBrains Mono"', '"IBM Plex Mono"', 'monospace'],
+                        sans: ['"JetBrains Mono"', 'monospace']
+                    },
+                    colors: {
+                        terminal: {
+                            bg: '#000000',
+                            panel: '#0a0a0a',
+                            border: '#1a1a1a',
+                            orange: '#ff6600',
+                            amber: '#ffaa00',
+                            green: '#00ff88',
+                            red: '#ff3344',
+                            blue: '#0088ff',
+                            muted: '#666666'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * {
+            font-family: 'JetBrains Mono', 'IBM Plex Mono', monospace;
+        }
+
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            font-size: 12px;
+            line-height: 1.4;
+            overflow-x: hidden;
+        }
+
+        .terminal-header {
+            background: linear-gradient(180deg, #1a1a1a 0%, #0a0a0a 100%);
+            border-bottom: 1px solid #ff6600;
+        }
+
+        .terminal-card {
+            background: #0a0a0a;
+            border: 1px solid #1a1a1a;
+            transition: all 0.15s ease;
+            position: relative;
+        }
+
+        .terminal-card:hover {
+            border-color: #ff6600;
+            box-shadow: 0 0 20px rgba(255, 102, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ff6600;
+        }
+
+        .blink {
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            50% {
+                opacity: 0.5;
+            }
+        }
+    </style>
+</head>
+
+<body class="min-h-screen">
+
+    <!-- Sidebar Navigation -->
+    <nav id="sidebar"
+        class="fixed left-0 top-0 h-full w-12 bg-black border-r border-[#333] flex flex-col items-center py-4 z-50">
+        <div class="text-[#ff6600] font-bold text-xs mb-6">C</div>
+        <div class="flex-1 flex flex-col gap-1">
+            <a href="radial.html"
+                class="w-8 h-8 flex items-center justify-center text-[#666] hover:text-[#ff6600] hover:bg-[#1a1a1a]"
+                title="Dashboard">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z">
+                    </path>
+                </svg>
+            </a>
+            <a href="momentum.html"
+                class="w-8 h-8 flex items-center justify-center text-[#666] hover:text-[#ff6600] hover:bg-[#1a1a1a]"
+                title="Momentum">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path>
+                </svg>
+            </a>
+            <a href="lowvol.html"
+                class="w-8 h-8 flex items-center justify-center text-[#666] hover:text-[#ff6600] hover:bg-[#1a1a1a]"
+                title="Risk Terminal">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10">
+                    </path>
+                </svg>
+            </a>
+            <a href="momentum_factor.html"
+                class="w-8 h-8 flex items-center justify-center text-[#666] hover:text-[#ff6600] hover:bg-[#1a1a1a]"
+                title="Momentum Factor">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                </svg>
+            </a>
+            <a href="portfolios.html"
+                class="w-8 h-8 flex items-center justify-center text-[#ff6600] bg-[#1a1a1a] border-l-2 border-[#ff6600]"
+                title="Portfolios">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
+                    </path>
+                </svg>
+            </a>
+        </div>
+    </nav>
+
+    <div class="ml-12">
+        <!-- Header -->
+        <header class="terminal-header px-4 py-2 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <span class="text-[#ff6600] font-bold text-sm">CALTROPIA</span>
+                <span class="text-[#666]">|</span>
+                <span class="text-white text-xs">INVESTMENT PORTFOLIOS</span>
+                <span class="text-[#00ff88] text-xs blink">● ACTIVE</span>
+            </div>
+            <div class="flex items-center gap-4 text-xs">
+                <div class="flex items-center gap-2">
+                    <span class="text-[#666]">LAST UPDATE:</span>
+                    <span id="last-updated" class="text-[#ffaa00]">--:--:--</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="p-6">
+            <div class="mb-6 flex items-center justify-between">
+                <h1 class="text-xl font-bold text-white flex items-center gap-2">
+                    <span class="w-2 h-6 bg-[#ff6600]"></span>
+                    STRATEGY UNIVERSE
+                </h1>
+                <div class="text-[#666] font-mono text-xs">19 STRATEGIES TRACKED</div>
+            </div>
+
+            <!-- Portfolios Grid -->
+            <div id="portfolio-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                <!-- Javascript will populate this -->
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBxG5qf6mb8E_-b2TeXlRNseMZ26L9DRYg",
+            authDomain: "trendscores-df341.firebaseapp.com",
+            projectId: "trendscores-df341",
+            databaseURL: "https://trendscores-df341-default-rtdb.firebaseio.com"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        const portfolios = [
+            "Caltropia Managed Futures EW",
+            "S&P Daily Rebalance",
+            "Caltropia Mean Reversion Factor",
+            "Caltropia Momentum Factor",
+            "Caltropia Low Vol Factor",
+            "S&P Dip/Rip",
+            "Caltropia Bond Regime Model",
+            "Caltropia Volatility Regimes",
+            "Caltropia Multi Strat Regime Model",
+            "Caltropia Sector Regime Model",
+            "Caltropia Bitcoin Regime Model",
+            "Caltropia Gold Regime Model",
+            "Caltropia Relative Val Vol",
+            "Caltropia Vol Tail Risk",
+            "Caltropia Multi Strat",
+            "Caltropia Managed Futures HV",
+            "Caltropia Active Core Equity",
+            "Caltropia L/S Equity",
+            "Caltropia Value Factor"
+        ];
+
+        let bitcoinData = null;
+        let managedFuturesData = null;
+        let spDailyData = null;
+        let dipRipData = null;
+        let bondRegimeData = null;
+        let volatilityRegimeData = null;
+        let sectorRegimeData = null;
+        let relativeValVolData = null;
+        let volTailRiskData = null;
+        let lsEquityData = null;
+        let activeCoreEquityData = null;
+
+        let momentumFactorData = null;
+        let meanReversionFactorData = null;
+        let lowVolFactorData = null;
+
+        function renderPortfolios() {
+            const container = document.getElementById('portfolio-grid');
+            document.getElementById('last-updated').textContent = new Date().toLocaleTimeString();
+
+            container.innerHTML = portfolios.map((name, i) => {
+                // Check for generic live data availability
+                if (name === "Caltropia Bitcoin Regime Model" && bitcoinData) return renderLiveStrategyCard(name, i, bitcoinData);
+                if (name === "Caltropia Managed Futures EW" && managedFuturesData) return renderLiveStrategyCard(name, i, managedFuturesData);
+                if (name === "S&P Daily Rebalance" && spDailyData) return renderLiveStrategyCard(name, i, spDailyData);
+                if (name === "S&P Dip/Rip" && dipRipData) return renderLiveStrategyCard(name, i, dipRipData);
+                if (name === "Caltropia Bond Regime Model" && bondRegimeData) return renderLiveStrategyCard(name, i, bondRegimeData);
+                if (name === "Caltropia Volatility Regimes" && volatilityRegimeData) return renderLiveStrategyCard(name, i, volatilityRegimeData);
+                if (name === "Caltropia Sector Regime Model" && sectorRegimeData) return renderLiveStrategyCard(name, i, sectorRegimeData);
+                if (name === "Caltropia Relative Val Vol" && relativeValVolData) return renderLiveStrategyCard(name, i, relativeValVolData);
+                if (name === "Caltropia Vol Tail Risk" && volTailRiskData) return renderLiveStrategyCard(name, i, volTailRiskData);
+                if (name === "Caltropia L/S Equity" && lsEquityData) return renderLiveStrategyCard(name, i, lsEquityData);
+
+                if (name === "Caltropia Active Core Equity" && activeCoreEquityData) return renderLiveStrategyCard(name, i, activeCoreEquityData);
+                if (name === "Caltropia Momentum Factor" && momentumFactorData) return renderLiveStrategyCard(name, i, momentumFactorData);
+                if (name === "Caltropia Mean Reversion Factor" && meanReversionFactorData) return renderLiveStrategyCard(name, i, meanReversionFactorData);
+                if (name === "Caltropia Low Vol Factor" && lowVolFactorData) return renderLiveStrategyCard(name, i, lowVolFactorData);
+
+                // Default Rendering
+                return `
+                <div class="terminal-card p-4 h-full flex flex-col justify-between group cursor-pointer" onclick="window.location.href='portfolio_detail.html?strategy=${encodeURIComponent(name)}'">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="text-[#ff6600] opacity-50 font-mono text-[10px]">0${i + 1}</div>
+                        <div class="w-2 h-2 rounded-full bg-[#333] group-hover:bg-[#00ff88] transition-colors"></div>
+                    </div>
+                    <div>
+                        <h3 class="text-white font-bold text-sm mb-2 group-hover:text-[#ff6600] transition-colors">${name}</h3>
+                        <div class="h-px w-full bg-[#333] my-3"></div>
+                        <div class="flex justify-between items-center text-[10px] text-[#666]">
+                            <span>STATUS: ACTIVE</span>
+                            <span class="group-hover:text-white transition-colors">VIEW ></span>
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function renderLiveStrategyCard(name, i, data) {
+            const statsToShow = [
+                { key: 'CAGR', label: 'CAGR', format: v => (v * 100).toFixed(1) + '%' },
+                { key: 'Sharpe', label: 'SHARPE', format: v => v.toFixed(2) },
+                { key: 'Volatility', label: 'VOL', format: v => (v * 100).toFixed(1) + '%' },
+                { key: 'Max DD', label: 'MAX DD', format: v => (v * 100).toFixed(1) + '%' },
+                { key: 'YTD Return', label: 'YTD', format: v => (v * 100).toFixed(1) + '%' }
+            ];
+
+            const statsHtml = statsToShow.map(stat => {
+                const val = data[stat.key];
+                // Basic check if value exists, assuming 0 is valid.
+                const displayVal = (val !== undefined && val !== null) ? stat.format(val) : '--';
+                // Color logic: specialized for negative/positive if needed, keeping simple green for now or white
+                // For Max DD it's usually negative, maybe red? Let's use standard mono green/white for now.
+                return `
+                    <div class="flex justify-between items-center text-xs mb-1">
+                        <span class="text-[#888] uppercase">${stat.label}</span>
+                        <span class="text-[#00ff88] font-mono">${displayVal}</span>
+                    </div>
+                 `;
+            }).join('');
+
+            return `
+                <div class="terminal-card p-4 h-full flex flex-col justify-between group cursor-pointer border-[#ffaa00]" onclick="window.location.href='portfolio_detail.html?strategy=${encodeURIComponent(name)}'">
+                    <div class="flex justify-between items-start mb-2">
+                        <div class="text-[#ffaa00] font-mono text-[10px]">0${i + 1}</div>
+                        <div class="flex items-center gap-1">
+                             <span class="text-[9px] text-[#ffaa00] animate-pulse">LIVE DATA</span>
+                             <div class="w-2 h-2 rounded-full bg-[#ffaa00]"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-white font-bold text-sm mb-2 group-hover:text-[#ffaa00] transition-colors">${name}</h3>
+                        <div class="h-px w-full bg-[#333] my-2"></div>
+                        <div class="flex flex-col gap-1 mb-2">
+                            ${statsHtml}
+                        </div>
+                        <div class="text-[10px] text-[#666] text-right group-hover:text-white transition-colors">VIEW FULL MODEL ></div>
+                    </div>
+                </div>
+             `;
+        }
+
+        // Fetch Bitcoin Data
+        onValue(ref(db, 'investmentStrategies/Bitcoin Regime Model'), (snapshot) => {
+            const data = snapshot.val();
+            if (data) { bitcoinData = data; renderPortfolios(); }
+        });
+
+        // Fetch Managed Futures Data
+        onValue(ref(db, 'investmentStrategies/Managed Futures Equal Weight'), (snapshot) => {
+            const data = snapshot.val();
+            if (data) { managedFuturesData = data; renderPortfolios(); }
+        });
+
+        // Fetch S&P Daily Rebalance Data
+        onValue(ref(db, 'investmentStrategies/S&P 500 Daily Regime'), (snapshot) => {
+            const data = snapshot.val();
+            if (data) { spDailyData = data; renderPortfolios(); }
+        });
+
+        // Fetch S&P Dip/Rip
+        onValue(ref(db, 'investmentStrategies/S&P 500 Dip Rip'), (snapshot) => {
+            const data = snapshot.val();
+            if (data) { dipRipData = data; renderPortfolios(); }
+        });
+
+        // Fetch Bond Regime Model
+        onValue(ref(db, 'investmentStrategies/Bond Regime Model'), (snapshot) => {
+            const data = snapshot.val();
+            if (data) { bondRegimeData = data; renderPortfolios(); }
+        });
+
+        // Fetch Volatility Regimes
+        onValue(ref(db, 'investmentStrategies/Volatility Regimes'), (snapshot) => {
+            const data = snapshot.val();
+            if (data) { volatilityRegimeData = data; renderPortfolios(); }
+        });
+
+        // Fetch Sector Regime Model
+        onValue(ref(db, 'investmentStrategies/Sector Regime Model'), (snapshot) => {
+            const data = snapshot.val();
+            if (data) { sectorRegimeData = data; renderPortfolios(); }
+        });
+
+        // Fetch Relative Value Volatility
+        onValue(ref(db, 'investmentStrategies/Relative Value Volatility'), (snapshot) => {
+            const data = snapshot.val();
+            if (data) { relativeValVolData = data; renderPortfolios(); }
+        });
+
+        // Fetch Volatility Tail Risk
+        onValue(ref(db, 'investmentStrategies/Volatility Tail Risk'), (snapshot) => {
+            const data = snapshot.val();
+            if (data) { volTailRiskData = data; renderPortfolios(); }
+        });
+
+        // Fetch Long Short Equity
+        onValue(ref(db, 'investmentStrategies/Long Short Equity'), (snapshot) => {
+            const data = snapshot.val();
+            if (data) { lsEquityData = data; renderPortfolios(); }
+        });
+
+        // Fetch Active Core Equity (US Core Equity)
+        onValue(ref(db, 'investmentStrategies/US Core Equity'), (snapshot) => {
+            const data = snapshot.val();
+            if (data) { activeCoreEquityData = data; renderPortfolios(); }
+        });
+
+        // Fetch Momentum Factor
+        onValue(ref(db, 'investmentStrategies/Momentum Factor'), (snapshot) => {
+            const data = snapshot.val();
+            // console.log("Momentum Factor Data:", data); 
+            if (data) { momentumFactorData = data; renderPortfolios(); }
+        });
+
+        // Fetch Mean Reversion Factor
+        onValue(ref(db, 'investmentStrategies/Mean Reversion Factor'), (snapshot) => {
+            const data = snapshot.val();
+            if (data) { meanReversionFactorData = data; renderPortfolios(); }
+        });
+
+        // Fetch Low Vol Factor
+        onValue(ref(db, 'investmentStrategies/Low Vol Factor'), (snapshot) => {
+            const data = snapshot.val();
+            if (data) { lowVolFactorData = data; renderPortfolios(); }
+        });
+
+        // Initial Render
+        renderPortfolios();
+    </script>
+</body>
+
+</html>

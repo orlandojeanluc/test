@@ -644,46 +644,214 @@ color: white;
 
 </head>
 
-
-<header id="HEAAD" class="text-white body-font fixed hidden md:block">
+<style>
+  /* Dropdown Styles */
+  .nav-item {
+    position: relative;
+  }
   
-  <div class=" mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
-    <a class="flex title-font font-medium items-center  mb-4 md:mb-0">
-      <!--
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-10 h-10 text-white p-2 bg-indigo-500 rounded-full" viewBox="0 0 24 24">
-        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
-      </svg>
-      !-->
-      <span id="CivHeader" class="animate-intro ml-12 text-4xl font-mreg font-bold tracking-widest mr-4 text-gray-900 mb-6 mt-6">C A L T R O P I A</span>
-    </a>
-
-    
-    <nav class="md:mr-auto md:ml-4 md:py-1 md:pl-4  flex flex-wrap items-center text-base justify-center">
-      
-      <a href="Pricing.html" class="animate-intro ml-12 mr-4  font-mreg font-bold tracking-widest text-2xl text-gray-900 mb-4 sm:mb-0">PRICING</a>
-
-
-      <a href="StrategiesGrid.html" class="animate-intro ml-12 mr-12  font-mreg font-bold tracking-widest text-2xl text-gray-900 mb-4 sm:mb-0">STRATEGIES</a>
-      <a id="trend-link" href="#" class="animate-intro mr-12  font-mreg font-bold tracking-widest text-2xl text-gray-900 ml-12 sm:ml-0">TREND SCORES</a>
-      
-      <a id="macro-link" href="#" class="animate-intro mr-12  font-mreg font-bold tracking-widest text-2xl text-gray-900">MACRO REGIMES</a>
-      <a href="" class="animate-intro mr-0 sm:mr-12  font-mreg font-bold tracking-widest text-2xl text-gray-900 mb-0 sm:mb-0 mt-4 sm:mt-0">MEAN REVERSION<span class="text-lg"> (Soon)</span></a>
-      <!--<a href="FactorAnalysis.html" class="mr-12  font-mreg font-bold tracking-widest text-2xl text-black">FACTOR ANALYSIS</a>! COMING SOON-->
-      <!--<a href="FactorAnalysis.html" class="mr-12  font-mreg font-bold tracking-widest text-2xl text-black">THIRD PARTY RESEARCH</a>-->
-      
-      
-      <!-- <a id="linkTwoThree" class="mr-12  font-mreg font-bold tracking-widest text-2xl">PERFORMANCE</a>
-!-->
-    </nav>
-    <a id="auth-button3" href="#">
-      <button3 class="hover:bg-transparent hover:animate-ping no-underline hover:underline inline-flex items-center py-1 px-3 rounded text-base hidden sm:hidden lg:block mt-4 md:mt-0 font-mreg font-bold tracking-widest text-2xl text-gray-900">
-        ENTER
-      </button3>
-    </a>
-  </div>
-
+  .dropdown {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    min-width: 220px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 16px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25),
+                0 0 0 1px rgba(0, 0, 0, 0.05);
+    padding: 12px 0;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 1000;
+  }
   
-</header> 
+  .nav-item:hover .dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+  }
+  
+  .dropdown-item {
+    display: block;
+    padding: 12px 24px;
+    font-family: 'montserrat-regular', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1f2937;
+    text-decoration: none;
+    letter-spacing: 0.05em;
+    transition: all 0.2s ease;
+  }
+  
+  .dropdown-item:hover {
+    background: rgba(59, 130, 246, 0.1);
+    color: #2563eb;
+    padding-left: 28px;
+  }
+  
+  .dropdown-divider {
+    height: 1px;
+    background: rgba(0, 0, 0, 0.08);
+    margin: 8px 16px;
+  }
+  
+  .dropdown-header {
+    padding: 8px 24px 12px;
+    font-family: 'montserrat-regular', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    color: #9ca3af;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  
+  /* Arrow indicator */
+  .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+  }
+  
+  .nav-link svg {
+    width: 12px;
+    height: 12px;
+    transition: transform 0.3s ease;
+    opacity: 0.5;
+  }
+  
+  .nav-item:hover .nav-link svg {
+    transform: rotate(180deg);
+    opacity: 1;
+  }
+  
+  /* Subtle hover effect on nav items */
+  .nav-link:hover {
+    color: #4b5563;
+  }
+  
+  /* Dropdown appear animation for items */
+  .dropdown-item {
+    opacity: 0;
+    transform: translateY(-8px);
+    animation: none;
+  }
+  
+  .nav-item:hover .dropdown-item {
+    animation: dropIn 0.4s ease forwards;
+  }
+  
+  .nav-item:hover .dropdown-item:nth-child(1) { animation-delay: 0.05s; }
+  .nav-item:hover .dropdown-item:nth-child(2) { animation-delay: 0.1s; }
+  .nav-item:hover .dropdown-item:nth-child(3) { animation-delay: 0.15s; }
+  .nav-item:hover .dropdown-item:nth-child(4) { animation-delay: 0.2s; }
+  .nav-item:hover .dropdown-item:nth-child(5) { animation-delay: 0.25s; }
+  .nav-item:hover .dropdown-item:nth-child(6) { animation-delay: 0.3s; }
+  
+  @keyframes dropIn {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  </style>
+  
+  <header id="HEAAD" class="text-white body-font hidden md:block fixed">
+    <div class="mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
+      <a href="index.html" class="flex title-font font-medium items-center mb-4 md:mb-0">
+        <span id="CivHeader" class="animate-intro ml-12 text-4xl font-mreg font-bold tracking-widest mr-4 text-gray-900">C A L T R O P I A</span>
+      </a>
+      
+      <nav class="md:mr-auto md:ml-4 md:py-1 md:pl-4 flex flex-wrap items-center text-base justify-center">
+        
+        <!-- PRICING - No dropdown -->
+        <a href="Pricing.html" class="animate-intro ml-12 mr-12 font-mreg font-bold tracking-widest text-2xl text-gray-900 mb-4 sm:mb-0">PRICING</a>
+        
+        <!-- STRATEGIES - With dropdown -->
+        <div class="nav-item mr-12">
+          <a href="#" class="nav-link animate-intro font-mreg font-bold tracking-widest text-2xl text-gray-900 mb-4 sm:mb-0">
+            STRATEGIES
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </a>
+          <div class="dropdown">
+            <span class="dropdown-header">Our Strategies</span>
+            <a href="StrategiesGrid.html" class="dropdown-item">View All Strategies</a>
+            
+          </div>
+        </div>
+        
+        <!-- TREND SCORES - With dropdown -->
+        <div class="nav-item mr-12">
+          <a id="trend-link" href="#" class="nav-link animate-intro font-mreg font-bold tracking-widest text-2xl text-gray-900">
+            FACTORS
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </a>
+          <div class="dropdown">
+            <span class="dropdown-header">Factor Analysis</span>
+            <a href="TrendOfficial.html" class="dropdown-item">Trend Following</a>
+            <a href="MomentumFactorScores.html" class="dropdown-item">Momentum</a>
+            <a href="EquityRiskSignals.html" class="dropdown-item">Low Volatility </a>
+            <a href="MeanReversionGrid.html" class="dropdown-item">Mean Reversion </a>
+            <div class="dropdown-divider"></div>
+            <a href="trend-methodology.html" class="dropdown-item">Methodology</a>
+          </div>
+        </div>
+        
+        <!-- MACRO REGIMES - With dropdown -->
+        <div class="nav-item mr-12">
+          <a id="macro-link" href="#" class="nav-link animate-intro font-mreg font-bold tracking-widest text-2xl text-gray-900">
+            MACRO REGIMES
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </a>
+          <div class="dropdown">
+            <span class="dropdown-header">Macro Coming Soon</span>
+            <a href="macro-current.html" class="dropdown-item">Current Regime</a>
+            <a href="macro-history.html" class="dropdown-item">Historical Regimes</a>
+            <a href="macro-indicators.html" class="dropdown-item">Key Indicators</a>
+            <div class="dropdown-divider"></div>
+            <a href="macro-research.html" class="dropdown-item">Research Notes</a>
+          </div>
+        </div>
+        
+        <!-- MEAN REVERSION DASH - With dropdown -->
+        <div class="nav-item mr-0 sm:mr-12">
+          <a href="#" class="nav-link animate-intro font-mreg font-bold tracking-widest text-2xl text-gray-900 mb-0 sm:mb-0 mt-4 sm:mt-0">
+            MEAN REVERSION DASH
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </a>
+          <div class="dropdown">
+            <span class="dropdown-header">Mean Reversion</span>
+            <a href="mr-dashboard.html" class="dropdown-item">Dashboard</a>
+            <a href="mr-signals.html" class="dropdown-item">Current Signals</a>
+            <a href="mr-holdings.html" class="dropdown-item">Holdings</a>
+            <div class="dropdown-divider"></div>
+            <a href="mr-performance.html" class="dropdown-item">Performance</a>
+          </div>
+        </div>
+        
+      </nav>
+      
+      <a id="auth-button3" href="#">
+        <button3 class="hover:bg-transparent hover:animate-ping no-underline hover:underline inline-flex items-center py-1 px-3 rounded text-base hidden sm:hidden lg:block mt-4 md:mt-0 font-mreg font-bold tracking-widest text-2xl text-gray-900">
+          ENTER
+        </button3>
+
+        
+      </a>
+    </div>
+  </header>
+
 
 <!-- header 
    ================================================== -->
@@ -719,7 +887,8 @@ color: white;
             <li><a id="trend-link1"  href="#" title="">Trend Scores</a></li>
             <li><a id="macro-link1" href="#" title="">Macro Regimes</a></li>
             <li><a href="Pricing.html" title="">Pricing</a></li>	
-            <li><a href="" title="">Mean Reversion (Soon)</a></li>	
+            <li><a id="mean-reversion-link1" href="#"title="">Mean Reversion Dash</a></li>
+            <li><a id="equityRiskSignals" href="#"title="">Equity Risk Dash</a></li>	
             
 
           </ul>	
@@ -876,21 +1045,21 @@ color: white;
          
        </h1>
         <p class="text-base text-2xl sm:text-lg md:text-2xl font-medium text-[#223963] leading-relaxed mt-6 md:mt-12 sm:mr-0 md:mr-32 px-6 sm:px-0 text-left sm:text-left">
-          <span class="font-bold text-blue-800">Caltropia Research</span> is a forward-thinking investment research firm dedicated to growing your capital through robust quantitative strategies. Our models are designed to maximize risk-adjusted returns across multiple time frames and asset classes—all in an accessible format you can run and manage yourself.
+          <span class="font-bold text-blue-800">Caltropia Research</span> is a forward thinking investment research firm dedicated to growing your capital through robust quantitative strategies. Our models are designed to maximize risk adjusted returns across multiple time frames and asset classes, all in an accessible format you can run and manage yourself.
         </p>
         <h1 class="text-5xl sm:text-5xl md:text-5xl  tracking-wide mt-16">
           Our Vision
          
        </h1>
         <p class="text-2xl text-base sm:text-lg md:text-2xl font-medium text-[#223963] leading-relaxed mt-6 md:mt-12 sm:mr-0 md:mr-32 px-6 sm:px-0 text-left sm:text-left">
-          <span class="font-bold text-blue-800">Empower investors</span> with sophisticated, data-driven strategies that maximize risk-adjusted returns across markets—delivered in a transparent, intuitive format anyone can manage with confidence.
+          <span class="font-bold text-blue-800">Empower investors</span> with sophisticated, data driven strategies that maximize risk adjusted returns across markets delivered in a transparent, intuitive format anyone can manage with confidence.
         </p>
         <h1 class="text-5xl sm:text-5xl md:text-5xl  tracking-wide mt-16">
           About Me
          
        </h1>
         <p class="text-2xl text-base sm:text-lg md:text-2xl font-medium text-[#223963] leading-relaxed mt-6 md:mt-12 sm:mr-0 md:mr-32 mb-48 px-6 sm:px-0 text-left sm:text-left">
-          <span class="font-bold text-blue-800">I spent</span> the early part of my career at a leading global investment management firm, where I conducted in-depth investment research and analysis to support portfolio construction and generate actionable insights. For the past decade, I have successfully founded and run my own investment management business for Family and Friends, delivering tailored quantitative strategies to a diverse client base with strong risk adjusted returns.
+          <span class="font-bold text-blue-800">I spent</span> the early part of my career at a leading global investment management firm, where I conducted in depth investment research and analysis to support portfolio construction and generate actionable insights. For the past decade, I have successfully founded and run my own investment management business for Family and Friends, delivering tailored quantitative strategies to a diverse client base delivering strong risk adjusted returns.
         </p>
       </div>
     </div>
@@ -960,7 +1129,7 @@ color: white;
          
          // When clicked, go to the login page
          authButtonLink.href = "signup.html"; // Change to your actual login page URL
-         authButton.onclick = null; // Remove any click action
+
        }
      });
 
@@ -987,7 +1156,7 @@ color: white;
          
          // When clicked, go to the login page
          authButtonLink2.href = "signup.html"; // Change to your actual login page URL
-         authButton2.onclick = null; // Remove any click action
+
        }
      });
 
@@ -1014,7 +1183,7 @@ color: white;
          
          // When clicked, go to the login page
          authButtonLink3.href = "signup.html"; // Change to your actual login page URL
-         authButton3.onclick = null; // Remove any click action
+
        }
      });
 
@@ -1273,11 +1442,12 @@ color: white;
             <div class="px-4 py-2">
               <div class="text-lg leading-6 font-medium space-y-1">
                 <h1 class="font-semibold text-blue-800 text-4xl mb-8 mt-12">
-                  Managed Futures Equal Weight (Free with Signup)  
+                  Managed Futures Equal Weight
                 </h1>
+                <p class=" font-semibold text-blue-600 text-2xl mb-8 mt-12">Free with Signup</p>
               </div>
               <div class="text-2xl">
-                <p class="font-large">
+                <p class="font-large mt-8">
                   <span class="text-blue-800 font-bold "> Objective: </span> Deliver diversified, uncorrelated returns by systematically capturing trends across global futures markets while actively managing risk. Comparable or better than many leading Managed Futures Strategies.
                 </p>
 
@@ -1325,7 +1495,7 @@ color: white;
                       class="w-full h-full"
                     ></lottie-player>
                   </div>
-                  <a id="managedFuturesEw1" href="#" class="text-blue-800 text-xl font-bold hover:underline">
+                  <a id="managedFuturesEw1" href="#" class="text-blue-800 text-2xl font-mreg font-bold  hover:underline">
                     Explore
                   </a>
                 </div>
@@ -1363,11 +1533,12 @@ color: white;
             <div class="px-4 py-2">
               <div class="text-lg leading-6 font-medium space-y-1">
                 <h1 class="font-semibold text-blue-800 text-4xl mb-8 mt-12">
-                  S&P 500 Daily Rebalance (Free with Signup)
+                  S&P 500 Daily Rebalance
                 </h1>
+                <p class=" font-semibold text-blue-600 text-2xl mb-8 mt-12">Free with Signup</p>
               </div>
               <div class="text-2xl ">
-                <p class=" font-large">
+                <p class=" font-large mt-8">
                  <span class="text-blue-800 font-bold "> <span class="text-blue-800 font-bold "> Objective: </span> </span> Beat the S&P 500 with lower volatility and higher returns. Dynamically increasing and decreasing exposure when needed to manage risk before you see or need it.  
                 </p>
 
@@ -1417,6 +1588,7 @@ color: white;
                       class="w-full h-full"
                     ></lottie-player>
                   </div>
+
                   <a id="SPDailyRebalance1" href="#" class="text-blue-800 text-2xl font-mreg font-bold  hover:underline">
                     Explore
                   </a>
@@ -1425,12 +1597,97 @@ color: white;
             </div>
           </a>
         </div>
+
         <div
           class="flex-none w-2/3 md:w-1/3 mr-8 md:pb-4  rounded-lg"
         >
 
             <div class="aspect-w-16 aspect-h-9">
               <!--<a href="SPDailyAgg.html">!-->
+                <a id="CaltropiaReversion" href="#">
+                <div class="object-cover shadow-md hover:shadow-xl rounded-full">
+                  <lottie-player class="object-cover" src="https://lottie.host/aff37338-b197-4060-ab88-3011f8c00d7d/Af8fHKIPij.json"
+  background="transparent"
+  speed="1"
+  style=" height: 300px"
+  loop
+  autoplay></lottie-player>
+                  </div>
+                </a>
+            </div>
+            <div class="px-4 py-2">
+              <div class="text-lg leading-6 font-medium space-y-1">
+                <h1 class=" font-semibold text-blue-800 text-4xl mb-8 mt-12">
+                  Caltropia Equity Mean Reversion
+                </h1>
+                <p class=" font-semibold text-blue-600 text-2xl mb-8 mt-12">Paid Plan. Temporarily Free</p>
+              </div>
+              <div class="text-2xl">
+                <p class=" font-large mt-8">
+                  <span class="text-blue-800 font-bold "> Objective: </span> Achieve consistent, market independent returns by exploiting short term inefficiencies in U.S. equities within a Long/Short Structure.
+                </p>
+
+                <!--Start Column Stats-->
+                <div class="text-base sm:text-lg text-gray-700 mb-8 mt-8">
+                  <div class="grid grid-cols-2 gap-y-4 gap-x-8">
+                
+                    <div class="flex flex-col items-start">
+                      <div class="text-2xl font-bold text-blue-800 font-mreg">YTD:</div>
+                      <div id="S&P500DipRip-Y" class="text-2xl font-mreg font-semibold text-gray-900">23.66%</div>
+                    </div>
+                
+                    <div class="flex flex-col items-start">
+                      <div class="text-2xl font-bold text-blue-800 font-mreg">CAGR:</div>
+                      <div id="S&P500DipRip-CA" class="text-2xl font-bold font-mreg font-semibold text-gray-900">9.63%</div>
+                    </div>
+                
+                    <div class="flex flex-col items-start">
+                      <div class="text-2xl font-bold text-blue-800 font-mreg">Volatility:</div>
+                      <div id="S&P500DipRip-" class="text-2xl font-bold font-mreg font-semibold text-gray-900">14.41%</div>
+                    </div>
+                
+                    <div class="flex flex-col items-start">
+                      <div class="text-2xl font-bold text-blue-800 font-mreg">Max DD:</div>
+                      <div id="S&P500DipRip-" class="text-2xl font-bold font-mreg font-semibold text-gray-900">-9.89%</div>
+                    </div>
+                    <div class="flex flex-col items-start ">
+                      <div class="text-2xl font-bold text-blue-800 font-mreg">Sharpe Ratio:</div>
+                      <div id="S&P500DipRip-" class="text-2xl font-bold font-mreg font-semibold text-gray-900">0.83</div>
+                    </div>
+                    
+                
+                  </div>
+                </div>
+                <!--End Column Stats-->
+
+                <!-- Container for the Lottie button -->
+                <div class="mt-8 flex items-center space-x-2 -ml-4">
+                  <div class="w-16 h-16 sm:w-16 sm:h-16">
+                    <lottie-player
+                    src="https://lottie.host/ca50b7be-e4df-4e90-b106-33d62bdec135/Amm2583CbP.json"
+                      background="transparent"
+                      speed="1"
+                      loop
+                      autoplay
+                      class="w-full h-full"
+                    ></lottie-player>
+                  </div>
+                  <a id="CaltropiaReversion1" href="#" class="text-blue-800 text-2xl font-mreg font-bold  hover:underline">
+                    <p class="text-blue-800 text-2xl font-mreg font-bold ">Explore</p>
+                  </a>
+                </div>
+
+              </div>
+            </div>
+
+        </div>
+
+        <div
+          class="flex-none w-2/3 md:w-1/3 mr-8 md:pb-4  rounded-lg"
+        >
+
+            <div class="aspect-w-16 aspect-h-9">
+              <a href="SPDailyAgg.html">
                 <div class="object-cover shadow-md hover:shadow-xl rounded-full">
                   <lottie-player class="object-cover" src="https://lottie.host/c7aa5b25-5f45-43b3-9007-5e9681913717/0AxWEw9GgW.json"
   background="transparent"
@@ -1444,11 +1701,12 @@ color: white;
             <div class="px-4 py-2">
               <div class="text-lg leading-6 font-medium space-y-1">
                 <h1 class=" font-semibold text-blue-800 text-4xl mb-8 mt-12">
-                  S&P 500 Aggressive Daily Rebalance (Paid Coming Soon)
+                  S&P 500 Aggressive Daily Rebalance
                 </h1>
+                <p class=" font-semibold text-blue-600 text-2xl mb-8 mt-12">Paid Plan. Temporarily Free</p>
               </div>
               <div class="text-2xl">
-                <p class=" font-large">
+                <p class=" font-large mt-8">
                   <span class="text-blue-800 font-bold "> Objective: </span> Beat the S&P 500 with lower volatility and higher returns while selling rips when you don't want to and buying dips when to afraid. 
                 </p>
 
@@ -1497,8 +1755,8 @@ color: white;
                       class="w-full h-full"
                     ></lottie-player>
                   </div>
-                <!--  <a href="DailyAggressive.html" class="text-blue-800 text-xl font-bold hover:underline">!-->
-                    Explore
+                    <a href="SPDailyAgg.html" class="text-blue-800 text-xl font-bold hover:underline">
+                    <p class="text-blue-800 text-2xl font-mreg font-bold ">Explore</p>
                   </a>
                 </div>
 
@@ -1506,6 +1764,8 @@ color: white;
             </div>
 
         </div>
+
+        
         <div
           class="flex-none w-2/3 md:w-1/3 mr-8 md:pb-4  rounded-lg"
         >
@@ -1513,7 +1773,7 @@ color: white;
             <div class="aspect-w-16 aspect-h-9">
 
               <div class="object-cover shadow-md hover:shadow-xl rounded-full">
-              <!--  <a href="BondRegimeModel.html">!-->
+            <a href="BondRegimeModel.html">
  <lottie-player class="object-cover" src="https://lottie.host/27142975-725a-4b81-8a7b-345d9da78534/SDbfq53JLL.json"
   background="transparent"
   speed="1"
@@ -1526,11 +1786,12 @@ color: white;
             <div class="px-4 py-2">
               <div class="text-lg leading-6 font-medium space-y-1">
                 <h1 class=" font-semibold text-blue-800 text-4xl mb-8 mt-12">
-                  Bond Regime's Model (Paid Coming Soon)
+                  Bond Regimes Model Strategy
                 </h1>
+                <p class=" font-semibold text-blue-600 text-2xl mb-8 mt-12">Paid Plan. Temporarily Free</p>
               </div>
               <div class="text-2xl">
-                <p class=" font-large">
+                <p class=" font-large mt-8">
                   <span class="text-blue-800 font-bold "> Objective: </span> Beat Long Term Holdings in Bonds, with less risk, higher returns and less drawdowns and with inflation protection.
                 </p>
                 
@@ -1540,26 +1801,26 @@ color: white;
                 
                     <div class="flex flex-col items-start">
                       <div class="text-2xl font-bold text-blue-800 font-mreg">YTD:</div>
-                      <div id="" class="text-2xl font-mreg font-semibold text-gray-900">TBA</div>
+                      <div id="" class="text-2xl font-mreg font-semibold text-gray-900">8.42%</div>
                     </div>
                 
                     <div class="flex flex-col items-start">
                       <div class="text-2xl font-bold text-blue-800 font-mreg">CAGR:</div>
-                      <div id="" class="text-2xl font-bold font-mreg font-semibold text-gray-900">TBA</div>
+                      <div id="BondRegimeModel-CAGR" class="text-2xl font-bold font-mreg font-semibold text-gray-900">TBA</div>
                     </div>
                 
                     <div class="flex flex-col items-start">
                       <div class="text-2xl font-bold text-blue-800 font-mreg">Volatility:</div>
-                      <div id="" class="text-2xl font-bold font-mreg font-semibold text-gray-900">TBA</div>
+                      <div id="BondRegimeModel-Volatility" class="text-2xl font-bold font-mreg font-semibold text-gray-900">TBA</div>
                     </div>
                 
                     <div class="flex flex-col items-start">
                       <div class="text-2xl font-bold text-blue-800 font-mreg">Max DD:</div>
-                      <div id="" class="text-2xl font-bold font-mreg font-semibold text-gray-900">TBA</div>
+                      <div id="BondRegimeModel-MaxDD" class="text-2xl font-bold font-mreg font-semibold text-gray-900">TBA</div>
                     </div>
                     <div class="flex flex-col items-start ">
                       <div class="text-2xl font-bold text-blue-800 font-mreg">Sharpe Ratio:</div>
-                      <div id="" class="text-2xl font-bold font-mreg font-semibold text-gray-900">TBA</div>
+                      <div id="BondRegimeModel-Sharpe" class="text-2xl font-bold font-mreg font-semibold text-gray-900">TBA</div>
                     </div>
                 
                   </div>
@@ -1578,8 +1839,8 @@ color: white;
                       class="w-full h-full"
                     ></lottie-player>
                   </div>
-                 <!-- <a href="BondRegimeModel.html" class="text-blue-800 text-xl font-bold hover:underline">!-->
-                    Explore
+              <a href="BondRegimeModel.html" class="text-blue-800 text-xl font-bold hover:underline">
+                  <p class="text-blue-800 text-2xl font-mreg font-bold ">Explore</p>
                   </a>
                 </div>
                 <!--End Lottie Button-->
@@ -1608,11 +1869,12 @@ color: white;
             <div class="px-4 py-2">
               <div class="text-lg leading-6 font-medium space-y-1">
                 <h1 class="font-semibold text-blue-800 text-4xl mb-8 mt-12">
-                  Relative Value Volatility (Paid Coming Soon) 
+                  Relative Value Volatility
                 </h1>
+                <p class=" font-semibold text-blue-600 text-2xl mb-8 mt-12">Paid Plan, Coming Soon</p>
               </div>
               <div class="text-2xl">
-                <p class="font-large">
+                <p class="font-large mt-8">
                   <span class="text-blue-800 font-bold "> Objective: </span> The Strategy seeks to generate attractive, risk adjusted returns by trading VX Futures To Long Front Month Volatility and Short Mid Month Volatility or vice versa.   
                 </p>
 
@@ -1662,7 +1924,7 @@ color: white;
                     ></lottie-player>
                   </div>
                   <!--<a href="RelativeValueVolatility.html" class="text-blue-800 text-xl font-bold hover:underline">!-->
-                    Explore
+                    <p class="text-blue-800 text-2xl font-mreg font-bold ">Explore</p>
                   </a>
                 </div>
                 <!--End Lottie Button-->
@@ -1688,11 +1950,12 @@ color: white;
             <div class="px-4 py-2">
               <div class="text-lg leading-6 font-medium space-y-1">
                 <h1 class="font-semibold text-blue-800 text-4xl mb-8 mt-12">
-                  Volatility Regimes (Paid Coming Soon) 
+                  Volatility Regimes 
                 </h1>
+                <p class=" font-semibold text-blue-600 text-2xl mb-8 mt-12">Paid Plan, Coming Soon</p>
               </div>
               <div class="text-2xl">
-                <p class="font-large">
+                <p class="font-large mt-8">
                   <span class="text-blue-800 font-bold "> Objective: </span> Long or Short or Both, Volatility Front Month Contracts to reduce risk in your overall portfolio and trade vx futures to generate a diversified set of returns.
                 </p>
 
@@ -1741,7 +2004,7 @@ color: white;
                     ></lottie-player>
                   </div>
                   <a href="/your-target-link" class="text-blue-800 text-xl font-bold hover:underline">
-                    Explore
+                    <p class="text-blue-800 text-2xl font-mreg font-bold ">Explore</p>
                   </a>
                 </div>
                 <!--End Lottie Button-->
@@ -1769,11 +2032,12 @@ color: white;
             <div class="px-4 py-2">
               <div class="text-lg leading-6 font-medium space-y-1">
                 <h1 class="font-semibold text-blue-800 text-4xl mb-8 mt-12">
-                  Volatility Tail Risk (Paid Coming Soon) 
+                  Volatility Tail Risk 
                 </h1>
+                <p class=" font-semibold text-blue-600 text-2xl mb-8 mt-12">Paid Plan, Coming Soon</p>
               </div>
               <div class="text-2xl">
-                <p class="font-large">
+                <p class="font-large mt-8">
                   <span class="text-blue-800 font-bold "> Objective: </span> Provide cost-efficient tail risk protection by using deep out-of-the-money puts that deliver outsized payoffs during extreme volatility events.
                 </p>
 
@@ -1822,7 +2086,7 @@ color: white;
                     ></lottie-player>
                   </div>
                   <a href="/your-target-link" class="text-blue-800 text-xl font-bold hover:underline">
-                    Explore
+                    <p class="text-blue-800 text-2xl font-mreg font-bold ">Explore</p>
                   </a>
                 </div>
                 <!--End Lottie Button-->
@@ -1850,11 +2114,12 @@ color: white;
             <div class="px-4 py-2">
               <div class="text-lg leading-6 font-medium space-y-1">
                 <h1 class="font-semibold text-blue-800 text-4xl mb-8 mt-12">
-                  Multi Strategy Regime Model (Paid Coming Soon) 
+                  Multi Strategy Regime Model 
                 </h1>
+                <p class=" font-semibold text-blue-600 text-2xl mb-8 mt-12">Paid Plan, Coming Soon</p>
               </div>
               <div class="text-2xl">
-                <p class="font-large">
+                <p class="font-large mt-8">
                   <span class="text-blue-800 font-bold "> Objective: </span> Blends 4 Robust Regime Models to Outpeform the S&P 500 with significantly less risk, drawdowns and volatility. 
                 </p>
 
@@ -1903,7 +2168,7 @@ color: white;
                     ></lottie-player>
                   </div>
                  <!-- <a href="MultiStratRegimeModel" class="text-blue-800 text-xl font-bold hover:underline">!-->
-                    Explore
+                  <p class="text-blue-800 text-2xl font-mreg font-bold ">Explore</p>
                   </a>
                 </div>
                 <!--End Lottie Button-->
@@ -1929,11 +2194,12 @@ color: white;
             <div class="px-4 py-2">
               <div class="text-lg leading-6 font-medium space-y-1">
                 <h1 class="font-semibold text-blue-800 text-4xl mb-8 mt-12">
-                  Multi Strat (Paid Coming Soon)  
+                  Multi Strat   
                 </h1>
+                <p class=" font-semibold text-blue-600 text-2xl mb-8 mt-12">Paid Plan, Coming Soon</p>
               </div>
               <div class="text-2xl">
-                <p class="font-large">
+                <p class="font-large mt-8">
                   <span class="text-blue-800 font-bold "> Objective: </span> Blends US Core Equity, Long Short Equity, Managed Futures, and Relative Value Volatility to outperform the S&P 500. 
                 </p>
 
@@ -1977,9 +2243,7 @@ color: white;
                       class="w-full h-full"
                     ></lottie-player>
                   </div>
-                  <a href="/your-target-link" class="text-blue-800 text-xl font-bold hover:underline">
-                    Explore
-                  </a>
+                  <p class="text-blue-800 text-2xl font-mreg font-bold ">Explore</p>
                 </div>
                 <!--End Lottie Button-->
 
@@ -2004,11 +2268,12 @@ color: white;
             <div class="px-4 py-2">
               <div class="text-lg leading-6 font-medium space-y-1">
                 <h1 class="font-semibold text-blue-800 text-4xl mb-8 mt-12">
-                  Managed Futures Systematic (Paid Coming Soon) 
+                  Managed Futures Systematic 
                 </h1>
+                <p class=" font-semibold text-blue-600 text-2xl mb-8 mt-12">Paid Plan, Coming Soon</p>
               </div>
               <div class="text-2xl">
-                <p class="font-large">
+                <p class="font-large mt-8">
                   <span class="text-blue-800 font-bold "> Objective: </span> Deliver diversified, uncorrelated returns by systematically capturing trends across global futures markets while actively managing risk.
                 </p>
 
@@ -2052,9 +2317,7 @@ color: white;
                       class="w-full h-full"
                     ></lottie-player>
                   </div>
-                  <a href="/your-target-link" class="text-blue-800 text-xl font-bold hover:underline">
-                    Explore
-                  </a>
+                  <p class="text-blue-800 text-2xl font-mreg font-bold ">Explore</p>
                 </div>
                 <!--End Lottie Button-->
 
@@ -2080,11 +2343,12 @@ color: white;
             <div class="px-4 py-2">
               <div class="text-lg leading-6 font-medium space-y-1">
                 <h1 class="font-semibold text-blue-800 text-4xl mb-8 mt-12">
-                  Sector Regime Model (Paid Coming Soon)
+                  Sector Regime Model 
                 </h1>
+                <p class=" font-semibold text-blue-600 text-2xl mb-8 mt-12">Paid Plan, Coming Soon</p>
               </div>
               <div class="text-2xl">
-                <p class="font-large">
+                <p class="font-large mt-8">
                   <span class="text-blue-800 font-bold "> Objective: </span> Long certain sectors during specific market regimes in which those sectors outperform and have no allocation to those that underperform the market in those regimes. 
                 </p>
 
@@ -2132,9 +2396,7 @@ color: white;
                       class="w-full h-full"
                     ></lottie-player>
                   </div>
-                  <a href="/your-target-link" class="text-blue-800 text-xl font-bold hover:underline">
-                    Explore
-                  </a>
+                  <p class="text-blue-800 text-2xl font-mreg font-bold ">Explore</p>
                 </div>
                 <!--End Lottie Button-->
 
@@ -2163,11 +2425,12 @@ color: white;
             <div class="px-4 py-2">
               <div class="text-lg leading-6 font-medium space-y-1">
                 <h1 class="font-semibold text-blue-800 text-4xl mb-8 mt-12">
-                  Bitcoin Regime Model (Paid Coming Soon)
+                  Bitcoin Regime Model
                 </h1>
+                <p class=" font-semibold text-blue-600 text-2xl mb-8 mt-12">Paid Plan, Coming Soon</p>
               </div>
               <div class="text-2xl">
-                <p class="font-large">
+                <p class="font-large mt-8">
                   <span class="text-blue-800 font-bold "> Objective: </span> Identify Bitcoin market regimes and dynamically adjust exposure to optimize risk-adjusted returns and manage drawdowns.
                 </p>
 
@@ -2215,9 +2478,7 @@ color: white;
                       class="w-full h-full"
                     ></lottie-player>
                   </div>
-                  <a href="/your-target-link" class="text-blue-800 text-xl font-bold hover:underline">
-                    Explore
-                  </a>
+                  <p class="text-blue-800 text-2xl font-mreg font-bold ">Explore</p>
                 </div>
                 <!--End Lottie Button-->
 
@@ -2243,11 +2504,12 @@ color: white;
             <div class="px-4 py-2">
               <div class="text-lg leading-6 font-medium space-y-1">
                 <h1 class="font-semibold text-blue-800 text-4xl mb-8 mt-12">
-                  Core Active Equity (Paid Coming Soon)
+                  Core Active Equity 
                 </h1>
+                <p class=" font-semibold text-blue-600 text-2xl mb-8 mt-12">Paid Plan, Coming Soon</p>
               </div>
               <div class="text-2xl">
-                <p class="font-large">
+                <p class="font-large mt-8">
                   <span class="text-blue-800 font-bold "> Objective: </span> Achieve superior risk-adjusted returns by actively selecting core equities and employing a proprietary algorithm to optimally weight assets.
                 </p>
 
@@ -2295,9 +2557,7 @@ color: white;
                       class="w-full h-full"
                     ></lottie-player>
                   </div>
-               <!--   <a href="coreEquity.html" class="text-blue-800 text-xl font-bold hover:underline">!-->
-                    Explore
-                  </a>
+                  <p class="text-blue-800 text-2xl font-mreg font-bold ">Explore</p>
                 </div>
                 <!--End Lottie Button-->
 
@@ -2323,11 +2583,12 @@ color: white;
             <div class="px-4 py-2">
               <div class="text-lg leading-6 font-medium space-y-1">
                 <h1 class="font-semibold text-blue-800 text-4xl mb-8 mt-12">
-                  Long/Short Active Equity (Paid Coming Soon)
+                  Long/Short Active Equity 
                 </h1>
+                <p class=" font-semibold text-blue-600 text-2xl mb-8 mt-12">Paid Plan, Coming Soon</p>
               </div>
               <div class="text-2xl">
-                <p class="font-large">
+                <p class="font-large mt-8">
                   <span class="text-blue-800 font-bold "> Objective: </span> Generate alpha by taking long and short positions across global equity markets using a proprietary algorithm to optimize weights and dynamically manage risk.
                 </p>
 
@@ -2375,9 +2636,7 @@ color: white;
                       class="w-full h-full"
                     ></lottie-player>
                   </div>
-                  <a href="/your-target-link" class="text-blue-800 text-xl font-bold hover:underline">
-                    Explore
-                  </a>
+                  <p class="text-blue-800 text-2xl font-mreg font-bold ">Explore</p>
                 </div>
                 <!--End Lottie Button-->
 
@@ -2403,11 +2662,12 @@ color: white;
             <div class="px-4 py-2">
               <div class="text-lg leading-6 font-medium space-y-1">
                 <h1 class="font-semibold text-blue-800 text-4xl mb-8 mt-12">
-                  Long/Short Equity Neutral (Paid/Data Coming Soon)
+                  Long/Short Equity Neutral 
                 </h1>
+                <p class=" font-semibold text-blue-600 text-2xl mb-8 mt-12">Paid Plan, Coming Soon</p>
               </div>
               <div class="text-2xl">
-                <p class="font-large">
+                <p class="font-large mt-8">
                   <span class="text-blue-800 font-bold "> Objective: </span> Generate consistent alpha through market-neutral long and short equity positions using a proprietary algorithm to optimize weights and manage risk.
                 </p>
 
@@ -2455,9 +2715,7 @@ color: white;
                       class="w-full h-full"
                     ></lottie-player>
                   </div>
-                  <a href="/your-target-link" class="text-blue-800 text-xl font-bold hover:underline">
-                    Explore
-                  </a>
+                  <p class="text-blue-800 text-2xl font-mreg font-bold ">Explore</p>
                 </div>
                 <!--End Lottie Button-->
 
@@ -2483,11 +2741,12 @@ color: white;
             <div class="px-4 py-2">
               <div class="text-lg leading-6 font-medium space-y-1">
                 <h1 class="font-semibold text-blue-800 text-4xl mb-8 mt-12">
-                  Core Equity Value Factor (Paid Coming Soon)
+                  Core Equity Value Factor 
                 </h1>
+                <p class=" font-semibold text-blue-600 text-2xl mb-8 mt-12">Paid Plan, Coming Soon</p>
               </div>
               <div class="text-2xl">
-                <p class="font-large">
+                <p class="font-large mt-8">
                   <span class="text-blue-800 font-bold "> Objective: </span> Generate superior risk-adjusted returns by selecting core equities with a value focus and applying a proprietary weighting algorithm alongside a proprietary value-factor model to optimize exposure and manage risk.
                 </p>
 
@@ -2535,9 +2794,7 @@ color: white;
                       class="w-full h-full"
                     ></lottie-player>
                   </div>
-                  <a href="/your-target-link" class="text-blue-800 text-xl font-bold hover:underline">
-                    Explore
-                  </a>
+                  <p class="text-blue-800 text-2xl font-mreg font-bold ">Explore</p>
                 </div>
                 <!--End Lottie Button-->
 
@@ -2563,11 +2820,12 @@ color: white;
             <div class="px-4 py-2">
               <div class="text-lg leading-6 font-medium space-y-1">
                 <h1 class="font-semibold text-blue-800 text-4xl mb-8 mt-12">
-                  International Active Equity (Paid/Data Coming Soon)
+                  International Active Equity 
                 </h1>
+                <p class=" font-semibold text-blue-600 text-2xl mb-8 mt-12">Paid Plan, Coming Soon</p>
               </div>
               <div class="text-2xl">
-                <p class="font-large">
+                <p class="font-large mt-8">
                   <span class="text-blue-800 font-bold "> Objective: </span> Deliver enhanced risk-adjusted returns by actively selecting international equities and employing a proprietary algorithm to optimize weightings and manage risk.
                 </p>
 
@@ -2615,9 +2873,7 @@ color: white;
                       class="w-full h-full"
                     ></lottie-player>
                   </div>
-                  <a href="/your-target-link" class="text-blue-800 text-xl font-bold hover:underline">
-                    Explore
-                  </a>
+                  <p class="text-blue-800 text-2xl font-mreg font-bold ">Explore</p>
                 </div>
                 <!--End Lottie Button-->
 
@@ -2643,11 +2899,12 @@ color: white;
             <div class="px-4 py-2">
               <div class="text-lg leading-6 font-medium space-y-1">
                 <h1 class="font-semibold text-blue-800 text-4xl mb-8 mt-12">
-                  China Core Equity (Paid Coming Soon)
+                  China Core Equity 
                 </h1>
+                <p class=" font-semibold text-blue-600 text-2xl mb-8 mt-12">Paid Plan, Coming Soon</p>
               </div>
               <div class="text-2xl">
-                <p class="font-large">
+                <p class="font-large mt-8">
                   <span class="text-blue-800 font-bold "> Objective: </span> Deliver superior risk-adjusted returns by actively selecting Chinese equities and employing a proprietary algorithm to optimize weightings and manage risk.
                 </p>
 
@@ -2695,9 +2952,7 @@ color: white;
                       class="w-full h-full"
                     ></lottie-player>
                   </div>
-                  <a href="/your-target-link" class="text-blue-800 text-xl font-bold hover:underline">
-                    Explore
-                  </a>
+                  <p class="text-blue-800 text-2xl font-mreg font-bold ">Explore</p>
                 </div>
                 <!--End Lottie Button-->
 
@@ -2723,11 +2978,12 @@ color: white;
             <div class="px-4 py-2">
               <div class="text-lg leading-6 font-medium space-y-1">
                 <h1 class="font-semibold text-blue-800 text-4xl mb-8 mt-12">
-                  Mexico Core Equity (Paid/Data Coming Soon)
+                  Mexico Core Equity 
                 </h1>
+                <p class=" font-semibold text-blue-600 text-2xl mb-8 mt-12">Paid Plan, Coming Soon</p>
               </div>
               <div class="text-2xl">
-                <p class="font-large">
+                <p class="font-large mt-8">
                   <span class="text-blue-800 font-bold "> Objective: </span> Deliver superior risk-adjusted returns by actively selecting Mexican equities and employing a proprietary algorithm to optimize weightings and manage risk.
                 </p>
 
@@ -2775,9 +3031,7 @@ color: white;
                       class="w-full h-full"
                     ></lottie-player>
                   </div>
-                  <a href="/your-target-link" class="text-blue-800 text-xl font-bold hover:underline">
-                    Explore
-                  </a>
+                  <p class="text-blue-800 text-2xl font-mreg font-bold ">Explore</p>
                 </div>
                 <!--End Lottie Button-->
 
@@ -2803,11 +3057,12 @@ color: white;
             <div class="px-4 py-2">
               <div class="text-lg leading-6 font-medium space-y-1">
                 <h1 class="font-semibold text-blue-800 text-4xl mb-8 mt-12">
-                  Macro Long Only (Paid/Data Coming Soon)
+                  Macro Long Only 
                 </h1>
+                <p class=" font-semibold text-blue-600 text-2xl mb-8 mt-12">Paid Plan, Coming Soon</p>
               </div>
               <div class="text-2xl">
-                <p class="font-large">
+                <p class="font-large mt-8">
                   <span class="text-blue-800 font-bold "> Objective: </span> Employ regime model insights to build a diversified long-only portfolio across global markets, focusing on secular growth themes and disciplined risk management.
                 </p>
 
@@ -2855,9 +3110,7 @@ color: white;
                       class="w-full h-full"
                     ></lottie-player>
                   </div>
-                  <a href="/your-target-link" class="text-blue-800 text-xl font-bold hover:underline">
-                    Explore
-                  </a>
+                  <p class="text-blue-800 text-2xl font-mreg font-bold ">Explore</p>
                 </div>
                 <!--End Lottie Button-->
 
@@ -2883,11 +3136,12 @@ color: white;
             <div class="px-4 py-2">
               <div class="text-lg leading-6 font-medium space-y-1">
                 <h1 class="font-semibold text-blue-800 text-4xl mb-8 mt-12">
-                  Intraday Long/Short Equity (Paid/Data Coming Soon)
+                  Intraday Long/Short Equity 
                 </h1>
+                <p class=" font-semibold text-blue-600 text-2xl mb-8 mt-12">Paid Plan, Coming Soon</p>
               </div>
               <div class="text-2xl">
-                <p class="font-large">
+                <p class="font-large mt-8">
                   <span class="text-blue-800 font-bold "> Objective: </span> Exploit intraday market inefficiencies through algorithmic long and short positioning, coupled with real-time risk controls, to deliver consistent short-term alpha.
                 </p>
 
@@ -2935,9 +3189,7 @@ color: white;
                       class="w-full h-full"
                     ></lottie-player>
                   </div>
-                  <a href="/your-target-link" class="text-blue-800 text-xl font-bold hover:underline">
-                    Explore
-                  </a>
+                  <p class="text-blue-800 text-2xl font-mreg font-bold ">Explore</p>
                 </div>
                 <!--End Lottie Button-->
 
@@ -2963,11 +3215,12 @@ color: white;
             <div class="px-4 py-2">
               <div class="text-lg leading-6 font-medium space-y-1">
                 <h1 class="font-semibold text-blue-800 text-4xl mb-8 mt-12">
-                  Japan Core Equity (Paid/Data Coming Soon)
+                  Japan Core Equity
                 </h1>
+                <p class=" font-semibold text-blue-600 text-2xl mb-8 mt-12">Paid Plan, Coming Soon</p>
               </div>
               <div class="text-2xl">
-                <p class="font-large">
+                <p class="font-large mt-8">
                   <span class="text-blue-800 font-bold "> Objective: </span> Build a concentrated long-only portfolio of Japanese equities using a proprietary weighting algorithm to target sustainable growth and attractive risk-adjusted returns.
                 </p>
 
@@ -3015,9 +3268,7 @@ color: white;
                       class="w-full h-full"
                     ></lottie-player>
                   </div>
-                  <a href="/your-target-link" class="text-blue-800 text-xl font-bold hover:underline">
-                    Explore
-                  </a>
+                  <p class="text-blue-800 text-2xl font-mreg font-bold ">Explore</p>
                 </div>
                 <!--End Lottie Button-->
 
@@ -3043,11 +3294,12 @@ color: white;
             <div class="px-4 py-2">
               <div class="text-lg leading-6 font-medium space-y-1">
                 <h1 class="font-semibold text-blue-800 text-4xl mb-8 mt-12">
-                  Gold Regime Model (Paid Coming Soon)
+                  Gold Regime Model 
                 </h1>
+                <p class=" font-semibold text-blue-600 text-2xl mb-8 mt-12">Paid Plan, Coming Soon</p>
               </div>
               <div class="text-2xl">
-                <p class="font-large">
+                <p class="font-large mt-8">
                   <span class="text-blue-800 font-bold "> Objective: </span> Identify gold market regimes and dynamically adjust exposure to optimize risk-adjusted returns and manage drawdowns.
                 </p>
 
@@ -3095,9 +3347,7 @@ color: white;
                       class="w-full h-full"
                     ></lottie-player>
                   </div>
-                  <a href="/your-target-link" class="text-blue-800 text-xl font-bold hover:underline">
-                    Explore
-                  </a>
+                  <p class="text-blue-800 text-2xl font-mreg font-bold ">Explore</p>
                 </div>
                 <!--End Lottie Button-->
 
@@ -3114,7 +3364,26 @@ color: white;
 
 </section>
 
-    
+<footer class="py-6 -mt-16 pl-6 pr-6 md:pl-0 md:pr-0">
+  <div class="flex justify-center items-center space-x-6 text-sm text-black mb-12">
+
+    <!-- Left Link -->
+    <a href="Disclaimer.html">
+    <h1 class="font-mreg font-bold text-xl md:text-2xl ">Disclaimer</h1>
+  </a>
+
+    <!-- Center Text -->
+    <span class="text-center text-black font-mreg font-bold text-xl md:text-2xl">
+      &copy; 2025 Caltropia Research. All rights reserved.
+    </span>
+
+    <!-- Right Link -->
+    <a href="Disclaimer.html">
+      <h1 class="font-mreg font-bold text-xl md:text-2xl">Terms of Use</h1>
+    </a>
+
+  </div>
+</footer>
 </div>
 
 </section>
@@ -3234,6 +3503,71 @@ color: white;
     } else {
       // Not logged in, link to sign up page
       SPDailyRebalLink1.href = "signupSPDailyRebalance.html";
+    }
+  });
+</script>
+
+<script>
+  firebase.auth().onAuthStateChanged((user) => {
+    const meanReversionLink = document.getElementById("mean-reversion-link");
+    if (user) {
+      // User is logged in, link to actual page
+      meanReversionLink.href = "MeanReversionGrid.html";
+    } else {
+      // Not logged in, link to sign up page
+      meanReversionLink.href = "signupMeanReversion.html";
+    }
+  });
+</script>
+
+<script>
+  firebase.auth().onAuthStateChanged((user) => {
+    const meanReversionLink1 = document.getElementById("mean-reversion-link1");
+    if (user) {
+      // User is logged in, link to actual page
+      meanReversionLink1.href = "MeanReversionGrid.html";
+    } else {
+      // Not logged in, link to sign up page
+      meanReversionLink1.href = "signupMeanReversion.html";
+    }
+  });
+</script>
+
+<script>
+  firebase.auth().onAuthStateChanged((user) => {
+    const meanReversionLink = document.getElementById("CaltropiaReversion");
+    if (user) {
+      // User is logged in, link to actual page
+      meanReversionLink.href = "EquityMeanReversion.html";
+    } else {
+      // Not logged in, link to sign up page
+      meanReversionLink.href = "signupEquityMeanReversion.html";
+    }
+  });
+</script>
+
+<script>
+  firebase.auth().onAuthStateChanged((user) => {
+    const meanReversionLink = document.getElementById("CaltropiaReversion1");
+    if (user) {
+      // User is logged in, link to actual page
+      meanReversionLink.href = "EquityMeanReversion.html";
+    } else {
+      // Not logged in, link to sign up page
+      meanReversionLink.href = "signupEquityMeanReversion.html";
+    }
+  });
+</script>
+
+<script>
+  firebase.auth().onAuthStateChanged((user) => {
+    const equityRiskLink = document.getElementById("equityRiskSignals");
+    if (user) {
+      // User is logged in, link to actual page
+      equityRiskLink.href = "EquityRiskSignals.html";
+    } else {
+      // Not logged in, link to sign up page
+      equityRiskLink.href = "EquityRiskSignals.html";
     }
   });
 </script>

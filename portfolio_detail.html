@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caltropia | Strategy Detail</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        mono: ['"JetBrains Mono"', '"IBM Plex Mono"', 'monospace'],
+                        sans: ['"JetBrains Mono"', 'monospace']
+                    },
+                    colors: {
+                        terminal: {
+                            bg: '#000000',
+                            panel: '#0a0a0a',
+                            border: '#1a1a1a',
+                            orange: '#ff6600',
+                            amber: '#ffaa00',
+                            green: '#00ff88',
+                            red: '#ff3344',
+                            blue: '#0088ff',
+                            muted: '#666666'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * {
+            font-family: 'JetBrains Mono', 'IBM Plex Mono', monospace;
+        }
+
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            font-size: 12px;
+            line-height: 1.4;
+            overflow-x: hidden;
+        }
+
+        .terminal-header {
+            background: linear-gradient(180deg, #1a1a1a 0%, #0a0a0a 100%);
+            border-bottom: 1px solid #ff6600;
+        }
+
+        .terminal-card {
+            background: #0a0a0a;
+            border: 1px solid #1a1a1a;
+            transition: all 0.15s ease;
+            position: relative;
+        }
+
+        .terminal-card:hover {
+            border-color: #ff6600;
+            box-shadow: 0 0 20px rgba(255, 102, 0, 0.1);
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ff6600;
+        }
+
+        .blink {
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            50% {
+                opacity: 0.5;
+            }
+        }
+    </style>
+</head>
+
+<body class="min-h-screen">
+
+    <!-- Sidebar Navigation -->
+    <nav id="sidebar"
+        class="fixed left-0 top-0 h-full w-12 bg-black border-r border-[#333] flex flex-col items-center py-4 z-50">
+        <div class="text-[#ff6600] font-bold text-xs mb-6">C</div>
+        <div class="flex-1 flex flex-col gap-1">
+            <a href="radial.html"
+                class="w-8 h-8 flex items-center justify-center text-[#666] hover:text-[#ff6600] hover:bg-[#1a1a1a]"
+                title="Dashboard">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z">
+                    </path>
+                </svg>
+            </a>
+            <a href="momentum.html"
+                class="w-8 h-8 flex items-center justify-center text-[#666] hover:text-[#ff6600] hover:bg-[#1a1a1a]"
+                title="Momentum">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path>
+                </svg>
+            </a>
+            <a href="lowvol.html"
+                class="w-8 h-8 flex items-center justify-center text-[#666] hover:text-[#ff6600] hover:bg-[#1a1a1a]"
+                title="Risk Terminal">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10">
+                    </path>
+                </svg>
+            </a>
+            <a href="momentum_factor.html"
+                class="w-8 h-8 flex items-center justify-center text-[#666] hover:text-[#ff6600] hover:bg-[#1a1a1a]"
+                title="Momentum Factor">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                </svg>
+            </a>
+            <a href="portfolios.html"
+                class="w-8 h-8 flex items-center justify-center text-[#ff6600] bg-[#1a1a1a] border-l-2 border-[#ff6600]"
+                title="Portfolios">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
+                    </path>
+                </svg>
+            </a>
+        </div>
+    </nav>
+
+    <div class="ml-12">
+        <!-- Header -->
+        <header class="terminal-header px-4 py-2 flex flex-col md:flex-row items-center justify-between gap-2 md:gap-0">
+            <div class="flex items-center gap-4 w-full md:w-auto justify-between md:justify-start">
+                <div class="flex items-center gap-2">
+                    <span class="text-[#ff6600] font-bold text-sm">CALTROPIA</span>
+                    <span class="text-[#666]">|</span>
+                    <span class="text-white text-xs">PORTFOLIO DETAIL</span>
+                </div>
+                <span class="text-[#00ff88] text-xs blink md:ml-2">● LIVE</span>
+            </div>
+            <div class="flex items-center gap-4 text-xs w-full md:w-auto justify-between md:justify-end">
+                <a href="portfolios.html" class="flex items-center gap-1 hover:text-[#ff6600] transition-colors">
+                    <span>&lt; BACK</span>
+                    <span class="hidden sm:inline">TO ALL STRATEGIES</span>
+                </a>
+                <div class="hidden sm:block w-px h-4 bg-[#333]"></div>
+                <div class="flex items-center gap-2">
+                    <span class="text-[#666] hidden sm:inline">LAST UPDATE:</span>
+                    <span id="last-updated" class="text-[#ffaa00]">--:--:--</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="p-4 md:p-6">
+            <!-- Strategy Title Header -->
+            <div class="mb-6">
+                <h1 id="strategy-title" class="text-xl md:text-2xl font-bold text-white flex items-center gap-2 mb-2">
+                    <span class="w-2 h-8 bg-[#ff6600]"></span>
+                    LOADING STRATEGY...
+                </h1>
+                <div class="flex flex-wrap items-center gap-2 md:gap-4 text-xs font-mono">
+                    <span class="px-2 py-0.5 bg-[#1a1a1a] border border-[#ffaa00] text-[#ffaa00]">ACTIVE</span>
+                    <span class="text-[#666]">ID: <span class="text-white">STRAT-8821</span></span>
+                    <span class="text-[#666]">RISK PROFILE: <span class="text-white">MODERATE-AGGRESSIVE</span></span>
+                </div>
+            </div>
+
+            <!-- Performance Grid -->
+            <div class="grid grid-cols-12 gap-6 mb-6">
+                <!-- Main Chart (Placeholder) -->
+                <div class="col-span-12 lg:col-span-8 terminal-card p-4 min-h-[400px] flex flex-col">
+                    <div class="flex flex-col sm:flex-row justify-between items-center mb-4 gap-4 sm:gap-0">
+                        <h3 class="text-[#ff6600] font-bold text-sm w-full sm:w-auto text-center sm:text-left">
+                            CUMULATIVE PERFORMANCE</h3>
+                        <div
+                            class="flex gap-2 text-[10px] w-full sm:w-auto justify-center sm:justify-end overflow-x-auto pb-2 sm:pb-0">
+                            <button id="btn-1m"
+                                class="time-filter-btn px-2 py-1 bg-[#1a1a1a] hover:bg-[#333] text-[#666] hover:text-white transition-colors"
+                                data-range="1M">1M</button>
+                            <button id="btn-3m"
+                                class="time-filter-btn px-2 py-1 bg-[#1a1a1a] hover:bg-[#333] text-[#666] hover:text-white transition-colors"
+                                data-range="3M">3M</button>
+                            <button id="btn-ytd"
+                                class="time-filter-btn px-2 py-1 bg-[#1a1a1a] hover:bg-[#333] text-[#666] hover:text-white transition-colors"
+                                data-range="YTD">YTD</button>
+                            <button id="btn-1y"
+                                class="time-filter-btn px-2 py-1 bg-[#1a1a1a] hover:bg-[#333] text-[#666] hover:text-white transition-colors"
+                                data-range="1Y">1Y</button>
+                            <button id="btn-5y"
+                                class="time-filter-btn px-2 py-1 bg-[#1a1a1a] hover:bg-[#333] text-[#666] hover:text-white transition-colors"
+                                data-range="5Y">5Y</button>
+                            <button id="btn-all"
+                                class="time-filter-btn px-2 py-1 bg-[#333] text-white transition-colors"
+                                data-range="ALL">ALL</button>
+                        </div>
+                    </div>
+                    <div
+                        class="flex-1 border border-[#1a1a1a] border-dashed flex items-center justify-center bg-[#050505] relative overflow-hidden">
+                        <!-- Chart container will be cleared by JS -->
+                        <div id="chart-container" class="w-full h-full relative">
+                            <!-- CSS Pattern as placeholder -->
+                            <div class="absolute inset-0 opacity-20"
+                                style="background-image: linear-gradient(#1a1a1a 1px, transparent 1px), linear-gradient(90deg, #1a1a1a 1px, transparent 1px); background-size: 20px 20px;">
+                            </div>
+                            <div
+                                class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-[#333] font-bold text-xl">
+                                CHART DATA PLACEHOLDER</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stats Panel -->
+                <div class="col-span-12 lg:col-span-4 flex flex-col gap-4">
+                    <!-- Key Stats -->
+                    <div class="terminal-card p-4">
+                        <h3 class="text-white font-bold text-sm mb-4 border-b border-[#333] pb-2">KEY STATISTICS</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <div class="text-[#666] text-[10px] uppercase">CAGR</div>
+                                <div class="text-[#00ff88] text-xl font-mono">14.2%</div>
+                            </div>
+                            <div>
+                                <div class="text-[#666] text-[10px] uppercase">Sharpe Ratio</div>
+                                <div class="text-white text-xl font-mono">1.82</div>
+                            </div>
+                            <div>
+                                <div class="text-[#666] text-[10px] uppercase">Max Drawdown</div>
+                                <div class="text-[#ff3344] text-xl font-mono">-12.5%</div>
+                            </div>
+                            <div>
+                                <div class="text-[#666] text-[10px] uppercase">Volatility</div>
+                                <div class="text-white text-xl font-mono">9.8%</div>
+                            </div>
+                            <div>
+                                <div class="text-[#666] text-[10px] uppercase">YTD Return</div>
+                                <div class="text-[#00ff88] text-xl font-mono">8.4%</div>
+                            </div>
+                            <div>
+                                <div class="text-[#666] text-[10px] uppercase">Sortino</div>
+                                <div class="text-white text-xl font-mono">2.15</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Allocation / Exposure -->
+                    <div class="terminal-card p-4 flex-1">
+                        <h3 class="text-white font-bold text-sm mb-4 border-b border-[#333] pb-2">ALLOCATION</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <div class="flex justify-between text-xs mb-1">
+                                    <span class="text-[#aaa]">EQUITY (SPY)</span>
+                                    <span id="alloc-equity-val" class="text-white font-mono">--%</span>
+                                </div>
+                                <div class="w-full h-1 bg-[#1a1a1a] overflow-hidden">
+                                    <div id="alloc-equity-bar" class="h-full bg-[#ff6600]" style="width: 0%"></div>
+                                </div>
+                            </div>
+                            <!-- Fixed Income Removed as requested -->
+                            <div>
+                                <div class="flex justify-between text-xs mb-1">
+                                    <span class="text-[#aaa]">CASH</span>
+                                    <span id="alloc-cash-val" class="text-white font-mono">--%</span>
+                                </div>
+                                <div class="w-full h-1 bg-[#1a1a1a] overflow-hidden">
+                                    <div id="alloc-cash-bar" class="h-full bg-[#00ff88]" style="width: 0%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Holdings / Log Table -->
+            <div class="terminal-card p-4">
+                <h3 class="text-white font-bold text-sm mb-4 flex justify-between items-center">
+                    <span>LATEST POSITIONS</span>
+                    <span class="text-[#666] text-xs font-normal">DISPLAYING TOP 5</span>
+                </h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="text-[#666] text-[10px] border-b border-[#333]">
+                                <th class="py-2 font-normal">TICKER</th>
+                                <th class="py-2 font-normal">NAME</th>
+                                <th class="py-2 font-normal text-right">WEIGHT</th>
+                                <th class="py-2 font-normal text-right">P/L DAY</th>
+                                <th class="py-2 font-normal text-right">STATUS</th>
+                            </tr>
+                        </thead>
+                        <tbody id="positions-body" class="text-xs font-mono">
+                            <tr>
+                                <td colspan="5" class="py-3 text-center text-[#666]">LOADING POSITIONS...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Historical Allocation Chart -->
+            <div class="terminal-card p-4">
+                <h3 class="text-white font-bold text-sm mb-4 border-b border-[#333] pb-2">HISTORICAL STRATEGY ALLOCATION
+                </h3>
+                <div class="w-full h-[300px] relative">
+                    <canvas id="allocation-chart"></canvas>
+                </div>
+            </div>
+
+            <!-- Monthly Returns Table -->
+            <div class="terminal-card p-4 mt-6">
+                <h3 class="text-white font-bold text-sm mb-4 border-b border-[#333] pb-2">MONTHLY RETURNS</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-center border-collapse text-xs font-mono">
+                        <thead>
+                            <tr class="text-[#666] border-b border-[#333]">
+                                <th class="py-2 text-left">YEAR</th>
+                                <th class="py-2">JAN</th>
+                                <th class="py-2">FEB</th>
+                                <th class="py-2">MAR</th>
+                                <th class="py-2">APR</th>
+                                <th class="py-2">MAY</th>
+                                <th class="py-2">JUN</th>
+                                <th class="py-2">JUL</th>
+                                <th class="py-2">AUG</th>
+                                <th class="py-2">SEP</th>
+                                <th class="py-2">OCT</th>
+                                <th class="py-2">NOV</th>
+                                <th class="py-2">DEC</th>
+                                <th class="py-2 border-l border-[#333]">YTD</th>
+                            </tr>
+                        </thead>
+                        <tbody id="monthly-returns-body">
+                            <tr>
+                                <td colspan="14" class="py-4 text-[#666]">LOADING RETURNS...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBxG5qf6mb8E_-b2TeXlRNseMZ26L9DRYg",
+            authDomain: "trendscores-df341.firebaseapp.com",
+            projectId: "trendscores-df341",
+            databaseURL: "https://trendscores-df341-default-rtdb.firebaseio.com"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // Global variables for chart data and instance
+        let fullStrategyData = null;
+        let chartInstance = null;
+        let currentRange = 'ALL';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Update timestamp
+            document.getElementById('last-updated').textContent = new Date().toLocaleTimeString();
+
+            // Setup Filter Buttons
+            document.querySelectorAll('.time-filter-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    // Update active state
+                    document.querySelectorAll('.time-filter-btn').forEach(b => {
+                        b.classList.remove('bg-[#333]', 'text-white');
+                        b.classList.add('bg-[#1a1a1a]', 'text-[#666]');
+                    });
+                    e.target.classList.remove('bg-[#1a1a1a]', 'text-[#666]');
+                    e.target.classList.add('bg-[#333]', 'text-white');
+
+                    // Update range
+                    currentRange = e.target.getAttribute('data-range');
+
+                    if (fullStrategyData) {
+                        renderSpDailyChart(fullStrategyData, document.getElementById('chart-container'));
+                    }
+                });
+            });
+
+            // Read URL Param for Strategy Name
+            const urlParams = new URLSearchParams(window.location.search);
+            const strategyName = urlParams.get('strategy');
+            const decodedName = strategyName ? decodeURIComponent(strategyName) : 'UNKNOWN';
+
+            if (strategyName) {
+                document.getElementById('strategy-title').innerHTML = `
+                    <span class="w-2 h-8 bg-[#ff6600]"></span>
+                    ${decodedName.toUpperCase()}
+                `;
+                document.title = `Caltropia | ${decodedName}`;
+            }
+
+            // Strategy Name to Firebase Path Mapping
+            const strategyPathMap = {
+                "Caltropia Managed Futures EW": "investmentStrategies/Managed Futures Equal Weight",
+                "S&P Daily Rebalance": "investmentStrategies/S&P 500 Daily Regime",
+                "Caltropia Mean Reversion Factor": "investmentStrategies/Mean Reversion Factor",
+                "Caltropia Momentum Factor": "investmentStrategies/Momentum Factor",
+                "Caltropia Low Vol Factor": "investmentStrategies/Low Vol Factor",
+                "S&P Dip/Rip": "investmentStrategies/S&P 500 Dip Rip",
+                "Caltropia Bond Regime Model": "investmentStrategies/Bond Regime Model",
+                "Caltropia Volatility Regimes": "investmentStrategies/Volatility Regimes",
+                "Caltropia Sector Regime Model": "investmentStrategies/Sector Regime Model",
+                "Caltropia Bitcoin Regime Model": "investmentStrategies/Bitcoin Regime Model",
+                "Caltropia Relative Val Vol": "investmentStrategies/Relative Value Volatility",
+                "Caltropia Vol Tail Risk": "investmentStrategies/Volatility Tail Risk",
+                "Caltropia L/S Equity": "investmentStrategies/Long Short Equity",
+                "Caltropia Active Core Equity": "investmentStrategies/US Core Equity"
+            };
+
+            // Fetch Key Statistics
+            const statsPath = strategyPathMap[decodedName];
+            if (statsPath) {
+                console.log(`Fetching stats from: ${statsPath}`);
+                onValue(ref(db, statsPath), (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        updateKeyStatistics(data);
+                    }
+                });
+            }
+
+            // Connection Check
+            onValue(ref(db, '.info/connected'), (snap) => {
+                if (snap.val() === true) {
+                    console.log('Firebase: Connected');
+                } else {
+                    console.error('Firebase: Disconnected');
+                }
+            });
+
+            // Logic for S&P Daily Rebalance Chart
+            if (decodedName === "S&P Daily Rebalance") {
+                const chartContainer = document.getElementById('chart-container');
+                chartContainer.innerHTML = '<div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-[#ff6600] animate-pulse">LOADING LIVE DATA...</div>';
+
+                // Fetch chart data
+                onValue(ref(db, 'monthlyspy'), (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        console.log('Chart data found.');
+                        fullStrategyData = data;
+                        renderSpDailyChart(data, chartContainer);
+                    } else {
+                        console.warn('No chart data found for monthlyspy.');
+                        chartContainer.innerHTML = '<div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-[#ff3344]">NO CHART DATA AVAILABLE</div>';
+                    }
+                }, (error) => {
+                    console.error(`Fetch Error: ${error.message}`);
+                });
+
+                // Fetch Latest Positions
+                onValue(ref(db, 'spDailyRebalance'), (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        renderPositionsTable(data);
+                    } else {
+                        document.getElementById('positions-body').innerHTML = '<tr><td colspan="5" class="py-3 text-center text-[#ff3344]">NO POSITIONS DATA FOUND</td></tr>';
+                    }
+                });
+
+                // Fetch Historical Allocations
+                onValue(ref(db, 'SpDailyHistAlloc'), (snapshot) => {
+                    const data = snapshot.val();
+                    console.log('SpDailyHistAlloc Data:', data); // Debug Log
+                    if (data) {
+                        renderAllocationChart(data);
+                    } else {
+                        console.warn('SpDailyHistAlloc returned null/undefined');
+                    }
+                });
+
+                // Fetch Monthly Returns
+                onValue(ref(db, 'monthlyspyperf'), (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        renderMonthlyReturnsTable(data);
+                    } else {
+                        document.getElementById('monthly-returns-body').innerHTML = '<tr><td colspan="14" class="py-4 text-center text-[#ff3344]">NO RETURNS DATA FOUND</td></tr>';
+                    }
+                });
+            } else {
+                console.log('Skipping chart fetch (name mismatch)');
+                document.getElementById('positions-body').innerHTML = '<tr><td colspan="5" class="py-3 text-center text-[#666]">NO DATA FOR THIS STRATEGY</td></tr>';
+                document.getElementById('monthly-returns-body').innerHTML = '<tr><td colspan="14" class="py-4 text-center text-[#666]">NO DATA FOR THIS STRATEGY</td></tr>';
+            }
+        });
+
+        function renderMonthlyReturnsTable(data) {
+            const tbody = document.getElementById('monthly-returns-body');
+            tbody.innerHTML = '';
+
+            // Debug: Log first entry to check value structure
+            const entries = Object.entries(data);
+            if (entries.length > 0) {
+                console.log('Sample Monthly Return:', entries[0]);
+            }
+
+            // Parse flat data: "Fri Apr 01 2011..." -> Value
+            // Aggregate into: { 2011: { 0: val, 1: val... } }
+            const yearMap = {};
+
+            entries.forEach(entry => {
+                const dateRaw = entry[0]; // "Fri Apr 01 2011..."
+                const date = new Date(dateRaw);
+
+                if (isNaN(date.getTime())) return; // Skip invalid dates
+
+                const y = date.getFullYear();
+                const m = date.getMonth() + 1; // 1-12 (match Loop below)
+
+                // Value extraction
+                let val = entry[1];
+                // Handle Array like [0.05] or Object { val: 0.05 }
+                if (Array.isArray(val)) val = val[0];
+                else if (typeof val === 'object' && val !== null) {
+                    val = val.Weight || val.value || val.Value || Object.values(val)[0];
+                }
+                if (typeof val === 'string') val = parseFloat(val);
+
+                // CORRECTION: User indicated values are 100x too high.
+                // This means data is stored as percentages (e.g. 1.95 for 1.95%) NOT decimals (0.0195).
+                // Normalize to decimal for consistency.
+                if (!isNaN(val)) {
+                    val = val / 100;
+                }
+
+                if (!yearMap[y]) yearMap[y] = {};
+                yearMap[y][m] = val;
+            });
+
+            // Sort Years Descending
+            const sortedYears = Object.keys(yearMap).sort((a, b) => b - a);
+
+            if (sortedYears.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="14" class="py-4 text-center text-[#666]">NO VALID DATE DATA FOUND</td></tr>';
+                return;
+            }
+
+            sortedYears.forEach(year => {
+                const monthData = yearMap[year];
+                let rowHtml = `<tr class="border-b border-[#1a1a1a] hover:bg-[#111]">
+                    <td class="py-3 text-left font-bold text-[#ccc]">${year}</td>`;
+
+                let product = 1.0;
+                let hasData = false;
+
+                for (let i = 1; i <= 12; i++) {
+                    const val = monthData[i];
+                    rowHtml += formatCell(val);
+
+                    if (val !== undefined && !isNaN(val)) {
+                        product *= (1 + val);
+                        hasData = true;
+                    }
+                }
+
+                // Calculate YTD
+                const ytd = hasData ? (product - 1) : null;
+                rowHtml += formatCell(ytd, true);
+
+                rowHtml += `</tr>`;
+                tbody.insertAdjacentHTML('beforeend', rowHtml);
+            });
+        }
+
+        function formatCell(val, isYtd = false) {
+            const borderClass = isYtd ? 'border-l border-[#1a1a1a]' : '';
+
+            if (val === undefined || val === null) {
+                return `<td class="py-3 text-[#333] ${borderClass}">--</td>`;
+            }
+
+            // Format pct
+            const pct = (val * 100).toFixed(1) + '%';
+            let colorClass = 'text-[#ccc]';
+            if (val > 0) colorClass = 'text-[#00ff88]';
+            if (val < 0) colorClass = 'text-[#ff3344]';
+
+            return `<td class="py-3 ${colorClass} ${borderClass}">${pct}</td>`;
+        }
+
+        function renderAllocationChart(data) {
+            const ctx = document.getElementById('allocation-chart').getContext('2d');
+
+            // Debug: Log the first entry to understand structure
+            const entries = Object.entries(data);
+            if (entries.length > 0) {
+                console.log('Sample Entry:', entries[0]);
+                // Visual Debug (Temporary) - verify if this helps
+                // document.getElementById('allocation-chart').parentElement.setAttribute('data-debug', JSON.stringify(entries[0]));
+            }
+
+            // Data Format: DateString -> Value ??
+            // If similar to monthlyspy, it might be an array or simple value.
+            const sortedEntries = entries.sort((a, b) => new Date(a[0]) - new Date(b[0]));
+
+            const labels = [];
+            const equityData = [];
+            const cashData = [];
+
+            sortedEntries.forEach(entry => {
+                const dateStr = entry[0];
+                const valObj = entry[1];
+                let eqWeight = 0;
+
+                // Flexible parsing
+                if (typeof valObj === 'number') {
+                    eqWeight = valObj;
+                } else if (Array.isArray(valObj)) {
+                    // Assuming Index 0 is Equity/Strategy Weight
+                    eqWeight = valObj[0];
+                } else if (typeof valObj === 'object') {
+                    if (valObj.spy !== undefined) eqWeight = valObj.spy;
+                    else if (valObj.SPY !== undefined) eqWeight = valObj.SPY;
+                    else if (valObj.Weight !== undefined) eqWeight = valObj.Weight;
+                    // Fallback: use first value if object has only one key?
+                    else if (Object.keys(valObj).length === 1) {
+                        eqWeight = Object.values(valObj)[0];
+                    }
+                }
+
+                // Handle potential string "0.4"
+                if (typeof eqWeight === 'string') eqWeight = parseFloat(eqWeight);
+
+                // Cap at 1.0 (100%)
+                eqWeight = Math.min(Math.max(eqWeight, 0), 1);
+                const cashWeight = 1 - eqWeight;
+
+                labels.push(new Date(dateStr).toLocaleDateString('en-US', { month: 'short', year: '2-digit' }));
+                equityData.push(eqWeight * 100);
+                cashData.push(cashWeight * 100);
+            });
+
+            // Destroy existing if any (pseudo-check, but Chart.js usually needs instance tracking)
+            // Ideally we track it. For now, we assume pure replace or new page load.
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'EQUITY (SPY)',
+                            data: equityData,
+                            borderColor: '#ff6600',
+                            backgroundColor: 'rgba(255, 102, 0, 0.2)', // Slightly more opaque for visibility
+                            borderWidth: 1,
+                            fill: true,
+                            pointRadius: 0
+                        },
+                        {
+                            label: 'CASH',
+                            data: cashData,
+                            borderColor: '#00ff88',
+                            backgroundColor: 'rgba(0, 255, 136, 0.1)',
+                            borderWidth: 1,
+                            fill: true,
+                            pointRadius: 0
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    scales: {
+                        x: {
+                            grid: { color: '#1a1a1a' },
+                            ticks: { color: '#666' }
+                        },
+                        y: {
+                            grid: { color: '#1a1a1a' },
+                            ticks: { color: '#666', callback: v => v + '%' },
+                            min: 0,
+                            max: 100,
+                            stacked: true
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: { color: '#fff', font: { family: 'JetBrains Mono' } }
+                        },
+                        tooltip: {
+                            backgroundColor: '#000',
+                            titleColor: '#fff',
+                            bodyColor: '#fff',
+                            borderColor: '#333',
+                            borderWidth: 1,
+                            callbacks: {
+                                label: (ctx) => `${ctx.dataset.label}: ${ctx.raw.toFixed(1)}%`
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderPositionsTable(data) {
+            const tbody = document.getElementById('positions-body');
+            tbody.innerHTML = ''; // Clear loading
+
+            // Data format: Key(Ticker) -> { Weight: 0.4 }
+            Object.keys(data).forEach(tickerKey => {
+                const item = data[tickerKey];
+                const weight = item.Weight || 0;
+
+                // Determine Status and Color
+                let status = 'FLAT';
+                let statusColor = 'text-[#aaa]';
+                if (weight > 0) {
+                    status = 'LONG';
+                    statusColor = 'text-[#00ff88]';
+                } else if (weight < 0) {
+                    status = 'SHORT';
+                    statusColor = 'text-[#ff3344]';
+                }
+
+                const weightPct = (weight * 100).toFixed(1) + '%';
+
+                // Name Mapping (Basic)
+                let nameMap = {
+                    'SPY': 'SPDR S&P 500 ETF Trust',
+                    'TLT': 'iShares 20+ Year Treasury Bond ETF',
+                    'GLD': 'SPDR Gold Shares',
+                    'UUP': 'Invesco DB US Dollar Index Bullish Fund',
+                    'IWM': 'iShares Russell 2000 ETF',
+                    'QQQ': 'Invesco QQQ Trust'
+                };
+                const fullName = nameMap[tickerKey.toUpperCase()] || tickerKey.toUpperCase() + ' ETF';
+
+                const row = `
+                    <tr class="border-b border-[#1a1a1a] hover:bg-[#111]">
+                        <td class="py-3 text-[#ffaa00]">${tickerKey.toUpperCase()}</td>
+                        <td class="py-3 text-[#ccc]">${fullName}</td>
+                        <td class="py-3 text-right">${weightPct}</td>
+                        <td class="py-3 text-right text-[#aaa]">--</td>
+                        <td class="py-3 text-right ${statusColor}">${status}</td>
+                    </tr>
+                `;
+                tbody.insertAdjacentHTML('beforeend', row);
+            });
+
+            // Update Allocation Panel (Dynamic)
+            updateAllocationPanel(data);
+        }
+
+        function updateAllocationPanel(data) {
+            // Logic: Equity = SPY Weight. Cash = 100% - Equity.
+            let equityWeight = 0;
+
+            // Find SPY (case insensitive)
+            const spyKey = Object.keys(data).find(k => k.toUpperCase() === 'SPY');
+            if (spyKey && data[spyKey].Weight) {
+                equityWeight = data[spyKey].Weight;
+            }
+
+            // Cap at 1 (100%) logic or allow leverage? Assuming standard 100% total for this display.
+            // If SPY is > 1 it handles leverage, but Cash logic '100 - SPY' implies max 1 is standard context or Cash becomes negative (margin).
+            // Let's implement math as requested: Cash = 1 - SPY.
+
+            const cashWeight = 1 - equityWeight;
+
+            const equityPct = (equityWeight * 100).toFixed(1) + '%';
+            const cashPct = (cashWeight * 100).toFixed(1) + '%';
+
+            // Update DOM
+            const equityValEl = document.getElementById('alloc-equity-val');
+            const equityBarEl = document.getElementById('alloc-equity-bar');
+            const cashValEl = document.getElementById('alloc-cash-val');
+            const cashBarEl = document.getElementById('alloc-cash-bar');
+
+            if (equityValEl) {
+                equityValEl.textContent = equityPct;
+                equityBarEl.style.width = Math.min(Math.abs(equityWeight * 100), 100) + '%'; // Visual cap
+            }
+
+            if (cashValEl) {
+                cashValEl.textContent = cashPct;
+                // Visual bar: if negative, maybe show 0 or red? Staying simple: width % absolute.
+                cashBarEl.style.width = Math.min(Math.abs(cashWeight * 100), 100) + '%';
+            }
+        }
+
+        function updateKeyStatistics(data) {
+            // Helper to safe format
+            const fmtPct = (v) => (v !== undefined && v !== null) ? (v * 100).toFixed(1) + '%' : '--';
+            const fmtNum = (v) => (v !== undefined && v !== null) ? v.toFixed(2) : '--';
+
+            const statsMap = {
+                'CAGR': { val: data['CAGR'], fmt: fmtPct },
+                'Sharpe Ratio': { val: data['Sharpe'], fmt: fmtNum },
+                'Max Drawdown': { val: data['Max DD'], fmt: fmtPct, color: '#ff3344' }, // Force red? Or keep green logic? User screenshot shows Green Max DD actually!
+                'Volatility': { val: data['Volatility'], fmt: fmtPct },
+                'YTD Return': { val: data['YTD Return'], fmt: fmtPct },
+                'Sortino': { val: data['Sortino'], fmt: fmtNum } // Note: Sortino might not be in all generic data, check logic
+            };
+
+            // Map to the grid cells (Naive approach: finding by label text or predefined order)
+            // Ideally, we should add IDs to the HTML elements. 
+            // Letting's simply iterate the stats container divs.
+
+            const cards = document.querySelectorAll('.terminal-card .grid > div');
+            // Expected Order in HTML: CAGR, Sharpe, Max DD, Volatility, YTD, Sortino
+            // Let's rely on text content matching of the header label
+
+            cards.forEach(card => {
+                const label = card.querySelector('.uppercase').textContent.trim();
+                const valueDiv = card.querySelector('.font-mono');
+
+                if (statsMap[label]) {
+                    const conf = statsMap[label];
+                    valueDiv.textContent = conf.fmt(conf.val);
+
+                    // Color logic based on user request/screenshot
+                    // Screenshot shows: CAGR(Green), Sharpe(Green), Vol(Green), Max DD(Green), YTD(Green).
+                    // This implies a "Terminal Green" for values, except maybe Errors.
+                    // Let's stick to the screenshot: All Green (#00ff88).
+                    valueDiv.className = `text-[#00ff88] text-xl font-mono`;
+
+                    // Special case: If user wants Max DD red, I'll stick to Green as per screenshot 
+                    // (Screenshot shows -15.4% in Green)
+                }
+            });
+        }
+
+        function renderSpDailyChart(monthlySpyData, container) {
+            // Process Data
+            // Format: Key (Date String) -> [StrategyVal, BenchmarkVal]
+            const sortedEntries = Object.entries(monthlySpyData).sort((a, b) => new Date(a[0]) - new Date(b[0]));
+
+            // Determine Date Range
+            const maxDate = new Date(sortedEntries[sortedEntries.length - 1][0]);
+            let startDate = new Date(sortedEntries[0][0]); // Default ALL
+
+            if (currentRange === '1M') {
+                startDate = new Date(maxDate);
+                startDate.setMonth(maxDate.getMonth() - 1);
+            } else if (currentRange === '3M') {
+                startDate = new Date(maxDate);
+                startDate.setMonth(maxDate.getMonth() - 3);
+            } else if (currentRange === 'YTD') {
+                startDate = new Date(maxDate.getFullYear(), 0, 1);
+            } else if (currentRange === '1Y') {
+                startDate = new Date(maxDate);
+                startDate.setFullYear(maxDate.getFullYear() - 1);
+            } else if (currentRange === '5Y') {
+                startDate = new Date(maxDate);
+                startDate.setFullYear(maxDate.getFullYear() - 5);
+            }
+
+            // Filter Data
+            const filteredEntries = sortedEntries.filter(e => new Date(e[0]) >= startDate);
+
+            const labels = filteredEntries.map(e => {
+                const d = new Date(e[0]);
+                return d.toLocaleDateString('en-US', { month: 'short', year: '2-digit' });
+            });
+            const strategyData = filteredEntries.map(e => e[1][0]);
+            const benchmarkData = filteredEntries.map(e => e[1][1]);
+
+            // Clear container and add canvas
+            // If chart instance exists, destroy it
+            if (chartInstance) {
+                chartInstance.destroy();
+            }
+
+            container.innerHTML = '<canvas id="performanceChart"></canvas>';
+            const ctx = document.getElementById('performanceChart').getContext('2d');
+
+            chartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'S&P DAILY REGIME',
+                            data: strategyData,
+                            borderColor: '#ff6600',
+                            backgroundColor: 'rgba(255, 102, 0, 0.1)',
+                            borderWidth: 2,
+                            pointRadius: 0,
+                            pointHoverRadius: 4,
+                            tension: 0.1,
+                            fill: true
+                        },
+                        {
+                            label: 'S&P 500 (BENCHMARK)',
+                            data: benchmarkData,
+                            borderColor: '#1a1a1a', // Dark grey/faded
+                            borderWidth: 2,
+                            pointRadius: 0,
+                            pointHoverRadius: 0,
+                            tension: 0.1,
+                            borderDash: [5, 5]
+                        } // Note: User said Blue/Grey. Using dark grey dash to keep focus on strategy.
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#666',
+                                font: { family: 'JetBrains Mono', size: 10 },
+                                boxWidth: 10
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: '#0a0a0a',
+                            titleColor: '#fff',
+                            bodyColor: '#ccc',
+                            borderColor: '#333',
+                            borderWidth: 1,
+                            titleFont: { family: 'JetBrains Mono' },
+                            bodyFont: { family: 'JetBrains Mono' },
+                            callbacks: {
+                                label: function (context) {
+                                    return context.dataset.label + ': ' + context.parsed.y.toFixed(2);
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { color: '#1a1a1a' },
+                            ticks: { color: '#666', font: { family: 'JetBrains Mono', size: 9 }, maxTicksLimit: 8 }
+                        },
+                        y: {
+                            grid: { color: '#1a1a1a' },
+                            ticks: { color: '#666', font: { family: 'JetBrains Mono', size: 9 } }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caltropia | Market Intelligence Terminal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        mono: ['"JetBrains Mono"', '"IBM Plex Mono"', 'monospace'],
+                        sans: ['"JetBrains Mono"', 'monospace']
+                    },
+                    colors: {
+                        terminal: {
+                            bg: '#000000',
+                            panel: '#0a0a0a',
+                            border: '#1a1a1a',
+                            orange: '#ff6600',
+                            amber: '#ffaa00',
+                            green: '#00ff88',
+                            red: '#ff3344',
+                            blue: '#0088ff',
+                            muted: '#666666'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * {
+            font-family: 'JetBrains Mono', 'IBM Plex Mono', monospace;
+        }
+
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            font-size: 12px;
+            line-height: 1.4;
+            overflow-x: hidden;
+        }
+
+        .terminal-header {
+            background: linear-gradient(180deg, #1a1a1a 0%, #0a0a0a 100%);
+            border-bottom: 1px solid #ff6600;
+        }
+
+        .terminal-card {
+            background: #0a0a0a;
+            border: 1px solid #1a1a1a;
+            transition: all 0.15s ease;
+            position: relative;
+        }
+
+        .terminal-card:hover {
+            border-color: #ff6600;
+            box-shadow: 0 0 20px rgba(255, 102, 0, 0.1);
+        }
+
+        .bar-fill {
+            transition: width 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        .radar-line {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: drawLine 2s ease forwards;
+        }
+
+        @keyframes drawLine {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+
+        .sort-btn.active {
+            background-color: #ff6600;
+            color: black;
+        }
+
+        .filter-chip {
+            border: 1px solid #333;
+            color: #666;
+            transition: all 0.2s;
+        }
+
+        .filter-chip:hover {
+            color: #fff;
+            border-color: #666;
+        }
+
+        .filter-chip.active {
+            background: #1a1a1a;
+            border-color: #ff6600;
+            color: #ff6600;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ff6600;
+        }
+
+        .blink {
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        #tooltip {
+            position: fixed;
+            pointer-events: none;
+            z-index: 10000;
+            background: rgba(10, 10, 10, 0.95);
+            border: 1px solid #ff6600;
+            padding: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        #tooltip.show {
+            opacity: 1;
+        }
+
+        /* Detail Panel */
+        #detail-panel {
+            position: fixed;
+            top: 0;
+            right: -500px;
+            width: 500px;
+            height: 100vh;
+            background: #0a0a0a;
+            border-left: 1px solid #ff6600;
+            z-index: 100;
+            padding: 32px;
+            transition: right 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+            box-shadow: -20px 0 50px rgba(0, 0, 0, 0.8);
+            overflow-y: auto;
+        }
+
+        #detail-panel.open {
+            right: 0;
+        }
+
+        #detail-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 99;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        #detail-overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        input {
+            background: #0a0a0a !important;
+            border: 1px solid #333 !important;
+            color: #fff !important;
+        }
+
+        input:focus {
+            border-color: #ff6600 !important;
+            outline: none !important;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen">
+
+    <!-- Sidebar Navigation -->
+    <nav id="sidebar"
+        class="fixed left-0 top-0 h-full w-12 bg-black border-r border-[#333] flex flex-col items-center py-4 z-50">
+        <div class="text-[#ff6600] font-bold text-xs mb-6">C</div>
+        <div class="flex-1 flex flex-col gap-1">
+            <a href="radial.html"
+                class="w-8 h-8 flex items-center justify-center text-[#ff6600] bg-[#1a1a1a] border-l-2 border-[#ff6600]"
+                title="Dashboard">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z">
+                    </path>
+                </svg>
+            </a>
+            <a href="momentum.html"
+                class="w-8 h-8 flex items-center justify-center text-[#666] hover:text-[#ff6600] hover:bg-[#1a1a1a]"
+                title="Momentum">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path>
+                </svg>
+            </a>
+            <a href="lowvol.html"
+                class="w-8 h-8 flex items-center justify-center text-[#666] hover:text-[#ff6600] hover:bg-[#1a1a1a]"
+                title="Risk Terminal">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10">
+                    </path>
+                </svg>
+            </a>
+            <a href="momentum_factor.html"
+                class="w-8 h-8 flex items-center justify-center text-[#666] hover:text-[#ff6600] hover:bg-[#1a1a1a]"
+                title="Momentum Factor">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                </svg>
+            </a>
+            <a href="portfolios.html"
+                class="w-8 h-8 flex items-center justify-center text-[#666] hover:text-[#ff6600] hover:bg-[#1a1a1a]"
+                title="Portfolios">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
+                    </path>
+                </svg>
+            </a>
+        </div>
+    </nav>
+
+    <div id="tooltip"></div>
+    <div id="detail-overlay" onclick="closeDetailPanel()"></div>
+    <div id="detail-panel">
+        <div class="flex items-center justify-between mb-8 border-b border-[#333] pb-4">
+            <h2 id="detail-title" class="text-xl font-bold text-[#ff6600]">ASSET DETAILS</h2>
+            <button onclick="closeDetailPanel()" class="w-6 h-6 text-[#666] hover:text-white">✕</button>
+        </div>
+        <div id="detail-content" class="space-y-6"></div>
+    </div>
+
+    <div class="ml-12">
+        <!-- Header -->
+        <header class="terminal-header px-4 py-2 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <span class="text-[#ff6600] font-bold text-sm">CALTROPIA</span>
+                <span class="text-[#666]">|</span>
+                <span class="text-white text-xs">MARKET INTELLIGENCE TERMINAL</span>
+                <span class="text-[#00ff88] text-xs blink">● LIVE</span>
+            </div>
+            <div class="flex items-center gap-4 text-xs">
+                <div class="flex items-center gap-2">
+                    <span class="text-[#666]">SEARCH:</span>
+                    <input type="text" id="search-input" class="px-2 py-1 text-xs w-48" placeholder="TICKER/SECTOR..."
+                        oninput="handleSearch(this.value)">
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="text-[#666]">LAST UPDATE:</span>
+                    <span id="last-updated" class="text-[#ffaa00]">--:--:--</span>
+                </div>
+                <button onclick="refreshData()"
+                    class="px-2 py-1 bg-[#1a1a1a] border border-[#333] text-[#ff6600] hover:bg-[#ff6600] hover:text-black transition-all">REFRESH</button>
+            </div>
+        </header>
+
+        <!-- Controls Bar -->
+        <div class="bg-[#0a0a0a] border-b border-[#1a1a1a] px-4 py-2 flex flex-wrap items-center justify-between gap-4">
+            <div class="flex items-center gap-2">
+                <span class="text-[#666] text-xs font-bold uppercase">FILTERS:</span>
+                <button class="filter-chip active px-2 py-1 text-xs" data-filter="all"
+                    onclick="setFilter('all')">ALL</button>
+                <button class="filter-chip px-2 py-1 text-xs" data-filter="bullish" onclick="setFilter('bullish')"><span
+                        class="text-[#00ff88]">●</span> BULL</button>
+                <button class="filter-chip px-2 py-1 text-xs" data-filter="bearish" onclick="setFilter('bearish')"><span
+                        class="text-[#ff3344]">●</span> BEAR</button>
+                <button class="filter-chip px-2 py-1 text-xs" data-filter="divergence"
+                    onclick="setFilter('divergence')">⚡ DIV</button>
+                <button class="filter-chip px-2 py-1 text-xs" data-filter="meanrev" onclick="setFilter('meanrev')">🔄
+                    REV</button>
+                <button class="filter-chip px-2 py-1 text-xs" data-filter="chop" onclick="setFilter('chop')">⚠️
+                    CHOP</button>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="text-[#666] text-xs font-bold uppercase">SORT:</span>
+                <button class="sort-btn active px-2 py-1 text-xs bg-[#1a1a1a] border border-[#333] text-[#666]"
+                    data-sort="score" onclick="setSort('score')">SCORE</button>
+                <button class="sort-btn px-2 py-1 text-xs bg-[#1a1a1a] border border-[#333] text-[#666]"
+                    data-sort="alpha" onclick="setSort('alpha')">NAME</button>
+                <button class="sort-btn px-2 py-1 text-xs bg-[#1a1a1a] border border-[#333] text-[#666]"
+                    data-sort="sector" onclick="setSort('sector')">SECTOR</button>
+            </div>
+        </div>
+
+        <div class="p-4 space-y-4">
+            <!-- Metrics Grid -->
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2">
+                <div class="terminal-card p-3 cursor-pointer" onclick="showMetricDetail('total')">
+                    <div class="text-[#666] text-[10px] font-bold uppercase mb-1">TOTAL ASSETS</div>
+                    <div id="total-assets" class="text-2xl font-bold text-white count-up">--</div>
+                </div>
+                <div class="terminal-card p-3 cursor-pointer" onclick="showMetricDetail('bullish')">
+                    <div class="text-[#666] text-[10px] font-bold uppercase mb-1 hover:text-[#00ff88]">BULLISH TREND
+                    </div>
+                    <div class="flex items-baseline gap-2 mb-1">
+                        <span id="bullish-count" class="text-2xl font-bold text-[#00ff88] count-up">--</span>
+                        <span id="bullish-pct" class="text-xs font-mono text-[#00ff88]">--%</span>
+                    </div>
+                    <div class="w-full bg-[#1a1a1a] h-1">
+                        <div id="bullish-bar" class="h-full bg-[#00ff88] bar-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div class="terminal-card p-3 cursor-pointer" onclick="showMetricDetail('neutral')">
+                    <div class="text-[#666] text-[10px] font-bold uppercase mb-1 hover:text-[#ffaa00]">NEUTRAL</div>
+                    <div class="flex items-baseline gap-2 mb-1">
+                        <span id="neutral-count" class="text-2xl font-bold text-[#ffaa00] count-up">--</span>
+                        <span id="neutral-pct" class="text-xs font-mono text-[#ffaa00]">--%</span>
+                    </div>
+                    <div class="w-full bg-[#1a1a1a] h-1">
+                        <div id="neutral-bar" class="h-full bg-[#ffaa00] bar-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div class="terminal-card p-3 cursor-pointer" onclick="showMetricDetail('bearish')">
+                    <div class="text-[#666] text-[10px] font-bold uppercase mb-1 hover:text-[#ff3344]">BEARISH TREND
+                    </div>
+                    <div class="flex items-baseline gap-2 mb-1">
+                        <span id="bearish-count" class="text-2xl font-bold text-[#ff3344] count-up">--</span>
+                        <span id="bearish-pct" class="text-xs font-mono text-[#ff3344]">--%</span>
+                    </div>
+                    <div class="w-full bg-[#1a1a1a] h-1">
+                        <div id="bearish-bar" class="h-full bg-[#ff3344] bar-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div class="terminal-card p-3 cursor-pointer hover:border-[#ff00ff]" onclick="setFilter('divergence')">
+                    <div class="text-[#666] text-[10px] font-bold uppercase mb-1">DIVERGENCES ⚡</div>
+                    <div id="divergence-count" class="text-2xl font-bold text-white count-up">--</div>
+                </div>
+                <div class="terminal-card p-3 cursor-pointer hover:border-[#00ffff]" onclick="setFilter('meanrev')">
+                    <div class="text-[#666] text-[10px] font-bold uppercase mb-1">MEAN REV 🔄</div>
+                    <div id="meanrev-count" class="text-2xl font-bold text-white count-up">--</div>
+                </div>
+            </div>
+
+            <!-- Main Charts Row -->
+            <div class="grid grid-cols-1 xl:grid-cols-12 gap-4">
+                <div class="xl:col-span-8 terminal-card p-4">
+                    <div class="flex items-center justify-between mb-4 border-b border-[#333] pb-2">
+                        <div>
+                            <h2 id="chart-title" class="text-lg font-bold text-white flex items-center gap-2">MARKET
+                                CONSTELLATION <span class="w-2 h-2 rounded-full bg-[#ff6600] animate-pulse"></span></h2>
+                            <p id="chart-subtitle" class="text-xs text-[#666]">SPATIAL VISUALIZATION</p>
+                        </div>
+                        <div class="flex gap-1">
+                            <button onclick="switchConstellation('overall')" id="const-overall"
+                                class="const-tab px-3 py-1 text-[10px] font-bold bg-[#ff6600] text-black">OVERALL</button>
+                            <button onclick="switchConstellation('st')" id="const-st"
+                                class="const-tab px-3 py-1 text-[10px] font-bold bg-[#1a1a1a] text-[#666] hover:text-white">SHORT
+                                TERM</button>
+                            <button onclick="switchConstellation('it')" id="const-it"
+                                class="const-tab px-3 py-1 text-[10px] font-bold bg-[#1a1a1a] text-[#666] hover:text-white">INTERM
+                                TERM</button>
+                        </div>
+                    </div>
+                    <div class="flex justify-center items-center py-4">
+                        <svg id="constellation-chart" width="600" height="600" viewBox="0 0 700 700"
+                            class="w-full max-w-[600px] h-auto"></svg>
+                    </div>
+                </div>
+
+                <div class="xl:col-span-4 space-y-4">
+                    <div class="terminal-card p-4">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-sm font-bold text-[#ffaa00]">SECTOR RADAR</h3>
+                            <div id="radar-info" class="text-[10px] font-mono text-[#666]">HOVER SECTOR</div>
+                        </div>
+                        <div class="flex justify-center">
+                            <svg id="radar-chart" width="280" height="280" viewBox="0 0 280 280"></svg>
+                        </div>
+                    </div>
+
+                    <div class="terminal-card p-4 flex-1">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-sm font-bold text-[#ffaa00]">TOP MOVERS</h3>
+                            <div class="flex">
+                                <button onclick="switchMovers('bulls')" id="movers-bulls"
+                                    class="px-2 py-0.5 text-[10px] font-bold bg-[#1a1a1a] text-[#00ff88] border border-[#333]">BULLS</button>
+                                <button onclick="switchMovers('bears')" id="movers-bears"
+                                    class="px-2 py-0.5 text-[10px] font-bold bg-[#1a1a1a] text-[#666] border border-[#333]">BEARS</button>
+                            </div>
+                        </div>
+                        <div id="movers-list" class="space-y-2"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Momentum Grid -->
+            <div class="terminal-card p-4">
+                <div class="flex justify-between mb-4">
+                    <h3 id="grid-title" class="text-sm font-bold text-white">MOMENTUM LEADERS</h3>
+                    <span id="showing-count" class="text-xs text-[#666] font-mono">LOADING...</span>
+                </div>
+                <div id="momentum-grid" class="flex gap-2 overflow-x-auto pb-2"></div>
+            </div>
+
+            <!-- Bottom Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <div class="terminal-card p-4">
+                    <h3 class="text-sm font-bold text-white mb-2">SCORE DISTRIBUTION</h3>
+                    <svg id="histogram-chart" width="100%" height="200" viewBox="0 0 500 200" class="w-full"></svg>
+                </div>
+                <div class="terminal-card p-4">
+                    <h3 class="text-sm font-bold text-white mb-2">TREND CORRELATION</h3>
+                    <svg id="scatter-chart" width="100%" height="200" viewBox="0 0 500 200" class="w-full"></svg>
+                </div>
+            </div>
+
+            <!-- Detailed Lists -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="terminal-card p-4 border-t-2 border-t-[#ff00ff]">
+                    <h3 class="font-bold text-white mb-4">DIVERGENCES ⚡</h3>
+                    <div id="divergence-list" class="space-y-2 h-[300px] overflow-y-auto custom-scrollbar"></div>
+                </div>
+                <div class="terminal-card p-4 border-t-2 border-t-[#00ffff]">
+                    <h3 class="font-bold text-white mb-4">MEAN REVERSION 🔄</h3>
+                    <div id="meanrev-list" class="space-y-2 h-[300px] overflow-y-auto custom-scrollbar"></div>
+                </div>
+                <div class="terminal-card p-4 border-t-2 border-t-[#ffaa00]">
+                    <h3 class="font-bold text-white mb-4">CHOP ZONE ⚠️</h3>
+                    <div id="chop-list" class="space-y-2 h-[300px] overflow-y-auto custom-scrollbar"></div>
+                </div>
+            </div>
+
+            <div class="terminal-card p-4 mt-4">
+                <h3 class="text-sm font-bold text-white mb-4">SECTOR PERFORMANCE</h3>
+                <div id="sector-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBxG5qf6mb8E_-b2TeXlRNseMZ26L9DRYg",
+            authDomain: "trendscores-df341.firebaseapp.com",
+            projectId: "trendscores-df341",
+            databaseURL: "https://trendscores-df341-default-rtdb.firebaseio.com"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const auth = getAuth(app);
+
+        // Configuration
+        const tickerConfig = [
+            { ticker: "NVDA", sector: "Tech" }, { ticker: "MSFT", sector: "Tech" }, { ticker: "AAPL", sector: "Tech" }, { ticker: "AMZN", sector: "Tech" }, { ticker: "META", sector: "Tech" }, { ticker: "AVGO", sector: "Tech" }, { ticker: "GOOGL", sector: "Tech" }, { ticker: "TSLA", sector: "Tech" }, { ticker: "ORCL", sector: "Tech" }, { ticker: "PLTR", sector: "Tech" }, { ticker: "CSCO", sector: "Tech" }, { ticker: "AMD", sector: "Tech" }, { ticker: "CRM", sector: "Tech" }, { ticker: "IBM", sector: "Tech" }, { ticker: "NOW", sector: "Tech" }, { ticker: "QCOM", sector: "Tech" }, { ticker: "TXN", sector: "Tech" }, { ticker: "ADBE", sector: "Tech" }, { ticker: "ANET", sector: "Tech" }, { ticker: "MU", sector: "Tech" }, { ticker: "AMAT", sector: "Tech" }, { ticker: "LRCX", sector: "Tech" }, { ticker: "PANW", sector: "Tech" }, { ticker: "ADI", sector: "Tech" }, { ticker: "KLAC", sector: "Tech" }, { ticker: "SNPS", sector: "Tech" }, { ticker: "INTC", sector: "Tech" }, { ticker: "CRWD", sector: "Tech" }, { ticker: "CDNS", sector: "Tech" }, { ticker: "NXPI", sector: "Tech" }, { ticker: "GLW", sector: "Tech" },
+            { ticker: "JPM", sector: "Finance" }, { ticker: "V", sector: "Finance" }, { ticker: "MA", sector: "Finance" }, { ticker: "BAC", sector: "Finance" }, { ticker: "WFC", sector: "Finance" }, { ticker: "GS", sector: "Finance" }, { ticker: "MS", sector: "Finance" }, { ticker: "AXP", sector: "Finance" }, { ticker: "C", sector: "Finance" }, { ticker: "SPGI", sector: "Finance" }, { ticker: "SCHW", sector: "Finance" }, { ticker: "BLK", sector: "Finance" }, { ticker: "COF", sector: "Finance" }, { ticker: "PNC", sector: "Finance" }, { ticker: "USB", sector: "Finance" }, { ticker: "BK", sector: "Finance" }, { ticker: "FI", sector: "Finance" }, { ticker: "MCO", sector: "Finance" }, { ticker: "ICE", sector: "Finance" }, { ticker: "CME", sector: "Finance" }, { ticker: "KKR", sector: "Finance" }, { ticker: "MMC", sector: "Finance" }, { ticker: "AON", sector: "Finance" }, { ticker: "AJG", sector: "Finance" }, { ticker: "TFC", sector: "Finance" }, { ticker: "APO", sector: "Finance" }, { ticker: "TRV", sector: "Finance" }, { ticker: "ALL", sector: "Finance" }, { ticker: "AFL", sector: "Finance" }, { ticker: "BX", sector: "Finance" }, { ticker: "PYPL", sector: "Finance" }, { ticker: "COIN", sector: "Finance" },
+            { ticker: "LLY", sector: "Health" }, { ticker: "UNH", sector: "Health" }, { ticker: "JNJ", sector: "Health" }, { ticker: "ABBV", sector: "Health" }, { ticker: "MRK", sector: "Health" }, { ticker: "PFE", sector: "Health" }, { ticker: "TMO", sector: "Health" }, { ticker: "ABT", sector: "Health" }, { ticker: "AMGN", sector: "Health" }, { ticker: "GILD", sector: "Health" }, { ticker: "VRTX", sector: "Health" }, { ticker: "BMY", sector: "Health" }, { ticker: "CVS", sector: "Health" }, { ticker: "CI", sector: "Health" }, { ticker: "ELV", sector: "Health" }, { ticker: "SYK", sector: "Health" }, { ticker: "MDT", sector: "Health" }, { ticker: "DHR", sector: "Health" }, { ticker: "BSX", sector: "Health" }, { ticker: "ISRG", sector: "Health" }, { ticker: "ZTS", sector: "Health" }, { ticker: "REGN", sector: "Health" }, { ticker: "HCA", sector: "Health" }, { ticker: "MCK", sector: "Health" }, { ticker: "BDX", sector: "Health" },
+            { ticker: "XOM", sector: "Energy" }, { ticker: "CVX", sector: "Energy" }, { ticker: "COP", sector: "Energy" }, { ticker: "EOG", sector: "Energy" }, { ticker: "SLB", sector: "Energy" }, { ticker: "MPC", sector: "Energy" }, { ticker: "WMB", sector: "Energy" }, { ticker: "PSX", sector: "Energy" }, { ticker: "VST", sector: "Energy" }, { ticker: "CEG", sector: "Energy" },
+            { ticker: "WMT", sector: "Consumer" }, { ticker: "COST", sector: "Consumer" }, { ticker: "HD", sector: "Consumer" }, { ticker: "PG", sector: "Consumer" }, { ticker: "KO", sector: "Consumer" }, { ticker: "PEP", sector: "Consumer" }, { ticker: "MCD", sector: "Consumer" }, { ticker: "NKE", sector: "Consumer" }, { ticker: "SBUX", sector: "Consumer" }, { ticker: "TJX", sector: "Consumer" }, { ticker: "LOW", sector: "Consumer" }, { ticker: "ORLY", sector: "Consumer" }, { ticker: "AZO", sector: "Consumer" }, { ticker: "MDLZ", sector: "Consumer" }, { ticker: "CL", sector: "Consumer" }, { ticker: "CMG", sector: "Consumer" }, { ticker: "MAR", sector: "Consumer" }, { ticker: "HLT", sector: "Consumer" }, { ticker: "RCL", sector: "Consumer" }, { ticker: "ABNB", sector: "Consumer" }, { ticker: "DIS", sector: "Consumer" }, { ticker: "NFLX", sector: "Consumer" }, { ticker: "BKNG", sector: "Consumer" },
+            { ticker: "CAT", sector: "Industrial" }, { ticker: "DE", sector: "Industrial" }, { ticker: "UNP", sector: "Industrial" }, { ticker: "HON", sector: "Industrial" }, { ticker: "GE", sector: "Industrial" }, { ticker: "BA", sector: "Industrial" }, { ticker: "RTX", sector: "Industrial" }, { ticker: "LMT", sector: "Industrial" }, { ticker: "GD", sector: "Industrial" }, { ticker: "NOC", sector: "Industrial" }, { ticker: "MMM", sector: "Industrial" }, { ticker: "EMR", sector: "Industrial" }, { ticker: "ETN", sector: "Industrial" }, { ticker: "PH", sector: "Industrial" }, { ticker: "ITW", sector: "Industrial" }, { ticker: "CMI", sector: "Industrial" }, { ticker: "CSX", sector: "Industrial" }, { ticker: "NSC", sector: "Industrial" }, { ticker: "UPS", sector: "Industrial" }, { ticker: "FAST", sector: "Industrial" }, { ticker: "URI", sector: "Industrial" }, { ticker: "PWR", sector: "Industrial" }, { ticker: "CTAS", sector: "Industrial" }, { ticker: "TDG", sector: "Industrial" }, { ticker: "HWM", sector: "Industrial" }, { ticker: "AXON", sector: "Industrial" }, { ticker: "JCI", sector: "Industrial" }, { ticker: "TT", sector: "Industrial" }, { ticker: "MSI", sector: "Industrial" }, { ticker: "ROP", sector: "Industrial" },
+            { ticker: "NEE", sector: "Utilities" }, { ticker: "DUK", sector: "Utilities" }, { ticker: "SO", sector: "Utilities" }, { ticker: "AEP", sector: "Utilities" }, { ticker: "SRE", sector: "Utilities" }, { ticker: "PLD", sector: "Utilities" }, { ticker: "AMT", sector: "Utilities" }, { ticker: "EQIX", sector: "Utilities" }, { ticker: "WELL", sector: "Utilities" }, { ticker: "SPG", sector: "Utilities" }, { ticker: "O", sector: "Utilities" },
+            { ticker: "T", sector: "Other" }, { ticker: "VZ", sector: "Other" }, { ticker: "TMUS", sector: "Other" }, { ticker: "UBER", sector: "Other" }, { ticker: "DASH", sector: "Other" }, { ticker: "INTU", sector: "Other" }, { ticker: "ADSK", sector: "Other" }, { ticker: "ACN", sector: "Other" }, { ticker: "ADP", sector: "Other" }, { ticker: "APH", sector: "Other" }, { ticker: "TEL", sector: "Other" }, { ticker: "APD", sector: "Other" }, { ticker: "ECL", sector: "Other" }, { ticker: "SHW", sector: "Other" }, { ticker: "LIN", sector: "Other" }, { ticker: "FCX", sector: "Other" }, { ticker: "NEM", sector: "Other" }, { ticker: "CB", sector: "Other" }, { ticker: "PGR", sector: "Other" }, { ticker: "WM", sector: "Other" }, { ticker: "GM", sector: "Other" }, { ticker: "PM", sector: "Other" }, { ticker: "MO", sector: "Other" }
+        ];
+
+        const sectors = ["Tech", "Finance", "Health", "Energy", "Consumer", "Industrial", "Utilities", "Other"];
+        const sectorColors = {
+            Tech: "#818cf8", Finance: "#60a5fa", Health: "#34d399", Energy: "#fbbf24",
+            Consumer: "#f472b6", Industrial: "#a78bfa", Utilities: "#22d3ee", Other: "#94a3b8"
+        };
+        const chartConfigs = {
+            overall: { title: "Overall Score", color: "#ff6600", key: "overallScore", range: [-8, 8] },
+            st: { title: "Short Term Trend", color: "#3b82f6", key: "stTrend", range: [-4, 4] },
+            it: { title: "Intermediate Trend", color: "#f59e0b", key: "itTrend", range: [-4, 4] }
+        };
+
+        let assetsData = [];
+        let filteredData = [];
+        let currentFilter = 'all';
+        let currentSort = 'score';
+        let currentConstellation = 'overall';
+        let currentMovers = 'bulls';
+        let highlightedCategory = null;
+
+        // Define loadData first
+        async function loadData() {
+            const results = await Promise.all(tickerConfig.map(async config => {
+                try {
+                    const snapshot = await get(ref(db, "equities/" + config.ticker));
+                    const data = snapshot.val();
+                    if (data) {
+                        const p = v => parseFloat(v) || 0;
+                        const stTrend = p(data.shortTermTrend) + p(data.shortTermStrength);
+                        const itTrend = p(data.intermTrend) + p(data.intermStrength);
+                        const meanReversion = p(data.meanReversion);
+                        const breakout = p(data.breakoutAndDown);
+                        return {
+                            ticker: config.ticker, sector: config.sector,
+                            overallScore: stTrend + itTrend + meanReversion + breakout,
+                            stTrend, itTrend, meanReversion, breakout
+                        };
+                    }
+                } catch (e) { }
+                return null;
+            }));
+            assetsData = results.filter(r => r);
+            filteredData = [...assetsData];
+            document.getElementById('last-updated').textContent = new Date().toLocaleTimeString();
+
+            // Simulate user interaction to ensure consistent state
+            // Use setTimeout to ensure DOM and event listeners are fully ready
+            setTimeout(() => {
+                const allBtn = document.querySelector('button[data-filter="all"]');
+                if (allBtn) {
+                    allBtn.click();
+                } else {
+                    // Fallback
+                    if (typeof window.setFilter === 'function') window.setFilter('all');
+                    else renderAll();
+                }
+            }, 500);
+        }
+
+        // Expose to window for onclick handlers - DEFINED EARLY TO ENSURE SCOPE AVAILABILITY
+        window.loadData = loadData;
+
+        // Helper functions moved to top to avoid hoisting issues
+        window.setFilter = function (filter) {
+            currentFilter = filter;
+            document.querySelectorAll('.filter-chip').forEach(c => {
+                c.classList.toggle('active', c.dataset.filter === filter);
+                c.classList.toggle('bg-[#1a1a1a]', c.dataset.filter !== filter);
+            });
+            renderAll();
+        };
+
+        window.setSort = function (sort) {
+            currentSort = sort;
+            document.querySelectorAll('.sort-btn').forEach(b => b.classList.toggle('active', b.dataset.sort === sort));
+            renderAll();
+        };
+
+        window.handleSearch = function (val) { renderAll(); };
+
+        window.switchConstellation = function (type) {
+            currentConstellation = type;
+            document.querySelectorAll('.const-tab').forEach(t => {
+                const isActive = t.id === `const-${type}`;
+                t.classList.toggle('bg-[#ff6600]', isActive);
+                t.classList.toggle('text-black', isActive);
+                t.classList.toggle('bg-[#1a1a1a]', !isActive);
+                t.classList.toggle('text-[#666]', !isActive);
+            });
+            drawConstellation();
+        };
+
+        window.switchMovers = function (type) {
+            currentMovers = type;
+            const bulls = document.getElementById('movers-bulls');
+            const bears = document.getElementById('movers-bears');
+            if (type === 'bulls') {
+                bulls.classList.add('text-[#00ff88]', 'border-[#333]'); bulls.classList.remove('text-[#666]');
+                bears.classList.add('text-[#666]'); bears.classList.remove('text-[#ff3344]');
+            } else {
+                bears.classList.add('text-[#ff3344]', 'border-[#333]'); bears.classList.remove('text-[#666]');
+                bulls.classList.add('text-[#666]'); bulls.classList.remove('text-[#00ff88]');
+            }
+            drawMovers();
+        };
+
+        window.filterBySector = function (sector) {
+            document.getElementById('search-input').value = sector;
+            renderAll();
+        };
+
+        window.showTooltip = function (e, ticker, sector, score) {
+            const el = document.getElementById('tooltip');
+            el.innerHTML = `<div class="font-bold text-[#ff6600]">${ticker}</div><div class="text-xs text-white">${sector}</div><div class="text-xs mt-1">Score: ${score}</div>`;
+            el.style.left = (e.clientX + 10) + 'px';
+            el.style.top = (e.clientY + 10) + 'px';
+            el.classList.add('show');
+        };
+
+        window.showGenericTooltip = function (e, title, content) {
+            const el = document.getElementById('tooltip');
+            el.innerHTML = `<div class="font-bold text-[#ff6600]">${title}</div><div class="text-xs text-white">${content}</div>`;
+            el.style.left = (e.clientX + 10) + 'px';
+            el.style.top = (e.clientY + 10) + 'px';
+            el.classList.add('show');
+        };
+
+        window.hideTooltip = function () { document.getElementById('tooltip').classList.remove('show'); };
+
+        window.openAssetDetail = function (ticker) {
+            const asset = assetsData.find(a => a.ticker === ticker);
+            if (!asset) return;
+            const el = document.getElementById('detail-content');
+            const color = asset.overallScore > 0 ? '#00ff88' : '#ff3344';
+            el.innerHTML = `
+                <div class="text-4xl font-bold mb-4" style="color:${color}">${asset.overallScore}</div>
+                <div class="grid grid-cols-2 gap-4 text-sm">
+                    <div class="terminal-card p-3">
+                        <div class="text-[#666]">ST TREND</div>
+                        <div class="font-bold text-white">${asset.stTrend}</div>
+                    </div>
+                    <div class="terminal-card p-3">
+                        <div class="text-[#666]">IT TREND</div>
+                        <div class="font-bold text-white">${asset.itTrend}</div>
+                    </div>
+                     <div class="terminal-card p-3">
+                        <div class="text-[#666]">MEAN REV</div>
+                        <div class="font-bold text-white">${asset.meanReversion}</div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('detail-panel').classList.add('open');
+            document.getElementById('detail-overlay').classList.add('show');
+        };
+        window.closeDetailPanel = function () {
+            document.getElementById('detail-panel').classList.remove('open');
+            document.getElementById('detail-overlay').classList.remove('show');
+        };
+        window.showMetricDetail = function (type) {
+            if (type === 'total') setFilter('all');
+            else setFilter(type);
+        };
+
+        window.refreshData = function () {
+            document.getElementById('last-updated').textContent = "SYNCING...";
+            loadData();
+        };
+
+        window.toggleMobileMenu = function () {
+            // Placeholder for mobile menu toggle
+        };
+
+        // Initialize directly - module scripts are deferred automatically
+        onAuthStateChanged(auth, (user) => {
+            loadData();
+        });
+
+        // --- Styles & Helpers ---
+        function getScoreColor(score, range = [-8, 8]) {
+            const [min, max] = range;
+            if (score >= max * 0.6) return "#00ff88"; // Strong Green
+            if (score > 0) return "#0088ff"; // Blue
+            if (score <= min * 0.6) return "#ff3344"; // Red
+            if (score < 0) return "#ff6600"; // Orange (actually make it red-ish/orange for bear)
+            return "#666666";
+        }
+
+        function getScoreCategory(score, range = [-8, 8]) {
+            const [min, max] = range;
+            if (score >= max * 0.6) return "strong-bull";
+            if (score > 0) return "bull";
+            if (score <= min * 0.6) return "strong-bear";
+            if (score < 0) return "bear";
+            return "neutral";
+        }
+
+        function applyFiltersAndSort() {
+            let data = [...assetsData];
+            const search = document.getElementById('search-input').value.toLowerCase();
+            if (search) data = data.filter(a => a.ticker.toLowerCase().includes(search) || a.sector.toLowerCase().includes(search));
+
+            if (currentFilter === 'bullish') data = data.filter(a => a.overallScore > 0);
+            else if (currentFilter === 'bearish') data = data.filter(a => a.overallScore < 0);
+            else if (currentFilter === 'divergence') data = data.filter(a => (a.stTrend > 0 && a.itTrend < 0) || (a.stTrend < 0 && a.itTrend > 0));
+            else if (currentFilter === 'meanrev') {
+                const targetValues = [-1.5, -1, -0.5, 0.5, 1, 1.5];
+                data = data.filter(a => targetValues.includes(parseFloat(a.meanReversion)));
+            }
+            else if (currentFilter === 'chop') data = data.filter(a => Math.abs(a.overallScore) <= 2 && Math.abs(a.stTrend) <= 1);
+
+            if (currentSort === 'score') {
+                data.sort((a, b) => Math.abs(b.overallScore) - Math.abs(a.overallScore));
+            } else if (currentSort === 'alpha') {
+                data.sort((a, b) => a.ticker.localeCompare(b.ticker));
+            } else if (currentSort === 'sector') {
+                data.sort((a, b) => a.sector.localeCompare(b.sector) || b.overallScore - a.overallScore);
+            }
+
+            filteredData = data;
+            document.getElementById('showing-count').textContent = `SHOWING ${data.length} ASSETS`;
+        }
+
+        function renderAll() {
+            applyFiltersAndSort();
+            updateMetrics();
+            drawConstellation();
+            drawRadarChart();
+            drawMomentumGrid();
+            drawMovers();
+            drawHistogram();
+            drawScatter();
+            drawSectorGrid();
+            drawSignalLists();
+        }
+
+        function updateMetrics() {
+            const total = assetsData.length;
+            const bullish = assetsData.filter(a => a.overallScore > 0).length;
+            const bearish = assetsData.filter(a => a.overallScore < 0).length;
+            const neutral = total - bullish - bearish;
+            const divergences = assetsData.filter(a => (a.stTrend > 0 && a.itTrend < 0) || (a.stTrend < 0 && a.itTrend > 0)).length;
+
+            const targetValues = [-1.5, -1, -0.5, 0.5, 1, 1.5];
+            const meanrev = assetsData.filter(a => targetValues.includes(parseFloat(a.meanReversion))).length;
+
+            animateNumber('total-assets', total);
+            animateNumber('bullish-count', bullish);
+            animateNumber('neutral-count', neutral);
+            animateNumber('bearish-count', bearish);
+            animateNumber('divergence-count', divergences);
+            animateNumber('meanrev-count', meanrev);
+
+            document.getElementById('bullish-pct').textContent = total ? `${Math.round(bullish / total * 100)}%` : '0%';
+            document.getElementById('neutral-pct').textContent = total ? `${Math.round(neutral / total * 100)}%` : '0%';
+            document.getElementById('bearish-pct').textContent = total ? `${Math.round(bearish / total * 100)}%` : '0%';
+
+            setTimeout(() => {
+                if (total) {
+                    document.getElementById('bullish-bar').style.width = `${bullish / total * 100}%`;
+                    document.getElementById('neutral-bar').style.width = `${neutral / total * 100}%`;
+                    document.getElementById('bearish-bar').style.width = `${bearish / total * 100}%`;
+                }
+            }, 100);
+        }
+
+        function animateNumber(id, target) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            el.textContent = target; // Simplify animation for now
+        }
+
+        // --- Charting ---
+        function drawConstellation() {
+            const svg = document.getElementById('constellation-chart');
+            const cx = 350, cy = 350, innerR = 50, outerR = 280;
+            const config = chartConfigs[currentConstellation];
+            const ordered = [];
+            sectors.forEach(s => filteredData.filter(a => a.sector === s).forEach(a => ordered.push(a)));
+
+            if (ordered.length === 0) {
+                svg.innerHTML = `<text x="${cx}" y="${cy}" text-anchor="middle" fill="#666" font-size="14">NO DATA</text>`;
+                return;
+            }
+
+            let html = `
+                <circle cx="${cx}" cy="${cy}" r="${outerR}" fill="none" stroke="${config.color}" stroke-width="1" stroke-opacity="0.2" stroke-dasharray="4 4"/>
+                <circle cx="${cx}" cy="${cy}" r="${innerR}" fill="none" stroke="#333" stroke-width="1"/>
+            `;
+
+            const points = ordered.map((a, i) => {
+                const ang = (2 * Math.PI * i / ordered.length) - Math.PI / 2;
+                let scoreToUse = a[config.key];
+                const rangeToUse = config.range;
+
+                const norm = Math.max(0.15, Math.min(0.95, (scoreToUse - rangeToUse[0]) / (rangeToUse[1] - rangeToUse[0])));
+                const r = innerR + (outerR - innerR) * norm;
+                return { x: cx + r * Math.cos(ang), y: cy + r * Math.sin(ang), ang, score: scoreToUse, ...a };
+            });
+
+            // Grid lines
+            points.forEach(p => {
+                const ex = cx + outerR * Math.cos(p.ang), ey = cy + outerR * Math.sin(p.ang);
+                const sx = cx + innerR * Math.cos(p.ang), sy = cy + innerR * Math.sin(p.ang);
+                html += `<line x1="${sx}" y1="${sy}" x2="${ex}" y2="${ey}" stroke="#333" stroke-width="1" opacity="0.3"/>`;
+            });
+
+            // Data Points
+            points.forEach((p, i) => {
+                const color = getScoreColor(p.score, config.range);
+                const opacity = 1;
+                const size = 5;
+
+                html += `
+                    <g style="cursor:pointer" onclick="openAssetDetail('${p.ticker}')"
+                       onmouseenter="showTooltip(event, '${p.ticker}', '${p.sector}', ${p.score}, '${p.stTrend}', '${p.itTrend}')"
+                       onmouseleave="hideTooltip()">
+                        <circle cx="${p.x}" cy="${p.y}" r="15" fill="transparent"/>
+                        <circle cx="${p.x}" cy="${p.y}" r="${size}" fill="${color}"/>
+                    </g>
+                `;
+
+                // Labels
+                if (ordered.length < 50 || i % 2 === 0) {
+                    const lx = cx + (outerR + 25) * Math.cos(p.ang), ly = cy + (outerR + 25) * Math.sin(p.ang);
+                    const deg = p.ang * 180 / Math.PI;
+                    const rot = (deg > -90 && deg < 90) ? deg : deg + 180;
+                    const anchor = (deg > -90 && deg < 90) ? "start" : "end";
+                    html += `<text x="${lx}" y="${ly}" transform="rotate(${rot},${lx},${ly})" text-anchor="${anchor}" font-size="10" fill="#666">${p.ticker}</text>`;
+                }
+            });
+            svg.innerHTML = html;
+        }
+
+        function drawRadarChart() {
+            const svg = document.getElementById('radar-chart');
+            const cx = 140, cy = 140, maxR = 100;
+            const sectorAvgs = sectors.map(s => {
+                const assets = assetsData.filter(a => a.sector === s);
+                return assets.length ? assets.reduce((sum, a) => sum + a.overallScore, 0) / assets.length : 0;
+            });
+            let html = '';
+            [0.33, 0.66, 1].forEach(r => {
+                html += `<circle cx="${cx}" cy="${cy}" r="${maxR * r}" fill="none" stroke="#333" stroke-width="1" stroke-dasharray="3 3"/>`;
+            });
+            const points = sectors.map((s, i) => {
+                const ang = (2 * Math.PI * i / 8) - Math.PI / 2;
+                const norm = Math.max(0.1, (sectorAvgs[i] + 8) / 16);
+                const r = maxR * norm;
+                return { x: cx + r * Math.cos(ang), y: cy + r * Math.sin(ang), sector: s, avg: sectorAvgs[i], ang };
+            });
+
+            // Connect lines
+            const path = points.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x},${p.y}`).join(' ') + 'Z';
+            html += `<path d="${path}" fill="#ff6600" fill-opacity="0.1" stroke="#ff6600" stroke-width="2"/>`;
+
+            points.forEach((p, i) => {
+                const lx = cx + (maxR + 15) * Math.cos(p.ang), ly = cy + (maxR + 15) * Math.sin(p.ang);
+                html += `<text x="${lx}" y="${ly}" text-anchor="middle" font-size="9" fill="#888" dy="3">${p.sector.slice(0, 4)}</text>`;
+
+                // Interactive zone for tooltip
+                html += `<circle cx="${p.x}" cy="${p.y}" r="6" fill="transparent" stroke="transparent" style="cursor:help"
+                        onmouseenter="showGenericTooltip(event, '${p.sector}', 'Avg Score: ${p.avg.toFixed(2)}')"
+                        onmouseleave="hideTooltip()" />`;
+            });
+            svg.innerHTML = html;
+        }
+
+        function drawMomentumGrid() {
+            const container = document.getElementById('momentum-grid');
+            const data = filteredData;
+            container.innerHTML = data.map((a, i) => {
+                const valNum = a.overallScore;
+                const color = valNum > 0 ? '#00ff88' : '#ff3344';
+                const displayVal = (valNum > 0 ? '+' : '') + valNum;
+                // Bar representation
+                const numBars = Math.min(5, Math.ceil(Math.abs(valNum) / 2));
+                const bars = Array(5).fill(0).map((_, j) => `
+                    <div class="w-1.5 h-3 bg-[#333]"><div class="w-full h-full" style="background:${j < numBars ? color : 'transparent'}"></div></div>
+                `).join('');
+
+                return `
+                    <div class="min-w-[160px] bg-[#1a1a1a] p-3 border border-[#333] hover:border-[#ff6600] cursor-pointer" onclick="openAssetDetail('${a.ticker}')">
+                        <div class="flex justify-between mb-2">
+                            <span class="font-bold text-[#fff]">${a.ticker}</span>
+                            <span class="font-mono text-xs" style="color:${color}">${displayVal}</span>
+                        </div>
+                        <div class="flex gap-1">${bars}</div>
+                        <div class="text-[9px] text-[#666] mt-2">${a.sector}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function drawMovers() {
+            const sorted = [...assetsData].sort((a, b) =>
+                currentMovers === 'bulls' ? b.overallScore - a.overallScore : a.overallScore - b.overallScore
+            ).slice(0, 5);
+            document.getElementById('movers-list').innerHTML = sorted.map((a, i) => {
+                const color = a.overallScore > 0 ? '#00ff88' : '#ff3344';
+                return `
+                    <div class="flex items-center justify-between p-2 hover:bg-[#1a1a1a] cursor-pointer border-b border-[#1a1a1a]" onclick="openAssetDetail('${a.ticker}')">
+                        <span class="text-[#666] w-4">${i + 1}</span>
+                        <span class="text-white font-bold w-12">${a.ticker}</span>
+                        <div class="flex-1 mx-2 h-1 bg-[#333]"><div class="h-full" style="width:${Math.min(100, Math.abs(a.overallScore) * 10)}%; background:${color}"></div></div>
+                        <span class="font-mono text-xs" style="color:${color}">${a.overallScore}</span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function drawHistogram() {
+            const svg = document.getElementById('histogram-chart');
+            const bins = Array(17).fill(0);
+            assetsData.forEach(a => {
+                const idx = Math.min(16, Math.max(0, Math.floor((a.overallScore + 8) / 1)));
+                bins[idx]++;
+            });
+            const max = Math.max(...bins);
+            let html = '';
+            bins.forEach((count, i) => {
+                const x = 30 + i * 27;
+                const h = (count / max) * 150;
+                const y = 170 - h;
+                const color = (i - 8) > 0 ? '#00ff88' : '#ff3344';
+                html += `<rect x="${x}" y="${y}" width="18" height="${h}" fill="${color}" fill-opacity="0.7"
+                         onmouseenter="showGenericTooltip(event, 'Score: ${i - 8}', '${count} Assets')"
+                         onmouseleave="hideTooltip()"/>`;
+            });
+            [-8, -4, 0, 4, 8].forEach(v => {
+                const x = 30 + (v + 8) * 27 + 9;
+                html += `<text x="${x}" y="190" text-anchor="middle" font-size="10" fill="#666">${v}</text>`;
+            });
+            svg.innerHTML = html;
+        }
+
+        function drawScatter() {
+            const svg = document.getElementById('scatter-chart');
+            const margin = { l: 40, r: 20, t: 10, b: 30 };
+            const w = 500 - margin.l - margin.r;
+            const h = 200 - margin.t - margin.b;
+            let html = '';
+
+            // Axes
+            html += `<line x1="${margin.l}" y1="${margin.t + h / 2}" x2="${margin.l + w}" y2="${margin.t + h / 2}" stroke="#333"/>`; // Horiz
+            html += `<line x1="${margin.l + w / 2}" y1="${margin.t}" x2="${margin.l + w / 2}" y2="${margin.t + h}" stroke="#333"/>`; // Vert
+
+            filteredData.forEach(a => {
+                const x = margin.l + ((a.stTrend + 4) / 8) * w;
+                const y = margin.t + ((4 - a.itTrend) / 8) * h;
+                html += `<circle cx="${x}" cy="${y}" r="4" fill="${sectorColors[a.sector]}" opacity="0.8" style="cursor:pointer"
+                        onmouseenter="showTooltip(event, '${a.ticker}', '${a.sector}', ${a.overallScore})"
+                        onmouseleave="hideTooltip()"
+                        onclick="openAssetDetail('${a.ticker}')"/>`;
+            });
+            svg.innerHTML = html;
+        }
+
+        function drawSectorGrid() {
+            const container = document.getElementById('sector-grid');
+            container.innerHTML = sectors.map(s => {
+                const assets = assetsData.filter(a => a.sector === s);
+                if (!assets.length) return '';
+                const avg = assets.reduce((sum, a) => sum + a.overallScore, 0) / assets.length;
+                const color = avg > 0 ? 'text-[#00ff88]' : 'text-[#ff3344]';
+                return `
+                    <div class="bg-[#1a1a1a] p-3 border border-[#333] cursor-pointer hover:border-[#ff6600]" onclick="filterBySector('${s}')">
+                        <div class="flex justify-between items-center">
+                            <span class="text-white font-bold">${s}</span>
+                            <span class="font-mono ${color} font-bold">${avg > 0 ? '+' : ''}${avg.toFixed(1)}</span>
+                        </div>
+                        <div class="text-xs text-[#666] mt-1">${assets.length} Assets</div>
+                    </div>
+                 `;
+            }).join('');
+        }
+
+        function drawSignalLists() {
+            // Divergences
+            const divs = assetsData.filter(a => (a.stTrend > 0 && a.itTrend < 0) || (a.stTrend < 0 && a.itTrend > 0)).slice(0, 10);
+            document.getElementById('divergence-list').innerHTML = divs.map(a => `
+                <div class="flex justify-between p-2 bg-[#1a1a1a] mb-1 cursor-pointer" onclick="openAssetDetail('${a.ticker}')">
+                    <span class="text-white font-bold">${a.ticker}</span>
+                    <span class="text-xs text-[#ff00ff]">ST: ${a.stTrend} | IT: ${a.itTrend}</span>
+                </div>
+            `).join('');
+
+            // Mean Rev
+            const targetValues = [-1.5, -1, -0.5, 0.5, 1, 1.5];
+            const mr = assetsData.filter(a => targetValues.includes(parseFloat(a.meanReversion))).slice(0, 10);
+            document.getElementById('meanrev-list').innerHTML = mr.map(a => `
+                 <div class="flex justify-between p-2 bg-[#1a1a1a] mb-1 cursor-pointer" onclick="openAssetDetail('${a.ticker}')">
+                    <span class="text-white font-bold">${a.ticker}</span>
+                    <span class="text-xs text-[#00ffff]">${a.meanReversion}</span>
+                </div>
+            `).join('');
+
+            // Chop
+            const chop = assetsData.filter(a => Math.abs(a.overallScore) <= 2 && Math.abs(a.stTrend) <= 1).slice(0, 10);
+            document.getElementById('chop-list').innerHTML = chop.map(a => `
+                 <div class="flex justify-between p-2 bg-[#1a1a1a] mb-1 cursor-pointer" onclick="openAssetDetail('${a.ticker}')">
+                    <span class="text-white font-bold">${a.ticker}</span>
+                    <span class="text-xs text-[#ffaa00]">Range Bound</span>
+                </div>
+            `).join('');
+        }
+    </script>
+</body>
+
+</html>

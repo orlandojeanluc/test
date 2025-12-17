@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caltropia | Momentum Factor Terminal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        mono: ['"JetBrains Mono"', '"IBM Plex Mono"', 'monospace'],
+                        sans: ['"JetBrains Mono"', 'monospace']
+                    },
+                    colors: {
+                        terminal: {
+                            bg: '#000000',
+                            panel: '#0a0a0a',
+                            border: '#1a1a1a',
+                            orange: '#ff6600',
+                            amber: '#ffaa00',
+                            green: '#00ff88',
+                            red: '#ff3344',
+                            blue: '#0088ff',
+                            muted: '#666666'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * {
+            font-family: 'JetBrains Mono', 'IBM Plex Mono', monospace;
+        }
+
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        .terminal-header {
+            background: linear-gradient(180deg, #1a1a1a 0%, #0a0a0a 100%);
+            border-bottom: 1px solid #ff6600;
+        }
+
+        .terminal-card {
+            background: #0a0a0a;
+            border: 1px solid #1a1a1a;
+            transition: all 0.15s ease;
+        }
+
+        .terminal-card:hover {
+            border-color: #ff6600;
+            box-shadow: 0 0 20px rgba(255, 102, 0, 0.1);
+        }
+
+        .data-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2px;
+            background: #1a1a1a;
+            padding: 2px;
+        }
+
+        .risk-bar {
+            height: 4px;
+            background: #1a1a1a;
+        }
+
+        @keyframes fillBar {
+            from {
+                width: 0;
+            }
+        }
+
+        .risk-fill {
+            height: 100%;
+            transition: width 0.3s ease;
+            animation: fillBar 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        .risk-lowest {
+            color: #00ff88;
+        }
+
+        .risk-low {
+            color: #88ff00;
+        }
+
+        .risk-medium {
+            color: #ffaa00;
+        }
+
+        .risk-high {
+            color: #ff6600;
+        }
+
+        .risk-highest {
+            color: #ff3344;
+        }
+
+        .badge {
+            font-size: 11px;
+            padding: 3px 8px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        .badge-lowest {
+            background: #00ff88;
+            color: #000;
+        }
+
+        .badge-low {
+            background: #88ff00;
+            color: #000;
+        }
+
+        .badge-medium {
+            background: #ffaa00;
+            color: #000;
+        }
+
+        .badge-high {
+            background: #ff6600;
+            color: #000;
+        }
+
+        .badge-highest {
+            background: #ff3344;
+            color: #000;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ff6600;
+        }
+
+        .blink {
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        input,
+        select {
+            background: #0a0a0a !important;
+            border: 1px solid #333 !important;
+            color: #fff !important;
+            font-family: 'JetBrains Mono', monospace !important;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #ff6600 !important;
+            outline: none !important;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen">
+
+    <!-- Mobile Menu Toggle -->
+    <button id="mobile-menu-btn" onclick="toggleMobileMenu()"
+        class="md:hidden fixed top-2 left-2 z-[60] w-8 h-8 bg-black border border-[#ff6600] text-[#ff6600] flex items-center justify-center">
+        <svg id="menu-icon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+        <svg id="close-icon" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+    </button>
+
+    <!-- Sidebar Navigation - Terminal Style -->
+    <nav id="sidebar"
+        class="fixed left-0 top-0 h-full w-12 bg-black border-r border-[#333] flex flex-col items-center py-4 z-50 transition-transform duration-300 -translate-x-full md:translate-x-0">
+        <div class="text-[#ff6600] font-bold text-xs mb-6">C</div>
+        <div class="flex-1 flex flex-col gap-1">
+            <a href="radial.html"
+                class="w-8 h-8 flex items-center justify-center text-[#666] hover:text-[#ff6600] hover:bg-[#1a1a1a] transition-all"
+                title="Dashboard">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                </svg>
+            </a>
+            <a href="momentum.html"
+                class="w-8 h-8 flex items-center justify-center text-[#666] hover:text-[#ff6600] hover:bg-[#1a1a1a] transition-all"
+                title="Momentum">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
+                </svg>
+            </a>
+            <a href="lowvol.html"
+                class="w-8 h-8 flex items-center justify-center text-[#666] hover:text-[#ff6600] hover:bg-[#1a1a1a] transition-all"
+                title="Risk Terminal">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10" />
+                </svg>
+            </a>
+            <a href="momentum_factor.html"
+                class="w-8 h-8 flex items-center justify-center text-[#ff6600] bg-[#1a1a1a] border-l-2 border-[#ff6600]"
+                title="Momentum Factor">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+            </a>
+            <a href="portfolios.html"
+                class="w-8 h-8 flex items-center justify-center text-[#666] hover:text-[#ff6600] hover:bg-[#1a1a1a] transition-all"
+                title="Portfolios">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
+                    </path>
+                </svg>
+            </a>
+        </div>
+    </nav>
+
+    <div id="mobile-overlay" onclick="toggleMobileMenu()" class="fixed inset-0 bg-black/80 z-40 hidden md:hidden"></div>
+
+    <div class="md:ml-12">
+        <!-- Terminal Header -->
+        <header class="terminal-header px-4 py-2 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <span class="text-[#ff6600] font-bold text-sm">CALTROPIA</span>
+                <span class="text-[#666]">|</span>
+                <span class="text-white text-xs">MOMENTUM FACTOR TERMINAL</span>
+                <span class="text-[#00ff88] text-xs blink">● LIVE</span>
+            </div>
+            <div class="flex items-center gap-4 text-xs">
+                <span class="text-[#666]">LAST UPDATE:</span>
+                <span id="last-updated" class="text-[#ffaa00]">--:--:--</span>
+                <button onclick="loadData()"
+                    class="px-2 py-1 bg-[#1a1a1a] border border-[#333] text-[#ff6600] hover:bg-[#ff6600] hover:text-black transition-all">
+                    REFRESH
+                </button>
+            </div>
+        </header>
+
+        <!-- Controls Bar -->
+        <div class="bg-[#0a0a0a] border-b border-[#1a1a1a] px-4 py-2 flex flex-wrap items-center gap-4">
+            <div class="flex items-center gap-2">
+                <span class="text-[#666] text-xs">SEARCH:</span>
+                <input type="text" id="search-input" class="px-2 py-1 text-xs w-32" placeholder="TICKER..."
+                    oninput="filterAssets()">
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="text-[#666] text-xs">SECTOR:</span>
+                <select id="sector-filter" class="px-2 py-1 text-xs" onchange="filterAssets()">
+                    <option value="all">ALL</option>
+                    <option value="Tech">TECH</option>
+                    <option value="Finance">FINANCE</option>
+                    <option value="Health">HEALTH</option>
+                    <option value="Energy">ENERGY</option>
+                    <option value="Consumer">CONSUMER</option>
+                    <option value="Industrial">INDUSTRIAL</option>
+                    <option value="Utilities">UTILITIES</option>
+                    <option value="Other">OTHER</option>
+                </select>
+            </div>
+            <div class="flex items-center gap-1">
+                <span class="text-[#666] text-xs">SORT:</span>
+                <button onclick="setSortBy('score')" class="sort-btn px-2 py-1 text-xs bg-[#ff6600] text-black"
+                    data-sort="score">LOW→HIGH</button>
+                <button onclick="setSortBy('score-desc')"
+                    class="sort-btn px-2 py-1 text-xs bg-[#1a1a1a] border border-[#333] text-[#666] hover:text-[#ff6600]"
+                    data-sort="score-desc">HIGH→LOW</button>
+                <button onclick="setSortBy('alpha')"
+                    class="sort-btn px-2 py-1 text-xs bg-[#1a1a1a] border border-[#333] text-[#666] hover:text-[#ff6600]"
+                    data-sort="alpha">A-Z</button>
+            </div>
+            <div class="ml-auto text-xs">
+                <span class="text-[#666]">ASSETS:</span>
+                <span id="asset-count" class="text-[#ffaa00]">0</span>
+            </div>
+        </div>
+
+        <!-- Data Grid -->
+        <div id="assets-grid" class="data-grid p-2">
+        </div>
+
+        <footer class="text-center text-[#333] text-xs py-4">
+            CALTROPIA MOMENTUM FACTOR TERMINAL v1.0 | DATA FROM FIREBASE
+        </footer>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBxG5qf6mb8E_-b2TeXlRNseMZ26L9DRYg",
+            authDomain: "trendscores-df341.firebaseapp.com",
+            projectId: "trendscores-df341",
+            databaseURL: "https://trendscores-df341-default-rtdb.firebaseio.com"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const auth = getAuth(app);
+
+        const tickerConfig = [
+            { ticker: "NVDA", sector: "Tech" }, { ticker: "MSFT", sector: "Tech" }, { ticker: "AAPL", sector: "Tech" }, { ticker: "AMZN", sector: "Tech" }, { ticker: "META", sector: "Tech" }, { ticker: "AVGO", sector: "Tech" }, { ticker: "GOOGL", sector: "Tech" }, { ticker: "TSLA", sector: "Tech" }, { ticker: "ORCL", sector: "Tech" }, { ticker: "PLTR", sector: "Tech" }, { ticker: "CSCO", sector: "Tech" }, { ticker: "AMD", sector: "Tech" }, { ticker: "CRM", sector: "Tech" }, { ticker: "IBM", sector: "Tech" }, { ticker: "NOW", sector: "Tech" }, { ticker: "QCOM", sector: "Tech" }, { ticker: "TXN", sector: "Tech" }, { ticker: "ADBE", sector: "Tech" }, { ticker: "ANET", sector: "Tech" }, { ticker: "MU", sector: "Tech" }, { ticker: "AMAT", sector: "Tech" }, { ticker: "LRCX", sector: "Tech" }, { ticker: "PANW", sector: "Tech" }, { ticker: "ADI", sector: "Tech" }, { ticker: "KLAC", sector: "Tech" }, { ticker: "SNPS", sector: "Tech" }, { ticker: "INTC", sector: "Tech" }, { ticker: "CRWD", sector: "Tech" }, { ticker: "CDNS", sector: "Tech" }, { ticker: "NXPI", sector: "Tech" }, { ticker: "GLW", sector: "Tech" },
+            { ticker: "JPM", sector: "Finance" }, { ticker: "V", sector: "Finance" }, { ticker: "MA", sector: "Finance" }, { ticker: "BAC", sector: "Finance" }, { ticker: "WFC", sector: "Finance" }, { ticker: "GS", sector: "Finance" }, { ticker: "MS", sector: "Finance" }, { ticker: "AXP", sector: "Finance" }, { ticker: "C", sector: "Finance" }, { ticker: "SPGI", sector: "Finance" }, { ticker: "SCHW", sector: "Finance" }, { ticker: "BLK", sector: "Finance" }, { ticker: "COF", sector: "Finance" }, { ticker: "PNC", sector: "Finance" }, { ticker: "USB", sector: "Finance" }, { ticker: "BK", sector: "Finance" }, { ticker: "FI", sector: "Finance" }, { ticker: "MCO", sector: "Finance" }, { ticker: "ICE", sector: "Finance" }, { ticker: "CME", sector: "Finance" }, { ticker: "KKR", sector: "Finance" }, { ticker: "MMC", sector: "Finance" }, { ticker: "AON", sector: "Finance" }, { ticker: "AJG", sector: "Finance" }, { ticker: "TFC", sector: "Finance" }, { ticker: "APO", sector: "Finance" }, { ticker: "TRV", sector: "Finance" }, { ticker: "ALL", sector: "Finance" }, { ticker: "AFL", sector: "Finance" }, { ticker: "BX", sector: "Finance" }, { ticker: "PYPL", sector: "Finance" }, { ticker: "COIN", sector: "Finance" },
+            { ticker: "LLY", sector: "Health" }, { ticker: "UNH", sector: "Health" }, { ticker: "JNJ", sector: "Health" }, { ticker: "ABBV", sector: "Health" }, { ticker: "MRK", sector: "Health" }, { ticker: "PFE", sector: "Health" }, { ticker: "TMO", sector: "Health" }, { ticker: "ABT", sector: "Health" }, { ticker: "AMGN", sector: "Health" }, { ticker: "GILD", sector: "Health" }, { ticker: "VRTX", sector: "Health" }, { ticker: "BMY", sector: "Health" }, { ticker: "CVS", sector: "Health" }, { ticker: "CI", sector: "Health" }, { ticker: "ELV", sector: "Health" }, { ticker: "SYK", sector: "Health" }, { ticker: "MDT", sector: "Health" }, { ticker: "DHR", sector: "Health" }, { ticker: "BSX", sector: "Health" }, { ticker: "ISRG", sector: "Health" }, { ticker: "ZTS", sector: "Health" }, { ticker: "REGN", sector: "Health" }, { ticker: "HCA", sector: "Health" }, { ticker: "MCK", sector: "Health" }, { ticker: "BDX", sector: "Health" },
+            { ticker: "XOM", sector: "Energy" }, { ticker: "CVX", sector: "Energy" }, { ticker: "COP", sector: "Energy" }, { ticker: "EOG", sector: "Energy" }, { ticker: "SLB", sector: "Energy" }, { ticker: "MPC", sector: "Energy" }, { ticker: "WMB", sector: "Energy" }, { ticker: "PSX", sector: "Energy" }, { ticker: "VST", sector: "Energy" }, { ticker: "CEG", sector: "Energy" },
+            { ticker: "WMT", sector: "Consumer" }, { ticker: "COST", sector: "Consumer" }, { ticker: "HD", sector: "Consumer" }, { ticker: "PG", sector: "Consumer" }, { ticker: "KO", sector: "Consumer" }, { ticker: "PEP", sector: "Consumer" }, { ticker: "MCD", sector: "Consumer" }, { ticker: "NKE", sector: "Consumer" }, { ticker: "SBUX", sector: "Consumer" }, { ticker: "TJX", sector: "Consumer" }, { ticker: "LOW", sector: "Consumer" }, { ticker: "ORLY", sector: "Consumer" }, { ticker: "AZO", sector: "Consumer" }, { ticker: "MDLZ", sector: "Consumer" }, { ticker: "CL", sector: "Consumer" }, { ticker: "CMG", sector: "Consumer" }, { ticker: "MAR", sector: "Consumer" }, { ticker: "HLT", sector: "Consumer" }, { ticker: "RCL", sector: "Consumer" }, { ticker: "ABNB", sector: "Consumer" }, { ticker: "DIS", sector: "Consumer" }, { ticker: "NFLX", sector: "Consumer" }, { ticker: "BKNG", sector: "Consumer" },
+            { ticker: "CAT", sector: "Industrial" }, { ticker: "DE", sector: "Industrial" }, { ticker: "UNP", sector: "Industrial" }, { ticker: "HON", sector: "Industrial" }, { ticker: "GE", sector: "Industrial" }, { ticker: "BA", sector: "Industrial" }, { ticker: "RTX", sector: "Industrial" }, { ticker: "LMT", sector: "Industrial" }, { ticker: "GD", sector: "Industrial" }, { ticker: "NOC", sector: "Industrial" }, { ticker: "MMM", sector: "Industrial" }, { ticker: "EMR", sector: "Industrial" }, { ticker: "ETN", sector: "Industrial" }, { ticker: "PH", sector: "Industrial" }, { ticker: "ITW", sector: "Industrial" }, { ticker: "CMI", sector: "Industrial" }, { ticker: "CSX", sector: "Industrial" }, { ticker: "NSC", sector: "Industrial" }, { ticker: "UPS", sector: "Industrial" }, { ticker: "FAST", sector: "Industrial" }, { ticker: "URI", sector: "Industrial" }, { ticker: "PWR", sector: "Industrial" }, { ticker: "CTAS", sector: "Industrial" }, { ticker: "TDG", sector: "Industrial" }, { ticker: "HWM", sector: "Industrial" }, { ticker: "AXON", sector: "Industrial" }, { ticker: "JCI", sector: "Industrial" }, { ticker: "TT", sector: "Industrial" }, { ticker: "MSI", sector: "Industrial" }, { ticker: "ROP", sector: "Industrial" },
+            { ticker: "NEE", sector: "Utilities" }, { ticker: "DUK", sector: "Utilities" }, { ticker: "SO", sector: "Utilities" }, { ticker: "AEP", sector: "Utilities" }, { ticker: "SRE", sector: "Utilities" }, { ticker: "PLD", sector: "Utilities" }, { ticker: "AMT", sector: "Utilities" }, { ticker: "EQIX", sector: "Utilities" }, { ticker: "WELL", sector: "Utilities" }, { ticker: "SPG", sector: "Utilities" }, { ticker: "O", sector: "Utilities" },
+            { ticker: "T", sector: "Other" }, { ticker: "VZ", sector: "Other" }, { ticker: "TMUS", sector: "Other" }, { ticker: "UBER", sector: "Other" }, { ticker: "DASH", sector: "Other" }, { ticker: "INTU", sector: "Other" }, { ticker: "ADSK", sector: "Other" }, { ticker: "ACN", sector: "Other" }, { ticker: "ADP", sector: "Other" }, { ticker: "APH", sector: "Other" }, { ticker: "TEL", sector: "Other" }, { ticker: "APD", sector: "Other" }, { ticker: "ECL", sector: "Other" }, { ticker: "SHW", sector: "Other" }, { ticker: "LIN", sector: "Other" }, { ticker: "FCX", sector: "Other" }, { ticker: "NEM", sector: "Other" }, { ticker: "CB", sector: "Other" }, { ticker: "PGR", sector: "Other" }, { ticker: "WM", sector: "Other" }, { ticker: "GM", sector: "Other" }, { ticker: "PM", sector: "Other" }, { ticker: "MO", sector: "Other" },
+        ];
+
+        let assetsData = [];
+        let currentSort = 'score';
+
+        onAuthStateChanged(auth, () => loadData());
+
+        window.loadData = async function () {
+            document.getElementById('last-updated').textContent = 'Syncing...';
+            const results = await Promise.all(tickerConfig.map(async config => {
+                try {
+                    const snapshot = await get(ref(db, "MomentumFactor/" + config.ticker));
+                    const data = snapshot.val();
+                    if (data !== null && data !== undefined) {
+                        let score = 0;
+                        if (typeof data === 'number') {
+                            score = data;
+                        } else if (typeof data === 'string') {
+                            score = parseFloat(data) || 0;
+                        } else if (typeof data === 'object') {
+                            score = parseFloat(data.EquityRisk || data.MomentumFactor || data.score) || 0;
+                        }
+
+                        return {
+                            ticker: config.ticker,
+                            sector: config.sector,
+                            score
+                        };
+                    }
+                } catch (e) { console.log('Error loading ' + config.ticker, e); }
+                return null;
+            }));
+            assetsData = results.filter(r => r);
+            document.getElementById('last-updated').textContent = new Date().toLocaleTimeString();
+            filterAssets();
+        };
+
+        window.filterAssets = function () {
+            const search = document.getElementById('search-input').value.toLowerCase();
+            const sector = document.getElementById('sector-filter').value;
+            let data = [...assetsData];
+
+            if (search) data = data.filter(a => a.ticker.toLowerCase().includes(search));
+            if (sector !== 'all') data = data.filter(a => a.sector === sector);
+
+            data.sort((a, b) => {
+                if (currentSort === 'score') return a.score - b.score;
+                if (currentSort === 'score-desc') return b.score - a.score;
+                return a.ticker.localeCompare(b.ticker);
+            });
+
+            renderGrid(data);
+        };
+
+        window.setSortBy = function (sort) {
+            currentSort = sort;
+            document.querySelectorAll('.sort-btn').forEach(btn => {
+                if (btn.dataset.sort === sort) {
+                    btn.classList.add('bg-[#ff6600]', 'text-black');
+                    btn.classList.remove('bg-[#1a1a1a]', 'text-[#666]', 'border', 'border-[#333]');
+                } else {
+                    btn.classList.remove('bg-[#ff6600]', 'text-black');
+                    btn.classList.add('bg-[#1a1a1a]', 'text-[#666]', 'border', 'border-[#333]');
+                }
+            });
+            filterAssets();
+        };
+
+        function getFactorLevel(score) {
+            if (score >= 4) return { class: 'risk-lowest', badge: 'badge-lowest', text: 'STRONG' };
+            if (score >= 2) return { class: 'risk-low', badge: 'badge-low', text: 'MODERATE' };
+            if (score >= 1) return { class: 'risk-medium', badge: 'badge-medium', text: 'WEAK' };
+            return { class: 'risk-highest', badge: 'badge-highest', text: 'POOR' };
+        }
+
+        function renderGrid(data) {
+            const container = document.getElementById('assets-grid');
+            document.getElementById('asset-count').textContent = data.length;
+
+            if (data.length === 0) {
+                container.innerHTML = '<div class="col-span-full text-center py-12 text-[#666]">NO DATA - LOADING FROM MOMENTUMFACTOR...</div>';
+                return;
+            }
+
+            container.innerHTML = data.map(a => {
+                const level = getFactorLevel(a.score);
+                // Color Logic synced with getFactorLevel:
+                // >= 4: Strong (Green #00ff88)
+                // >= 2: Moderate (Lime #88ff00)
+                // >= 1: Weak (Amber #ffaa00)
+                // < 1: Poor (Red #ff3344)
+                const scoreColor = a.score >= 4 ? '#00ff88' : a.score >= 2 ? '#88ff00' : a.score >= 1 ? '#ffaa00' : '#ff3344';
+                const barWidth = Math.min(100, a.score * 20);
+
+                return `
+                    <div class="terminal-card p-4">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center gap-2">
+                                <span class="text-[#ff6600] font-bold text-lg">${a.ticker}</span>
+                                <span class="text-[#444] text-xs">${a.sector.toUpperCase()}</span>
+                            </div>
+                            <span class="badge ${level.badge}">${level.text}</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-[#666] text-xs">MOMENTUM SCORE</span>
+                            <span class="text-3xl font-bold ${level.class}">${a.score.toFixed(1)}</span>
+                        </div>
+                        <div class="risk-bar mt-3">
+                            <div class="risk-fill" style="width:${barWidth}%; background:${scoreColor}"></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        window.toggleMobileMenu = function () {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('mobile-overlay');
+            const menuIcon = document.getElementById('menu-icon');
+            const closeIcon = document.getElementById('close-icon');
+            sidebar.classList.toggle('-translate-x-full');
+            sidebar.classList.toggle('translate-x-0');
+            overlay.classList.toggle('hidden');
+            menuIcon.classList.toggle('hidden');
+            closeIcon.classList.toggle('hidden');
+        };
+    </script>
+</body>
+
+</html>
