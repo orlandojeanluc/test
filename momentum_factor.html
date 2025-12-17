@@ -182,60 +182,58 @@
     </style>
 </head>
 
-<body class="min-h-screen">
-
-    <!-- Mobile Menu Toggle -->
-    <button id="mobile-menu-btn" onclick="toggleMobileMenu()"
-        class="md:hidden fixed top-2 left-2 z-[60] w-8 h-8 bg-black border border-[#ff6600] text-[#ff6600] flex items-center justify-center">
-        <svg id="menu-icon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-        </svg>
-        <svg id="close-icon" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-        </svg>
-    </button>
+<body class="min-h-screen w-screen overflow-x-hidden">
 
     <!-- Sidebar Navigation - Terminal Style -->
-    <nav id="sidebar"
-        class="fixed left-0 top-0 h-full w-12 bg-black border-r border-[#333] flex flex-col items-center py-4 z-50 transition-transform duration-300 -translate-x-full md:translate-x-0">
-        <div class="text-[#ff6600] font-bold text-xs mb-6">C</div>
-        <div class="flex-1 flex flex-col gap-1">
+    <!-- Navigation: Bottom on Mobile, Left on Desktop -->
+    <nav id="sidebar" class="fixed z-50 bg-black flex items-center
+                bottom-0 w-full h-14 border-t border-[#333] flex-row justify-around py-0
+                lg:left-0 lg:top-0 lg:h-full lg:w-12 lg:border-r lg:border-t-0 lg:flex-col lg:py-4">
+
+        <!-- Logo (Hidden on Mobile, Visible on Desktop) -->
+        <div class="hidden lg:block text-[#ff6600] font-bold text-xs mb-6">C</div>
+
+        <!-- Links Container -->
+        <div
+            class="flex-1 flex flex-row w-full justify-around items-center lg:flex-col lg:w-auto lg:justify-start lg:gap-4 lg:items-center">
             <a href="radial.html"
-                class="w-8 h-8 flex items-center justify-center text-[#666] hover:text-[#ff6600] hover:bg-[#1a1a1a] transition-all"
+                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#666] hover:text-[#ff6600] lg:hover:bg-[#1a1a1a]"
                 title="Dashboard">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                        d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z">
+                    </path>
                 </svg>
             </a>
             <a href="momentum.html"
-                class="w-8 h-8 flex items-center justify-center text-[#666] hover:text-[#ff6600] hover:bg-[#1a1a1a] transition-all"
+                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#666] hover:text-[#ff6600] lg:hover:bg-[#1a1a1a]"
                 title="Momentum">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
+                        d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path>
                 </svg>
             </a>
             <a href="lowvol.html"
-                class="w-8 h-8 flex items-center justify-center text-[#666] hover:text-[#ff6600] hover:bg-[#1a1a1a] transition-all"
+                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#666] hover:text-[#ff6600] lg:hover:bg-[#1a1a1a]"
                 title="Risk Terminal">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10" />
+                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10">
+                    </path>
                 </svg>
             </a>
             <a href="momentum_factor.html"
-                class="w-8 h-8 flex items-center justify-center text-[#ff6600] bg-[#1a1a1a] border-l-2 border-[#ff6600]"
+                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#ff6600] border-t-2 lg:border-t-0 lg:bg-[#1a1a1a] lg:border-l-2 border-[#ff6600]"
                 title="Momentum Factor">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                 </svg>
             </a>
             <a href="portfolios.html"
-                class="w-8 h-8 flex items-center justify-center text-[#666] hover:text-[#ff6600] hover:bg-[#1a1a1a] transition-all"
+                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#666] hover:text-[#ff6600] lg:hover:bg-[#1a1a1a]"
                 title="Portfolios">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
                     </path>
@@ -244,11 +242,11 @@
         </div>
     </nav>
 
-    <div id="mobile-overlay" onclick="toggleMobileMenu()" class="fixed inset-0 bg-black/80 z-40 hidden md:hidden"></div>
-
-    <div class="md:ml-12">
-        <!-- Terminal Header -->
-        <header class="terminal-header px-4 py-2 flex items-center justify-between">
+    <!-- Main Content Container -->
+    <div class="ml-0 lg:ml-12 pb-20 lg:pb-0 transition-all">
+        <!-- Header -->
+        <header
+            class="terminal-header px-4 py-2 flex flex-col lg:flex-row lg:items-center justify-between gap-2 lg:gap-0 sticky top-0 z-40">
             <div class="flex items-center gap-4">
                 <span class="text-[#ff6600] font-bold text-sm">CALTROPIA</span>
                 <span class="text-[#666]">|</span>
