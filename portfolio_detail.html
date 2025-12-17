@@ -276,7 +276,7 @@
                         <div class="space-y-4">
                             <div>
                                 <div class="flex justify-between text-xs mb-1">
-                                    <span class="text-[#aaa]">EQUITY (SPY)</span>
+                                    <span id="alloc-equity-label" class="text-[#aaa]">EQUITY (SPY)</span>
                                     <span id="alloc-equity-val" class="text-white font-mono">--%</span>
                                 </div>
                                 <div class="w-full h-1 bg-[#1a1a1a] overflow-hidden">
@@ -498,6 +498,8 @@
                 chartDataPath = 'equityReversionperf';
             } else if (decodedName === 'S&P Dip/Rip') {
                 chartDataPath = 'monthlyspyagg';
+            } else if (decodedName === 'Caltropia Bond Regime Model') {
+                chartDataPath = 'monthlybondregime';
             }
 
             if (chartDataPath) {
@@ -556,6 +558,12 @@
                     if (data) renderPositionsTable(data, decodedName);
                     else document.getElementById('positions-body').innerHTML = '<tr><td colspan="5" class="py-3 text-center text-[#ff3344]">NO POSITIONS DATA FOUND</td></tr>';
                 });
+            } else if (decodedName === 'Caltropia Bond Regime Model') {
+                onValue(ref(db, 'TLTDailyRebalance'), (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) renderPositionsTable(data, decodedName);
+                    else document.getElementById('positions-body').innerHTML = '<tr><td colspan="5" class="py-3 text-center text-[#ff3344]">NO POSITIONS DATA FOUND</td></tr>';
+                });
             } else {
                 document.getElementById('positions-body').innerHTML = '<tr><td colspan="5" class="py-3 text-center text-[#666]">NO POSITIONS DATA</td></tr>';
             }
@@ -602,6 +610,27 @@
                 onValue(ref(db, 'monthlyspyaggperf'), (snapshot) => {
                     const data = snapshot.val();
                     if (data) renderMonthlyReturnsTable(data);
+                    else document.getElementById('monthly-returns-body').innerHTML = '<tr><td colspan="14" class="py-4 text-center text-[#ff3344]">NO RETURNS DATA FOUND</td></tr>';
+                });
+            } else if (decodedName === 'Caltropia Bond Regime Model') {
+                // Ensure Allocation Chart is Visible
+                document.getElementById('allocation-chart-container').style.display = 'block';
+
+                // Historical Allocations
+                onValue(ref(db, 'BondRegimeHistAlloc'), (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) renderAllocationChart(data, decodedName);
+                });
+
+                // Monthly Returns
+                onValue(ref(db, 'monthlybondregime'), (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        // Bond Regime data is Cumulative Price/Index (e.g., 2000+).
+                        // We must calculate Monthly Returns from these prices.
+                        const returnsData = convertPricesToReturns(data);
+                        renderMonthlyReturnsTable(returnsData);
+                    }
                     else document.getElementById('monthly-returns-body').innerHTML = '<tr><td colspan="14" class="py-4 text-center text-[#ff3344]">NO RETURNS DATA FOUND</td></tr>';
                 });
             } else {
@@ -704,7 +733,42 @@
             return `<td class="py-3 ${colorClass} ${borderClass}">${pct}</td>`;
         }
 
-        function renderAllocationChart(data) {
+        function convertPricesToReturns(priceData) {
+            // Helper to calculate % Return from Cumulative Price Series
+            // Returns formatted object: { DateString: ReturnVal * 100 }
+            // Logic: Return = (Price_Current / Price_Prev) - 1
+            // We multiply by 100 because renderMonthlyReturnsTable divides by 100.
+
+            const entries = Object.entries(priceData).sort((a, b) => new Date(a[0]) - new Date(b[0]));
+            if (entries.length < 2) return {};
+
+            const returnsData = {};
+            let prevVal = null;
+
+            entries.forEach((entry, index) => {
+                const dateKey = entry[0];
+                let val = entry[1];
+
+                // Extract numeric value
+                if (Array.isArray(val)) val = val[0];
+                else if (typeof val === 'object' && val !== null) {
+                    val = val.Weight || val.value || val.Value || Object.values(val)[0];
+                }
+                if (typeof val === 'string') val = parseFloat(val);
+
+                if (prevVal !== null && prevVal !== 0) {
+                    const ret = (val / prevVal) - 1;
+                    // Scale to Percentage (e.g. 0.025 -> 2.5)
+                    returnsData[dateKey] = ret * 100;
+                }
+
+                prevVal = val;
+            });
+
+            return returnsData;
+        }
+
+        function renderAllocationChart(data, strategyName) {
             const ctx = document.getElementById('allocation-chart').getContext('2d');
 
             // Debug: Log the first entry to understand structure
@@ -722,6 +786,11 @@
             const labels = [];
             const equityData = [];
             const cashData = [];
+
+            let datasetLabel = 'EQUITY (SPY)';
+            if (strategyName === 'Caltropia Bond Regime Model') {
+                datasetLabel = 'FIXED INCOME (TLT)';
+            }
 
             sortedEntries.forEach(entry => {
                 const dateStr = entry[0];
@@ -765,7 +834,7 @@
                     labels: labels,
                     datasets: [
                         {
-                            label: 'EQUITY (SPY)',
+                            label: datasetLabel,
                             data: equityData,
                             borderColor: '#ff6600',
                             backgroundColor: 'rgba(255, 102, 0, 0.2)', // Slightly more opaque for visibility
@@ -1036,17 +1105,26 @@
             });
 
             // Update Allocation Panel (Dynamic)
-            updateAllocationPanel(data);
+            updateAllocationPanel(data, strategyName);
         }
 
-        function updateAllocationPanel(data) {
-            // Logic: Equity = SPY Weight. Cash = 100% - Equity.
+        function updateAllocationPanel(data, strategyName) {
+            // Logic: Equity = SPY Weight (or TLT for Bond Regime). Cash = 100% - Equity.
             let equityWeight = 0;
+            let targetTicker = 'SPY';
+            let labelText = 'EQUITY (SPY)';
 
-            // Find SPY (case insensitive)
-            const spyKey = Object.keys(data).find(k => k.toUpperCase() === 'SPY');
-            if (spyKey && data[spyKey].Weight) {
-                equityWeight = data[spyKey].Weight;
+            if (strategyName === 'Caltropia Bond Regime Model') {
+                targetTicker = 'TLT';
+                labelText = 'FIXED INCOME (TLT)';
+            }
+
+            // Find Ticker (case insensitive)
+            const key = Object.keys(data).find(k => k.toUpperCase() === targetTicker);
+            if (key && data[key]) {
+                // Handle object structure { Weight: ... } or simple value
+                if (data[key].Weight !== undefined) equityWeight = data[key].Weight;
+                else if (typeof data[key] === 'number') equityWeight = data[key];
             }
 
             // Cap at 1 (100%) logic or allow leverage? Assuming standard 100% total for this display.
@@ -1063,6 +1141,10 @@
             const equityBarEl = document.getElementById('alloc-equity-bar');
             const cashValEl = document.getElementById('alloc-cash-val');
             const cashBarEl = document.getElementById('alloc-cash-bar');
+
+            // Update Label
+            const labelEl = document.getElementById('alloc-equity-label');
+            if (labelEl) labelEl.textContent = labelText;
 
             if (equityValEl) {
                 equityValEl.textContent = equityPct;
