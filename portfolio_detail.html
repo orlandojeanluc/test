@@ -496,6 +496,8 @@
                 chartDataPath = 'monthlyspy';
             } else if (decodedName === 'Caltropia Mean Reversion Factor') {
                 chartDataPath = 'equityReversionperf';
+            } else if (decodedName === 'S&P Dip/Rip') {
+                chartDataPath = 'monthlyspyagg';
             }
 
             if (chartDataPath) {
@@ -548,6 +550,12 @@
                 const secChart = document.getElementById('sector-chart-container');
                 if (secChart) secChart.classList.remove('hidden');
 
+            } else if (decodedName === 'S&P Dip/Rip') {
+                onValue(ref(db, 'SPYDailyAggressive'), (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) renderPositionsTable(data, decodedName);
+                    else document.getElementById('positions-body').innerHTML = '<tr><td colspan="5" class="py-3 text-center text-[#ff3344]">NO POSITIONS DATA FOUND</td></tr>';
+                });
             } else {
                 document.getElementById('positions-body').innerHTML = '<tr><td colspan="5" class="py-3 text-center text-[#666]">NO POSITIONS DATA</td></tr>';
             }
@@ -576,6 +584,22 @@
 
                 // Monthly Returns specific to Mean Reversion
                 onValue(ref(db, 'monthlyequityReversionrtns'), (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) renderMonthlyReturnsTable(data);
+                    else document.getElementById('monthly-returns-body').innerHTML = '<tr><td colspan="14" class="py-4 text-center text-[#ff3344]">NO RETURNS DATA FOUND</td></tr>';
+                });
+            } else if (decodedName === 'S&P Dip/Rip') {
+                // Ensure Allocation Chart is Visible
+                document.getElementById('allocation-chart-container').style.display = 'block';
+
+                // Historical Allocations
+                onValue(ref(db, 'SpAggHistAlloc'), (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) renderAllocationChart(data);
+                });
+
+                // Monthly Returns
+                onValue(ref(db, 'monthlyspyaggperf'), (snapshot) => {
                     const data = snapshot.val();
                     if (data) renderMonthlyReturnsTable(data);
                     else document.getElementById('monthly-returns-body').innerHTML = '<tr><td colspan="14" class="py-4 text-center text-[#ff3344]">NO RETURNS DATA FOUND</td></tr>';
