@@ -19,15 +19,15 @@
                     },
                     colors: {
                         terminal: {
-                            bg: '#0d1117',
-                            panel: '#161b22',
-                            border: '#30363d',
-                            orange: '#c586c0',
-                            amber: '#dcdcaa',
-                            green: '#b5cea8',
-                            red: '#f48771',
-                            blue: '#9cdcfe',
-                            muted: '#8b949e'
+                            bg: '#15202B',
+                            panel: '#0a0a0a',
+                            border: '#1a1a1a',
+                            orange: '#ff6600',
+                            amber: '#ffaa00',
+                            green: '#00ff88',
+                            red: '#ff3344',
+                            blue: '#0088ff',
+                            muted: '#666666'
                         }
                     }
                 }
@@ -40,7 +40,7 @@
         }
 
         body {
-            background-color: #0d1117;
+            background-color: #15202B;
             color: #ffffff;
             font-size: 12px;
             line-height: 1.4;
@@ -48,21 +48,20 @@
         }
 
         .terminal-header {
-            background: #161b22;
-            border-bottom: 1px solid #30363d;
+            background: linear-gradient(180deg, #1a1a1a 0%, #0a0a0a 100%);
+            border-bottom: 1px solid #ff6600;
         }
 
         .terminal-card {
-            background: #161b22;
-            border: 1px solid #30363d;
+            background: #0a0a0a;
+            border: 1px solid #1a1a1a;
             transition: all 0.15s ease;
             position: relative;
-            border-radius: 8px;
         }
 
         .terminal-card:hover {
-            border-color: #c586c0;
-            box-shadow: 0 0 20px rgba(197, 134, 192, 0.1);
+            border-color: #ff6600;
+            box-shadow: 0 0 20px rgba(255, 102, 0, 0.1);
         }
 
         .bar-fill {
@@ -82,15 +81,14 @@
         }
 
         .sort-btn.active {
-            background-color: #c586c0;
+            background-color: #ff6600;
             color: black;
         }
 
         .filter-chip {
-            border: 1px solid #30363d;
-            color: #8b949e;
+            border: 1px solid #333;
+            color: #666;
             transition: all 0.2s;
-            border-radius: 6px;
         }
 
         .filter-chip:hover {
@@ -99,9 +97,9 @@
         }
 
         .filter-chip.active {
-            background: #252526;
-            border-color: #c586c0;
-            color: #c586c0;
+            background: #1a1a1a;
+            border-color: #ff6600;
+            color: #ff6600;
         }
 
         ::-webkit-scrollbar {
@@ -118,7 +116,7 @@
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: #c586c0;
+            background: #ff6600;
         }
 
         .blink {
@@ -135,13 +133,12 @@
             position: fixed;
             pointer-events: none;
             z-index: 10000;
-            background: rgba(22, 27, 34, 0.95);
-            border: 1px solid #30363d;
+            background: rgba(10, 10, 10, 0.95);
+            border: 1px solid #ff6600;
             padding: 12px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
             opacity: 0;
             transition: opacity 0.2s;
-            border-radius: 6px;
         }
 
         #tooltip.show {
@@ -156,8 +153,8 @@
             width: 100%;
             max-width: 500px;
             height: 100vh;
-            background: #161b22;
-            border-left: 1px solid #30363d;
+            background: #0a0a0a;
+            border-left: 1px solid #ff6600;
             z-index: 100;
             padding: 32px;
             transition: right 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -185,14 +182,13 @@
         }
 
         input {
-            background: #161b22 !important;
-            border: 1px solid #30363d !important;
+            background: #0a0a0a !important;
+            border: 1px solid #333 !important;
             color: #fff !important;
-            border-radius: 6px;
         }
 
         input:focus {
-            border-color: #c586c0 !important;
+            border-color: #ff6600 !important;
             outline: none !important;
         }
     </style>
@@ -202,18 +198,18 @@
 
     <!-- Sidebar Navigation -->
     <!-- Navigation: Bottom on Mobile, Left on Desktop -->
-    <nav id="sidebar" class="fixed z-50 bg-[#0d1117] flex items-center
-                bottom-0 w-full h-14 border-t border-[#30363d] flex-row justify-around py-0
+    <nav id="sidebar" class="fixed z-50 bg-black flex items-center
+                bottom-0 w-full h-14 border-t border-[#333] flex-row justify-around py-0
                 lg:left-0 lg:top-0 lg:h-full lg:w-12 lg:border-r lg:border-t-0 lg:flex-col lg:py-4">
 
         <!-- Logo (Hidden on Mobile, Visible on Desktop) -->
-        <div class="hidden lg:block text-[#c586c0] font-bold text-xs mb-6">C</div>
+        <div class="hidden lg:block text-[#ff6600] font-bold text-xs mb-6">C</div>
 
         <!-- Links Container -->
         <div
             class="flex-1 flex flex-row w-full justify-around items-center lg:flex-col lg:w-auto lg:justify-start lg:gap-4 lg:items-center">
             <a href="radial.html"
-                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#c586c0] lg:bg-[#161b22] border-t-2 lg:border-t-0 lg:border-l-2 border-[#c586c0]"
+                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#ff6600] lg:bg-[#1a1a1a] border-t-2 lg:border-t-0 lg:border-l-2 border-[#ff6600]"
                 title="Dashboard">
                 <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -222,7 +218,7 @@
                 </svg>
             </a>
             <a href="momentum.html"
-                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22]"
+                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#666] hover:text-[#ff6600] lg:hover:bg-[#1a1a1a]"
                 title="Momentum">
                 <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -230,7 +226,7 @@
                 </svg>
             </a>
             <a href="lowvol.html"
-                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22]"
+                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#666] hover:text-[#ff6600] lg:hover:bg-[#1a1a1a]"
                 title="Risk Terminal">
                 <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -239,7 +235,7 @@
                 </svg>
             </a>
             <a href="momentum_factor.html"
-                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22]"
+                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#666] hover:text-[#ff6600] lg:hover:bg-[#1a1a1a]"
                 title="Momentum Factor">
                 <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -247,7 +243,7 @@
                 </svg>
             </a>
             <a href="mean_reversion.html"
-                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22]"
+                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#666] hover:text-[#ff6600] lg:hover:bg-[#1a1a1a]"
                 title="Mean Reversion">
                 <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -256,7 +252,7 @@
                 </svg>
             </a>
             <a href="portfolios.html"
-                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22]"
+                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#666] hover:text-[#ff6600] lg:hover:bg-[#1a1a1a]"
                 title="Portfolios">
                 <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -271,8 +267,8 @@
     <div id="detail-overlay" onclick="closeDetailPanel()"></div>
     <div id="detail-panel">
         <div class="flex items-center justify-between mb-8 border-b border-[#333] pb-4">
-            <h2 id="detail-title" class="text-xl font-bold text-[#c586c0]">ASSET DETAILS</h2>
-            <button onclick="closeDetailPanel()" class="w-6 h-6 text-[#8b949e] hover:text-white">✕</button>
+            <h2 id="detail-title" class="text-xl font-bold text-[#ff6600]">ASSET DETAILS</h2>
+            <button onclick="closeDetailPanel()" class="w-6 h-6 text-[#666] hover:text-white">✕</button>
         </div>
         <div id="detail-content" class="space-y-6"></div>
     </div>
@@ -283,44 +279,44 @@
             class="terminal-header px-4 py-3 flex flex-col md:flex-row md:items-center justify-between gap-4 sticky top-0 z-40">
             <div class="flex items-center gap-2 md:gap-4 w-full md:w-auto justify-between md:justify-start">
                 <div class="flex items-center gap-2">
-                    <span class="text-[#c586c0] font-bold text-sm">CALTROPIA</span>
-                    <span class="text-[#8b949e]">|</span>
+                    <span class="text-[#ff6600] font-bold text-sm">CALTROPIA</span>
+                    <span class="text-[#666]">|</span>
                     <span class="text-white text-xs whitespace-nowrap">MARKET TERMINAL</span>
                 </div>
-                <span class="text-[#b5cea8] text-[10px] md:text-xs blink">● LIVE</span>
+                <span class="text-[#00ff88] text-[10px] md:text-xs blink">● LIVE</span>
             </div>
             <div class="flex flex-col md:flex-row items-start md:items-center gap-3 md:gap-4 text-xs w-full md:w-auto">
                 <div class="flex items-center gap-2 w-full md:w-auto">
-                    <span class="text-[#8b949e] whitespace-nowrap">SEARCH:</span>
+                    <span class="text-[#666] whitespace-nowrap">SEARCH:</span>
                     <div class="flex-1 md:flex-none flex items-center gap-2">
                         <input type="text" id="search-input"
-                            class="px-2 py-1 text-base md:text-xs w-full md:w-48 bg-[#161b22] border border-[#30363d] text-white focus:border-[#c586c0] outline-none"
+                            class="px-2 py-1 text-base md:text-xs w-full md:w-48 bg-[#1a1a1a] border border-[#333] text-white focus:border-[#ff6600] outline-none"
                             placeholder="TICKER..." oninput="handleSearch(this.value)">
                         <button onclick="refreshData()"
-                            class="px-2 py-1 bg-[#161b22] border border-[#30363d] text-[#c586c0] hover:bg-[#c586c0] hover:text-black transition-all">↻</button>
+                            class="px-2 py-1 bg-[#1a1a1a] border border-[#333] text-[#ff6600] hover:bg-[#ff6600] hover:text-black transition-all">↻</button>
                     </div>
                 </div>
                 <!-- Last Update: Hidden on very small screens or stacked -->
                 <div class="flex items-center gap-2 hidden lg:flex">
-                    <span class="text-[#8b949e]">UPDATED:</span>
-                    <span id="last-updated" class="text-[#dcdcaa]">--:--:--</span>
+                    <span class="text-[#666]">UPDATED:</span>
+                    <span id="last-updated" class="text-[#ffaa00]">--:--:--</span>
                 </div>
             </div>
         </header>
 
         <!-- Controls Bar: Horizontal Scroll on Mobile -->
         <div
-            class="bg-[#0d1117] border-b border-[#30363d] px-4 py-2 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 overflow-x-hidden">
+            class="bg-[#0a0a0a] border-b border-[#1a1a1a] px-4 py-2 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 overflow-x-hidden">
             <!-- Filter Group: Horizontal Scroll -->
             <div class="flex items-center gap-2 w-full md:w-auto overflow-x-auto pb-2 md:pb-0 no-scrollbar">
                 <span
-                    class="text-[#8b949e] text-xs font-bold uppercase whitespace-nowrap sticky left-0 bg-[#0d1117] z-10 pr-2">FILTERS:</span>
+                    class="text-[#666] text-xs font-bold uppercase whitespace-nowrap sticky left-0 bg-[#0a0a0a] z-10 pr-2">FILTERS:</span>
                 <button class="filter-chip active px-2 py-1 text-xs whitespace-nowrap" data-filter="all"
                     onclick="setFilter('all')">ALL</button>
                 <button class="filter-chip px-2 py-1 text-xs whitespace-nowrap" data-filter="bullish"
-                    onclick="setFilter('bullish')"><span class="text-[#b5cea8]">●</span> BULL</button>
+                    onclick="setFilter('bullish')"><span class="text-[#00ff88]">●</span> BULL</button>
                 <button class="filter-chip px-2 py-1 text-xs whitespace-nowrap" data-filter="bearish"
-                    onclick="setFilter('bearish')"><span class="text-[#f48771]">●</span> BEAR</button>
+                    onclick="setFilter('bearish')"><span class="text-[#ff3344]">●</span> BEAR</button>
                 <button class="filter-chip px-2 py-1 text-xs whitespace-nowrap" data-filter="divergence"
                     onclick="setFilter('divergence')">⚡ DIV</button>
                 <button class="filter-chip px-2 py-1 text-xs whitespace-nowrap" data-filter="meanrev"
@@ -334,15 +330,15 @@
             <!-- Sort Group -->
             <div class="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0">
                 <span
-                    class="text-[#8b949e] text-xs font-bold uppercase whitespace-nowrap sticky left-0 bg-[#0d1117] z-10 pr-2">SORT:</span>
+                    class="text-[#666] text-xs font-bold uppercase whitespace-nowrap sticky left-0 bg-[#0a0a0a] z-10 pr-2">SORT:</span>
                 <button
-                    class="sort-btn active px-2 py-1 text-xs bg-[#1a1a1a] border border-[#333] text-[#8b949e] whitespace-nowrap"
+                    class="sort-btn active px-2 py-1 text-xs bg-[#1a1a1a] border border-[#333] text-[#666] whitespace-nowrap"
                     data-sort="score" onclick="setSort('score')">SCORE</button>
                 <button
-                    class="sort-btn px-2 py-1 text-xs bg-[#1a1a1a] border border-[#333] text-[#8b949e] whitespace-nowrap"
+                    class="sort-btn px-2 py-1 text-xs bg-[#1a1a1a] border border-[#333] text-[#666] whitespace-nowrap"
                     data-sort="alpha" onclick="setSort('alpha')">NAME</button>
                 <button
-                    class="sort-btn px-2 py-1 text-xs bg-[#1a1a1a] border border-[#333] text-[#8b949e] whitespace-nowrap"
+                    class="sort-btn px-2 py-1 text-xs bg-[#1a1a1a] border border-[#333] text-[#666] whitespace-nowrap"
                     data-sort="sector" onclick="setSort('sector')">SECTOR</button>
             </div>
         </div>
@@ -351,47 +347,47 @@
             <!-- Metrics Grid -->
             <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2">
                 <div class="terminal-card p-3 cursor-pointer" onclick="showMetricDetail('total')">
-                    <div class="text-[#8b949e] text-[10px] font-bold uppercase mb-1">TOTAL ASSETS</div>
+                    <div class="text-[#666] text-[10px] font-bold uppercase mb-1">TOTAL ASSETS</div>
                     <div id="total-assets" class="text-2xl font-bold text-white count-up">--</div>
                 </div>
                 <div class="terminal-card p-3 cursor-pointer" onclick="showMetricDetail('bullish')">
-                    <div class="text-[#8b949e] text-[10px] font-bold uppercase mb-1 hover:text-[#b5cea8]">BULLISH TREND
+                    <div class="text-[#666] text-[10px] font-bold uppercase mb-1 hover:text-[#00ff88]">BULLISH TREND
                     </div>
                     <div class="flex items-baseline gap-2 mb-1">
-                        <span id="bullish-count" class="text-2xl font-bold text-[#b5cea8] count-up">--</span>
-                        <span id="bullish-pct" class="text-xs font-mono text-[#b5cea8]">--%</span>
+                        <span id="bullish-count" class="text-2xl font-bold text-[#00ff88] count-up">--</span>
+                        <span id="bullish-pct" class="text-xs font-mono text-[#00ff88]">--%</span>
                     </div>
                     <div class="w-full bg-[#1a1a1a] h-1">
-                        <div id="bullish-bar" class="h-full bg-[#b5cea8] bar-fill" style="width: 0%"></div>
+                        <div id="bullish-bar" class="h-full bg-[#00ff88] bar-fill" style="width: 0%"></div>
                     </div>
                 </div>
                 <div class="terminal-card p-3 cursor-pointer" onclick="showMetricDetail('neutral')">
-                    <div class="text-[#8b949e] text-[10px] font-bold uppercase mb-1 hover:text-[#dcdcaa]">NEUTRAL</div>
+                    <div class="text-[#666] text-[10px] font-bold uppercase mb-1 hover:text-[#ffaa00]">NEUTRAL</div>
                     <div class="flex items-baseline gap-2 mb-1">
-                        <span id="neutral-count" class="text-2xl font-bold text-[#dcdcaa] count-up">--</span>
-                        <span id="neutral-pct" class="text-xs font-mono text-[#dcdcaa]">--%</span>
+                        <span id="neutral-count" class="text-2xl font-bold text-[#ffaa00] count-up">--</span>
+                        <span id="neutral-pct" class="text-xs font-mono text-[#ffaa00]">--%</span>
                     </div>
                     <div class="w-full bg-[#1a1a1a] h-1">
-                        <div id="neutral-bar" class="h-full bg-[#dcdcaa] bar-fill" style="width: 0%"></div>
+                        <div id="neutral-bar" class="h-full bg-[#ffaa00] bar-fill" style="width: 0%"></div>
                     </div>
                 </div>
                 <div class="terminal-card p-3 cursor-pointer" onclick="showMetricDetail('bearish')">
-                    <div class="text-[#8b949e] text-[10px] font-bold uppercase mb-1 hover:text-[#f48771]">BEARISH TREND
+                    <div class="text-[#666] text-[10px] font-bold uppercase mb-1 hover:text-[#ff3344]">BEARISH TREND
                     </div>
                     <div class="flex items-baseline gap-2 mb-1">
-                        <span id="bearish-count" class="text-2xl font-bold text-[#f48771] count-up">--</span>
-                        <span id="bearish-pct" class="text-xs font-mono text-[#f48771]">--%</span>
+                        <span id="bearish-count" class="text-2xl font-bold text-[#ff3344] count-up">--</span>
+                        <span id="bearish-pct" class="text-xs font-mono text-[#ff3344]">--%</span>
                     </div>
                     <div class="w-full bg-[#1a1a1a] h-1">
-                        <div id="bearish-bar" class="h-full bg-[#f48771] bar-fill" style="width: 0%"></div>
+                        <div id="bearish-bar" class="h-full bg-[#ff3344] bar-fill" style="width: 0%"></div>
                     </div>
                 </div>
-                <div class="terminal-card p-3 cursor-pointer hover:border-[#bc8cff]" onclick="setFilter('divergence')">
-                    <div class="text-[#8b949e] text-[10px] font-bold uppercase mb-1">DIVERGENCES ⚡</div>
+                <div class="terminal-card p-3 cursor-pointer hover:border-[#ff00ff]" onclick="setFilter('divergence')">
+                    <div class="text-[#666] text-[10px] font-bold uppercase mb-1">DIVERGENCES ⚡</div>
                     <div id="divergence-count" class="text-2xl font-bold text-white count-up">--</div>
                 </div>
-                <div class="terminal-card p-3 cursor-pointer hover:border-[#39c5cf]" onclick="setFilter('meanrev')">
-                    <div class="text-[#8b949e] text-[10px] font-bold uppercase mb-1">MEAN REV 🔄</div>
+                <div class="terminal-card p-3 cursor-pointer hover:border-[#00ffff]" onclick="setFilter('meanrev')">
+                    <div class="text-[#666] text-[10px] font-bold uppercase mb-1">MEAN REV 🔄</div>
                     <div id="meanrev-count" class="text-2xl font-bold text-white count-up">--</div>
                 </div>
             </div>
@@ -403,22 +399,22 @@
                         class="flex flex-col md:flex-row items-start md:items-center justify-between mb-4 border-b border-[#333] pb-2 gap-2">
                         <div>
                             <h2 id="chart-title" class="text-lg font-bold text-white flex items-center gap-2">MARKET
-                                CONSTELLATION <span class="w-2 h-2 rounded-full bg-[#c586c0] animate-pulse"></span></h2>
-                            <p id="chart-subtitle" class="text-xs text-[#8b949e]">SPATIAL VISUALIZATION</p>
+                                CONSTELLATION <span class="w-2 h-2 rounded-full bg-[#ff6600] animate-pulse"></span></h2>
+                            <p id="chart-subtitle" class="text-xs text-[#666]">SPATIAL VISUALIZATION</p>
                         </div>
                         <div class="flex items-center gap-2 w-full md:w-auto">
                             <div class="flex gap-1 overflow-x-auto flex-1 md:flex-none">
                                 <button onclick="switchConstellation('overall')" id="const-overall"
-                                    class="const-tab px-3 py-1 text-[10px] font-bold bg-[#c586c0] text-black whitespace-nowrap flex-1 md:flex-none text-center">OVERALL</button>
+                                    class="const-tab px-3 py-1 text-[10px] font-bold bg-[#ff6600] text-black whitespace-nowrap flex-1 md:flex-none text-center">OVERALL</button>
                                 <button onclick="switchConstellation('st')" id="const-st"
-                                    class="const-tab px-3 py-1 text-[10px] font-bold bg-[#1a1a1a] text-[#8b949e] hover:text-white whitespace-nowrap flex-1 md:flex-none text-center">SHORT
+                                    class="const-tab px-3 py-1 text-[10px] font-bold bg-[#1a1a1a] text-[#666] hover:text-white whitespace-nowrap flex-1 md:flex-none text-center">SHORT
                                     TERM</button>
                                 <button onclick="switchConstellation('it')" id="const-it"
-                                    class="const-tab px-3 py-1 text-[10px] font-bold bg-[#1a1a1a] text-[#8b949e] hover:text-white whitespace-nowrap flex-1 md:flex-none text-center">INTERM
+                                    class="const-tab px-3 py-1 text-[10px] font-bold bg-[#1a1a1a] text-[#666] hover:text-white whitespace-nowrap flex-1 md:flex-none text-center">INTERM
                                     TERM</button>
                             </div>
                             <button onclick="toggleChartFullscreen()"
-                                class="p-1 text-[#8b949e] hover:text-[#c586c0] border border-[#333] bg-[#1a1a1a]"
+                                class="p-1 text-[#666] hover:text-[#ff6600] border border-[#333] bg-[#1a1a1a]"
                                 title="Maximize Chart">
                                 <svg id="expand-icon" class="w-4 h-4" fill="none" stroke="currentColor"
                                     viewBox="0 0 24 24">
@@ -497,8 +493,8 @@
                 <div class="xl:col-span-4 space-y-4">
                     <div class="terminal-card p-4">
                         <div class="flex justify-between items-center mb-4">
-                            <h3 class="text-sm font-bold text-[#dcdcaa]">SECTOR RADAR</h3>
-                            <div id="radar-info" class="text-[10px] font-mono text-[#8b949e]">HOVER SECTOR</div>
+                            <h3 class="text-sm font-bold text-[#ffaa00]">SECTOR RADAR</h3>
+                            <div id="radar-info" class="text-[10px] font-mono text-[#666]">HOVER SECTOR</div>
                         </div>
                         <div class="flex justify-center">
                             <svg id="radar-chart" width="280" height="280" viewBox="0 0 280 280"></svg>
@@ -507,12 +503,12 @@
 
                     <div class="terminal-card p-4 flex-1">
                         <div class="flex items-center justify-between mb-4">
-                            <h3 class="text-sm font-bold text-[#dcdcaa]">TOP MOVERS</h3>
+                            <h3 class="text-sm font-bold text-[#ffaa00]">TOP MOVERS</h3>
                             <div class="flex">
                                 <button onclick="switchMovers('bulls')" id="movers-bulls"
-                                    class="px-2 py-0.5 text-[10px] font-bold bg-[#1a1a1a] text-[#b5cea8] border border-[#333]">BULLS</button>
+                                    class="px-2 py-0.5 text-[10px] font-bold bg-[#1a1a1a] text-[#00ff88] border border-[#333]">BULLS</button>
                                 <button onclick="switchMovers('bears')" id="movers-bears"
-                                    class="px-2 py-0.5 text-[10px] font-bold bg-[#1a1a1a] text-[#8b949e] border border-[#333]">BEARS</button>
+                                    class="px-2 py-0.5 text-[10px] font-bold bg-[#1a1a1a] text-[#666] border border-[#333]">BEARS</button>
                             </div>
                         </div>
                         <div id="movers-list" class="space-y-2"></div>
@@ -524,7 +520,7 @@
             <div class="terminal-card p-4">
                 <div class="flex justify-between mb-4">
                     <h3 id="grid-title" class="text-sm font-bold text-white">MOMENTUM LEADERS</h3>
-                    <span id="showing-count" class="text-xs text-[#8b949e] font-mono">LOADING...</span>
+                    <span id="showing-count" class="text-xs text-[#666] font-mono">LOADING...</span>
                 </div>
                 <div id="momentum-grid" class="flex gap-2 overflow-x-auto pb-2"></div>
             </div>
@@ -595,11 +591,11 @@
 
         const sectors = ["Tech", "Finance", "Health", "Energy", "Consumer", "Industrial", "Utilities", "Other"];
         const sectorColors = {
-            Tech: "#818cf8", Finance: "#9cdcfe", Health: "#34d399", Energy: "#dcdcaa",
-            Consumer: "#f472b6", Industrial: "#a78bfa", Utilities: "#c586c0", Other: "#94a3b8"
+            Tech: "#818cf8", Finance: "#60a5fa", Health: "#34d399", Energy: "#fbbf24",
+            Consumer: "#f472b6", Industrial: "#a78bfa", Utilities: "#22d3ee", Other: "#94a3b8"
         };
         const chartConfigs = {
-            overall: { title: "Overall Score", color: "#c586c0", key: "overallScore", range: [-8, 8] },
+            overall: { title: "Overall Score", color: "#ff6600", key: "overallScore", range: [-8, 8] },
             st: { title: "Short Term Trend", color: "#3b82f6", key: "stTrend", range: [-4, 4] },
             it: { title: "Intermediate Trend", color: "#f59e0b", key: "itTrend", range: [-4, 4] }
         };
@@ -676,10 +672,10 @@
             currentConstellation = type;
             document.querySelectorAll('.const-tab').forEach(t => {
                 const isActive = t.id === `const-${type}`;
-                t.classList.toggle('bg-[#c586c0]', isActive);
+                t.classList.toggle('bg-[#ff6600]', isActive);
                 t.classList.toggle('text-black', isActive);
                 t.classList.toggle('bg-[#1a1a1a]', !isActive);
-                t.classList.toggle('text-[#8b949e]', !isActive);
+                t.classList.toggle('text-[#666]', !isActive);
             });
             drawConstellation();
         };
@@ -689,11 +685,11 @@
             const bulls = document.getElementById('movers-bulls');
             const bears = document.getElementById('movers-bears');
             if (type === 'bulls') {
-                bulls.classList.add('text-[#b5cea8]', 'border-[#333]'); bulls.classList.remove('text-[#8b949e]');
-                bears.classList.add('text-[#8b949e]'); bears.classList.remove('text-[#f48771]');
+                bulls.classList.add('text-[#00ff88]', 'border-[#333]'); bulls.classList.remove('text-[#666]');
+                bears.classList.add('text-[#666]'); bears.classList.remove('text-[#ff3344]');
             } else {
-                bears.classList.add('text-[#f48771]', 'border-[#333]'); bears.classList.remove('text-[#8b949e]');
-                bulls.classList.add('text-[#8b949e]'); bulls.classList.remove('text-[#b5cea8]');
+                bears.classList.add('text-[#ff3344]', 'border-[#333]'); bears.classList.remove('text-[#666]');
+                bulls.classList.add('text-[#666]'); bulls.classList.remove('text-[#00ff88]');
             }
             drawMovers();
         };
@@ -705,7 +701,7 @@
 
         window.showTooltip = function (e, ticker, sector, score) {
             const el = document.getElementById('tooltip');
-            el.innerHTML = `<div class="font-bold text-[#c586c0]">${ticker}</div><div class="text-xs text-white">${sector}</div><div class="text-xs mt-1">Score: ${score}</div>`;
+            el.innerHTML = `<div class="font-bold text-[#ff6600]">${ticker}</div><div class="text-xs text-white">${sector}</div><div class="text-xs mt-1">Score: ${score}</div>`;
             el.style.left = (e.clientX + 10) + 'px';
             el.style.top = (e.clientY + 10) + 'px';
             el.classList.add('show');
@@ -713,7 +709,7 @@
 
         window.showGenericTooltip = function (e, title, content) {
             const el = document.getElementById('tooltip');
-            el.innerHTML = `<div class="font-bold text-[#c586c0]">${title}</div><div class="text-xs text-white">${content}</div>`;
+            el.innerHTML = `<div class="font-bold text-[#ff6600]">${title}</div><div class="text-xs text-white">${content}</div>`;
             el.style.left = (e.clientX + 10) + 'px';
             el.style.top = (e.clientY + 10) + 'px';
             el.classList.add('show');
@@ -725,20 +721,20 @@
             const asset = assetsData.find(a => a.ticker === ticker);
             if (!asset) return;
             const el = document.getElementById('detail-content');
-            const color = asset.overallScore > 0 ? '#b5cea8' : '#f48771';
+            const color = asset.overallScore > 0 ? '#00ff88' : '#ff3344';
             el.innerHTML = `
                 <div class="text-4xl font-bold mb-4" style="color:${color}">${asset.overallScore}</div>
                 <div class="grid grid-cols-2 gap-4 text-sm">
                     <div class="terminal-card p-3">
-                        <div class="text-[#8b949e]">ST TREND</div>
+                        <div class="text-[#666]">ST TREND</div>
                         <div class="font-bold text-white">${asset.stTrend}</div>
                     </div>
                     <div class="terminal-card p-3">
-                        <div class="text-[#8b949e]">IT TREND</div>
+                        <div class="text-[#666]">IT TREND</div>
                         <div class="font-bold text-white">${asset.itTrend}</div>
                     </div>
                      <div class="terminal-card p-3">
-                        <div class="text-[#8b949e]">MEAN REV</div>
+                        <div class="text-[#666]">MEAN REV</div>
                         <div class="font-bold text-white">${asset.meanReversion}</div>
                     </div>
                 </div>
@@ -772,10 +768,10 @@
         // --- Styles & Helpers ---
         function getScoreColor(score, range = [-8, 8]) {
             const [min, max] = range;
-            if (score >= max * 0.6) return "#b5cea8"; // Strong Green
-            if (score > 0) return "#9cdcfe"; // Blue
-            if (score <= min * 0.6) return "#f48771"; // Red
-            if (score < 0) return "#c586c0"; // Orange (actually make it red-ish/orange for bear)
+            if (score >= max * 0.6) return "#00ff88"; // Strong Green
+            if (score > 0) return "#0088ff"; // Blue
+            if (score <= min * 0.6) return "#ff3344"; // Red
+            if (score < 0) return "#ff6600"; // Orange (actually make it red-ish/orange for bear)
             return "#666666";
         }
 
@@ -945,7 +941,7 @@
 
             // Connect lines
             const path = points.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x},${p.y}`).join(' ') + 'Z';
-            html += `<path d="${path}" fill="#c586c0" fill-opacity="0.1" stroke="#c586c0" stroke-width="2"/>`;
+            html += `<path d="${path}" fill="#ff6600" fill-opacity="0.1" stroke="#ff6600" stroke-width="2"/>`;
 
             points.forEach((p, i) => {
                 const lx = cx + (maxR + 15) * Math.cos(p.ang), ly = cy + (maxR + 15) * Math.sin(p.ang);
@@ -964,7 +960,7 @@
             const data = filteredData;
             container.innerHTML = data.map((a, i) => {
                 const valNum = a.overallScore;
-                const color = valNum > 0 ? '#b5cea8' : '#f48771';
+                const color = valNum > 0 ? '#00ff88' : '#ff3344';
                 const displayVal = (valNum > 0 ? '+' : '') + valNum;
                 // Bar representation
                 const numBars = Math.min(5, Math.ceil(Math.abs(valNum) / 2));
@@ -973,13 +969,13 @@
                 `).join('');
 
                 return `
-                    <div class="min-w-[160px] bg-[#1a1a1a] p-3 border border-[#333] hover:border-[#c586c0] cursor-pointer" onclick="openAssetDetail('${a.ticker}')">
+                    <div class="min-w-[160px] bg-[#1a1a1a] p-3 border border-[#333] hover:border-[#ff6600] cursor-pointer" onclick="openAssetDetail('${a.ticker}')">
                         <div class="flex justify-between mb-2">
                             <span class="font-bold text-[#fff]">${a.ticker}</span>
                             <span class="font-mono text-xs" style="color:${color}">${displayVal}</span>
                         </div>
                         <div class="flex gap-1">${bars}</div>
-                        <div class="text-[9px] text-[#8b949e] mt-2">${a.sector}</div>
+                        <div class="text-[9px] text-[#666] mt-2">${a.sector}</div>
                     </div>
                 `;
             }).join('');
@@ -990,10 +986,10 @@
                 currentMovers === 'bulls' ? b.overallScore - a.overallScore : a.overallScore - b.overallScore
             ).slice(0, 5);
             document.getElementById('movers-list').innerHTML = sorted.map((a, i) => {
-                const color = a.overallScore > 0 ? '#b5cea8' : '#f48771';
+                const color = a.overallScore > 0 ? '#00ff88' : '#ff3344';
                 return `
                     <div class="flex items-center justify-between p-2 hover:bg-[#1a1a1a] cursor-pointer border-b border-[#1a1a1a]" onclick="openAssetDetail('${a.ticker}')">
-                        <span class="text-[#8b949e] w-4">${i + 1}</span>
+                        <span class="text-[#666] w-4">${i + 1}</span>
                         <span class="text-white font-bold w-12">${a.ticker}</span>
                         <div class="flex-1 mx-2 h-1 bg-[#333]"><div class="h-full" style="width:${Math.min(100, Math.abs(a.overallScore) * 10)}%; background:${color}"></div></div>
                         <span class="font-mono text-xs" style="color:${color}">${a.overallScore}</span>
@@ -1015,7 +1011,7 @@
                 const x = 30 + i * 27;
                 const h = (count / max) * 150;
                 const y = 170 - h;
-                const color = (i - 8) > 0 ? '#b5cea8' : '#f48771';
+                const color = (i - 8) > 0 ? '#00ff88' : '#ff3344';
                 html += `<rect x="${x}" y="${y}" width="18" height="${h}" fill="${color}" fill-opacity="0.7"
                          onmouseenter="showGenericTooltip(event, 'Score: ${i - 8}', '${count} Assets')"
                          onmouseleave="hideTooltip()"/>`;
@@ -1055,14 +1051,14 @@
                 const assets = assetsData.filter(a => a.sector === s);
                 if (!assets.length) return '';
                 const avg = assets.reduce((sum, a) => sum + a.overallScore, 0) / assets.length;
-                const color = avg > 0 ? 'text-[#b5cea8]' : 'text-[#f48771]';
+                const color = avg > 0 ? 'text-[#00ff88]' : 'text-[#ff3344]';
                 return `
-                    <div class="bg-[#1a1a1a] p-3 border border-[#333] cursor-pointer hover:border-[#c586c0]" onclick="filterBySector('${s}')">
+                    <div class="bg-[#1a1a1a] p-3 border border-[#333] cursor-pointer hover:border-[#ff6600]" onclick="filterBySector('${s}')">
                         <div class="flex justify-between items-center">
                             <span class="text-white font-bold">${s}</span>
                             <span class="font-mono ${color} font-bold">${avg > 0 ? '+' : ''}${avg.toFixed(1)}</span>
                         </div>
-                        <div class="text-xs text-[#8b949e] mt-1">${assets.length} Assets</div>
+                        <div class="text-xs text-[#666] mt-1">${assets.length} Assets</div>
                     </div>
                  `;
             }).join('');
