@@ -539,15 +539,15 @@
 
             <!-- Detailed Lists -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div class="terminal-card p-4 border-t-2 border-t-[#ff00ff]">
+                <div class="terminal-card p-4">
                     <h3 class="font-bold text-white mb-4">DIVERGENCES ⚡</h3>
                     <div id="divergence-list" class="space-y-2 h-[300px] overflow-y-auto custom-scrollbar"></div>
                 </div>
-                <div class="terminal-card p-4 border-t-2 border-t-[#00ffff]">
+                <div class="terminal-card p-4">
                     <h3 class="font-bold text-white mb-4">MEAN REVERSION 🔄</h3>
                     <div id="meanrev-list" class="space-y-2 h-[300px] overflow-y-auto custom-scrollbar"></div>
                 </div>
-                <div class="terminal-card p-4 border-t-2 border-t-[#ffaa00]">
+                <div class="terminal-card p-4">
                     <h3 class="font-bold text-white mb-4">CHOP ZONE ⚠️</h3>
                     <div id="chop-list" class="space-y-2 h-[300px] overflow-y-auto custom-scrollbar"></div>
                 </div>
@@ -1066,11 +1066,16 @@
 
         function drawSignalLists() {
             // Divergences
-            const divs = assetsData.filter(a => (a.stTrend > 0 && a.itTrend < 0) || (a.stTrend < 0 && a.itTrend > 0)).slice(0, 10);
+            // Divergences: Only ST -4/IT 4 or ST 4/IT -4 as requested
+            const divs = assetsData.filter(a =>
+                (parseInt(a.stTrend) === -4 && parseInt(a.itTrend) === 4) ||
+                (parseInt(a.stTrend) === 4 && parseInt(a.itTrend) === -4)
+            ).slice(0, 10);
+
             document.getElementById('divergence-list').innerHTML = divs.map(a => `
                 <div class="flex justify-between p-2 bg-[#1a1a1a] mb-1 cursor-pointer" onclick="openAssetDetail('${a.ticker}')">
                     <span class="text-white font-bold">${a.ticker}</span>
-                    <span class="text-xs text-[#ff00ff]">ST: ${a.stTrend} | IT: ${a.itTrend}</span>
+                    <span class="text-xs text-white">ST: ${a.stTrend} | IT: ${a.itTrend}</span>
                 </div>
             `).join('');
 
@@ -1080,7 +1085,7 @@
             document.getElementById('meanrev-list').innerHTML = mr.map(a => `
                  <div class="flex justify-between p-2 bg-[#1a1a1a] mb-1 cursor-pointer" onclick="openAssetDetail('${a.ticker}')">
                     <span class="text-white font-bold">${a.ticker}</span>
-                    <span class="text-xs text-[#00ffff]">${a.meanReversion}</span>
+                    <span class="text-xs text-white">${a.meanReversion}</span>
                 </div>
             `).join('');
 
@@ -1089,7 +1094,7 @@
             document.getElementById('chop-list').innerHTML = chop.map(a => `
                  <div class="flex justify-between p-2 bg-[#1a1a1a] mb-1 cursor-pointer" onclick="openAssetDetail('${a.ticker}')">
                     <span class="text-white font-bold">${a.ticker}</span>
-                    <span class="text-xs text-[#ffaa00]">Range Bound</span>
+                    <span class="text-xs text-white">Range Bound</span>
                 </div>
             `).join('');
         }
