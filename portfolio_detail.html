@@ -302,7 +302,7 @@
             <div class="terminal-card p-4">
                 <h3 class="text-white font-bold text-sm mb-4 flex justify-between items-center">
                     <span>LATEST POSITIONS</span>
-                    <span class="text-[#666] text-xs font-normal">DISPLAYING TOP 5</span>
+                    <span id="positions-header-extra" class="text-[#666] text-xs font-normal">DISPLAYING TOP 5</span>
                 </h3>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse">
@@ -500,6 +500,8 @@
                 chartDataPath = 'monthlyspyagg';
             } else if (decodedName === 'Caltropia Bond Regime Model') {
                 chartDataPath = 'monthlybondregime';
+            } else if (decodedName === 'Caltropia Momentum Factor') {
+                chartDataPath = 'MomentumFactorReturns';
             }
 
             if (chartDataPath) {
@@ -564,6 +566,20 @@
                     if (data) renderPositionsTable(data, decodedName);
                     else document.getElementById('positions-body').innerHTML = '<tr><td colspan="5" class="py-3 text-center text-[#ff3344]">NO POSITIONS DATA FOUND</td></tr>';
                 });
+            } else if (decodedName === 'Caltropia Momentum Factor') {
+                onValue(ref(db, 'MomentumFactorHoldings'), (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        renderPositionsTable(data, decodedName);
+                        // Similar to Mean Reversion, render Sector Chart
+                        if (typeof renderSectorChart === 'function') {
+                            renderSectorChart(data);
+                        }
+                        const secChart = document.getElementById('sector-chart-container');
+                        if (secChart) secChart.classList.remove('hidden');
+                    }
+                    else document.getElementById('positions-body').innerHTML = '<tr><td colspan="5" class="py-3 text-center text-[#ff3344]">NO POSITIONS DATA FOUND</td></tr>';
+                });
             } else {
                 document.getElementById('positions-body').innerHTML = '<tr><td colspan="5" class="py-3 text-center text-[#666]">NO POSITIONS DATA</td></tr>';
             }
@@ -609,7 +625,7 @@
                 // Monthly Returns
                 onValue(ref(db, 'monthlyspyaggperf'), (snapshot) => {
                     const data = snapshot.val();
-                    if (data) renderMonthlyReturnsTable(data);
+                    if (data) renderMonthlyReturnsTable(data, decodedName);
                     else document.getElementById('monthly-returns-body').innerHTML = '<tr><td colspan="14" class="py-4 text-center text-[#ff3344]">NO RETURNS DATA FOUND</td></tr>';
                 });
             } else if (decodedName === 'Caltropia Bond Regime Model') {
@@ -629,8 +645,18 @@
                         // Bond Regime data is Cumulative Price/Index (e.g., 2000+).
                         // We must calculate Monthly Returns from these prices.
                         const returnsData = convertPricesToReturns(data);
-                        renderMonthlyReturnsTable(returnsData);
+                        renderMonthlyReturnsTable(returnsData, decodedName);
                     }
+                    else document.getElementById('monthly-returns-body').innerHTML = '<tr><td colspan="14" class="py-4 text-center text-[#ff3344]">NO RETURNS DATA FOUND</td></tr>';
+                });
+            } else if (decodedName === 'Caltropia Momentum Factor') {
+                // HIDE Historical Allocation Chart for this strategy
+                const allocContainer = document.getElementById('allocation-chart-container');
+                if (allocContainer) allocContainer.style.display = 'none';
+
+                onValue(ref(db, 'MomentumFactorMonthlyRtns'), (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) renderMonthlyReturnsTable(data, decodedName);
                     else document.getElementById('monthly-returns-body').innerHTML = '<tr><td colspan="14" class="py-4 text-center text-[#ff3344]">NO RETURNS DATA FOUND</td></tr>';
                 });
             } else {
@@ -639,7 +665,7 @@
             }
         });
 
-        function renderMonthlyReturnsTable(data) {
+        function renderMonthlyReturnsTable(data, strategyName) {
             const tbody = document.getElementById('monthly-returns-body');
             tbody.innerHTML = '';
 
@@ -671,11 +697,18 @@
                 }
                 if (typeof val === 'string') val = parseFloat(val);
 
-                // CORRECTION: User indicated values are 100x too high.
+                // CORRECTION: User indicated values are 100x too high for OTHER strategies.
                 // This means data is stored as percentages (e.g. 1.95 for 1.95%) NOT decimals (0.0195).
                 // Normalize to decimal for consistency.
                 if (!isNaN(val)) {
-                    val = val / 100;
+                    // For Momentum Factor, user says numbers are "100 times too small" if we divide.
+                    // This means Momentum Factor is ALREADY decimal (0.05). So SKIP division.
+                    if (strategyName === 'Caltropia Momentum Factor') {
+                        // Keep raw val (decimal)
+                    } else {
+                        // For others (S&P, Bond, etc), divide by 100 (Percentage Points -> Decimal)
+                        val = val / 100;
+                    }
                 }
 
                 if (!yearMap[y]) yearMap[y] = {};
@@ -1003,7 +1036,73 @@
             });
         }
 
+        let currentPositionsData = null;
+
+        // Expose to window for onclick access from module
+        window.downloadPositionsCsv = function () {
+            if (!currentPositionsData) {
+                console.error("No data available for CSV download");
+                return;
+            }
+
+            // Build CSV Content
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += "TICKER,NAME,WEIGHT,SECTOR\n"; // Header
+
+            Object.keys(currentPositionsData).forEach(tickerKey => {
+                let ticker = tickerKey.toUpperCase();
+                // Strip suffix for Momentum Factor if needed (logic is duplicated here to ensure CSV matches View)
+                // But view logic is complex. Ideally we reuse raw data + key transformation.
+                // For Momentum Factor, we already strip suffixes in View.
+                // Let's just use raw key for now or strip ' ETF' if simple.
+                ticker = ticker.replace(' ETF', '').replace(' US EQUITY', '');
+
+                const item = currentPositionsData[tickerKey];
+                let weight = 0;
+                if (typeof item === 'number') weight = item;
+                else if (item.Weight !== undefined) weight = item.Weight;
+                else if (Array.isArray(item) && item.length > 0) weight = item[0];
+                else if (typeof item === 'object') {
+                    weight = item.Weight || item.Value || item.weight || (item[0] !== undefined ? item[0] : 0);
+                }
+
+                // Force positive for Momentum
+                weight = Math.abs(weight);
+
+                // Skip 0 weights
+                if (weight < 0.0001) return;
+
+                // Sector Lookup using map
+                const sector = (typeof tickerSectorMap !== 'undefined' && tickerSectorMap[ticker]) ? tickerSectorMap[ticker] : 'Other';
+
+                // Name (Mock or Empty since we don't have a name map in raw data usually, only in view via static map or raw)
+                // View uses hardcoded logic or just Ticker. We'll leave Name empty or same as Ticker.
+                const name = ticker;
+
+                csvContent += `${ticker},${name},${weight.toFixed(2)}%,${sector}\n`;
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "momentum_positions.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
         function renderPositionsTable(data, strategyName) { // Added strategyName arg
+            currentPositionsData = data; // Store for CSV export
+
+            const headerExtra = document.getElementById('positions-header-extra');
+            if (headerExtra) {
+                if (strategyName === 'Caltropia Momentum Factor') {
+                    headerExtra.innerHTML = '<span class="cursor-pointer text-[#ff6600] hover:text-white" onclick="downloadPositionsCsv()">[DOWNLOAD CSV]</span>';
+                } else {
+                    headerExtra.innerText = 'DISPLAYING TOP 5';
+                }
+            }
+
             const tbody = document.getElementById('positions-body');
             tbody.innerHTML = ''; // Clear loading
 
@@ -1042,6 +1141,14 @@
                     console.warn(`Weight for AAPL parsed as 0. Raw Item:`, item);
                 }
 
+                // FORCE POSITIVE for Momentum Factor as per user "no negative positions"
+                if (strategyName === 'Caltropia Momentum Factor') {
+                    weight = Math.abs(weight);
+
+                    // FILTER: Hide 0.00% weights (effectively 0)
+                    if (Math.abs(weight) < 0.0001) return;
+                }
+
                 // FILTER: User requested to hide assets with 0.01% weight for Mean Reversion
                 // Since Mean Reversion uses raw weight as percentage (0.01 = 0.01%), we check against 0.01
                 if (strategyName === 'Caltropia Mean Reversion Factor' && Math.abs(weight - 0.01) < 0.0001) {
@@ -1066,7 +1173,7 @@
                 // implying raw data IS the percentage.
 
                 let weightPct;
-                if (strategyName === 'Caltropia Mean Reversion Factor') { // Use arg strategyName
+                if (strategyName === 'Caltropia Mean Reversion Factor' || strategyName === 'Caltropia Momentum Factor') { // Use arg strategyName
                     weightPct = (weight).toFixed(2) + '%';
                 } else {
                     weightPct = (weight * 100).toFixed(2) + '%'; // Standard
@@ -1085,7 +1192,7 @@
                 let fullName = nameMap[tickerKey.toUpperCase()];
 
                 if (!fullName) {
-                    if (strategyName === 'Caltropia Mean Reversion Factor') {
+                    if (strategyName === 'Caltropia Mean Reversion Factor' || strategyName === 'Caltropia Momentum Factor') {
                         fullName = tickerKey.toUpperCase(); // Stocks, just show ticker
                     } else {
                         fullName = tickerKey.toUpperCase() + ' ETF'; // Default Assumption for S&P Strat
@@ -1117,14 +1224,42 @@
             if (strategyName === 'Caltropia Bond Regime Model') {
                 targetTicker = 'TLT';
                 labelText = 'FIXED INCOME (TLT)';
+            } else if (strategyName === 'Caltropia Momentum Factor') {
+                labelText = 'EQUITY';
+                // For Momentum, sum ALL weights
+                let totalWeight = 0;
+                Object.values(data).forEach(item => {
+                    let w = 0;
+                    if (typeof item === 'number') w = item;
+                    else if (item.Weight !== undefined) w = item.Weight;
+                    else if (Array.isArray(item) && item.length > 0) w = item[0];
+                    else if (typeof item === 'object') {
+                        w = item.Weight || item.Value || item.weight || Object.values(item)[0] || 0;
+                    }
+                    totalWeight += Math.abs(parseFloat(w) || 0); // Force positive as per user rule
+                });
+
+                // Normalization: If Sum is > 2 (likely Percentage Points e.g. 99.5), divide by 100 to get Decimal
+                // The Panel expects Decimal for width calculation.
+                // If sum is ~1.0, it's already Decimal.
+                if (totalWeight > 2.0) {
+                    equityWeight = totalWeight / 100;
+                } else {
+                    equityWeight = totalWeight;
+                }
+
+                // Skip the standard ticker lookup
+                targetTicker = null;
             }
 
-            // Find Ticker (case insensitive)
-            const key = Object.keys(data).find(k => k.toUpperCase() === targetTicker);
-            if (key && data[key]) {
-                // Handle object structure { Weight: ... } or simple value
-                if (data[key].Weight !== undefined) equityWeight = data[key].Weight;
-                else if (typeof data[key] === 'number') equityWeight = data[key];
+            if (targetTicker) {
+                // Find Ticker (case insensitive)
+                const key = Object.keys(data).find(k => k.toUpperCase() === targetTicker);
+                if (key && data[key]) {
+                    // Handle object structure { Weight: ... } or simple value
+                    if (data[key].Weight !== undefined) equityWeight = data[key].Weight;
+                    else if (typeof data[key] === 'number') equityWeight = data[key];
+                }
             }
 
             // Cap at 1 (100%) logic or allow leverage? Assuming standard 100% total for this display.
@@ -1135,6 +1270,9 @@
 
             const equityPct = (equityWeight * 100).toFixed(1) + '%';
             const cashPct = (cashWeight * 100).toFixed(1) + '%';
+
+            // Check if user specifically requested NO (SPY) for certain strategies
+            // For Momentum, we set labelText = 'EQUITY' above.
 
             // Update DOM
             const equityValEl = document.getElementById('alloc-equity-val');
@@ -1303,8 +1441,13 @@
 
             // Add Benchmark if data exists
             if (benchmarkData.length > 0) {
+                let benchLabel = 'BENCHMARK (SPY)';
+                if (strategyName === 'Caltropia Momentum Factor') {
+                    benchLabel = 'BENCHMARK (MTUM)';
+                }
+
                 datasets.push({
-                    label: 'BENCHMARK (SPY)',
+                    label: benchLabel,
                     data: benchmarkData,
                     borderColor: '#666',
                     borderWidth: 2,
