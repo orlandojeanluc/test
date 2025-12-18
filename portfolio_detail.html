@@ -502,6 +502,8 @@
                 chartDataPath = 'monthlybondregime';
             } else if (decodedName === 'Caltropia Momentum Factor') {
                 chartDataPath = 'MomentumFactorReturns';
+            } else if (decodedName === 'Caltropia Low Vol Factor') {
+                chartDataPath = 'LowVolFactorReturns';
             }
 
             if (chartDataPath) {
@@ -572,6 +574,20 @@
                     if (data) {
                         renderPositionsTable(data, decodedName);
                         // Similar to Mean Reversion, render Sector Chart
+                        if (typeof renderSectorChart === 'function') {
+                            renderSectorChart(data);
+                        }
+                        const secChart = document.getElementById('sector-chart-container');
+                        if (secChart) secChart.classList.remove('hidden');
+                    }
+                    else document.getElementById('positions-body').innerHTML = '<tr><td colspan="5" class="py-3 text-center text-[#ff3344]">NO POSITIONS DATA FOUND</td></tr>';
+                });
+            } else if (decodedName === 'Caltropia Low Vol Factor') {
+                onValue(ref(db, 'LowVolFactorHoldings'), (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        renderPositionsTable(data, decodedName);
+                        // Render Sector Chart
                         if (typeof renderSectorChart === 'function') {
                             renderSectorChart(data);
                         }
@@ -659,6 +675,16 @@
                     if (data) renderMonthlyReturnsTable(data, decodedName);
                     else document.getElementById('monthly-returns-body').innerHTML = '<tr><td colspan="14" class="py-4 text-center text-[#ff3344]">NO RETURNS DATA FOUND</td></tr>';
                 });
+            } else if (decodedName === 'Caltropia Low Vol Factor') {
+                // HIDE Historical Allocation Chart
+                const allocContainer = document.getElementById('allocation-chart-container');
+                if (allocContainer) allocContainer.style.display = 'none';
+
+                onValue(ref(db, 'LowVolFactorMonthlyRtns'), (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) renderMonthlyReturnsTable(data, decodedName);
+                    else document.getElementById('monthly-returns-body').innerHTML = '<tr><td colspan="14" class="py-4 text-center text-[#ff3344]">NO RETURNS DATA FOUND</td></tr>';
+                });
             } else {
                 // Clean up / Placeholder for others
                 document.getElementById('monthly-returns-body').innerHTML = '<tr><td colspan="14" class="py-4 text-center text-[#666]">NO RETURNS DATA FOR THIS STRATEGY</td></tr>';
@@ -703,7 +729,7 @@
                 if (!isNaN(val)) {
                     // For Momentum Factor, user says numbers are "100 times too small" if we divide.
                     // This means Momentum Factor is ALREADY decimal (0.05). So SKIP division.
-                    if (strategyName === 'Caltropia Momentum Factor') {
+                    if (strategyName === 'Caltropia Momentum Factor' || strategyName === 'Caltropia Low Vol Factor') {
                         // Keep raw val (decimal)
                     } else {
                         // For others (S&P, Bond, etc), divide by 100 (Percentage Points -> Decimal)
@@ -1037,7 +1063,9 @@
         }
 
         let currentPositionsData = null;
+        let currentStrategyName = null;
 
+        // Expose to window for onclick access from module
         // Expose to window for onclick access from module
         window.downloadPositionsCsv = function () {
             if (!currentPositionsData) {
@@ -1051,10 +1079,7 @@
 
             Object.keys(currentPositionsData).forEach(tickerKey => {
                 let ticker = tickerKey.toUpperCase();
-                // Strip suffix for Momentum Factor if needed (logic is duplicated here to ensure CSV matches View)
-                // But view logic is complex. Ideally we reuse raw data + key transformation.
-                // For Momentum Factor, we already strip suffixes in View.
-                // Let's just use raw key for now or strip ' ETF' if simple.
+                // Strip suffix logic for various strategies
                 ticker = ticker.replace(' ETF', '').replace(' US EQUITY', '');
 
                 const item = currentPositionsData[tickerKey];
@@ -1066,17 +1091,29 @@
                     weight = item.Weight || item.Value || item.weight || (item[0] !== undefined ? item[0] : 0);
                 }
 
-                // Force positive for Momentum
-                weight = Math.abs(weight);
-
-                // Skip 0 weights
-                if (weight < 0.0001) return;
+                // Strategy Specific Filters & Transformations
+                if (currentStrategyName === 'Caltropia Momentum Factor') {
+                    // Force Positive
+                    weight = Math.abs(weight);
+                    // Filter < 0.0001
+                    if (weight < 0.0001) return;
+                } else if (currentStrategyName === 'Caltropia Mean Reversion Factor') {
+                    // Filter nearly 0.01 (dust logic from renderPositionsTable)
+                    if (Math.abs(weight - 0.01) < 0.0001) return;
+                } else if (currentStrategyName === 'Caltropia Low Vol Factor') {
+                    // Force Positive (Assuming Long Only)
+                    weight = Math.abs(weight);
+                    // Filter Dust
+                    if (weight < 0.0001) return;
+                } else {
+                    // Default generic filter
+                    if (Math.abs(weight) < 0.000001) return;
+                }
 
                 // Sector Lookup using map
                 const sector = (typeof tickerSectorMap !== 'undefined' && tickerSectorMap[ticker]) ? tickerSectorMap[ticker] : 'Other';
 
-                // Name (Mock or Empty since we don't have a name map in raw data usually, only in view via static map or raw)
-                // View uses hardcoded logic or just Ticker. We'll leave Name empty or same as Ticker.
+                // Name (using ticker as fallback)
                 const name = ticker;
 
                 csvContent += `${ticker},${name},${weight.toFixed(2)}%,${sector}\n`;
@@ -1085,7 +1122,14 @@
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
             link.setAttribute("href", encodedUri);
-            link.setAttribute("download", "momentum_positions.csv");
+
+            // Dynamic Filename
+            let filename = "positions.csv";
+            if (currentStrategyName === 'Caltropia Momentum Factor') filename = "momentum_positions.csv";
+            else if (currentStrategyName === 'Caltropia Mean Reversion Factor') filename = "mean_reversion_positions.csv";
+            else if (currentStrategyName === 'Caltropia Low Vol Factor') filename = "low_vol_positions.csv";
+
+            link.setAttribute("download", filename);
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -1093,10 +1137,11 @@
 
         function renderPositionsTable(data, strategyName) { // Added strategyName arg
             currentPositionsData = data; // Store for CSV export
+            currentStrategyName = strategyName;
 
             const headerExtra = document.getElementById('positions-header-extra');
             if (headerExtra) {
-                if (strategyName === 'Caltropia Momentum Factor') {
+                if (strategyName === 'Caltropia Momentum Factor' || strategyName === 'Caltropia Mean Reversion Factor' || strategyName === 'Caltropia Low Vol Factor') {
                     headerExtra.innerHTML = '<span class="cursor-pointer text-[#ff6600] hover:text-white" onclick="downloadPositionsCsv()">[DOWNLOAD CSV]</span>';
                 } else {
                     headerExtra.innerText = 'DISPLAYING TOP 5';
@@ -1173,7 +1218,7 @@
                 // implying raw data IS the percentage.
 
                 let weightPct;
-                if (strategyName === 'Caltropia Mean Reversion Factor' || strategyName === 'Caltropia Momentum Factor') { // Use arg strategyName
+                if (strategyName === 'Caltropia Mean Reversion Factor' || strategyName === 'Caltropia Momentum Factor' || strategyName === 'Caltropia Low Vol Factor') { // Use arg strategyName
                     weightPct = (weight).toFixed(2) + '%';
                 } else {
                     weightPct = (weight * 100).toFixed(2) + '%'; // Standard
@@ -1224,7 +1269,7 @@
             if (strategyName === 'Caltropia Bond Regime Model') {
                 targetTicker = 'TLT';
                 labelText = 'FIXED INCOME (TLT)';
-            } else if (strategyName === 'Caltropia Momentum Factor') {
+            } else if (strategyName === 'Caltropia Momentum Factor' || strategyName === 'Caltropia Low Vol Factor') {
                 labelText = 'EQUITY';
                 // For Momentum, sum ALL weights
                 let totalWeight = 0;
