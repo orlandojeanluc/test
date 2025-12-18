@@ -7,7 +7,7 @@
     <title>Caltropia | Equity Risk Terminal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link
-        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
         rel="stylesheet">
     <script>
         tailwind.config = {
@@ -15,19 +15,19 @@
                 extend: {
                     fontFamily: {
                         mono: ['"JetBrains Mono"', '"IBM Plex Mono"', 'monospace'],
-                        sans: ['"JetBrains Mono"', 'monospace']
+                        sans: ['"Inter"', 'sans-serif']
                     },
                     colors: {
                         terminal: {
-                            bg: '#000000',
-                            panel: '#0a0a0a',
-                            border: '#1a1a1a',
-                            orange: '#ff6600',
-                            amber: '#ffaa00',
-                            green: '#00ff88',
-                            red: '#ff3344',
-                            blue: '#0088ff',
-                            muted: '#666666'
+                            bg: '#0d1117',
+                            panel: '#11151b',
+                            border: '#21262d',
+                            orange: '#c586c0',
+                            amber: '#dcdcaa',
+                            green: '#b5cea8',
+                            red: '#f48771',
+                            blue: '#9cdcfe',
+                            muted: '#8b949e'
                         }
                     }
                 }
@@ -36,43 +36,47 @@
     </script>
     <style>
         * {
-            font-family: 'JetBrains Mono', 'IBM Plex Mono', monospace;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
         }
 
         body {
-            background-color: #000000;
-            color: #ffffff;
+            background-color: #0d1117;
+            color: #c9d1d9;
             font-size: 12px;
             line-height: 1.4;
         }
 
         .terminal-header {
-            background: linear-gradient(180deg, #1a1a1a 0%, #0a0a0a 100%);
-            border-bottom: 1px solid #ff6600;
+            background: #11151b;
+            border-bottom: 1px solid #21262d;
         }
 
         .terminal-card {
-            background: #0a0a0a;
-            border: 1px solid #1a1a1a;
+            background: #11151b;
+            border: 1px solid #21262d;
             transition: all 0.15s ease;
+            border-radius: 0.5rem;
         }
 
         .terminal-card:hover {
-            border-color: #ff6600;
-            box-shadow: 0 0 20px rgba(255, 102, 0, 0.1);
+            border-color: #c586c0;
+            box-shadow: 0 0 20px rgba(197, 134, 192, 0.1);
         }
 
         .data-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 2px;
-            background: #1a1a1a;
-            padding: 2px;
+            gap: 12px;
+            padding: 12px;
         }
 
         .risk-bar {
             height: 4px;
-            background: #1a1a1a;
+            background: #21262d;
         }
 
         .risk-fill {
@@ -80,24 +84,28 @@
             transition: width 0.3s ease;
         }
 
+        /* Risk Colors Mapped to Syntax Theme */
         .risk-lowest {
-            color: #00ff88;
+            color: #b5cea8;
         }
 
+        /* Green */
         .risk-low {
-            color: #88ff00;
+            color: #b5cea8;
         }
 
         .risk-medium {
-            color: #ffaa00;
+            color: #dcdcaa;
         }
 
+        /* Yellow */
         .risk-high {
-            color: #ff6600;
+            color: #f48771;
         }
 
+        /* Red */
         .risk-highest {
-            color: #ff3344;
+            color: #f48771;
         }
 
         .badge {
@@ -106,30 +114,32 @@
             letter-spacing: 0.5px;
             text-transform: uppercase;
             font-weight: 700;
+            border-radius: 4px;
         }
 
+        /* Badges Mapped to Syntax Theme */
         .badge-lowest {
-            background: #00ff88;
+            background: #b5cea8;
             color: #000;
         }
 
         .badge-low {
-            background: #88ff00;
+            background: #b5cea8;
             color: #000;
         }
 
         .badge-medium {
-            background: #ffaa00;
+            background: #dcdcaa;
             color: #000;
         }
 
         .badge-high {
-            background: #ff6600;
+            background: #f48771;
             color: #000;
         }
 
         .badge-highest {
-            background: #ff3344;
+            background: #f48771;
             color: #000;
         }
 
@@ -138,15 +148,16 @@
         }
 
         ::-webkit-scrollbar-track {
-            background: #0a0a0a;
+            background: #0d1117;
         }
 
         ::-webkit-scrollbar-thumb {
-            background: #333;
+            background: #21262d;
+            border-radius: 4px;
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: #ff6600;
+            background: #c586c0;
         }
 
         .blink {
@@ -161,15 +172,16 @@
 
         input,
         select {
-            background: #0a0a0a !important;
-            border: 1px solid #333 !important;
+            background: #11151b !important;
+            border: 1px solid #21262d !important;
             color: #fff !important;
-            font-family: 'JetBrains Mono', monospace !important;
+            font-family: 'Inter', sans-serif !important;
+            border-radius: 0.375rem;
         }
 
         input:focus,
         select:focus {
-            border-color: #ff6600 !important;
+            border-color: #c586c0 !important;
             outline: none !important;
         }
     </style>
@@ -180,17 +192,17 @@
     <!-- Sidebar Navigation - Terminal Style -->
     <!-- Navigation: Bottom on Mobile, Left on Desktop -->
     <nav id="sidebar" class="fixed z-50 bg-black flex items-center
-                bottom-0 w-full h-14 border-t border-[#333] flex-row justify-around py-0
+                bottom-0 w-full h-14 border-t border-[#21262d] flex-row justify-around py-0
                 lg:left-0 lg:top-0 lg:h-full lg:w-12 lg:border-r lg:border-t-0 lg:flex-col lg:py-4">
 
         <!-- Logo (Hidden on Mobile, Visible on Desktop) -->
-        <div class="hidden lg:block text-[#ff6600] font-bold text-xs mb-6">C</div>
+        <div class="hidden lg:block text-[#c586c0] font-bold text-xs mb-6">C</div>
 
         <!-- Links Container -->
         <div
             class="flex-1 flex flex-row w-full justify-around items-center lg:flex-col lg:w-auto lg:justify-start lg:gap-4 lg:items-center">
             <a href="radial.html"
-                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#666] hover:text-[#ff6600] lg:hover:bg-[#1a1a1a]"
+                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#21262d]"
                 title="Dashboard">
                 <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -199,7 +211,7 @@
                 </svg>
             </a>
             <a href="momentum.html"
-                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#666] hover:text-[#ff6600] lg:hover:bg-[#1a1a1a]"
+                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#21262d]"
                 title="Momentum">
                 <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -207,7 +219,7 @@
                 </svg>
             </a>
             <a href="lowvol.html"
-                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#ff6600] border-t-2 lg:border-t-0 lg:bg-[#1a1a1a] lg:border-l-2 border-[#ff6600]"
+                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#c586c0] border-t-2 lg:border-t-0 lg:bg-[#21262d] lg:border-l-2 border-[#c586c0]"
                 title="Risk Terminal">
                 <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -216,7 +228,7 @@
                 </svg>
             </a>
             <a href="momentum_factor.html"
-                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#666] hover:text-[#ff6600] lg:hover:bg-[#1a1a1a]"
+                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#21262d]"
                 title="Momentum Factor">
                 <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -224,7 +236,7 @@
                 </svg>
             </a>
             <a href="mean_reversion.html"
-                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#666] hover:text-[#ff6600] lg:hover:bg-[#1a1a1a]"
+                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#21262d]"
                 title="Mean Reversion">
                 <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -233,7 +245,7 @@
                 </svg>
             </a>
             <a href="portfolios.html"
-                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#666] hover:text-[#ff6600] lg:hover:bg-[#1a1a1a]"
+                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#21262d]"
                 title="Portfolios">
                 <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -250,33 +262,33 @@
         <header
             class="terminal-header px-4 py-2 flex flex-col lg:flex-row lg:items-center justify-between gap-2 lg:gap-0 sticky top-0 z-40">
             <div class="flex items-center gap-4">
-                <span class="text-[#ff6600] font-bold text-sm">CALTROPIA</span>
-                <span class="text-[#666]">|</span>
+                <span class="text-[#c586c0] font-bold text-sm">CALTROPIA</span>
+                <span class="text-[#8b949e]">|</span>
                 <span class="text-white text-xs">EQUITY RISK TERMINAL</span>
-                <span class="text-[#00ff88] text-xs blink">● LIVE</span>
+                <span class="text-[#b5cea8] text-xs blink">● LIVE</span>
             </div>
             <div class="flex items-center gap-4 text-xs">
-                <span class="text-[#666]">LAST UPDATE:</span>
-                <span id="last-updated" class="text-[#ffaa00]">--:--:--</span>
+                <span class="text-[#8b949e]">LAST UPDATE:</span>
+                <span id="last-updated" class="text-[#dcdcaa]">--:--:--</span>
                 <button onclick="loadData()"
-                    class="px-2 py-1 bg-[#1a1a1a] border border-[#333] text-[#ff6600] hover:bg-[#ff6600] hover:text-black transition-all">
+                    class="px-2 py-1 bg-[#21262d] border border-[#21262d] text-[#c586c0] hover:bg-[#c586c0] hover:text-black transition-all">
                     REFRESH
                 </button>
             </div>
         </header>
 
         <!-- Controls Bar -->
-        <div class="bg-[#0a0a0a] border-b border-[#1a1a1a] px-4 py-2 flex flex-wrap items-center gap-4">
+        <div class="bg-[#11151b] border-b border-[#21262d] px-4 py-2 flex flex-wrap items-center gap-4">
             <div class="flex items-center gap-2">
-                <span class="text-[#666] text-xs">SEARCH:</span>
+                <span class="text-[#8b949e] text-xs">SEARCH:</span>
                 <input type="text" id="search-input"
-                    class="px-2 py-1 text-base md:text-xs w-32 bg-[#1a1a1a] border border-[#333] text-white focus:border-[#ff6600] outline-none"
+                    class="px-2 py-1 text-base md:text-xs w-32 bg-[#21262d] border border-[#21262d] text-white focus:border-[#c586c0] outline-none"
                     placeholder="TICKER..." oninput="filterAssets()">
             </div>
             <div class="flex items-center gap-2">
-                <span class="text-[#666] text-xs">SECTOR:</span>
+                <span class="text-[#8b949e] text-xs">SECTOR:</span>
                 <select id="sector-filter"
-                    class="px-2 py-1 text-base md:text-xs bg-[#1a1a1a] border border-[#333] text-white outline-none"
+                    class="px-2 py-1 text-base md:text-xs bg-[#21262d] border border-[#21262d] text-white outline-none"
                     onchange="filterAssets()">
                     <option value="all">ALL</option>
                     <option value="Tech">TECH</option>
@@ -290,19 +302,19 @@
                 </select>
             </div>
             <div class="flex items-center gap-1">
-                <span class="text-[#666] text-xs">SORT:</span>
-                <button onclick="setSortBy('score')" class="sort-btn px-2 py-1 text-xs bg-[#ff6600] text-black"
+                <span class="text-[#8b949e] text-xs">SORT:</span>
+                <button onclick="setSortBy('score')" class="sort-btn px-2 py-1 text-xs bg-[#c586c0] text-black"
                     data-sort="score">LOW→HIGH</button>
                 <button onclick="setSortBy('score-desc')"
-                    class="sort-btn px-2 py-1 text-xs bg-[#1a1a1a] border border-[#333] text-[#666] hover:text-[#ff6600]"
+                    class="sort-btn px-2 py-1 text-xs bg-[#21262d] border border-[#21262d] text-[#8b949e] hover:text-[#c586c0]"
                     data-sort="score-desc">HIGH→LOW</button>
                 <button onclick="setSortBy('alpha')"
-                    class="sort-btn px-2 py-1 text-xs bg-[#1a1a1a] border border-[#333] text-[#666] hover:text-[#ff6600]"
+                    class="sort-btn px-2 py-1 text-xs bg-[#21262d] border border-[#21262d] text-[#8b949e] hover:text-[#c586c0]"
                     data-sort="alpha">A-Z</button>
             </div>
             <div class="ml-auto text-xs">
-                <span class="text-[#666]">ASSETS:</span>
-                <span id="asset-count" class="text-[#ffaa00]">0</span>
+                <span class="text-[#8b949e]">ASSETS:</span>
+                <span id="asset-count" class="text-[#dcdcaa]">0</span>
             </div>
         </div>
 
@@ -310,7 +322,7 @@
         <div id="assets-grid" class="data-grid p-2">
         </div>
 
-        <footer class="text-center text-[#333] text-xs py-4">
+        <footer class="text-center text-[#21262d] text-xs py-4">
             CALTROPIA EQUITY RISK TERMINAL v2.0 | DATA FROM FIREBASE
         </footer>
     </div>
@@ -401,11 +413,11 @@
             currentSort = sort;
             document.querySelectorAll('.sort-btn').forEach(btn => {
                 if (btn.dataset.sort === sort) {
-                    btn.classList.add('bg-[#ff6600]', 'text-black');
-                    btn.classList.remove('bg-[#1a1a1a]', 'text-[#666]', 'border', 'border-[#333]');
+                    btn.classList.add('bg-[#c586c0]', 'text-black');
+                    btn.classList.remove('bg-[#21262d]', 'text-[#8b949e]', 'border', 'border-[#21262d]');
                 } else {
-                    btn.classList.remove('bg-[#ff6600]', 'text-black');
-                    btn.classList.add('bg-[#1a1a1a]', 'text-[#666]', 'border', 'border-[#333]');
+                    btn.classList.remove('bg-[#c586c0]', 'text-black');
+                    btn.classList.add('bg-[#21262d]', 'text-[#8b949e]', 'border', 'border-[#21262d]');
                 }
             });
             filterAssets();
@@ -424,26 +436,26 @@
             document.getElementById('asset-count').textContent = data.length;
 
             if (data.length === 0) {
-                container.innerHTML = '<div class="col-span-full text-center py-12 text-[#666]">NO DATA - LOADING FROM EQUITIESRISKSIGNALS...</div>';
+                container.innerHTML = '<div class="col-span-full text-center py-12 text-[#8b949e]">NO DATA - LOADING FROM EQUITIESRISKSIGNALS...</div>';
                 return;
             }
 
             container.innerHTML = data.map(a => {
                 const risk = getRiskLevel(a.score);
-                const scoreColor = a.score <= 2 ? '#00ff88' : a.score <= 4 ? '#ffaa00' : '#ff3344';
+                const scoreColor = a.score <= 2 ? '#b5cea8' : a.score <= 4 ? '#dcdcaa' : '#f48771';
                 const barWidth = Math.min(100, a.score * 10);
 
                 return `
                     <div class="terminal-card p-4">
                         <div class="flex items-center justify-between mb-3">
                             <div class="flex items-center gap-2">
-                                <span class="text-[#ff6600] font-bold text-lg">${a.ticker}</span>
+                                <span class="text-[#c586c0] font-bold text-lg">${a.ticker}</span>
                                 <span class="text-[#444] text-xs">${a.sector.toUpperCase()}</span>
                             </div>
                             <span class="badge ${risk.badge}">${risk.text}</span>
                         </div>
                         <div class="flex items-center justify-between">
-                            <span class="text-[#666] text-xs">RISK SCORE</span>
+                            <span class="text-[#8b949e] text-xs">RISK SCORE</span>
                             <span class="text-3xl font-bold ${risk.class}">${a.score.toFixed(1)}</span>
                         </div>
                         <div class="risk-bar mt-3">
