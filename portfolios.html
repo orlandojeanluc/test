@@ -7,7 +7,7 @@
     <title>Caltropia | Investment Portfolios</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link
-        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
         rel="stylesheet">
     <script>
         tailwind.config = {
@@ -15,19 +15,19 @@
                 extend: {
                     fontFamily: {
                         mono: ['"JetBrains Mono"', '"IBM Plex Mono"', 'monospace'],
-                        sans: ['"JetBrains Mono"', 'monospace']
+                        sans: ['"Inter"', 'sans-serif']
                     },
                     colors: {
                         terminal: {
-                            bg: '#000000',
-                            panel: '#0a0a0a',
-                            border: '#1a1a1a',
-                            orange: '#ff6600',
-                            amber: '#ffaa00',
-                            green: '#00ff88',
-                            red: '#ff3344',
-                            blue: '#0088ff',
-                            muted: '#666666'
+                            bg: '#0d1117',
+                            panel: '#161b22',
+                            border: '#21262d',
+                            orange: '#c586c0',
+                            amber: '#dcdcaa',
+                            green: '#b5cea8',
+                            red: '#f48771',
+                            blue: '#9cdcfe',
+                            muted: '#8b949e'
                         }
                     }
                 }
@@ -36,32 +36,37 @@
     </script>
     <style>
         * {
-            font-family: 'JetBrains Mono', 'IBM Plex Mono', monospace;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
         }
 
         body {
-            background-color: #000000;
-            color: #ffffff;
+            background-color: #0d1117;
+            color: #c9d1d9;
             font-size: 12px;
             line-height: 1.4;
             overflow-x: hidden;
         }
 
         .terminal-header {
-            background: linear-gradient(180deg, #1a1a1a 0%, #0a0a0a 100%);
-            border-bottom: 1px solid #ff6600;
+            background: #161b22;
+            border-bottom: 1px solid #21262d;
         }
 
         .terminal-card {
-            background: #0a0a0a;
-            border: 1px solid #1a1a1a;
+            background: #161b22;
+            border: 1px solid #21262d;
             transition: all 0.15s ease;
             position: relative;
+            border-radius: 0.5rem;
         }
 
         .terminal-card:hover {
-            border-color: #ff6600;
-            box-shadow: 0 0 20px rgba(255, 102, 0, 0.1);
+            border-color: #c586c0;
+            box-shadow: 0 0 20px rgba(197, 134, 192, 0.1);
             transform: translateY(-2px);
         }
 
@@ -71,15 +76,16 @@
         }
 
         ::-webkit-scrollbar-track {
-            background: #0a0a0a;
+            background: #0d1117;
         }
 
         ::-webkit-scrollbar-thumb {
-            background: #333;
+            background: #21262d;
+            border-radius: 4px;
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: #ff6600;
+            background: #c586c0;
         }
 
         .blink {
@@ -98,18 +104,18 @@
 
     <!-- Sidebar Navigation -->
     <!-- Navigation: Bottom on Mobile, Left on Desktop -->
-    <nav id="sidebar" class="fixed z-50 bg-black flex items-center
-               bottom-0 w-full h-14 border-t border-[#333] flex-row justify-around py-0
+    <nav id="sidebar" class="fixed z-50 bg-[#161b22] flex items-center
+               bottom-0 w-full h-14 border-t border-[#21262d] flex-row justify-around py-0
                lg:left-0 lg:top-0 lg:h-full lg:w-12 lg:border-r lg:border-t-0 lg:flex-col lg:py-4">
 
         <!-- Logo (Hidden on Mobile, Visible on Desktop) -->
-        <div class="hidden lg:block text-[#ff6600] font-bold text-xs mb-6">C</div>
+        <div class="hidden lg:block text-[#c586c0] font-bold text-xs mb-6">C</div>
 
         <!-- Links Container -->
         <div
             class="flex-1 flex flex-row w-full justify-around items-center lg:flex-col lg:w-auto lg:justify-start lg:gap-4 lg:items-center">
             <a href="radial.html"
-                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#666] hover:text-[#ff6600] lg:hover:bg-[#1a1a1a]"
+                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#21262d]"
                 title="Dashboard">
                 <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -117,7 +123,7 @@
                     </path>
             </a>
             <a href="momentum.html"
-                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#666] hover:text-[#ff6600] lg:hover:bg-[#1a1a1a]"
+                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#21262d]"
                 title="Momentum">
                 <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -125,7 +131,7 @@
                 </svg>
             </a>
             <a href="lowvol.html"
-                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#666] hover:text-[#ff6600] lg:hover:bg-[#1a1a1a]"
+                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#21262d]"
                 title="Risk Terminal">
                 <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -134,7 +140,7 @@
                 </svg>
             </a>
             <a href="momentum_factor.html"
-                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#666] hover:text-[#ff6600] lg:hover:bg-[#1a1a1a]"
+                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#21262d]"
                 title="Momentum Factor">
                 <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -142,7 +148,7 @@
                 </svg>
             </a>
             <a href="mean_reversion.html"
-                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#666] hover:text-[#ff6600] lg:hover:bg-[#1a1a1a]"
+                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#21262d]"
                 title="Mean Reversion">
                 <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -151,7 +157,7 @@
                 </svg>
             </a>
             <a href="portfolios.html"
-                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#ff6600] border-t-2 lg:border-t-0 lg:bg-[#1a1a1a] lg:border-l-2 border-[#ff6600]"
+                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#c586c0] border-t-2 lg:border-t-0 lg:bg-[#21262d] lg:border-l-2 border-[#c586c0]"
                 title="Portfolios">
                 <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -168,15 +174,15 @@
         <header
             class="terminal-header px-4 py-2 flex flex-col lg:flex-row lg:items-center justify-between gap-2 lg:gap-0 sticky top-0 z-40">
             <div class="flex items-center gap-2 lg:gap-4">
-                <span class="text-[#ff6600] font-bold text-sm">CALTROPIA</span>
-                <span class="text-[#666] hidden lg:inline">|</span>
+                <span class="text-[#c586c0] font-bold text-sm">CALTROPIA</span>
+                <span class="text-[#8b949e] hidden lg:inline">|</span>
                 <span class="text-white text-xs whitespace-nowrap">INVESTMENT PORTFOLIOS</span>
-                <span class="text-[#00ff88] text-[10px] lg:text-xs blink">● ACTIVE</span>
+                <span class="text-[#b5cea8] text-[10px] lg:text-xs blink">● ACTIVE</span>
             </div>
             <div class="flex items-center gap-4 text-xs justify-end w-full lg:w-auto">
                 <div class="flex items-center gap-2">
-                    <span class="text-[#666]">UPDATED:</span>
-                    <span id="last-updated" class="text-[#ffaa00]">--:--:--</span>
+                    <span class="text-[#8b949e]">UPDATED:</span>
+                    <span id="last-updated" class="text-[#dcdcaa]">--:--:--</span>
                 </div>
             </div>
         </header>
@@ -185,10 +191,10 @@
         <div class="p-4 md:p-6">
             <div class="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-2">
                 <h1 class="text-lg md:text-xl font-bold text-white flex items-center gap-2">
-                    <span class="w-2 h-6 bg-[#ff6600]"></span>
+                    <span class="w-2 h-6 bg-[#c586c0]"></span>
                     STRATEGY UNIVERSE
                 </h1>
-                <div class="text-[#666] font-mono text-xs">19 STRATEGIES TRACKED</div>
+                <div class="text-[#8b949e] font-mono text-xs">19 STRATEGIES TRACKED</div>
             </div>
 
             <!-- Portfolios Grid -->
@@ -276,13 +282,13 @@
                 return `
                 <div class="terminal-card p-4 h-full flex flex-col justify-between group cursor-pointer" onclick="window.location.href='portfolio_detail.html?strategy=${encodeURIComponent(name)}'">
                     <div class="flex justify-between items-start mb-4">
-                        <div class="text-[#ff6600] opacity-50 font-mono text-[10px]">0${i + 1}</div>
-                        <div class="w-2 h-2 rounded-full bg-[#333] group-hover:bg-[#00ff88] transition-colors"></div>
+                        <div class="text-[#c586c0] opacity-50 font-mono text-[10px]">0${i + 1}</div>
+                        <div class="w-2 h-2 rounded-full bg-[#21262d] group-hover:bg-[#b5cea8] transition-colors"></div>
                     </div>
                     <div>
-                        <h3 class="text-white font-bold text-sm mb-2 group-hover:text-[#ff6600] transition-colors">${name}</h3>
-                        <div class="h-px w-full bg-[#333] my-3"></div>
-                        <div class="flex justify-between items-center text-[10px] text-[#666]">
+                        <h3 class="text-white font-bold text-sm mb-2 group-hover:text-[#c586c0] transition-colors">${name}</h3>
+                        <div class="h-px w-full bg-[#21262d] my-3"></div>
+                        <div class="flex justify-between items-center text-[10px] text-[#8b949e]">
                             <span>STATUS: ACTIVE</span>
                             <span class="group-hover:text-white transition-colors">VIEW ></span>
                         </div>
@@ -309,27 +315,27 @@
                 return `
                     <div class="flex justify-between items-center text-xs mb-1">
                         <span class="text-[#888] uppercase">${stat.label}</span>
-                        <span class="text-[#00ff88] font-mono">${displayVal}</span>
+                        <span class="text-[#b5cea8] font-bold">${displayVal}</span>
                     </div>
                  `;
             }).join('');
 
             return `
-                <div class="terminal-card p-4 h-full flex flex-col justify-between group cursor-pointer border-[#ffaa00]" onclick="window.location.href='portfolio_detail.html?strategy=${encodeURIComponent(name)}'">
+                <div class="terminal-card p-4 h-full flex flex-col justify-between group cursor-pointer border-[#dcdcaa]" onclick="window.location.href='portfolio_detail.html?strategy=${encodeURIComponent(name)}'">
                     <div class="flex justify-between items-start mb-2">
-                        <div class="text-[#ffaa00] font-mono text-[10px]">0${i + 1}</div>
+                        <div class="text-[#dcdcaa] font-mono text-[10px]">0${i + 1}</div>
                         <div class="flex items-center gap-1">
-                             <span class="text-[9px] text-[#ffaa00] animate-pulse">LIVE DATA</span>
-                             <div class="w-2 h-2 rounded-full bg-[#ffaa00]"></div>
+                             <span class="text-[9px] text-[#dcdcaa] animate-pulse">LIVE DATA</span>
+                             <div class="w-2 h-2 rounded-full bg-[#dcdcaa]"></div>
                         </div>
                     </div>
                     <div>
-                        <h3 class="text-white font-bold text-sm mb-2 group-hover:text-[#ffaa00] transition-colors">${name}</h3>
-                        <div class="h-px w-full bg-[#333] my-2"></div>
+                        <h3 class="text-white font-bold text-sm mb-2 group-hover:text-[#dcdcaa] transition-colors">${name}</h3>
+                        <div class="h-px w-full bg-[#21262d] my-2"></div>
                         <div class="flex flex-col gap-1 mb-2">
                             ${statsHtml}
                         </div>
-                        <div class="text-[10px] text-[#666] text-right group-hover:text-white transition-colors">VIEW FULL MODEL ></div>
+                        <div class="text-[10px] text-[#8b949e] text-right group-hover:text-white transition-colors">VIEW FULL MODEL ></div>
                     </div>
                 </div>
              `;

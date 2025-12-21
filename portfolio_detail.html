@@ -7,7 +7,7 @@
     <title>Caltropia | Strategy Detail</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link
-        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
         rel="stylesheet">
     <script>
         tailwind.config = {
@@ -15,19 +15,19 @@
                 extend: {
                     fontFamily: {
                         mono: ['"JetBrains Mono"', '"IBM Plex Mono"', 'monospace'],
-                        sans: ['"JetBrains Mono"', 'monospace']
+                        sans: ['"Inter"', 'sans-serif']
                     },
                     colors: {
                         terminal: {
-                            bg: '#000000',
-                            panel: '#0a0a0a',
-                            border: '#1a1a1a',
-                            orange: '#ff6600',
-                            amber: '#ffaa00',
-                            green: '#00ff88',
-                            red: '#ff3344',
-                            blue: '#0088ff',
-                            muted: '#666666'
+                            bg: '#0d1117',
+                            panel: '#161b22',
+                            border: '#21262d',
+                            orange: '#c586c0',
+                            amber: '#dcdcaa',
+                            green: '#b5cea8',
+                            red: '#f48771',
+                            blue: '#9cdcfe',
+                            muted: '#8b949e'
                         }
                     }
                 }
@@ -36,32 +36,37 @@
     </script>
     <style>
         * {
-            font-family: 'JetBrains Mono', 'IBM Plex Mono', monospace;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
         }
 
         body {
-            background-color: #000000;
-            color: #ffffff;
+            background-color: #0d1117;
+            color: #c9d1d9;
             font-size: 12px;
             line-height: 1.4;
             overflow-x: hidden;
         }
 
         .terminal-header {
-            background: linear-gradient(180deg, #1a1a1a 0%, #0a0a0a 100%);
-            border-bottom: 1px solid #ff6600;
+            background: #161b22;
+            border-bottom: 1px solid #21262d;
         }
 
         .terminal-card {
-            background: #0a0a0a;
-            border: 1px solid #1a1a1a;
+            background: #161b22;
+            border: 1px solid #21262d;
             transition: all 0.15s ease;
             position: relative;
+            border-radius: 0.5rem;
         }
 
         .terminal-card:hover {
-            border-color: #ff6600;
-            box-shadow: 0 0 20px rgba(255, 102, 0, 0.1);
+            border-color: #c586c0;
+            box-shadow: 0 0 20px rgba(197, 134, 192, 0.1);
         }
 
         ::-webkit-scrollbar {
@@ -70,15 +75,16 @@
         }
 
         ::-webkit-scrollbar-track {
-            background: #0a0a0a;
+            background: #0d1117;
         }
 
         ::-webkit-scrollbar-thumb {
-            background: #333;
+            background: #21262d;
+            border-radius: 4px;
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: #ff6600;
+            background: #c586c0;
         }
 
         .blink {
@@ -96,54 +102,54 @@
 <body class="min-h-screen">
 
     <!-- Navigation: Bottom on Mobile, Left on Desktop -->
-    <nav id="sidebar" class="fixed z-50 bg-black flex items-center
-               bottom-0 w-full h-14 border-t border-[#333] flex-row justify-around py-0
-               md:left-0 md:top-0 md:h-full md:w-12 md:border-r md:border-t-0 md:flex-col md:py-4">
+    <nav id="sidebar" class="fixed z-50 bg-[#161b22] flex items-center
+                bottom-0 w-full h-14 border-t border-[#21262d] flex-row justify-around py-0
+                lg:left-0 lg:top-0 lg:h-full lg:w-12 lg:border-r lg:border-t-0 lg:flex-col lg:py-4">
 
         <!-- Logo (Hidden on Mobile, Visible on Desktop) -->
-        <div class="hidden md:block text-[#ff6600] font-bold text-xs mb-6">C</div>
+        <div class="hidden lg:block text-[#c586c0] font-bold text-xs mb-6">C</div>
 
         <!-- Links Container -->
         <div
-            class="flex-1 flex flex-row w-full justify-around items-center md:flex-col md:w-auto md:justify-start md:gap-4 md:items-center">
+            class="flex-1 flex flex-row w-full justify-around items-center lg:flex-col lg:w-auto lg:justify-start lg:gap-4 lg:items-center">
             <a href="radial.html"
-                class="w-10 h-full md:w-8 md:h-8 flex items-center justify-center text-[#666] hover:text-[#ff6600] md:hover:bg-[#1a1a1a]"
+                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#21262d]"
                 title="Dashboard">
-                <svg class="w-5 h-5 md:w-4 md:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z">
                     </path>
                 </svg>
             </a>
             <a href="momentum.html"
-                class="w-10 h-full md:w-8 md:h-8 flex items-center justify-center text-[#666] hover:text-[#ff6600] md:hover:bg-[#1a1a1a]"
+                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#21262d]"
                 title="Momentum">
-                <svg class="w-5 h-5 md:w-4 md:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path>
                 </svg>
             </a>
             <a href="lowvol.html"
-                class="w-10 h-full md:w-8 md:h-8 flex items-center justify-center text-[#666] hover:text-[#ff6600] md:hover:bg-[#1a1a1a]"
+                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#21262d]"
                 title="Risk Terminal">
-                <svg class="w-5 h-5 md:w-4 md:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10">
                     </path>
                 </svg>
             </a>
             <a href="momentum_factor.html"
-                class="w-10 h-full md:w-8 md:h-8 flex items-center justify-center text-[#666] hover:text-[#ff6600] md:hover:bg-[#1a1a1a]"
+                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#21262d]"
                 title="Momentum Factor">
-                <svg class="w-5 h-5 md:w-4 md:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                 </svg>
             </a>
             <a href="portfolios.html"
-                class="w-10 h-full md:w-8 md:h-8 flex items-center justify-center text-[#ff6600] md:bg-[#1a1a1a] border-t-2 md:border-t-0 md:border-l-2 border-[#ff6600]"
+                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#c586c0] border-t-2 lg:border-t-0 lg:bg-[#161b22] lg:border-l-2 border-[#c586c0]"
                 title="Portfolios">
-                <svg class="w-5 h-5 md:w-4 md:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
                     </path>
@@ -152,28 +158,28 @@
         </div>
     </nav>
 
-    <div class="ml-0 md:ml-12 pb-20 md:pb-0 transition-all">
+    <div class="ml-0 lg:ml-12 pb-20 lg:pb-0 transition-all">
         <!-- Header -->
         <header
             class="terminal-header px-4 py-2 flex flex-col md:flex-row md:items-center justify-between gap-2 md:gap-0 sticky top-0 z-40">
             <div class="flex items-center gap-2 md:gap-4">
                 <a href="portfolios.html"
-                    class="text-[#ff6600] hover:text-white transition-colors text-xs flex items-center gap-1">
+                    class="text-[#c586c0] hover:text-white transition-colors text-xs flex items-center gap-1">
                     <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7">
                         </path>
                     </svg>
                     BACK
                 </a>
-                <span class="text-[#666] hidden md:inline">|</span>
+                <span class="text-[#8b949e] hidden md:inline">|</span>
                 <span class="text-white text-xs font-bold uppercase truncate max-w-[200px] md:max-w-none"
                     id="strategy-name">LOADING...</span>
-                <span class="text-[#00ff88] text-[10px] md:text-xs blink">● LIVE</span>
+                <span class="text-[#b5cea8] text-[10px] md:text-xs blink">● LIVE</span>
             </div>
             <div class="flex items-center gap-4 text-xs justify-end w-full md:w-auto">
                 <div class="flex items-center gap-2">
-                    <span class="text-[#666]">UPDATED:</span>
-                    <span id="last-updated" class="text-[#ffaa00]">--:--:--</span>
+                    <span class="text-[#8b949e]">UPDATED:</span>
+                    <span id="last-updated" class="text-[#dcdcaa]">--:--:--</span>
                 </div>
             </div>
         </header>
@@ -183,13 +189,14 @@
             <!-- Top Grid: Key Stats + Chart -->
             <div class="mb-6">
                 <h1 id="strategy-title" class="text-xl md:text-2xl font-bold text-white flex items-center gap-2 mb-2">
-                    <span class="w-2 h-8 bg-[#ff6600]"></span>
+                    <span class="w-2 h-8 bg-[#c586c0]"></span>
                     LOADING STRATEGY...
                 </h1>
-                <div class="flex flex-wrap items-center gap-2 md:gap-4 text-xs font-mono">
-                    <span class="px-2 py-0.5 bg-[#1a1a1a] border border-[#ffaa00] text-[#ffaa00]">ACTIVE</span>
-                    <span class="text-[#666]">ID: <span class="text-white">STRAT-8821</span></span>
-                    <span class="text-[#666]">RISK PROFILE: <span class="text-white">MODERATE-AGGRESSIVE</span></span>
+                <div class="flex flex-wrap items-center gap-2 md:gap-4 text-xs font-bold">
+                    <span class="px-2 py-0.5 bg-[#21262d] border border-[#dcdcaa] text-[#dcdcaa]">ACTIVE</span>
+                    <span class="text-[#8b949e]">ID: <span class="text-white">STRAT-8821</span></span>
+                    <span class="text-[#8b949e]">RISK PROFILE: <span
+                            class="text-white">MODERATE-AGGRESSIVE</span></span>
                 </div>
             </div>
 
@@ -198,40 +205,40 @@
                 <!-- Main Chart (Placeholder) -->
                 <div class="col-span-12 lg:col-span-8 terminal-card p-4 min-h-[400px] flex flex-col">
                     <div class="flex flex-col sm:flex-row justify-between items-center mb-4 gap-4 sm:gap-0">
-                        <h3 class="text-[#ff6600] font-bold text-sm w-full sm:w-auto text-center sm:text-left">
+                        <h3 class="text-[#c586c0] font-bold text-sm w-full sm:w-auto text-center sm:text-left">
                             CUMULATIVE PERFORMANCE</h3>
                         <div
                             class="flex gap-2 text-[10px] w-full sm:w-auto justify-center sm:justify-end overflow-x-auto pb-2 sm:pb-0">
                             <button id="btn-1m"
-                                class="time-filter-btn px-2 py-1 bg-[#1a1a1a] hover:bg-[#333] text-[#666] hover:text-white transition-colors"
+                                class="time-filter-btn px-2 py-1 bg-[#21262d] hover:bg-[#21262d] text-[#8b949e] hover:text-white transition-colors"
                                 data-range="1M">1M</button>
                             <button id="btn-3m"
-                                class="time-filter-btn px-2 py-1 bg-[#1a1a1a] hover:bg-[#333] text-[#666] hover:text-white transition-colors"
+                                class="time-filter-btn px-2 py-1 bg-[#21262d] hover:bg-[#21262d] text-[#8b949e] hover:text-white transition-colors"
                                 data-range="3M">3M</button>
                             <button id="btn-ytd"
-                                class="time-filter-btn px-2 py-1 bg-[#1a1a1a] hover:bg-[#333] text-[#666] hover:text-white transition-colors"
+                                class="time-filter-btn px-2 py-1 bg-[#21262d] hover:bg-[#21262d] text-[#8b949e] hover:text-white transition-colors"
                                 data-range="YTD">YTD</button>
                             <button id="btn-1y"
-                                class="time-filter-btn px-2 py-1 bg-[#1a1a1a] hover:bg-[#333] text-[#666] hover:text-white transition-colors"
+                                class="time-filter-btn px-2 py-1 bg-[#21262d] hover:bg-[#21262d] text-[#8b949e] hover:text-white transition-colors"
                                 data-range="1Y">1Y</button>
                             <button id="btn-5y"
-                                class="time-filter-btn px-2 py-1 bg-[#1a1a1a] hover:bg-[#333] text-[#666] hover:text-white transition-colors"
+                                class="time-filter-btn px-2 py-1 bg-[#21262d] hover:bg-[#21262d] text-[#8b949e] hover:text-white transition-colors"
                                 data-range="5Y">5Y</button>
                             <button id="btn-all"
-                                class="time-filter-btn px-2 py-1 bg-[#333] text-white transition-colors"
+                                class="time-filter-btn px-2 py-1 bg-[#21262d] text-white transition-colors"
                                 data-range="ALL">ALL</button>
                         </div>
                     </div>
                     <div
-                        class="flex-1 border border-[#1a1a1a] border-dashed flex items-center justify-center bg-[#050505] relative overflow-hidden">
+                        class="flex-1 border border-[#21262d] border-dashed flex items-center justify-center bg-[#161b22] relative overflow-hidden">
                         <!-- Chart container will be cleared by JS -->
                         <div id="chart-container" class="w-full h-full relative">
                             <!-- CSS Pattern as placeholder -->
                             <div class="absolute inset-0 opacity-20"
-                                style="background-image: linear-gradient(#1a1a1a 1px, transparent 1px), linear-gradient(90deg, #1a1a1a 1px, transparent 1px); background-size: 20px 20px;">
+                                style="background-image: linear-gradient(#21262d 1px, transparent 1px), linear-gradient(90deg, #21262d 1px, transparent 1px); background-size: 20px 20px;">
                             </div>
                             <div
-                                class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-[#333] font-bold text-xl">
+                                class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-[#21262d] font-bold text-xl">
                                 CHART DATA PLACEHOLDER</div>
                         </div>
                     </div>
@@ -241,56 +248,56 @@
                 <div class="col-span-12 lg:col-span-4 flex flex-col gap-4">
                     <!-- Key Stats -->
                     <div class="terminal-card p-4">
-                        <h3 class="text-white font-bold text-sm mb-4 border-b border-[#333] pb-2">KEY STATISTICS</h3>
+                        <h3 class="text-white font-bold text-sm mb-4 border-b border-[#21262d] pb-2">KEY STATISTICS</h3>
                         <div class="grid grid-cols-2 gap-4">
                             <div>
-                                <div class="text-[#666] text-[10px] uppercase">CAGR</div>
-                                <div class="text-[#00ff88] text-xl font-mono">14.2%</div>
+                                <div class="text-[#8b949e] text-[10px] uppercase">CAGR</div>
+                                <div class="text-[#b5cea8] text-xl font-bold">14.2%</div>
                             </div>
                             <div>
-                                <div class="text-[#666] text-[10px] uppercase">Sharpe Ratio</div>
-                                <div class="text-white text-xl font-mono">1.82</div>
+                                <div class="text-[#8b949e] text-[10px] uppercase">Sharpe Ratio</div>
+                                <div class="text-white text-xl font-bold">1.82</div>
                             </div>
                             <div>
-                                <div class="text-[#666] text-[10px] uppercase">Max Drawdown</div>
-                                <div class="text-[#ff3344] text-xl font-mono">-12.5%</div>
+                                <div class="text-[#8b949e] text-[10px] uppercase">Max Drawdown</div>
+                                <div class="text-[#f48771] text-xl font-bold">-12.5%</div>
                             </div>
                             <div>
-                                <div class="text-[#666] text-[10px] uppercase">Volatility</div>
-                                <div class="text-white text-xl font-mono">9.8%</div>
+                                <div class="text-[#8b949e] text-[10px] uppercase">Volatility</div>
+                                <div class="text-white text-xl font-bold">9.8%</div>
                             </div>
                             <div>
-                                <div class="text-[#666] text-[10px] uppercase">YTD Return</div>
-                                <div class="text-[#00ff88] text-xl font-mono">8.4%</div>
+                                <div class="text-[#8b949e] text-[10px] uppercase">YTD Return</div>
+                                <div class="text-[#b5cea8] text-xl font-bold">8.4%</div>
                             </div>
                             <div>
-                                <div class="text-[#666] text-[10px] uppercase">Sortino</div>
-                                <div class="text-white text-xl font-mono">2.15</div>
+                                <div class="text-[#8b949e] text-[10px] uppercase">Sortino</div>
+                                <div class="text-white text-xl font-bold">2.15</div>
                             </div>
                         </div>
                     </div>
 
                     <!-- Allocation / Exposure -->
                     <div class="terminal-card p-4 flex-1">
-                        <h3 class="text-white font-bold text-sm mb-4 border-b border-[#333] pb-2">ALLOCATION</h3>
+                        <h3 class="text-white font-bold text-sm mb-4 border-b border-[#21262d] pb-2">ALLOCATION</h3>
                         <div class="space-y-4">
                             <div>
                                 <div class="flex justify-between text-xs mb-1">
                                     <span id="alloc-equity-label" class="text-[#aaa]">EQUITY (SPY)</span>
-                                    <span id="alloc-equity-val" class="text-white font-mono">--%</span>
+                                    <span id="alloc-equity-val" class="text-white font-bold">--%</span>
                                 </div>
-                                <div class="w-full h-1 bg-[#1a1a1a] overflow-hidden">
-                                    <div id="alloc-equity-bar" class="h-full bg-[#ff6600]" style="width: 0%"></div>
+                                <div class="w-full h-1 bg-[#21262d] overflow-hidden">
+                                    <div id="alloc-equity-bar" class="h-full bg-[#c586c0]" style="width: 0%"></div>
                                 </div>
                             </div>
                             <!-- Fixed Income Removed as requested -->
                             <div>
                                 <div class="flex justify-between text-xs mb-1">
                                     <span class="text-[#aaa]">CASH</span>
-                                    <span id="alloc-cash-val" class="text-white font-mono">--%</span>
+                                    <span id="alloc-cash-val" class="text-white font-bold">--%</span>
                                 </div>
-                                <div class="w-full h-1 bg-[#1a1a1a] overflow-hidden">
-                                    <div id="alloc-cash-bar" class="h-full bg-[#00ff88]" style="width: 0%"></div>
+                                <div class="w-full h-1 bg-[#21262d] overflow-hidden">
+                                    <div id="alloc-cash-bar" class="h-full bg-[#b5cea8]" style="width: 0%"></div>
                                 </div>
                             </div>
                         </div>
@@ -302,12 +309,12 @@
             <div class="terminal-card p-4">
                 <h3 class="text-white font-bold text-sm mb-4 flex justify-between items-center">
                     <span>LATEST POSITIONS</span>
-                    <span id="positions-header-extra" class="text-[#666] text-xs font-normal">DISPLAYING TOP 5</span>
+                    <span id="positions-header-extra" class="text-[#8b949e] text-xs font-normal">DISPLAYING TOP 5</span>
                 </h3>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse">
                         <thead>
-                            <tr class="text-[#666] text-[10px] border-b border-[#333]">
+                            <tr class="text-[#8b949e] text-[10px] border-b border-[#21262d]">
                                 <th class="py-2 font-normal">TICKER</th>
                                 <th class="py-2 font-normal">NAME</th>
                                 <th class="py-2 font-normal text-right">WEIGHT</th>
@@ -315,9 +322,9 @@
                                 <th class="py-2 font-normal text-right">STATUS</th>
                             </tr>
                         </thead>
-                        <tbody id="positions-body" class="text-xs font-mono">
+                        <tbody id="positions-body" class="text-xs font-bold">
                             <tr>
-                                <td colspan="5" class="py-3 text-center text-[#666]">LOADING POSITIONS...</td>
+                                <td colspan="5" class="py-3 text-center text-[#8b949e]">LOADING POSITIONS...</td>
                             </tr>
                         </tbody>
                     </table>
@@ -326,7 +333,8 @@
 
             <!-- Historical Allocation Chart -->
             <div id="allocation-chart-container" class="terminal-card p-4">
-                <h3 class="text-white font-bold text-sm mb-4 border-b border-[#333] pb-2">HISTORICAL STRATEGY ALLOCATION
+                <h3 class="text-white font-bold text-sm mb-4 border-b border-[#21262d] pb-2">HISTORICAL STRATEGY
+                    ALLOCATION
                 </h3>
                 <div class="w-full h-[300px] relative">
                     <canvas id="allocation-chart"></canvas>
@@ -335,7 +343,7 @@
 
             <!-- Sector Allocation Chart (Mean Reversion Only) -->
             <div id="sector-chart-container" class="terminal-card p-4 hidden">
-                <h3 class="text-white font-bold text-sm mb-4 border-b border-[#333] pb-2">SECTOR ALLOCATION</h3>
+                <h3 class="text-white font-bold text-sm mb-4 border-b border-[#21262d] pb-2">SECTOR ALLOCATION</h3>
                 <div class="w-full h-[300px] relative flex justify-center">
                     <canvas id="sector-chart"></canvas>
                 </div>
@@ -344,11 +352,11 @@
 
             <!-- Monthly Returns Table -->
             <div class="terminal-card p-4 mt-6">
-                <h3 class="text-white font-bold text-sm mb-4 border-b border-[#333] pb-2">MONTHLY RETURNS</h3>
+                <h3 class="text-white font-bold text-sm mb-4 border-b border-[#21262d] pb-2">MONTHLY RETURNS</h3>
                 <div class="overflow-x-auto">
-                    <table class="w-full text-center border-collapse text-xs font-mono">
+                    <table class="w-full text-center border-collapse text-xs font-bold">
                         <thead>
-                            <tr class="text-[#666] border-b border-[#333]">
+                            <tr class="text-[#8b949e] border-b border-[#21262d]">
                                 <th class="py-2 text-left">YEAR</th>
                                 <th class="py-2">JAN</th>
                                 <th class="py-2">FEB</th>
@@ -362,12 +370,12 @@
                                 <th class="py-2">OCT</th>
                                 <th class="py-2">NOV</th>
                                 <th class="py-2">DEC</th>
-                                <th class="py-2 border-l border-[#333]">YTD</th>
+                                <th class="py-2 border-l border-[#21262d]">YTD</th>
                             </tr>
                         </thead>
                         <tbody id="monthly-returns-body">
                             <tr>
-                                <td colspan="14" class="py-4 text-[#666]">LOADING RETURNS...</td>
+                                <td colspan="14" class="py-4 text-[#8b949e]">LOADING RETURNS...</td>
                             </tr>
                         </tbody>
                     </table>
@@ -407,11 +415,11 @@
                 btn.addEventListener('click', (e) => {
                     // Update active state
                     document.querySelectorAll('.time-filter-btn').forEach(b => {
-                        b.classList.remove('bg-[#333]', 'text-white');
-                        b.classList.add('bg-[#1a1a1a]', 'text-[#666]');
+                        b.classList.remove('bg-[#21262d]', 'text-white');
+                        b.classList.add('bg-[#21262d]', 'text-[#8b949e]');
                     });
-                    e.target.classList.remove('bg-[#1a1a1a]', 'text-[#666]');
-                    e.target.classList.add('bg-[#333]', 'text-white');
+                    e.target.classList.remove('bg-[#21262d]', 'text-[#8b949e]');
+                    e.target.classList.add('bg-[#21262d]', 'text-white');
 
                     // Update range
                     currentRange = e.target.getAttribute('data-range');
@@ -421,10 +429,6 @@
                         // We need to access it here. It is safe because click happens after DOMContentLoaded executions.
                         // However, decodedName const is declared below. Let's grab it fresh or move declaration up.
                         // Moving declaration up is safer. But simple fix: Use URL params again here or rely on scoping if defined.
-                        // Let's rely on scoping: decodedName is defined in the same scope (DOMContentLoaded cb)
-                        // But it's defined AFTER this block. Const is block scoped but TDZ applies.
-                        // BUT the click handler executes LATER. Is TDZ relevant for closure capture? 
-                        // Yes, if variable exists in scope. It does.
                         // Let's try passing it. If it fails, I'll move definition up.
                         // Safest: Use window.location inside handler or grab the declared variable.
                         // Actually, let's just grab it from URL inside the handler to be 100% safe and simple.
@@ -442,7 +446,7 @@
 
             if (strategyName) {
                 document.getElementById('strategy-title').innerHTML = `
-                    <span class="w-2 h-8 bg-[#ff6600]"></span>
+                    <span class="w-2 h-8 bg-[#c586c0]"></span>
                     ${decodedName.toUpperCase()}
                 `;
                 document.title = `Caltropia | ${decodedName}`;
@@ -507,7 +511,7 @@
             }
 
             if (chartDataPath) {
-                chartContainer.innerHTML = '<div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-[#ff6600] animate-pulse">LOADING LIVE DATA...</div>';
+                chartContainer.innerHTML = '<div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-[#c586c0] animate-pulse">LOADING LIVE DATA...</div>';
                 console.log(`Fetching chart data from: ${chartDataPath}`);
 
                 onValue(ref(db, chartDataPath), (snapshot) => {
@@ -521,15 +525,15 @@
                         }
                     } else {
                         console.warn(`No chart data found for ${chartDataPath}.`);
-                        chartContainer.innerHTML = '<div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-[#ff3344]">NO CHART DATA AVAILABLE</div>';
+                        chartContainer.innerHTML = '<div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-[#f48771]">NO CHART DATA AVAILABLE</div>';
                     }
                 }, (error) => {
                     console.error(`Fetch Error: ${error.message}`);
-                    chartContainer.innerHTML = '<div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-[#ff3344]">ERROR LOADING DATA</div>';
+                    chartContainer.innerHTML = '<div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-[#f48771]">ERROR LOADING DATA</div>';
                 });
             } else {
                 console.log('No specific chart path configured for this strategy.');
-                chartContainer.innerHTML = '<div class="flex items-center justify-center h-full text-[#666]">NO CHART DATA LIVE</div>';
+                chartContainer.innerHTML = '<div class="flex items-center justify-center h-full text-[#8b949e]">NO CHART DATA LIVE</div>';
             }
 
             // 2. Fetch Latest Positions
@@ -537,7 +541,7 @@
                 onValue(ref(db, 'spDailyRebalance'), (snapshot) => {
                     const data = snapshot.val();
                     if (data) renderPositionsTable(data, decodedName);
-                    else document.getElementById('positions-body').innerHTML = '<tr><td colspan="5" class="py-3 text-center text-[#ff3344]">NO POSITIONS DATA FOUND</td></tr>';
+                    else document.getElementById('positions-body').innerHTML = '<tr><td colspan="5" class="py-3 text-center text-[#f48771]">NO POSITIONS DATA FOUND</td></tr>';
                 });
             } else if (decodedName === 'Caltropia Mean Reversion Factor') {
                 onValue(ref(db, 'equityMeanReversionholdings'), (snapshot) => {
@@ -549,7 +553,7 @@
                             renderSectorChart(data);
                         }
                     }
-                    else document.getElementById('positions-body').innerHTML = '<tr><td colspan="5" class="py-3 text-center text-[#ff3344]">NO POSITIONS DATA FOUND</td></tr>';
+                    else document.getElementById('positions-body').innerHTML = '<tr><td colspan="5" class="py-3 text-center text-[#f48771]">NO POSITIONS DATA FOUND</td></tr>';
                 });
 
                 // Show Sector Container (ensure element exists)
@@ -560,13 +564,13 @@
                 onValue(ref(db, 'SPYDailyAggressive'), (snapshot) => {
                     const data = snapshot.val();
                     if (data) renderPositionsTable(data, decodedName);
-                    else document.getElementById('positions-body').innerHTML = '<tr><td colspan="5" class="py-3 text-center text-[#ff3344]">NO POSITIONS DATA FOUND</td></tr>';
+                    else document.getElementById('positions-body').innerHTML = '<tr><td colspan="5" class="py-3 text-center text-[#f48771]">NO POSITIONS DATA FOUND</td></tr>';
                 });
             } else if (decodedName === 'Caltropia Bond Regime Model') {
                 onValue(ref(db, 'TLTDailyRebalance'), (snapshot) => {
                     const data = snapshot.val();
                     if (data) renderPositionsTable(data, decodedName);
-                    else document.getElementById('positions-body').innerHTML = '<tr><td colspan="5" class="py-3 text-center text-[#ff3344]">NO POSITIONS DATA FOUND</td></tr>';
+                    else document.getElementById('positions-body').innerHTML = '<tr><td colspan="5" class="py-3 text-center text-[#f48771]">NO POSITIONS DATA FOUND</td></tr>';
                 });
             } else if (decodedName === 'Caltropia Momentum Factor') {
                 onValue(ref(db, 'MomentumFactorHoldings'), (snapshot) => {
@@ -580,7 +584,7 @@
                         const secChart = document.getElementById('sector-chart-container');
                         if (secChart) secChart.classList.remove('hidden');
                     }
-                    else document.getElementById('positions-body').innerHTML = '<tr><td colspan="5" class="py-3 text-center text-[#ff3344]">NO POSITIONS DATA FOUND</td></tr>';
+                    else document.getElementById('positions-body').innerHTML = '<tr><td colspan="5" class="py-3 text-center text-[#f48771]">NO POSITIONS DATA FOUND</td></tr>';
                 });
             } else if (decodedName === 'Caltropia Low Vol Factor') {
                 onValue(ref(db, 'LowVolFactorHoldings'), (snapshot) => {
@@ -594,10 +598,10 @@
                         const secChart = document.getElementById('sector-chart-container');
                         if (secChart) secChart.classList.remove('hidden');
                     }
-                    else document.getElementById('positions-body').innerHTML = '<tr><td colspan="5" class="py-3 text-center text-[#ff3344]">NO POSITIONS DATA FOUND</td></tr>';
+                    else document.getElementById('positions-body').innerHTML = '<tr><td colspan="5" class="py-3 text-center text-[#f48771]">NO POSITIONS DATA FOUND</td></tr>';
                 });
             } else {
-                document.getElementById('positions-body').innerHTML = '<tr><td colspan="5" class="py-3 text-center text-[#666]">NO POSITIONS DATA</td></tr>';
+                document.getElementById('positions-body').innerHTML = '<tr><td colspan="5" class="py-3 text-center text-[#8b949e]">NO POSITIONS DATA</td></tr>';
             }
 
             // 3. Fetch Historical Data (Allocations & Returns)
@@ -615,7 +619,7 @@
                 onValue(ref(db, 'monthlyspyperf'), (snapshot) => {
                     const data = snapshot.val();
                     if (data) renderMonthlyReturnsTable(data);
-                    else document.getElementById('monthly-returns-body').innerHTML = '<tr><td colspan="14" class="py-4 text-center text-[#ff3344]">NO RETURNS DATA FOUND</td></tr>';
+                    else document.getElementById('monthly-returns-body').innerHTML = '<tr><td colspan="14" class="py-4 text-center text-[#f48771]">NO RETURNS DATA FOUND</td></tr>';
                 });
             } else if (decodedName === 'Caltropia Mean Reversion Factor') {
                 // Hide Allocation Chart for this strategy
@@ -626,7 +630,7 @@
                 onValue(ref(db, 'monthlyequityReversionrtns'), (snapshot) => {
                     const data = snapshot.val();
                     if (data) renderMonthlyReturnsTable(data);
-                    else document.getElementById('monthly-returns-body').innerHTML = '<tr><td colspan="14" class="py-4 text-center text-[#ff3344]">NO RETURNS DATA FOUND</td></tr>';
+                    else document.getElementById('monthly-returns-body').innerHTML = '<tr><td colspan="14" class="py-4 text-center text-[#f48771]">NO RETURNS DATA FOUND</td></tr>';
                 });
             } else if (decodedName === 'S&P Dip/Rip') {
                 // Ensure Allocation Chart is Visible
@@ -642,7 +646,7 @@
                 onValue(ref(db, 'monthlyspyaggperf'), (snapshot) => {
                     const data = snapshot.val();
                     if (data) renderMonthlyReturnsTable(data, decodedName);
-                    else document.getElementById('monthly-returns-body').innerHTML = '<tr><td colspan="14" class="py-4 text-center text-[#ff3344]">NO RETURNS DATA FOUND</td></tr>';
+                    else document.getElementById('monthly-returns-body').innerHTML = '<tr><td colspan="14" class="py-4 text-center text-[#f48771]">NO RETURNS DATA FOUND</td></tr>';
                 });
             } else if (decodedName === 'Caltropia Bond Regime Model') {
                 // Ensure Allocation Chart is Visible
@@ -663,7 +667,7 @@
                         const returnsData = convertPricesToReturns(data);
                         renderMonthlyReturnsTable(returnsData, decodedName);
                     }
-                    else document.getElementById('monthly-returns-body').innerHTML = '<tr><td colspan="14" class="py-4 text-center text-[#ff3344]">NO RETURNS DATA FOUND</td></tr>';
+                    else document.getElementById('monthly-returns-body').innerHTML = '<tr><td colspan="14" class="py-4 text-center text-[#f48771]">NO RETURNS DATA FOUND</td></tr>';
                 });
             } else if (decodedName === 'Caltropia Momentum Factor') {
                 // HIDE Historical Allocation Chart for this strategy
@@ -673,7 +677,7 @@
                 onValue(ref(db, 'MomentumFactorMonthlyRtns'), (snapshot) => {
                     const data = snapshot.val();
                     if (data) renderMonthlyReturnsTable(data, decodedName);
-                    else document.getElementById('monthly-returns-body').innerHTML = '<tr><td colspan="14" class="py-4 text-center text-[#ff3344]">NO RETURNS DATA FOUND</td></tr>';
+                    else document.getElementById('monthly-returns-body').innerHTML = '<tr><td colspan="14" class="py-4 text-center text-[#f48771]">NO RETURNS DATA FOUND</td></tr>';
                 });
             } else if (decodedName === 'Caltropia Low Vol Factor') {
                 // HIDE Historical Allocation Chart
@@ -683,11 +687,11 @@
                 onValue(ref(db, 'LowVolFactorMonthlyRtns'), (snapshot) => {
                     const data = snapshot.val();
                     if (data) renderMonthlyReturnsTable(data, decodedName);
-                    else document.getElementById('monthly-returns-body').innerHTML = '<tr><td colspan="14" class="py-4 text-center text-[#ff3344]">NO RETURNS DATA FOUND</td></tr>';
+                    else document.getElementById('monthly-returns-body').innerHTML = '<tr><td colspan="14" class="py-4 text-center text-[#f48771]">NO RETURNS DATA FOUND</td></tr>';
                 });
             } else {
                 // Clean up / Placeholder for others
-                document.getElementById('monthly-returns-body').innerHTML = '<tr><td colspan="14" class="py-4 text-center text-[#666]">NO RETURNS DATA FOR THIS STRATEGY</td></tr>';
+                document.getElementById('monthly-returns-body').innerHTML = '<tr><td colspan="14" class="py-4 text-center text-[#8b949e]">NO RETURNS DATA FOR THIS STRATEGY</td></tr>';
             }
         });
 
@@ -745,13 +749,13 @@
             const sortedYears = Object.keys(yearMap).sort((a, b) => b - a);
 
             if (sortedYears.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="14" class="py-4 text-center text-[#666]">NO VALID DATE DATA FOUND</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="14" class="py-4 text-center text-[#8b949e]">NO VALID DATE DATA FOUND</td></tr>';
                 return;
             }
 
             sortedYears.forEach(year => {
                 const monthData = yearMap[year];
-                let rowHtml = `<tr class="border-b border-[#1a1a1a] hover:bg-[#111]">
+                let rowHtml = `<tr class="border-b border-[#21262d] hover:bg-[#111]">
                     <td class="py-3 text-left font-bold text-[#ccc]">${year}</td>`;
 
                 let product = 1.0;
@@ -777,17 +781,17 @@
         }
 
         function formatCell(val, isYtd = false) {
-            const borderClass = isYtd ? 'border-l border-[#1a1a1a]' : '';
+            const borderClass = isYtd ? 'border-l border-[#21262d]' : '';
 
             if (val === undefined || val === null) {
-                return `<td class="py-3 text-[#333] ${borderClass}">--</td>`;
+                return `<td class="py-3 text-[#21262d] ${borderClass}">--</td>`;
             }
 
             // Format pct
             const pct = (val * 100).toFixed(1) + '%';
             let colorClass = 'text-[#ccc]';
-            if (val > 0) colorClass = 'text-[#00ff88]';
-            if (val < 0) colorClass = 'text-[#ff3344]';
+            if (val > 0) colorClass = 'text-[#b5cea8]';
+            if (val < 0) colorClass = 'text-[#f48771]';
 
             return `<td class="py-3 ${colorClass} ${borderClass}">${pct}</td>`;
         }
@@ -895,7 +899,7 @@
                         {
                             label: datasetLabel,
                             data: equityData,
-                            borderColor: '#ff6600',
+                            borderColor: '#c586c0',
                             backgroundColor: 'rgba(255, 102, 0, 0.2)', // Slightly more opaque for visibility
                             borderWidth: 1,
                             fill: true,
@@ -904,7 +908,7 @@
                         {
                             label: 'CASH',
                             data: cashData,
-                            borderColor: '#00ff88',
+                            borderColor: '#b5cea8',
                             backgroundColor: 'rgba(0, 255, 136, 0.1)',
                             borderWidth: 1,
                             fill: true,
@@ -921,12 +925,12 @@
                     },
                     scales: {
                         x: {
-                            grid: { color: '#1a1a1a' },
-                            ticks: { color: '#666' }
+                            grid: { color: '#21262d' },
+                            ticks: { color: '#8b949e' }
                         },
                         y: {
-                            grid: { color: '#1a1a1a' },
-                            ticks: { color: '#666', callback: v => v + '%' },
+                            grid: { color: '#21262d' },
+                            ticks: { color: '#8b949e', callback: v => v + '%' },
                             min: 0,
                             max: 100,
                             stacked: true
@@ -940,7 +944,7 @@
                             backgroundColor: '#000',
                             titleColor: '#fff',
                             bodyColor: '#fff',
-                            borderColor: '#333',
+                            borderColor: '#21262d',
                             borderWidth: 1,
                             callbacks: {
                                 label: (ctx) => `${ctx.dataset.label}: ${ctx.raw.toFixed(1)}%`
@@ -1020,10 +1024,10 @@
 
             // Define Sector Colors (Custom Palette)
             const colorMap = {
-                'Tech': '#3366cc', 'Finance': '#109618', 'Health': '#dc3912', 'Energy': '#ff9900',
+                'Tech': '#8b949ecc', 'Finance': '#109618', 'Health': '#dc3912', 'Energy': '#ff9900',
                 'Consumer': '#990099', 'Industrial': '#0099c6', 'Utilities': '#dd4477', 'Other': '#66aa00'
             };
-            const bgColors = labels.map(l => colorMap[l] || '#666');
+            const bgColors = labels.map(l => colorMap[l] || '#8b949e');
 
             if (sectorChartInstance) sectorChartInstance.destroy();
 
@@ -1050,7 +1054,7 @@
                             backgroundColor: '#000',
                             titleColor: '#fff',
                             bodyColor: '#fff',
-                            borderColor: '#333',
+                            borderColor: '#21262d',
                             borderWidth: 1,
                             callbacks: {
                                 label: (ctx) => ` ${ctx.label}: ${ctx.raw.toFixed(2)}%`
@@ -1142,7 +1146,7 @@
             const headerExtra = document.getElementById('positions-header-extra');
             if (headerExtra) {
                 if (strategyName === 'Caltropia Momentum Factor' || strategyName === 'Caltropia Mean Reversion Factor' || strategyName === 'Caltropia Low Vol Factor') {
-                    headerExtra.innerHTML = '<span class="cursor-pointer text-[#ff6600] hover:text-white" onclick="downloadPositionsCsv()">[DOWNLOAD CSV]</span>';
+                    headerExtra.innerHTML = '<span class="cursor-pointer text-[#c586c0] hover:text-white" onclick="downloadPositionsCsv()">[DOWNLOAD CSV]</span>';
                 } else {
                     headerExtra.innerText = 'DISPLAYING TOP 5';
                 }
@@ -1205,10 +1209,10 @@
                 let statusColor = 'text-[#aaa]';
                 if (weight > 0) {
                     status = 'LONG';
-                    statusColor = 'text-[#00ff88]';
+                    statusColor = 'text-[#b5cea8]';
                 } else if (weight < 0) {
                     status = 'SHORT';
-                    statusColor = 'text-[#ff3344]';
+                    statusColor = 'text-[#f48771]';
                 }
 
                 // Format Percentage
@@ -1245,8 +1249,8 @@
                 }
 
                 const row = `
-                    <tr class="border-b border-[#1a1a1a] hover:bg-[#111]">
-                        <td class="py-3 text-[#ffaa00]">${tickerKey.toUpperCase()}</td>
+                    <tr class="border-b border-[#21262d] hover:bg-[#111]">
+                        <td class="py-3 text-[#dcdcaa]">${tickerKey.toUpperCase()}</td>
                         <td class="py-3 text-[#ccc]">${fullName}</td>
                         <td class="py-3 text-right">${weightPct}</td>
                         <td class="py-3 text-right text-[#aaa]">--</td>
@@ -1349,7 +1353,7 @@
             const statsMap = {
                 'CAGR': { val: data['CAGR'], fmt: fmtPct },
                 'Sharpe Ratio': { val: data['Sharpe'], fmt: fmtNum },
-                'Max Drawdown': { val: data['Max DD'], fmt: fmtPct, color: '#ff3344' }, // Force red? Or keep green logic? User screenshot shows Green Max DD actually!
+                'Max Drawdown': { val: data['Max DD'], fmt: fmtPct, color: '#f48771' }, // Force red? Or keep green logic? User screenshot shows Green Max DD actually!
                 'Volatility': { val: data['Volatility'], fmt: fmtPct },
                 'YTD Return': { val: data['YTD Return'], fmt: fmtPct },
                 'Sortino': { val: data['Sortino'], fmt: fmtNum } // Note: Sortino might not be in all generic data, check logic
@@ -1374,8 +1378,8 @@
                     // Color logic based on user request/screenshot
                     // Screenshot shows: CAGR(Green), Sharpe(Green), Vol(Green), Max DD(Green), YTD(Green).
                     // This implies a "Terminal Green" for values, except maybe Errors.
-                    // Let's stick to the screenshot: All Green (#00ff88).
-                    valueDiv.className = `text-[#00ff88] text-xl font-mono`;
+                    // Let's stick to the screenshot: All Green (#b5cea8).
+                    valueDiv.className = `text-[#b5cea8] text-xl font-bold`;
 
                     // Special case: If user wants Max DD red, I'll stick to Green as per screenshot 
                     // (Screenshot shows -15.4% in Green)
@@ -1395,7 +1399,7 @@
 
             // Determine Date Range
             if (sortedEntries.length === 0) {
-                container.innerHTML = '<div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-[#ff3344]">NO DATA AVAILABLE</div>';
+                container.innerHTML = '<div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-[#f48771]">NO DATA AVAILABLE</div>';
                 return;
             }
 
@@ -1474,7 +1478,7 @@
                 {
                     label: strategyName.toUpperCase(), // Use Dynamic Name
                     data: strategyData,
-                    borderColor: '#ff6600',
+                    borderColor: '#c586c0',
                     backgroundColor: 'rgba(255, 102, 0, 0.1)',
                     borderWidth: 2,
                     pointRadius: 0,
@@ -1494,7 +1498,7 @@
                 datasets.push({
                     label: benchLabel,
                     data: benchmarkData,
-                    borderColor: '#666',
+                    borderColor: '#8b949e',
                     borderWidth: 2,
                     pointRadius: 0,
                     pointHoverRadius: 0,
@@ -1519,7 +1523,7 @@
                     plugins: {
                         legend: {
                             labels: {
-                                color: '#666',
+                                color: '#8b949e',
                                 font: { family: 'JetBrains Mono', size: 10 },
                                 boxWidth: 10
                             }
@@ -1528,7 +1532,7 @@
                             backgroundColor: '#0a0a0a',
                             titleColor: '#fff',
                             bodyColor: '#ccc',
-                            borderColor: '#333',
+                            borderColor: '#21262d',
                             borderWidth: 1,
                             titleFont: { family: 'JetBrains Mono' },
                             bodyFont: { family: 'JetBrains Mono' },
@@ -1541,12 +1545,12 @@
                     },
                     scales: {
                         x: {
-                            grid: { color: '#1a1a1a' },
-                            ticks: { color: '#666', font: { family: 'JetBrains Mono', size: 9 }, maxTicksLimit: 8 }
+                            grid: { color: '#21262d' },
+                            ticks: { color: '#8b949e', font: { family: 'JetBrains Mono', size: 9 }, maxTicksLimit: 8 }
                         },
                         y: {
-                            grid: { color: '#1a1a1a' },
-                            ticks: { color: '#666', font: { family: 'JetBrains Mono', size: 9 } }
+                            grid: { color: '#21262d' },
+                            ticks: { color: '#8b949e', font: { family: 'JetBrains Mono', size: 9 } }
                         }
                     }
                 }
