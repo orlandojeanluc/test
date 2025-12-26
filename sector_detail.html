@@ -437,8 +437,15 @@
                         </div>
                         <div class="flex items-center gap-2 w-full md:w-auto">
                             <div class="flex gap-1 overflow-x-auto flex-1 md:flex-none">
+                                <button onclick="switchView('momentum')" id="view-momentum"
+                                    class="view-tab px-3 py-1 text-[10px] font-bold bg-[#c586c0] text-black whitespace-nowrap flex-1 md:flex-none text-center">TREND</button>
+                                <button onclick="switchView('risk')" id="view-risk"
+                                    class="view-tab px-3 py-1 text-[10px] font-bold bg-[#1a1a1a] text-[#8b949e] hover:text-white whitespace-nowrap flex-1 md:flex-none text-center">RISK</button>
+                            </div>
+                            <div class="w-px bg-[#333] h-4 mx-2"></div>
+                            <div class="flex gap-1 overflow-x-auto flex-1 md:flex-none">
                                 <button onclick="switchConstellation('overall')" id="const-overall"
-                                    class="const-tab px-3 py-1 text-[10px] font-bold bg-[#c586c0] text-black whitespace-nowrap flex-1 md:flex-none text-center">OVERALL</button>
+                                    class="const-tab px-3 py-1 text-[10px] font-bold bg-[#21262d] text-white border border-[#c586c0] whitespace-nowrap flex-1 md:flex-none text-center">OVERALL</button>
                                 <button onclick="switchConstellation('st')" id="const-st"
                                     class="const-tab px-3 py-1 text-[10px] font-bold bg-[#1a1a1a] text-[#8b949e] hover:text-white whitespace-nowrap flex-1 md:flex-none text-center">SHORT
                                     TERM</button>
@@ -554,22 +561,49 @@
         let currentSort = 'score';
         let currentConstellation = 'overall';
         let currentMovers = 'bulls';
+        let currentView = 'momentum'; // momentum | risk
 
         async function loadData() {
             const results = await Promise.all(tickerConfig.map(async config => {
                 try {
-                    const snapshot = await get(ref(db, "equities/" + config.ticker));
-                    const data = snapshot.val();
+                    const [equitySnap, riskSnap] = await Promise.all([
+                        get(ref(db, "equities/" + config.ticker)),
+                        get(ref(db, "equitiesRiskSignals/" + config.ticker))
+                    ]);
+
+                    const data = equitySnap.val();
+                    const riskData = riskSnap.val();
+
                     if (data) {
                         const p = v => parseFloat(v) || 0;
                         const stTrend = p(data.shortTermTrend) + p(data.shortTermStrength);
                         const itTrend = p(data.intermTrend) + p(data.intermStrength);
                         const meanReversion = p(data.meanReversion);
                         const breakout = p(data.breakoutAndDown);
+
+
+                        // Risk Score Extraction (matching lowvol.html logic)
+                        let riskScore = 4; // Default Moderate
+                        let hasRiskData = false;
+
+                        if (riskData !== null && riskData !== undefined) {
+                            hasRiskData = true;
+                            if (typeof riskData === 'number') {
+                                riskScore = riskData;
+                            } else if (typeof riskData === 'string') {
+                                riskScore = parseFloat(riskData) || 0;
+                            } else if (typeof riskData === 'object') {
+                                // Field is EquityRisk, not riskScore!
+                                riskScore = parseFloat(riskData.EquityRisk) || 0;
+                            }
+                        }
+
                         return {
                             ticker: config.ticker, sector: config.sector,
                             overallScore: stTrend + itTrend + meanReversion + breakout,
-                            stTrend, itTrend, meanReversion, breakout
+                            stTrend, itTrend, meanReversion, breakout,
+                            riskScore,
+                            hasRiskData: !!riskData
                         };
                     }
                 } catch (e) { }
@@ -590,6 +624,7 @@
             // Filter
             let data = [...assetsData];
 
+            // ... (rest of filter logic same) ...
             if (document.getElementById('search-input').value) {
                 const s = document.getElementById('search-input').value.toLowerCase();
                 data = data.filter(d => d.ticker.toLowerCase().includes(s));
@@ -621,7 +656,13 @@
             svg.selectAll("*").remove();
 
             const width = 600, height = 600;
-            const nodes = processedNodes(filteredData);
+            let nodes = processedNodes(filteredData);
+
+            // Filter out nodes without risk data if in Risk View
+            if (currentView === 'risk') {
+                nodes = nodes.filter(d => d.hasRiskData);
+            }
+
             const isMobile = window.innerWidth < 768; // Mobile Breakpoint
             const scale = isMobile ? 1.5 : 1; // Scale factor for mobile
 
@@ -648,18 +689,29 @@
                     .on("end", dragended))
                 .on("click", (e, d) => window.openAssetDetail(d.ticker))
                 .on("mouseover", (e, d) => window.showTooltip(e, d.ticker, d.sector, d.score.toFixed(1)))
-                .on("mouseout", window.hideTooltip);
+                .on("mouseout", window.hideTooltip)
+                .style("cursor", "pointer");
 
             // Circles
             node.append("circle")
                 .attr("r", d => (15 + Math.abs(d.score)) * scale) // Scale size
-                .attr("fill", d => getScoreColor(d.score))
-                .attr("stroke", "#0d1117")
-                .attr("stroke-width", 2);
+                .attr("fill", d => getViewColor(d))
+                .attr("stroke", d => {
+                    // Golden Setup Logic: Momentum > 0 AND Mean Reversion > 0
+                    if (d.overallScore > 0 && d.meanReversion > 0 && currentView === 'momentum') return "#FFD700"; // Gold
+                    return "#0d1117";
+                })
+                .attr("stroke-width", d => {
+                    if (d.overallScore > 0 && d.meanReversion > 0 && currentView === 'momentum') return 3;
+                    return 2;
+                });
 
             // Text
             node.append("text")
-                .text(d => `${d.ticker} (${d.score.toFixed(1)})`)
+                .text(d => {
+                    const val = currentView === 'risk' ? d.riskScore.toFixed(1) : d.score.toFixed(1);
+                    return `${d.ticker} (${val})`;
+                })
                 .attr("dy", 4)
                 .attr("text-anchor", "middle")
                 .attr("fill", "#fff")
@@ -793,6 +845,25 @@
             return "#666666";
         }
 
+        function getViewColor(d) {
+            if (currentView === 'risk') {
+                // Risk: 0, 2 (Low) | 4 (Med) | 6 (High) | 10 (Highest)
+                if (d.riskScore <= 2) return "#b5cea8"; // Green
+                if (d.riskScore === 4) return "#FFD700"; // Gold (High Visibility)
+                if (d.riskScore === 6) return "#ce9178"; // Orange
+                return "#f48771"; // Red (10)
+            }
+            return getScoreColor(d.score);
+        }
+
+        function getRiskLabel(score) {
+            if (score <= 0) return 'LOWEST';
+            if (score <= 2) return 'LOW';
+            if (score <= 4) return 'MODERATE';
+            if (score <= 6) return 'HIGH';
+            return 'HIGHEST';
+        }
+
         // Window Helpers specific to this page
         window.setFilter = function (f) {
             currentFilter = f;
@@ -808,7 +879,7 @@
             renderAll();
         }
         window.handleSearch = function (val) { renderAll(); };
-        window.toggleChartFullscreen = function () { // ... same logic ...
+        window.toggleChartFullscreen = function () {
             const card = document.querySelector('.xl\\:col-span-8.terminal-card');
             card.classList.toggle('chart-fullscreen');
             if (card.classList.contains('chart-fullscreen')) document.body.style.overflow = 'hidden';
@@ -819,13 +890,29 @@
             document.querySelectorAll('.const-tab').forEach(t => {
                 const isActive = t.id === `const-${type}`;
                 t.classList.toggle('bg-[#c586c0]', isActive);
-                t.classList.toggle('text-black', isActive);
+                t.classList.toggle('text-white', isActive);
+                t.classList.toggle('border-[#c586c0]', isActive);
+
+                t.classList.toggle('text-[#8b949e]', !isActive);
+                t.classList.toggle('bg-[#1a1a1a]', !isActive);
+                t.classList.toggle('border-transparent', !isActive);
             });
             drawConstellation();
         };
+        window.switchView = function (type) {
+            currentView = type; // momentum | risk
+            document.querySelectorAll('.view-tab').forEach(t => {
+                const isActive = t.id === `view-${type}`;
+                t.classList.toggle('bg-[#c586c0]', isActive);
+                t.classList.toggle('text-black', isActive);
+
+                t.classList.toggle('text-[#8b949e]', !isActive);
+                t.classList.toggle('bg-[#1a1a1a]', !isActive);
+            });
+            renderAll();
+        };
         window.switchMovers = function (type) {
             currentMovers = type;
-            // Update buttons
             const bulls = document.getElementById('movers-bulls');
             const bears = document.getElementById('movers-bears');
             if (type === 'bulls') {
@@ -837,7 +924,6 @@
             }
             drawMovers();
         };
-
         window.showTooltip = function (e, ticker, sector, score) {
             const el = document.getElementById('tooltip');
             el.innerHTML = `<div class="font-bold text-[#c586c0]">${ticker}</div><div class="text-xs text-white">${sector}</div><div class="text-xs mt-1">Score: ${score}</div>`;
@@ -846,11 +932,19 @@
             el.classList.add('show');
         };
         window.hideTooltip = function () { document.getElementById('tooltip').classList.remove('show'); };
+
         window.openAssetDetail = function (ticker) {
             const asset = assetsData.find(a => a.ticker === ticker);
             if (!asset) return;
             const el = document.getElementById('detail-content');
             const color = asset.overallScore > 0 ? '#b5cea8' : '#f48771';
+
+            // Risk Color
+            let riskColor = '#f48771';
+            if (asset.riskScore <= 2) riskColor = '#b5cea8';
+            else if (asset.riskScore === 4) riskColor = '#FFD700'; // Gold
+            else if (asset.riskScore === 6) riskColor = '#ce9178';
+
             el.innerHTML = `
                 <div class="mb-2">
                     <div class="text-3xl font-bold text-[#c586c0]">${asset.ticker}</div>
@@ -866,18 +960,35 @@
                         <div class="text-[#8b949e]">IT TREND</div>
                         <div class="font-bold text-white">${asset.itTrend}</div>
                     </div>
+                </div>
+                <div class="mt-4 terminal-card p-3">
+                    <div class="flex justify-between items-center border-b border-[#333] pb-2 mb-2">
+                         <span class="text-[#8b949e] text-xs">RISK PROFILE</span>
+                         <span class="font-bold" style="color:${riskColor}">${getRiskLabel(asset.riskScore)}</span>
+                    </div>
+                    <div class="flex justify-between items-center mb-1">
+                         <span class="text-[#8b949e]">RISK SCORE</span>
+                         <span class="font-bold text-white">${asset.riskScore.toFixed(0)}</span>
+                    </div>
+                     <div class="flex justify-between items-center">
+                         <span class="text-[#8b949e]">MEAN REV</span>
+                         <span class="font-bold text-white">${asset.meanReversion.toFixed(2)}</span>
+                    </div>
                 </div>`;
             document.getElementById('detail-panel').classList.add('open');
             document.getElementById('detail-overlay').classList.add('show');
-        }
+        };
+
         window.closeDetailPanel = function () {
             document.getElementById('detail-panel').classList.remove('open');
             document.getElementById('detail-overlay').classList.remove('show');
         };
+
         window.showMetricDetail = function (type) {
             if (type === 'total') setFilter('all');
             else setFilter(type);
         };
+
         window.refreshData = function () {
             document.getElementById('last-updated').textContent = "SYNCING...";
             loadData();
