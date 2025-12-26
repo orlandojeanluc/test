@@ -622,26 +622,21 @@
 
             const width = 600, height = 600;
             const nodes = processedNodes(filteredData);
+            const isMobile = window.innerWidth < 768; // Mobile Breakpoint
+            const scale = isMobile ? 1.5 : 1; // Scale factor for mobile
 
             // Force Simulation
             const simulation = d3.forceSimulation(nodes)
-                .force("charge", d3.forceManyBody().strength(-200)) // Stronger repulsion for clearer sector view
+                .force("charge", d3.forceManyBody().strength(isMobile ? -250 : -200)) // Stronger repulsion for clustered mobile view
                 .force("center", d3.forceCenter(width / 2, height / 2))
-                .force("collide", d3.forceCollide().radius(30))
+                .force("collide", d3.forceCollide().radius(d => (20 + Math.abs(d.score)) * scale))
                 .force("radial", d3.forceRadial(d => {
-                    // Mapping: High Score (Abs) -> Center (Radius 0)
-                    // Max Score ~10 -> 0
-                    // Min Score 0 -> 250 (Edge)
                     const maxScore = 10;
                     const normalized = Math.min(Math.abs(d.score), maxScore) / maxScore;
-                    // Invert: 1 (High Score) -> 0 (Center)
                     return (1 - normalized) * 250;
                 }, width / 2, height / 2).strength(0.8));
 
             const g = svg.append("g");
-
-            // Draw Links (Optional - connects nodes?) - skipping for simplicity in detail view, just showing nodes
-            // Or maybe links based on correlation? Stick to radial style: no links, just spatial
 
             const node = g.append("g")
                 .selectAll("g")
@@ -657,7 +652,7 @@
 
             // Circles
             node.append("circle")
-                .attr("r", d => 15 + Math.abs(d.score)) // Size by score
+                .attr("r", d => (15 + Math.abs(d.score)) * scale) // Scale size
                 .attr("fill", d => getScoreColor(d.score))
                 .attr("stroke", "#0d1117")
                 .attr("stroke-width", 2);
@@ -668,14 +663,14 @@
                 .attr("dy", 4)
                 .attr("text-anchor", "middle")
                 .attr("fill", "#fff")
-                .attr("font-size", "10px")
+                .attr("font-size", isMobile ? "14px" : "10px") // Bigger text on mobile
                 .attr("font-weight", "bold")
                 .style("text-shadow", "0px 1px 4px rgba(0,0,0,0.8)");
 
             simulation.on("tick", () => {
                 // Bounding Box Logic
                 nodes.forEach(d => {
-                    const r = 20 + Math.abs(d.score);
+                    const r = (20 + Math.abs(d.score)) * scale;
                     d.x = Math.max(r, Math.min(width - r, d.x));
                     d.y = Math.max(r, Math.min(height - r, d.y));
                 });
