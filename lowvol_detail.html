@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caltropia | Ticker Risk Detail</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        mono: ['"JetBrains Mono"', '"IBM Plex Mono"', 'monospace'],
+                        sans: ['"Inter"', 'sans-serif']
+                    },
+                    colors: {
+                        terminal: {
+                            bg: '#0d1117',
+                            panel: '#161b22',
+                            border: '#21262d',
+                            orange: '#c586c0',
+                            amber: '#dcdcaa',
+                            green: '#b5cea8',
+                            red: '#f48771',
+                            blue: '#9cdcfe',
+                            muted: '#8b949e'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        body {
+            background-color: #0d1117;
+            color: #c9d1d9;
+            font-size: 14px;
+            line-height: 1.4;
+            overflow-x: hidden;
+        }
+
+        .terminal-header {
+            background: #161b22;
+            border-bottom: 1px solid #21262d;
+        }
+
+        .terminal-card {
+            background: #161b22;
+            border: 1px solid #21262d;
+            transition: all 0.15s ease;
+            position: relative;
+            border-radius: 0.5rem;
+        }
+
+        .terminal-card:hover {
+            border-color: #c586c0;
+            box-shadow: 0 0 20px rgba(197, 134, 192, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .risk-card-active {
+            border-color: #c586c0 !important;
+            background: linear-gradient(145deg, #161b22, #1f242d) !important;
+            box-shadow: 0 0 25px rgba(197, 134, 192, 0.15) !important;
+        }
+
+        .text-glow {
+            text-shadow: 0 0 20px currentColor;
+        }
+
+        .risk-lowest {
+            color: #b5cea8;
+        }
+
+        .risk-low {
+            color: #b5cea8;
+        }
+
+        .risk-medium {
+            color: #dcdcaa;
+        }
+
+        .risk-high {
+            color: #f48771;
+        }
+
+        .risk-highest {
+            color: #f48771;
+        }
+
+        .blink {
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            50% {
+                opacity: 0.5;
+            }
+        }
+    </style>
+</head>
+
+<body class="min-h-screen">
+    <!-- Navigation: Sidebar (Desktop) / Hidden (Mobile) - Copied from lowvol.html -->
+    <nav id="sidebar" class="fixed z-50 bg-[#0d1117] flex items-center
+                bottom-0 w-full h-14 border-t border-[#21262d] flex-row justify-around py-0
+                lg:left-0 lg:top-0 lg:h-full lg:w-12 lg:border-r lg:border-t-0 lg:flex-col lg:py-4">
+
+        <!-- Logo (Hidden on Mobile, Visible on Desktop) -->
+        <div class="hidden lg:block text-[#c586c0] font-bold text-xs mb-6">C</div>
+
+        <!-- Links Container -->
+        <div
+            class="flex-1 flex flex-row w-full justify-around items-center lg:flex-col lg:w-auto lg:justify-start lg:gap-4 lg:items-center">
+            <a href="radial.html"
+                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22]"
+                title="Dashboard">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z">
+                    </path>
+                </svg>
+            </a>
+            <a href="lowvol.html"
+                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#c586c0] border-t-2 lg:border-t-0 lg:bg-[#161b22] lg:border-l-2 border-[#c586c0]"
+                title="Risk Terminal">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10">
+                    </path>
+                </svg>
+            </a>
+            <a href="momentum_factor.html"
+                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22]"
+                title="Momentum Factor">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                </svg>
+            </a>
+            <a href="mean_reversion.html"
+                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22]"
+                title="Mean Reversion">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
+                    </path>
+                </svg>
+            </a>
+            <a href="portfolios.html"
+                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22]"
+                title="Portfolios">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
+                    </path>
+                </svg>
+            </a>
+        </div>
+    </nav>
+
+    <div class="ml-0 lg:ml-12 pb-20 lg:pb-0 transition-all">
+        <!-- Header -->
+        <header
+            class="terminal-header px-4 py-2 flex flex-col md:flex-row md:items-center justify-between gap-2 md:gap-0 sticky top-0 z-40 bg-[#161b22]">
+            <div class="flex items-center gap-2 md:gap-4">
+                <a href="lowvol.html"
+                    class="text-[#c586c0] hover:text-white transition-colors text-xs flex items-center gap-1">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7">
+                        </path>
+                    </svg>
+                    BACK
+                </a>
+                <span class="text-[#8b949e] hidden md:inline">|</span>
+                <span id="ticker-header" class="text-white text-xs font-bold uppercase">LOADING...</span>
+                <span class="text-[#b5cea8] text-[10px] md:text-xs blink">● LIVE</span>
+            </div>
+            <div class="flex items-center gap-4 text-xs">
+                <span class="text-[#8b949e]">UPDATED:</span>
+                <span id="last-updated" class="text-[#dcdcaa]">--:--:--</span>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="p-6 max-w-7xl mx-auto space-y-6">
+
+            <!-- Current Risk Score Card -->
+            <div id="top-score-card"
+                class="terminal-card p-10 flex flex-col items-center justify-center text-center relative overflow-hidden transition-all duration-500">
+                <!-- Background Glow -->
+                <div id="score-glow"
+                    class="absolute inset-0 opacity-20 bg-gradient-to-r from-transparent via-transparent to-transparent">
+                </div>
+
+                <h2 class="text-[#8b949e] text-sm uppercase tracking-[0.2em] mb-4 font-bold relative z-10">Current Risk
+                    Score</h2>
+                <div id="current-risk-score" class="text-8xl font-bold text-white relative z-10 text-glow">--</div>
+            </div>
+
+            <div class="space-y-4">
+                <h3 class="text-xl text-[#c9d1d9] font-bold border-b border-[#21262d] pb-2">
+                    Performance and Volatility by Risk Regime Scores
+                </h3>
+
+                <!-- Risk Grid -->
+                <!-- Grid of 5 Equal Cards -->
+                <div id="risk-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+                    <!-- Cards injected by JS -->
+                    <div class="col-span-full text-center text-[#8b949e] py-12">LOADING DATA...</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
+        import { getAuth } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBxG5qf6mb8E_-b2TeXlRNseMZ26L9DRYg",
+            authDomain: "trendscores-df341.firebaseapp.com",
+            projectId: "trendscores-df341",
+            databaseURL: "https://trendscores-df341-default-rtdb.firebaseio.com"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // Get Params
+        const urlParams = new URLSearchParams(window.location.search);
+        const ticker = urlParams.get('ticker');
+
+        if (!ticker) {
+            window.location.href = 'lowvol.html';
+        }
+
+        document.getElementById('ticker-header').textContent = `${ticker} RISK ANALYSIS`;
+
+        async function loadDetailData() {
+            document.getElementById('last-updated').textContent = "Syncing...";
+
+            try {
+                // Fetch Current Score
+                const currentScoreSnap = await get(ref(db, `equitiesRiskSignals/${ticker}`));
+                const currentData = currentScoreSnap.val();
+                let currentScore = 0;
+                if (typeof currentData === 'object') currentScore = parseFloat(currentData.EquityRisk) || 0;
+                else currentScore = parseFloat(currentData) || 0;
+
+                const scoreEl = document.getElementById('current-risk-score');
+                const glowEl = document.getElementById('score-glow');
+                const cardEl = document.getElementById('top-score-card');
+
+                scoreEl.textContent = currentScore;
+
+                // Colorize Main Score & Glow
+                const styles = getRiskClasses(currentScore);
+                scoreEl.className = `text-8xl font-bold relative z-10 text-glow ${styles.textClass}`;
+
+                // Dynamic Gradient Glow
+                glowEl.className = `absolute inset-0 opacity-20 bg-gradient-to-br ${styles.gradient}`;
+                cardEl.style.boxShadow = `0 0 40px ${styles.shadowColor}`;
+
+                // Fetch Performance Data
+                const perfSnap = await get(ref(db, `equityRiskScoresbyPerformance/${ticker}`));
+                const perfData = perfSnap.val();
+
+                renderRiskGrid(perfData, currentScore); // Pass current score
+                document.getElementById('last-updated').textContent = new Date().toLocaleTimeString();
+
+            } catch (e) {
+                console.error("Error fetching details", e);
+                document.getElementById('risk-grid').innerHTML = '<div class="col-span-full text-center text-[#f48771]">ERROR LOADING DATA</div>';
+            }
+        }
+
+        function renderRiskGrid(data, currentScore) {
+            const container = document.getElementById('risk-grid');
+            if (!data) {
+                container.innerHTML = '<div class="col-span-full text-center text-[#8b949e]">NO HISTORICAL PERFORMANCE DATA AVAILABLE</div>';
+                return;
+            }
+
+            // Expected keys: 0, 2, 4, 6, 10
+            const keys = ['0', '2', '4', '6', '10'];
+
+            // Normalize current score to nearest key for highlighting (0, 2, 4, 6, 10)
+            // Just finding exact match or closest bucket? Assuming exact match logic for "Active Regime" highlighting
+            let activeKey = null;
+            if (keys.includes(String(currentScore))) activeKey = String(currentScore);
+
+            container.innerHTML = keys.map(k => {
+                const item = data[k];
+                if (!item) return '';
+
+                // Keys from Firebase: AnnualizedReturn, AnnualizedVolatility
+                const ret = item.AnnualizedReturn !== undefined ? item.AnnualizedReturn : (item.Return || 0);
+                const vol = item.AnnualizedVolatility !== undefined ? item.AnnualizedVolatility : (item.Volatility || 0);
+
+                const retVal = parseFloat(ret);
+                const displayRet = retVal.toFixed(2) + '%';
+                const displayVol = parseFloat(vol).toFixed(2) + '%';
+                const displayScore = k === '10' ? '10' : k;
+
+                // Color Logic
+                const retColor = retVal >= 0 ? 'text-[#b5cea8]' : 'text-[#f48771]';
+                const isActive = k === activeKey ? 'risk-card-active' : '';
+                const activeLabel = k === activeKey ? '<div class="absolute top-2 right-2 text-[10px] text-[#c586c0] font-bold border border-[#c586c0] px-1 rounded">CURRENT</div>' : '';
+
+                return `
+                    <div class="terminal-card p-6 flex flex-col items-center justify-between min-h-[200px] hover:border-[#c586c0] transition-colors relative ${isActive}">
+                        ${activeLabel}
+                        <div class="text-left w-full border-b border-[#30363d] pb-4 mb-4">
+                            <h3 class="text-3xl font-bold text-[#c9d1d9] mb-1">Risk</h3>
+                            <div class="text-5xl font-bold text-white">${displayScore}</div>
+                        </div>
+                        
+                        <div class="w-full space-y-4">
+                            <div class="flex flex-col items-start">
+                                <span class="text-[#8b949e] text-xs font-bold uppercase tracking-wider">Annual Return</span>
+                                <span class="text-2xl font-bold ${retColor}">${displayRet}</span>
+                            </div>
+                             <div class="flex flex-col items-start">
+                                <span class="text-[#8b949e] text-xs font-bold uppercase tracking-wider">Volatility</span>
+                                <span class="text-2xl font-bold text-white">${displayVol}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function getRiskClasses(score) {
+            if (score <= 0) return { textClass: 'text-[#b5cea8]', gradient: 'from-[#b5cea8] via-[#0d1117] to-[#0d1117]', shadowColor: 'rgba(181, 206, 168, 0.1)' }; // Green
+            if (score <= 2) return { textClass: 'text-[#b5cea8]', gradient: 'from-[#b5cea8] via-[#0d1117] to-[#0d1117]', shadowColor: 'rgba(181, 206, 168, 0.1)' };
+            if (score <= 4) return { textClass: 'text-[#dcdcaa]', gradient: 'from-[#dcdcaa] via-[#0d1117] to-[#0d1117]', shadowColor: 'rgba(220, 220, 170, 0.1)' }; // Yellow
+            if (score <= 6) return { textClass: 'text-[#f48771]', gradient: 'from-[#f48771] via-[#0d1117] to-[#0d1117]', shadowColor: 'rgba(244, 135, 113, 0.1)' }; // Orange
+            return { textClass: 'text-[#f48771]', gradient: 'from-[#f48771] via-[#0d1117] to-[#0d1117]', shadowColor: 'rgba(244, 135, 113, 0.2)' }; // Red
+        }
+
+        // Initialize
+        loadDetailData();
+
+    </script>
+</body>
+
+</html>

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Caltropia | Equity Risk Terminal</title>
+    <title>Caltropia | Mean Reversion Signals</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
@@ -84,12 +84,12 @@
             transition: width 0.3s ease;
         }
 
-        /* Risk Colors Mapped to Syntax Theme */
+        /* Signal Colors Mapped to Syntax Theme */
         .risk-lowest {
             color: #b5cea8;
         }
 
-        /* Green */
+        /* Postive/Green */
         .risk-low {
             color: #b5cea8;
         }
@@ -98,12 +98,12 @@
             color: #dcdcaa;
         }
 
-        /* Yellow */
+        /* Neutral/Yellow */
         .risk-high {
             color: #f48771;
         }
 
-        /* Red */
+        /* Negative/Red */
         .risk-highest {
             color: #f48771;
         }
@@ -190,19 +190,18 @@
 <body class="min-h-screen w-screen overflow-x-hidden">
 
     <!-- Sidebar Navigation - Terminal Style -->
-    <!-- Navigation: Bottom on Mobile, Left on Desktop -->
     <nav id="sidebar" class="fixed z-50 bg-[#0d1117] flex items-center
                 bottom-0 w-full h-14 border-t border-[#21262d] flex-row justify-around py-0
                 lg:left-0 lg:top-0 lg:h-full lg:w-12 lg:border-r lg:border-t-0 lg:flex-col lg:py-4">
 
-        <!-- Logo (Hidden on Mobile, Visible on Desktop) -->
+        <!-- Logo -->
         <div class="hidden lg:block text-[#c586c0] font-bold text-xs mb-6">C</div>
 
         <!-- Links Container -->
         <div
             class="flex-1 flex flex-row w-full justify-around items-center lg:flex-col lg:w-auto lg:justify-start lg:gap-4 lg:items-center">
             <a href="radial.html"
-                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22]"
+                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#21262d]"
                 title="Dashboard">
                 <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -211,7 +210,7 @@
                 </svg>
             </a>
             <a href="momentum.html"
-                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22]"
+                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#21262d]"
                 title="Momentum">
                 <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -219,7 +218,7 @@
                 </svg>
             </a>
             <a href="lowvol.html"
-                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#c586c0] border-t-2 lg:border-t-0 lg:bg-[#161b22] lg:border-l-2 border-[#c586c0]"
+                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#21262d]"
                 title="Risk Terminal">
                 <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -228,7 +227,7 @@
                 </svg>
             </a>
             <a href="momentum_factor.html"
-                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22]"
+                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#21262d]"
                 title="Momentum Factor">
                 <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -236,7 +235,7 @@
                 </svg>
             </a>
             <a href="mean_reversion.html"
-                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22]"
+                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#c586c0] border-t-2 lg:border-t-0 lg:bg-[#21262d] lg:border-l-2 border-[#c586c0]"
                 title="Mean Reversion">
                 <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -245,7 +244,7 @@
                 </svg>
             </a>
             <a href="portfolios.html"
-                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22]"
+                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#21262d]"
                 title="Portfolios">
                 <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -264,7 +263,7 @@
             <div class="flex items-center gap-4">
                 <span class="text-[#c586c0] font-bold text-sm">CALTROPIA</span>
                 <span class="text-[#8b949e]">|</span>
-                <span class="text-white text-xs">EQUITY RISK TERMINAL</span>
+                <span class="text-white text-xs">MEAN REVERSION SIGNALS</span>
                 <span class="text-[#b5cea8] text-xs blink">● LIVE</span>
             </div>
             <div class="flex items-center gap-4 text-xs">
@@ -278,7 +277,7 @@
         </header>
 
         <!-- Controls Bar -->
-        <div class="bg-[#11151b] border-b border-[#21262d] px-4 py-2 flex flex-wrap items-center gap-4">
+        <div class="bg-[#161b22] border-b border-[#21262d] px-4 py-2 flex flex-wrap items-center gap-4">
             <div class="flex items-center gap-2">
                 <span class="text-[#8b949e] text-xs">SEARCH:</span>
                 <input type="text" id="search-input"
@@ -303,11 +302,11 @@
             </div>
             <div class="flex items-center gap-1">
                 <span class="text-[#8b949e] text-xs">SORT:</span>
-                <button onclick="setSortBy('score')" class="sort-btn px-2 py-1 text-xs bg-[#c586c0] text-black"
-                    data-sort="score">LOW→HIGH</button>
-                <button onclick="setSortBy('score-desc')"
-                    class="sort-btn px-2 py-1 text-xs bg-[#21262d] border border-[#21262d] text-[#8b949e] hover:text-[#c586c0]"
+                <button onclick="setSortBy('score-desc')" class="sort-btn px-2 py-1 text-xs bg-[#c586c0] text-black"
                     data-sort="score-desc">HIGH→LOW</button>
+                <button onclick="setSortBy('score')"
+                    class="sort-btn px-2 py-1 text-xs bg-[#21262d] border border-[#21262d] text-[#8b949e] hover:text-[#c586c0]"
+                    data-sort="score">LOW→HIGH</button>
                 <button onclick="setSortBy('alpha')"
                     class="sort-btn px-2 py-1 text-xs bg-[#21262d] border border-[#21262d] text-[#8b949e] hover:text-[#c586c0]"
                     data-sort="alpha">A-Z</button>
@@ -323,7 +322,7 @@
         </div>
 
         <footer class="text-center text-[#21262d] text-xs py-4">
-            CALTROPIA EQUITY RISK TERMINAL v2.0 | DATA FROM FIREBASE
+            CALTROPIA MEAN REVERSION SIGNALS TERMINAL v1.0 | DATA FROM FIREBASE
         </footer>
     </div>
 
@@ -355,7 +354,7 @@
         ];
 
         let assetsData = [];
-        let currentSort = 'score';
+        let currentSort = 'score-desc';
 
         onAuthStateChanged(auth, () => loadData());
 
@@ -363,18 +362,17 @@
             document.getElementById('last-updated').textContent = 'Syncing...';
             const results = await Promise.all(tickerConfig.map(async config => {
                 try {
-                    const snapshot = await get(ref(db, "equitiesRiskSignals/" + config.ticker));
+                    // Fetch from 'equities' node as per user screenshot
+                    const snapshot = await get(ref(db, "equities/" + config.ticker));
                     const data = snapshot.val();
                     if (data !== null && data !== undefined) {
                         let score = 0;
-                        // Check if data is a direct number value or an object
-                        if (typeof data === 'number') {
+                        // Data is likely an object containing meanReversion field
+                        if (typeof data === 'object') {
+                            score = parseFloat(data.meanReversion) || 0;
+                        } else if (typeof data === 'number') {
+                            // Fallback if structure is different
                             score = data;
-                        } else if (typeof data === 'string') {
-                            score = parseFloat(data) || 0;
-                        } else if (typeof data === 'object') {
-                            // Use EquityRisk field from Firebase
-                            score = parseFloat(data.EquityRisk) || 0;
                         }
 
                         return {
@@ -399,7 +397,10 @@
             if (search) data = data.filter(a => a.ticker.toLowerCase().includes(search));
             if (sector !== 'all') data = data.filter(a => a.sector === sector);
 
-            // Sort by score (lower = lower risk)
+            // Filter out 0.00 scores as requested
+            data = data.filter(a => Math.abs(a.score) > 0.001);
+
+            // Sort by score
             data.sort((a, b) => {
                 if (currentSort === 'score') return a.score - b.score;
                 if (currentSort === 'score-desc') return b.score - a.score;
@@ -423,12 +424,11 @@
             filterAssets();
         };
 
-        function getRiskLevel(score) {
-            if (score <= 0) return { class: 'risk-lowest', badge: 'badge-lowest', text: 'LOWEST' };
-            if (score <= 2) return { class: 'risk-low', badge: 'badge-low', text: 'LOW' };
-            if (score <= 4) return { class: 'risk-medium', badge: 'badge-medium', text: 'MODERATE' };
-            if (score <= 6) return { class: 'risk-high', badge: 'badge-high', text: 'HIGH' };
-            return { class: 'risk-highest', badge: 'badge-highest', text: 'HIGHEST' };
+        function getSignalStrength(score) {
+            // Logic: Positive = Green, Negative = Red
+            if (score > 0) return { class: 'risk-lowest', badge: 'badge-lowest', text: 'POSITIVE' };
+            if (score < 0) return { class: 'risk-highest', badge: 'badge-highest', text: 'NEGATIVE' };
+            return { class: 'text-[#8b949e]', badge: 'bg-[#21262d] text-[#aaa]', text: 'NEUTRAL' };
         }
 
         function renderGrid(data) {
@@ -436,27 +436,36 @@
             document.getElementById('asset-count').textContent = data.length;
 
             if (data.length === 0) {
-                container.innerHTML = '<div class="col-span-full text-center py-12 text-[#8b949e]">NO DATA - LOADING FROM EQUITIESRISKSIGNALS...</div>';
+                container.innerHTML = '<div class="col-span-full text-center py-12 text-[#8b949e]">NO DATA - LOADING FROM EQUITIES...</div>';
                 return;
             }
 
             container.innerHTML = data.map(a => {
-                const risk = getRiskLevel(a.score);
-                const scoreColor = a.score <= 2 ? '#b5cea8' : a.score <= 4 ? '#dcdcaa' : '#f48771';
-                const barWidth = Math.min(100, a.score * 10);
+                const signal = getSignalStrength(a.score);
+                // Color Logic synced with getSignalStrength
+                // Positive: Green (#b5cea8), Negative: Red (#f48771), Zero: Grey
+                let scoreColor = '#8b949e';
+                if (a.score > 0) scoreColor = '#b5cea8';
+                if (a.score < 0) scoreColor = '#f48771';
+
+                // Bar Width based on magnitude (Abs Value)
+                // Assuming max score around 5-10? Scaling factor 20 means max 5.
+                // If score is 100 or something larger, we might need a different scale.
+                // For now sticking to * 20.
+                const barWidth = Math.min(100, Math.abs(a.score) * 20);
 
                 return `
-                    <div class="terminal-card p-4 cursor-pointer hover:bg-[#21262d] transition-colors" onclick="window.location.href='lowvol_detail.html?ticker=${a.ticker}'">
+                    <div class="terminal-card p-4">
                         <div class="flex items-center justify-between mb-3">
                             <div class="flex items-center gap-2">
                                 <span class="text-[#c586c0] font-bold text-lg">${a.ticker}</span>
                                 <span class="text-[#444] text-xs">${a.sector.toUpperCase()}</span>
                             </div>
-                            <span class="badge ${risk.badge}">${risk.text}</span>
+                            <span class="badge ${signal.badge}">${signal.text}</span>
                         </div>
                         <div class="flex items-center justify-between">
-                            <span class="text-[#8b949e] text-xs">RISK SCORE</span>
-                            <span class="text-3xl font-bold ${risk.class}">${a.score.toFixed(1)}</span>
+                            <span class="text-[#8b949e] text-xs">SIGNAL SCORE</span>
+                            <span class="text-3xl font-bold ${signal.class}">${a.score.toFixed(2)}</span>
                         </div>
                         <div class="risk-bar mt-3">
                             <div class="risk-fill" style="width:${barWidth}%; background:${scoreColor}"></div>
@@ -465,18 +474,6 @@
                 `;
             }).join('');
         }
-
-        window.toggleMobileMenu = function () {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('mobile-overlay');
-            const menuIcon = document.getElementById('menu-icon');
-            const closeIcon = document.getElementById('close-icon');
-            sidebar.classList.toggle('-translate-x-full');
-            sidebar.classList.toggle('translate-x-0');
-            overlay.classList.toggle('hidden');
-            menuIcon.classList.toggle('hidden');
-            closeIcon.classList.toggle('hidden');
-        };
     </script>
 </body>
 

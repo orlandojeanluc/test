@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Caltropia | Equity Risk Terminal</title>
+    <title>Caltropia | Momentum Terminal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
@@ -69,7 +69,7 @@
 
         .data-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 12px;
             padding: 12px;
         }
@@ -84,30 +84,6 @@
             transition: width 0.3s ease;
         }
 
-        /* Risk Colors Mapped to Syntax Theme */
-        .risk-lowest {
-            color: #b5cea8;
-        }
-
-        /* Green */
-        .risk-low {
-            color: #b5cea8;
-        }
-
-        .risk-medium {
-            color: #dcdcaa;
-        }
-
-        /* Yellow */
-        .risk-high {
-            color: #f48771;
-        }
-
-        /* Red */
-        .risk-highest {
-            color: #f48771;
-        }
-
         .badge {
             font-size: 11px;
             padding: 3px 8px;
@@ -115,32 +91,6 @@
             text-transform: uppercase;
             font-weight: 700;
             border-radius: 4px;
-        }
-
-        /* Badges Mapped to Syntax Theme */
-        .badge-lowest {
-            background: #b5cea8;
-            color: #000;
-        }
-
-        .badge-low {
-            background: #b5cea8;
-            color: #000;
-        }
-
-        .badge-medium {
-            background: #dcdcaa;
-            color: #000;
-        }
-
-        .badge-high {
-            background: #f48771;
-            color: #000;
-        }
-
-        .badge-highest {
-            background: #f48771;
-            color: #000;
         }
 
         ::-webkit-scrollbar {
@@ -211,7 +161,7 @@
                 </svg>
             </a>
             <a href="momentum.html"
-                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22]"
+                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#c586c0] border-t-2 lg:border-t-0 lg:bg-[#161b22] lg:border-l-2 border-[#c586c0]"
                 title="Momentum">
                 <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -219,7 +169,7 @@
                 </svg>
             </a>
             <a href="lowvol.html"
-                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#c586c0] border-t-2 lg:border-t-0 lg:bg-[#161b22] lg:border-l-2 border-[#c586c0]"
+                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22]"
                 title="Risk Terminal">
                 <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -264,7 +214,7 @@
             <div class="flex items-center gap-4">
                 <span class="text-[#c586c0] font-bold text-sm">CALTROPIA</span>
                 <span class="text-[#8b949e]">|</span>
-                <span class="text-white text-xs">EQUITY RISK TERMINAL</span>
+                <span class="text-white text-xs">TREND TERMINAL</span>
                 <span class="text-[#b5cea8] text-xs blink">● LIVE</span>
             </div>
             <div class="flex items-center gap-4 text-xs">
@@ -303,14 +253,17 @@
             </div>
             <div class="flex items-center gap-1">
                 <span class="text-[#8b949e] text-xs">SORT:</span>
-                <button onclick="setSortBy('score')" class="sort-btn px-2 py-1 text-xs bg-[#c586c0] text-black"
-                    data-sort="score">LOW→HIGH</button>
-                <button onclick="setSortBy('score-desc')"
+                <button onclick="setSortBy('overall')" class="sort-btn px-2 py-1 text-xs bg-[#c586c0] text-black"
+                    data-sort="overall">OVERALL</button>
+                <button onclick="setSortBy('st')"
                     class="sort-btn px-2 py-1 text-xs bg-[#21262d] border border-[#21262d] text-[#8b949e] hover:text-[#c586c0]"
-                    data-sort="score-desc">HIGH→LOW</button>
-                <button onclick="setSortBy('alpha')"
+                    data-sort="st">ST TREND</button>
+                <button onclick="setSortBy('it')"
                     class="sort-btn px-2 py-1 text-xs bg-[#21262d] border border-[#21262d] text-[#8b949e] hover:text-[#c586c0]"
-                    data-sort="alpha">A-Z</button>
+                    data-sort="it">IT TREND</button>
+                <button onclick="setSortBy('meanrev')"
+                    class="sort-btn px-2 py-1 text-xs bg-[#21262d] border border-[#21262d] text-[#8b949e] hover:text-[#c586c0]"
+                    data-sort="meanrev">MEAN REV</button>
             </div>
             <div class="ml-auto text-xs">
                 <span class="text-[#8b949e]">ASSETS:</span>
@@ -318,12 +271,12 @@
             </div>
         </div>
 
-        <!-- Data Grid -->
+        <!-- Assets Grid -->
         <div id="assets-grid" class="data-grid p-2">
         </div>
 
         <footer class="text-center text-[#21262d] text-xs py-4">
-            CALTROPIA EQUITY RISK TERMINAL v2.0 | DATA FROM FIREBASE
+            CALTROPIA MOMENTUM TERMINAL v2.0 | DATA FROM FIREBASE
         </footer>
     </div>
 
@@ -351,11 +304,11 @@
             { ticker: "WMT", sector: "Consumer" }, { ticker: "COST", sector: "Consumer" }, { ticker: "HD", sector: "Consumer" }, { ticker: "PG", sector: "Consumer" }, { ticker: "KO", sector: "Consumer" }, { ticker: "PEP", sector: "Consumer" }, { ticker: "MCD", sector: "Consumer" }, { ticker: "NKE", sector: "Consumer" }, { ticker: "SBUX", sector: "Consumer" }, { ticker: "TJX", sector: "Consumer" }, { ticker: "LOW", sector: "Consumer" }, { ticker: "ORLY", sector: "Consumer" }, { ticker: "AZO", sector: "Consumer" }, { ticker: "MDLZ", sector: "Consumer" }, { ticker: "CL", sector: "Consumer" }, { ticker: "CMG", sector: "Consumer" }, { ticker: "MAR", sector: "Consumer" }, { ticker: "HLT", sector: "Consumer" }, { ticker: "RCL", sector: "Consumer" }, { ticker: "ABNB", sector: "Consumer" }, { ticker: "DIS", sector: "Consumer" }, { ticker: "NFLX", sector: "Consumer" }, { ticker: "BKNG", sector: "Consumer" },
             { ticker: "CAT", sector: "Industrial" }, { ticker: "DE", sector: "Industrial" }, { ticker: "UNP", sector: "Industrial" }, { ticker: "HON", sector: "Industrial" }, { ticker: "GE", sector: "Industrial" }, { ticker: "BA", sector: "Industrial" }, { ticker: "RTX", sector: "Industrial" }, { ticker: "LMT", sector: "Industrial" }, { ticker: "GD", sector: "Industrial" }, { ticker: "NOC", sector: "Industrial" }, { ticker: "MMM", sector: "Industrial" }, { ticker: "EMR", sector: "Industrial" }, { ticker: "ETN", sector: "Industrial" }, { ticker: "PH", sector: "Industrial" }, { ticker: "ITW", sector: "Industrial" }, { ticker: "CMI", sector: "Industrial" }, { ticker: "CSX", sector: "Industrial" }, { ticker: "NSC", sector: "Industrial" }, { ticker: "UPS", sector: "Industrial" }, { ticker: "FAST", sector: "Industrial" }, { ticker: "URI", sector: "Industrial" }, { ticker: "PWR", sector: "Industrial" }, { ticker: "CTAS", sector: "Industrial" }, { ticker: "TDG", sector: "Industrial" }, { ticker: "HWM", sector: "Industrial" }, { ticker: "AXON", sector: "Industrial" }, { ticker: "JCI", sector: "Industrial" }, { ticker: "TT", sector: "Industrial" }, { ticker: "MSI", sector: "Industrial" }, { ticker: "ROP", sector: "Industrial" },
             { ticker: "NEE", sector: "Utilities" }, { ticker: "DUK", sector: "Utilities" }, { ticker: "SO", sector: "Utilities" }, { ticker: "AEP", sector: "Utilities" }, { ticker: "SRE", sector: "Utilities" }, { ticker: "PLD", sector: "Utilities" }, { ticker: "AMT", sector: "Utilities" }, { ticker: "EQIX", sector: "Utilities" }, { ticker: "WELL", sector: "Utilities" }, { ticker: "SPG", sector: "Utilities" }, { ticker: "O", sector: "Utilities" },
-            { ticker: "T", sector: "Other" }, { ticker: "VZ", sector: "Other" }, { ticker: "TMUS", sector: "Other" }, { ticker: "UBER", sector: "Other" }, { ticker: "DASH", sector: "Other" }, { ticker: "INTU", sector: "Other" }, { ticker: "ADSK", sector: "Other" }, { ticker: "ACN", sector: "Other" }, { ticker: "ADP", sector: "Other" }, { ticker: "APH", sector: "Other" }, { ticker: "TEL", sector: "Other" }, { ticker: "APD", sector: "Other" }, { ticker: "ECL", sector: "Other" }, { ticker: "SHW", sector: "Other" }, { ticker: "LIN", sector: "Other" }, { ticker: "FCX", sector: "Other" }, { ticker: "NEM", sector: "Other" }, { ticker: "CB", sector: "Other" }, { ticker: "PGR", sector: "Other" }, { ticker: "WM", sector: "Other" }, { ticker: "GM", sector: "Other" }, { ticker: "PM", sector: "Other" }, { ticker: "MO", sector: "Other" },
+            { ticker: "T", sector: "Other" }, { ticker: "VZ", sector: "Other" }, { ticker: "TMUS", sector: "Other" }, { ticker: "UBER", sector: "Other" }, { ticker: "DASH", sector: "Other" }, { ticker: "INTU", sector: "Other" }, { ticker: "ADSK", sector: "Other" }, { ticker: "ACN", sector: "Other" }, { ticker: "ADP", sector: "Other" }, { ticker: "APH", sector: "Other" }, { ticker: "TEL", sector: "Other" }, { ticker: "APD", sector: "Other" }, { ticker: "ECL", sector: "Other" }, { ticker: "SHW", sector: "Other" }, { ticker: "LIN", sector: "Other" }, { ticker: "FCX", sector: "Other" }, { ticker: "NEM", sector: "Other" }, { ticker: "CB", sector: "Other" }, { ticker: "PGR", sector: "Other" }, { ticker: "WM", sector: "Other" }, { ticker: "GM", sector: "Other" }, { ticker: "PM", sector: "Other" }, { ticker: "MO", sector: "Other" }
         ];
 
         let assetsData = [];
-        let currentSort = 'score';
+        let currentSort = 'overall';
 
         onAuthStateChanged(auth, () => loadData());
 
@@ -363,27 +316,23 @@
             document.getElementById('last-updated').textContent = 'Syncing...';
             const results = await Promise.all(tickerConfig.map(async config => {
                 try {
-                    const snapshot = await get(ref(db, "equitiesRiskSignals/" + config.ticker));
+                    const snapshot = await get(ref(db, "equities/" + config.ticker));
                     const data = snapshot.val();
-                    if (data !== null && data !== undefined) {
-                        let score = 0;
-                        // Check if data is a direct number value or an object
-                        if (typeof data === 'number') {
-                            score = data;
-                        } else if (typeof data === 'string') {
-                            score = parseFloat(data) || 0;
-                        } else if (typeof data === 'object') {
-                            // Use EquityRisk field from Firebase
-                            score = parseFloat(data.EquityRisk) || 0;
-                        }
-
+                    if (data) {
+                        const p = v => parseFloat(v) || 0;
                         return {
                             ticker: config.ticker,
                             sector: config.sector,
-                            score
+                            stTrend: p(data.shortTermTrend),
+                            stStrength: p(data.shortTermStrength),
+                            itTrend: p(data.intermTrend),
+                            itStrength: p(data.intermStrength),
+                            meanReversion: p(data.meanReversion),
+                            breakout: p(data.breakoutAndDown),
+                            overall: p(data.shortTermTrend) + p(data.shortTermStrength) + p(data.intermTrend) + p(data.intermStrength) + p(data.meanReversion) + p(data.breakoutAndDown)
                         };
                     }
-                } catch (e) { console.log('Error loading ' + config.ticker, e); }
+                } catch (e) { }
                 return null;
             }));
             assetsData = results.filter(r => r);
@@ -399,11 +348,13 @@
             if (search) data = data.filter(a => a.ticker.toLowerCase().includes(search));
             if (sector !== 'all') data = data.filter(a => a.sector === sector);
 
-            // Sort by score (lower = lower risk)
+            // Sort
             data.sort((a, b) => {
-                if (currentSort === 'score') return a.score - b.score;
-                if (currentSort === 'score-desc') return b.score - a.score;
-                return a.ticker.localeCompare(b.ticker);
+                if (currentSort === 'overall') return b.overall - a.overall;
+                if (currentSort === 'st') return (b.stTrend + b.stStrength) - (a.stTrend + a.stStrength);
+                if (currentSort === 'it') return (b.itTrend + b.itStrength) - (a.itTrend + a.itStrength);
+                if (currentSort === 'meanrev') return Math.abs(b.meanReversion) - Math.abs(a.meanReversion);
+                return 0;
             });
 
             renderGrid(data);
@@ -423,43 +374,56 @@
             filterAssets();
         };
 
-        function getRiskLevel(score) {
-            if (score <= 0) return { class: 'risk-lowest', badge: 'badge-lowest', text: 'LOWEST' };
-            if (score <= 2) return { class: 'risk-low', badge: 'badge-low', text: 'LOW' };
-            if (score <= 4) return { class: 'risk-medium', badge: 'badge-medium', text: 'MODERATE' };
-            if (score <= 6) return { class: 'risk-high', badge: 'badge-high', text: 'HIGH' };
-            return { class: 'risk-highest', badge: 'badge-highest', text: 'HIGHEST' };
-        }
-
         function renderGrid(data) {
             const container = document.getElementById('assets-grid');
             document.getElementById('asset-count').textContent = data.length;
 
             if (data.length === 0) {
-                container.innerHTML = '<div class="col-span-full text-center py-12 text-[#8b949e]">NO DATA - LOADING FROM EQUITIESRISKSIGNALS...</div>';
+                container.innerHTML = '<div class="col-span-full text-center py-12 text-[#8b949e]">NO DATA - LOADING FROM FIREBASE...</div>';
                 return;
             }
 
             container.innerHTML = data.map(a => {
-                const risk = getRiskLevel(a.score);
-                const scoreColor = a.score <= 2 ? '#b5cea8' : a.score <= 4 ? '#dcdcaa' : '#f48771';
-                const barWidth = Math.min(100, a.score * 10);
+                const overallColor = a.overall > 0 ? '#b5cea8' : a.overall < 0 ? '#f48771' : '#8b949e';
+
+                const factors = [
+                    { name: 'ST TREND', value: a.stTrend, max: 2, color: '#b5cea8' },
+                    { name: 'ST STR', value: a.stStrength, max: 2, color: '#9cdcfe' },
+                    { name: 'IT TREND', value: a.itTrend, max: 2, color: '#dcdcaa' },
+                    { name: 'IT STR', value: a.itStrength, max: 2, color: '#c586c0' },
+                    { name: 'MEAN REV', value: a.meanReversion, max: 1.5, color: '#f48771' },
+                    { name: 'BREAKOUT', value: a.breakout, max: 2, color: '#a855f7' }
+                ];
+
+                const factorRows = factors.map(f => {
+                    const normPct = Math.min(100, (Math.abs(f.value) / f.max) * 100);
+                    const isPositive = f.value >= 0;
+                    const valColor = f.value > 0 ? 'text-[#b5cea8]' : f.value < 0 ? 'text-[#f48771]' : 'text-[#8b949e]';
+                    const barColor = isPositive ? f.color : '#f48771';
+
+                    return `
+                        <div class="flex items-center justify-between text-[10px] mb-1">
+                            <span class="text-[#8b949e] w-16">${f.name}</span>
+                            <div class="flex-1 mx-2 h-1 bg-[#21262d] rounded overflow-hidden">
+                                <div class="h-full transition-all" 
+                                     style="width:${normPct}%; background:${barColor}; opacity: ${f.value === 0 ? 0 : 1}"></div>
+                            </div>
+                            <span class="w-8 text-right ${valColor}">${f.value > 0 ? '+' : ''}${f.value.toFixed(1)}</span>
+                        </div>
+                    `;
+                }).join('');
 
                 return `
-                    <div class="terminal-card p-4 cursor-pointer hover:bg-[#21262d] transition-colors" onclick="window.location.href='lowvol_detail.html?ticker=${a.ticker}'">
+                    <div class="terminal-card p-4">
                         <div class="flex items-center justify-between mb-3">
                             <div class="flex items-center gap-2">
                                 <span class="text-[#c586c0] font-bold text-lg">${a.ticker}</span>
                                 <span class="text-[#444] text-xs">${a.sector.toUpperCase()}</span>
                             </div>
-                            <span class="badge ${risk.badge}">${risk.text}</span>
+                            <div class="text-3xl font-bold" style="color:${overallColor}">${a.overall > 0 ? '+' : ''}${a.overall.toFixed(1)}</div>
                         </div>
-                        <div class="flex items-center justify-between">
-                            <span class="text-[#8b949e] text-xs">RISK SCORE</span>
-                            <span class="text-3xl font-bold ${risk.class}">${a.score.toFixed(1)}</span>
-                        </div>
-                        <div class="risk-bar mt-3">
-                            <div class="risk-fill" style="width:${barWidth}%; background:${scoreColor}"></div>
+                        <div class="space-y-1 border-t border-[#21262d] pt-2">
+                            ${factorRows}
                         </div>
                     </div>
                 `;
