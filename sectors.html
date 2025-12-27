@@ -234,6 +234,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
         import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
+        import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-functions.js";
 
         // Config
         const firebaseConfig = {
@@ -244,6 +245,7 @@
         };
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
+        const functions = getFunctions(app);
 
         // Ticker Config (Same as lowvol.html)
         const tickerConfig = [
@@ -260,51 +262,26 @@
         async function init() {
             document.getElementById('sector-count').textContent = [...new Set(tickerConfig.map(t => t.sector))].length;
 
-            // 1. Fetch All Data
-            const results = await Promise.all(tickerConfig.map(async config => {
-                try {
-                    // Fetch both data points in parallel
-                    const [momSnap, riskSnap] = await Promise.all([
-                        get(ref(db, `equities/${config.ticker}`)),
-                        get(ref(db, `equitiesRiskSignals/${config.ticker}`))
-                    ]);
+            try {
+                // Call Cloud Function for aggregated data
+                const getSectorsData = httpsCallable(functions, 'getSectorsData');
+                const result = await getSectorsData();
+                const allAssetData = result.data;
 
-                    const momData = momSnap.val() || {};
-                    const riskData = riskSnap.val();
+                processSectorData(allAssetData);
+                document.getElementById('last-updated').textContent = new Date().toLocaleTimeString();
 
-                    // Process Momentum/MeanRev Score
-                    // Mom Score = sum of factors? Or just use MeanReversion field?
-                    // Using logic from lowvol.html for aggregation style
-                    const p = v => parseFloat(v) || 0;
-                    const momScore = p(momData.shortTermTrend) + p(momData.shortTermStrength) + p(momData.intermTrend) + p(momData.intermStrength) + p(momData.meanReversion) + p(momData.breakoutAndDown);
-
-                    // Process Risk Score
-                    let riskScore = 0;
-                    if (typeof riskData === 'object' && riskData) riskScore = parseFloat(riskData.EquityRisk) || 0;
-                    else if (riskData) riskScore = parseFloat(riskData) || 0;
-
-                    const stTrend = p(momData.shortTermTrend);
-                    const itTrend = p(momData.intermTrend);
-                    const trendScore = stTrend + itTrend;
-
-                    return {
-                        ticker: config.ticker,
-                        sector: config.sector,
-                        momScore,
-                        riskScore,
-                        trendScore
-                    };
-
-                } catch (e) { console.error(e); }
-                return null;
-            }));
-
-            const validData = results.filter(r => r);
-            processSectors(validData);
-            document.getElementById('last-updated').textContent = new Date().toLocaleTimeString();
+            } catch (error) {
+                console.error("Error fetching sector data:", error);
+                document.getElementById('sector-grid').innerHTML = `
+                    <div class="col-span-full text-center py-20 text-[#f48771] border border-[#f48771] rounded bg-[#0d1117]">
+                        ERROR LOADING DATA. PLEASE REFRESH.
+                    </div>
+                `;
+            }
         }
 
-        function processSectors(data) {
+        function processSectorData(data) {
             // Group by Sector
             const sectors = {};
             data.forEach(item => {

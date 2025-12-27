@@ -539,6 +539,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
         import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
+        import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-functions.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
 
         // Firebase Config
@@ -550,6 +551,7 @@
         };
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
+        const functions = getFunctions(app);
         const auth = getAuth(app);
 
         // Global Ticker Config
@@ -590,52 +592,22 @@
         let currentView = 'momentum'; // momentum | risk
 
         async function loadData() {
-            const results = await Promise.all(tickerConfig.map(async config => {
-                try {
-                    const [equitySnap, riskSnap] = await Promise.all([
-                        get(ref(db, "equities/" + config.ticker)),
-                        get(ref(db, "equitiesRiskSignals/" + config.ticker))
-                    ]);
+            try {
+                // Call Cloud Function
+                const getSectorDetailData = httpsCallable(functions, 'getSectorDetailData');
+                // Pass the foundSector to the function for server-side filtering
+                const result = await getSectorDetailData({ sector: foundSector });
+                const allAssets = result.data;
 
-                    const data = equitySnap.val();
-                    const riskData = riskSnap.val();
+                assetsData = allAssets;
 
-                    if (data) {
-                        const p = v => parseFloat(v) || 0;
-                        const stTrend = p(data.shortTermTrend) + p(data.shortTermStrength);
-                        const itTrend = p(data.intermTrend) + p(data.intermStrength);
-                        const meanReversion = p(data.meanReversion);
-                        const breakout = p(data.breakoutAndDown);
+            } catch (error) {
+                console.error("Error fetching sector detail data:", error);
+            }
 
-
-                        // Risk Score Extraction (matching lowvol.html logic)
-                        let riskScore = 4; // Default Moderate
-                        let hasRiskData = false;
-
-                        if (riskData !== null && riskData !== undefined) {
-                            hasRiskData = true;
-                            if (typeof riskData === 'number') {
-                                riskScore = riskData;
-                            } else if (typeof riskData === 'string') {
-                                riskScore = parseFloat(riskData) || 0;
-                            } else if (typeof riskData === 'object') {
-                                // Field is EquityRisk, not riskScore!
-                                riskScore = parseFloat(riskData.EquityRisk) || 0;
-                            }
-                        }
-
-                        return {
-                            ticker: config.ticker, sector: config.sector,
-                            overallScore: stTrend + itTrend + meanReversion + breakout,
-                            stTrend, itTrend, meanReversion, breakout,
-                            riskScore,
-                            hasRiskData: !!riskData
-                        };
-                    }
-                } catch (e) { }
-                return null;
-            }));
-            assetsData = results.filter(r => r);
+            assetsData = assetsData.filter(r => r);
+            filteredData = [...assetsData];
+            document.getElementById('last-updated').textContent = new Date().toLocaleTimeString();
             filteredData = [...assetsData];
             document.getElementById('last-updated').textContent = new Date().toLocaleTimeString();
 
