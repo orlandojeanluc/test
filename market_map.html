@@ -366,7 +366,17 @@
                 .on("mouseover", (e, d) => showTooltip(e, d.data))
                 .on("mousemove", (e) => moveTooltip(e))
                 .on("mouseout", hideTooltip)
-                .on("click", (e, d) => window.location.href = `sector_detail.html?sector=${d.data.sector}`); // Navigate on click?
+                .on("click", (e, d) => {
+                    const isMobile = window.innerWidth < 768;
+                    if (isMobile) {
+                        // Mobile: Just show/update tooltip on tap, don't navigate
+                        e.stopPropagation(); // Prevent affecting parents
+                        showTooltip(e, d.data);
+                    } else {
+                        // Desktop: Navigate to sector detail
+                        window.location.href = `sector_detail.html?sector=${d.data.sector}`;
+                    }
+                });
 
             // Ticker Labels
             cell.append("text")
