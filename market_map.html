@@ -431,7 +431,17 @@
 
         function moveTooltip(e) {
             const el = document.getElementById('tooltip');
-            el.style.left = (e.pageX + 10) + 'px';
+            const tooltipWidth = el.offsetWidth;
+            const windowWidth = window.innerWidth;
+
+            let left = e.pageX + 10;
+
+            // Smart Positioning: Flip to left if too close to right edge
+            if ((e.clientX + 10 + tooltipWidth) > (windowWidth - 10)) {
+                left = e.pageX - tooltipWidth - 10;
+            }
+
+            el.style.left = left + 'px';
             el.style.top = (e.pageY + 10) + 'px';
         }
 
