@@ -4,11 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Caltropia | Mean Reversion Signals</title>
+    <title>Caltropia | Market Map</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
         rel="stylesheet">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -46,162 +47,73 @@
         body {
             background-color: #0d1117;
             color: #c9d1d9;
-            font-size: 12px;
+            font-size: 14px;
             line-height: 1.4;
+            overflow: hidden;
         }
 
+        /* Fixed height */
         .terminal-header {
             background: #161b22;
             border-bottom: 1px solid #21262d;
         }
 
-        .terminal-card {
-            background: #161b22;
+        .map-tooltip {
+            position: absolute;
+            background: rgba(22, 27, 34, 0.95);
             border: 1px solid #21262d;
-            transition: all 0.15s ease;
-            border-radius: 0.5rem;
-        }
-
-        .terminal-card:hover {
-            border-color: #c586c0;
-            box-shadow: 0 0 20px rgba(197, 134, 192, 0.1);
-        }
-
-        .data-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 12px;
-            padding: 12px;
-        }
-
-        .risk-bar {
-            height: 4px;
-            background: #21262d;
-        }
-
-        .risk-fill {
-            height: 100%;
-            transition: width 0.3s ease;
-        }
-
-        /* Signal Colors Mapped to Syntax Theme */
-        .risk-lowest {
-            color: #b5cea8;
-        }
-
-        /* Postive/Green */
-        .risk-low {
-            color: #b5cea8;
-        }
-
-        .risk-medium {
-            color: #dcdcaa;
-        }
-
-        /* Neutral/Yellow */
-        .risk-high {
-            color: #f48771;
-        }
-
-        /* Negative/Red */
-        .risk-highest {
-            color: #f48771;
-        }
-
-        .badge {
-            font-size: 11px;
-            padding: 3px 8px;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-            font-weight: 700;
+            padding: 8px;
             border-radius: 4px;
+            pointer-events: none;
+            font-size: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            display: none;
         }
 
-        /* Badges Mapped to Syntax Theme */
-        .badge-lowest {
-            background: #b5cea8;
-            color: #000;
+        .view-btn.active {
+            background-color: #c586c0;
+            color: #0d1117;
         }
 
-        .badge-low {
-            background: #b5cea8;
-            color: #000;
+        .node {
+            cursor: pointer;
+            transition: opacity 0.2s;
         }
 
-        .badge-medium {
-            background: #dcdcaa;
-            color: #000;
+        .node:hover {
+            opacity: 0.8;
+            stroke: #fff;
+            stroke-width: 2px;
         }
 
-        .badge-high {
-            background: #f48771;
-            color: #000;
+        .node-label {
+            pointer-events: none;
+            font-weight: bold;
+            fill: white;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
         }
 
-        .badge-highest {
-            background: #f48771;
-            color: #000;
-        }
-
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #0d1117;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #21262d;
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: #c586c0;
-        }
-
-        .blink {
-            animation: blink 1s infinite;
-        }
-
-        @keyframes blink {
-            50% {
-                opacity: 0.5;
-            }
-        }
-
-        input,
-        select {
-            background: #11151b !important;
-            border: 1px solid #21262d !important;
-            color: #fff !important;
-            font-family: 'Inter', sans-serif !important;
-            border-radius: 0.375rem;
-        }
-
-        input:focus,
-        select:focus {
-            border-color: #c586c0 !important;
-            outline: none !important;
+        .node-sector-label {
+            pointer-events: none;
+            fill: rgba(255, 255, 255, 0.3);
+            font-size: 10px;
+            uppercase;
         }
     </style>
 </head>
 
-<body class="min-h-screen w-screen overflow-x-hidden">
-
-    <!-- Sidebar Navigation - Terminal Style -->
+<body class="h-screen flex flex-col">
+    <!-- Sidebar Navigation -->
     <nav id="sidebar" class="fixed z-50 bg-[#0d1117] flex items-center
                 bottom-0 w-full h-14 border-t border-[#21262d] flex-row justify-around py-0
                 lg:left-0 lg:top-0 lg:h-full lg:w-12 lg:border-r lg:border-t-0 lg:flex-col lg:py-4">
-
-        <!-- Logo -->
         <div class="hidden lg:block text-[#c586c0] font-bold text-xs mb-6">C</div>
 
-        <!-- Links Container -->
         <div
             class="flex-1 flex flex-row w-full justify-around items-center lg:flex-col lg:w-auto lg:justify-start lg:gap-4 lg:items-center">
             <a href="radial.html"
-                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#21262d]"
+                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22]"
                 title="Dashboard">
                 <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -209,16 +121,8 @@
                     </path>
                 </svg>
             </a>
-            <a href="momentum.html"
-                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#21262d]"
-                title="Momentum">
-                <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path>
-                </svg>
-            </a>
             <a href="lowvol.html"
-                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#21262d]"
+                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22]"
                 title="Risk Terminal">
                 <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -226,8 +130,16 @@
                     </path>
                 </svg>
             </a>
+            <a href="momentum.html"
+                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22]"
+                title="Momentum">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path>
+                </svg>
+            </a>
             <a href="momentum_factor.html"
-                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#21262d]"
+                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22]"
                 title="Momentum Factor">
                 <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -235,7 +147,7 @@
                 </svg>
             </a>
             <a href="mean_reversion.html"
-                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#c586c0] border-t-2 lg:border-t-0 lg:bg-[#21262d] lg:border-l-2 border-[#c586c0]"
+                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22]"
                 title="Mean Reversion">
                 <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -254,7 +166,7 @@
                 </svg>
             </a>
             <a href="portfolios.html"
-                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#21262d]"
+                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22]"
                 title="Portfolios">
                 <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -272,7 +184,7 @@
                 </svg>
             </a>
             <a href="market_map.html"
-                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22]"
+                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#c586c0] border-t-2 lg:border-t-0 lg:bg-[#161b22] lg:border-l-2 border-[#c586c0]"
                 title="Market Map">
                 <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -291,81 +203,50 @@
         </div>
     </nav>
 
-    <!-- Main Content Container -->
-    <div class="ml-0 lg:ml-12 pb-20 lg:pb-0 transition-all">
+    <div class="ml-0 lg:ml-12 h-screen flex flex-col transition-all">
         <!-- Header -->
         <header
-            class="terminal-header px-4 py-2 flex flex-col lg:flex-row lg:items-center justify-between gap-2 lg:gap-0 sticky top-0 z-40">
-            <div class="flex items-center gap-4">
+            class="terminal-header px-4 py-2 flex flex-col md:flex-row md:items-center justify-between gap-2 md:gap-0 bg-[#161b22]">
+            <div class="flex items-center gap-2 md:gap-4">
                 <span class="text-[#c586c0] font-bold text-sm">CALTROPIA</span>
                 <span class="text-[#8b949e]">|</span>
-                <span class="text-white text-xs">MEAN REVERSION SIGNALS</span>
-                <span class="text-[#b5cea8] text-xs blink">● LIVE</span>
+                <span class="text-white text-xs font-bold uppercase">MARKET MAP</span>
+                <span class="text-[#b5cea8] text-[10px] md:text-xs blink">● LIVE</span>
             </div>
-            <div class="flex items-center gap-4 text-xs">
-                <span class="text-[#8b949e]">LAST UPDATE:</span>
-                <span id="last-updated" class="text-[#dcdcaa]">--:--:--</span>
-                <button onclick="loadData()"
-                    class="px-2 py-1 bg-[#21262d] border border-[#21262d] text-[#c586c0] hover:bg-[#c586c0] hover:text-black transition-all">
-                    REFRESH
-                </button>
+
+            <div class="flex items-center gap-2">
+                <button onclick="setView('momentum')" id="btn-mom"
+                    class="view-btn active text-[10px] px-2 py-1 rounded bg-[#21262d] text-[#8b949e] font-bold border border-[#21262d]">MOMENTUM</button>
+                <button onclick="setView('risk')" id="btn-risk"
+                    class="view-btn text-[10px] px-2 py-1 rounded bg-[#21262d] text-[#8b949e] font-bold border border-[#21262d]">RISK</button>
             </div>
         </header>
 
-        <!-- Controls Bar -->
-        <div class="bg-[#161b22] border-b border-[#21262d] px-4 py-2 flex flex-wrap items-center gap-4">
-            <div class="flex items-center gap-2">
-                <span class="text-[#8b949e] text-xs">SEARCH:</span>
-                <input type="text" id="search-input"
-                    class="px-2 py-1 text-base md:text-xs w-32 bg-[#21262d] border border-[#21262d] text-white focus:border-[#c586c0] outline-none"
-                    placeholder="TICKER..." oninput="filterAssets()">
-            </div>
-            <div class="flex items-center gap-2">
-                <span class="text-[#8b949e] text-xs">SECTOR:</span>
-                <select id="sector-filter"
-                    class="px-2 py-1 text-base md:text-xs bg-[#21262d] border border-[#21262d] text-white outline-none"
-                    onchange="filterAssets()">
-                    <option value="all">ALL</option>
-                    <option value="Tech">TECH</option>
-                    <option value="Finance">FINANCE</option>
-                    <option value="Health">HEALTH</option>
-                    <option value="Energy">ENERGY</option>
-                    <option value="Consumer">CONSUMER</option>
-                    <option value="Industrial">INDUSTRIAL</option>
-                    <option value="Utilities">UTILITIES</option>
-                    <option value="Other">OTHER</option>
-                </select>
-            </div>
+        <!-- Main Content -->
+        <div id="map-container" class="flex-1 w-full relative overflow-hidden bg-[#0d1117]">
+            <div id="loading"
+                class="absolute inset-0 flex items-center justify-center text-[#8b949e] animate-pulse pointer-events-none">
+                Fetching Market Data...</div>
+        </div>
+
+        <!-- Legend -->
+        <div id="legend-container"
+            class="absolute bottom-4 right-4 bg-[#161b22] border border-[#21262d] p-3 rounded text-xs z-40 hidden md:block">
+            <div id="legend-title" class="text-[#8b949e] mb-1 font-bold">MOMENTUM</div>
             <div class="flex items-center gap-1">
-                <span class="text-[#8b949e] text-xs">SORT:</span>
-                <button onclick="setSortBy('score-desc')" class="sort-btn px-2 py-1 text-xs bg-[#c586c0] text-black"
-                    data-sort="score-desc">HIGH→LOW</button>
-                <button onclick="setSortBy('score')"
-                    class="sort-btn px-2 py-1 text-xs bg-[#21262d] border border-[#21262d] text-[#8b949e] hover:text-[#c586c0]"
-                    data-sort="score">LOW→HIGH</button>
-                <button onclick="setSortBy('alpha')"
-                    class="sort-btn px-2 py-1 text-xs bg-[#21262d] border border-[#21262d] text-[#8b949e] hover:text-[#c586c0]"
-                    data-sort="alpha">A-Z</button>
-            </div>
-            <div class="ml-auto text-xs">
-                <span class="text-[#8b949e]">ASSETS:</span>
-                <span id="asset-count" class="text-[#dcdcaa]">0</span>
+                <div class="w-3 h-3 bg-[#f48771]"></div><span class="text-[#8b949e] mr-2">Bearish</span>
+                <div class="w-3 h-3 bg-[#1e1e1e]"></div><span class="text-[#8b949e] mr-2">Neutral</span>
+                <div class="w-3 h-3 bg-[#9cdcfe]"></div><span class="text-[#8b949e]">Bullish</span>
             </div>
         </div>
 
-        <!-- Data Grid -->
-        <div id="assets-grid" class="data-grid p-2">
-        </div>
-
-        <footer class="text-center text-[#21262d] text-xs py-4">
-            CALTROPIA MEAN REVERSION SIGNALS TERMINAL v1.0 | DATA FROM FIREBASE
-        </footer>
+        <div id="tooltip" class="map-tooltip"></div>
     </div>
 
+    <!-- Scripts -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
         import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBxG5qf6mb8E_-b2TeXlRNseMZ26L9DRYg",
@@ -373,11 +254,10 @@
             projectId: "trendscores-df341",
             databaseURL: "https://trendscores-df341-default-rtdb.firebaseio.com"
         };
-
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
-        const auth = getAuth(app);
 
+        // Minimal Ticker Config
         const tickerConfig = [
             { ticker: "NVDA", sector: "Tech" }, { ticker: "MSFT", sector: "Tech" }, { ticker: "AAPL", sector: "Tech" }, { ticker: "AMZN", sector: "Tech" }, { ticker: "META", sector: "Tech" }, { ticker: "AVGO", sector: "Tech" }, { ticker: "GOOGL", sector: "Tech" }, { ticker: "TSLA", sector: "Tech" }, { ticker: "ORCL", sector: "Tech" }, { ticker: "PLTR", sector: "Tech" }, { ticker: "CSCO", sector: "Tech" }, { ticker: "AMD", sector: "Tech" }, { ticker: "CRM", sector: "Tech" }, { ticker: "IBM", sector: "Tech" }, { ticker: "NOW", sector: "Tech" }, { ticker: "QCOM", sector: "Tech" }, { ticker: "TXN", sector: "Tech" }, { ticker: "ADBE", sector: "Tech" }, { ticker: "ANET", sector: "Tech" }, { ticker: "MU", sector: "Tech" }, { ticker: "AMAT", sector: "Tech" }, { ticker: "LRCX", sector: "Tech" }, { ticker: "PANW", sector: "Tech" }, { ticker: "ADI", sector: "Tech" }, { ticker: "KLAC", sector: "Tech" }, { ticker: "SNPS", sector: "Tech" }, { ticker: "INTC", sector: "Tech" }, { ticker: "CRWD", sector: "Tech" }, { ticker: "CDNS", sector: "Tech" }, { ticker: "NXPI", sector: "Tech" }, { ticker: "GLW", sector: "Tech" },
             { ticker: "JPM", sector: "Finance" }, { ticker: "V", sector: "Finance" }, { ticker: "MA", sector: "Finance" }, { ticker: "BAC", sector: "Finance" }, { ticker: "WFC", sector: "Finance" }, { ticker: "GS", sector: "Finance" }, { ticker: "MS", sector: "Finance" }, { ticker: "AXP", sector: "Finance" }, { ticker: "C", sector: "Finance" }, { ticker: "SPGI", sector: "Finance" }, { ticker: "SCHW", sector: "Finance" }, { ticker: "BLK", sector: "Finance" }, { ticker: "COF", sector: "Finance" }, { ticker: "PNC", sector: "Finance" }, { ticker: "USB", sector: "Finance" }, { ticker: "BK", sector: "Finance" }, { ticker: "FI", sector: "Finance" }, { ticker: "MCO", sector: "Finance" }, { ticker: "ICE", sector: "Finance" }, { ticker: "CME", sector: "Finance" }, { ticker: "KKR", sector: "Finance" }, { ticker: "MMC", sector: "Finance" }, { ticker: "AON", sector: "Finance" }, { ticker: "AJG", sector: "Finance" }, { ticker: "TFC", sector: "Finance" }, { ticker: "APO", sector: "Finance" }, { ticker: "TRV", sector: "Finance" }, { ticker: "ALL", sector: "Finance" }, { ticker: "AFL", sector: "Finance" }, { ticker: "BX", sector: "Finance" }, { ticker: "PYPL", sector: "Finance" }, { ticker: "COIN", sector: "Finance" },
@@ -386,130 +266,180 @@
             { ticker: "WMT", sector: "Consumer" }, { ticker: "COST", sector: "Consumer" }, { ticker: "HD", sector: "Consumer" }, { ticker: "PG", sector: "Consumer" }, { ticker: "KO", sector: "Consumer" }, { ticker: "PEP", sector: "Consumer" }, { ticker: "MCD", sector: "Consumer" }, { ticker: "NKE", sector: "Consumer" }, { ticker: "SBUX", sector: "Consumer" }, { ticker: "TJX", sector: "Consumer" }, { ticker: "LOW", sector: "Consumer" }, { ticker: "ORLY", sector: "Consumer" }, { ticker: "AZO", sector: "Consumer" }, { ticker: "MDLZ", sector: "Consumer" }, { ticker: "CL", sector: "Consumer" }, { ticker: "CMG", sector: "Consumer" }, { ticker: "MAR", sector: "Consumer" }, { ticker: "HLT", sector: "Consumer" }, { ticker: "RCL", sector: "Consumer" }, { ticker: "ABNB", sector: "Consumer" }, { ticker: "DIS", sector: "Consumer" }, { ticker: "NFLX", sector: "Consumer" }, { ticker: "BKNG", sector: "Consumer" },
             { ticker: "CAT", sector: "Industrial" }, { ticker: "DE", sector: "Industrial" }, { ticker: "UNP", sector: "Industrial" }, { ticker: "HON", sector: "Industrial" }, { ticker: "GE", sector: "Industrial" }, { ticker: "BA", sector: "Industrial" }, { ticker: "RTX", sector: "Industrial" }, { ticker: "LMT", sector: "Industrial" }, { ticker: "GD", sector: "Industrial" }, { ticker: "NOC", sector: "Industrial" }, { ticker: "MMM", sector: "Industrial" }, { ticker: "EMR", sector: "Industrial" }, { ticker: "ETN", sector: "Industrial" }, { ticker: "PH", sector: "Industrial" }, { ticker: "ITW", sector: "Industrial" }, { ticker: "CMI", sector: "Industrial" }, { ticker: "CSX", sector: "Industrial" }, { ticker: "NSC", sector: "Industrial" }, { ticker: "UPS", sector: "Industrial" }, { ticker: "FAST", sector: "Industrial" }, { ticker: "URI", sector: "Industrial" }, { ticker: "PWR", sector: "Industrial" }, { ticker: "CTAS", sector: "Industrial" }, { ticker: "TDG", sector: "Industrial" }, { ticker: "HWM", sector: "Industrial" }, { ticker: "AXON", sector: "Industrial" }, { ticker: "JCI", sector: "Industrial" }, { ticker: "TT", sector: "Industrial" }, { ticker: "MSI", sector: "Industrial" }, { ticker: "ROP", sector: "Industrial" },
             { ticker: "NEE", sector: "Utilities" }, { ticker: "DUK", sector: "Utilities" }, { ticker: "SO", sector: "Utilities" }, { ticker: "AEP", sector: "Utilities" }, { ticker: "SRE", sector: "Utilities" }, { ticker: "PLD", sector: "Utilities" }, { ticker: "AMT", sector: "Utilities" }, { ticker: "EQIX", sector: "Utilities" }, { ticker: "WELL", sector: "Utilities" }, { ticker: "SPG", sector: "Utilities" }, { ticker: "O", sector: "Utilities" },
-            { ticker: "T", sector: "Other" }, { ticker: "VZ", sector: "Other" }, { ticker: "TMUS", sector: "Other" }, { ticker: "UBER", sector: "Other" }, { ticker: "DASH", sector: "Other" }, { ticker: "INTU", sector: "Other" }, { ticker: "ADSK", sector: "Other" }, { ticker: "ACN", sector: "Other" }, { ticker: "ADP", sector: "Other" }, { ticker: "APH", sector: "Other" }, { ticker: "TEL", sector: "Other" }, { ticker: "APD", sector: "Other" }, { ticker: "ECL", sector: "Other" }, { ticker: "SHW", sector: "Other" }, { ticker: "LIN", sector: "Other" }, { ticker: "FCX", sector: "Other" }, { ticker: "NEM", sector: "Other" }, { ticker: "CB", sector: "Other" }, { ticker: "PGR", sector: "Other" }, { ticker: "WM", sector: "Other" }, { ticker: "GM", sector: "Other" }, { ticker: "PM", sector: "Other" }, { ticker: "MO", sector: "Other" },
+            { ticker: "T", sector: "Other" }, { ticker: "VZ", sector: "Other" }, { ticker: "TMUS", sector: "Other" }, { ticker: "UBER", sector: "Other" }, { ticker: "DASH", sector: "Other" }, { ticker: "INTU", sector: "Other" }, { ticker: "ADSK", sector: "Other" }, { ticker: "ACN", sector: "Other" }, { ticker: "ADP", sector: "Other" }, { ticker: "APH", sector: "Other" }, { ticker: "TEL", sector: "Other" }, { ticker: "APD", sector: "Other" }, { ticker: "ECL", sector: "Other" }, { ticker: "SHW", sector: "Other" }, { ticker: "LIN", sector: "Other" }, { ticker: "FCX", sector: "Other" }, { ticker: "NEM", sector: "Other" }, { ticker: "CB", sector: "Other" }, { ticker: "PGR", sector: "Other" }, { ticker: "WM", sector: "Other" }, { ticker: "GM", sector: "Other" }, { ticker: "PM", sector: "Other" }, { ticker: "MO", sector: "Other" }
         ];
 
-        let assetsData = [];
-        let currentSort = 'score-desc';
+        let allData = [];
+        let currentView = 'momentum'; // momentum | risk
 
-        onAuthStateChanged(auth, () => loadData());
-
-        window.loadData = async function () {
-            document.getElementById('last-updated').textContent = 'Syncing...';
+        async function init() {
             const results = await Promise.all(tickerConfig.map(async config => {
                 try {
-                    // Fetch from 'equities' node as per user screenshot
-                    const snapshot = await get(ref(db, "equities/" + config.ticker));
-                    const data = snapshot.val();
-                    if (data !== null && data !== undefined) {
-                        let score = 0;
-                        // Data is likely an object containing meanReversion field
-                        if (typeof data === 'object') {
-                            score = parseFloat(data.meanReversion) || 0;
-                        } else if (typeof data === 'number') {
-                            // Fallback if structure is different
-                            score = data;
-                        }
+                    const [momSnap, riskSnap] = await Promise.all([
+                        get(ref(db, `equities/${config.ticker}`)),
+                        get(ref(db, `equitiesRiskSignals/${config.ticker}`))
+                    ]);
+                    const momData = momSnap.val() || {};
+                    const riskData = riskSnap.val();
+                    const p = v => parseFloat(v) || 0;
 
-                        return {
-                            ticker: config.ticker,
-                            sector: config.sector,
-                            score
-                        };
-                    }
-                } catch (e) { console.log('Error loading ' + config.ticker, e); }
-                return null;
+                    const trendScore = p(momData.shortTermTrend) + p(momData.intermTrend);
+
+                    let riskScore = 4;
+                    if (typeof riskData === 'object' && riskData) riskScore = parseFloat(riskData.EquityRisk) || 0;
+                    else if (typeof riskData === 'number') riskScore = riskData;
+
+                    return { ticker: config.ticker, sector: config.sector, trendScore, riskScore, value: 1 }; // Uniform size for now
+                } catch (e) { return null; }
             }));
-            assetsData = results.filter(r => r);
-            document.getElementById('last-updated').textContent = new Date().toLocaleTimeString();
-            filterAssets();
-        };
 
-        window.filterAssets = function () {
-            const search = document.getElementById('search-input').value.toLowerCase();
-            const sector = document.getElementById('sector-filter').value;
-            let data = [...assetsData];
-
-            if (search) data = data.filter(a => a.ticker.toLowerCase().includes(search));
-            if (sector !== 'all') data = data.filter(a => a.sector === sector);
-
-            // Filter out 0.00 scores as requested
-            data = data.filter(a => Math.abs(a.score) > 0.001);
-
-            // Sort by score
-            data.sort((a, b) => {
-                if (currentSort === 'score') return a.score - b.score;
-                if (currentSort === 'score-desc') return b.score - a.score;
-                return a.ticker.localeCompare(b.ticker);
-            });
-
-            renderGrid(data);
-        };
-
-        window.setSortBy = function (sort) {
-            currentSort = sort;
-            document.querySelectorAll('.sort-btn').forEach(btn => {
-                if (btn.dataset.sort === sort) {
-                    btn.classList.add('bg-[#c586c0]', 'text-black');
-                    btn.classList.remove('bg-[#21262d]', 'text-[#8b949e]', 'border', 'border-[#21262d]');
-                } else {
-                    btn.classList.remove('bg-[#c586c0]', 'text-black');
-                    btn.classList.add('bg-[#21262d]', 'text-[#8b949e]', 'border', 'border-[#21262d]');
-                }
-            });
-            filterAssets();
-        };
-
-        function getSignalStrength(score) {
-            // Logic: Positive = Green, Negative = Red
-            if (score > 0) return { class: 'risk-lowest', badge: 'badge-lowest', text: 'POSITIVE' };
-            if (score < 0) return { class: 'risk-highest', badge: 'badge-highest', text: 'NEGATIVE' };
-            return { class: 'text-[#8b949e]', badge: 'bg-[#21262d] text-[#aaa]', text: 'NEUTRAL' };
+            allData = results.filter(r => r);
+            document.getElementById('loading').style.display = 'none';
+            drawMap();
         }
 
-        function renderGrid(data) {
-            const container = document.getElementById('assets-grid');
-            document.getElementById('asset-count').textContent = data.length;
+        function drawMap() {
+            const container = document.getElementById('map-container');
+            const width = container.clientWidth;
+            const height = container.clientHeight;
 
-            if (data.length === 0) {
-                container.innerHTML = '<div class="col-span-full text-center py-12 text-[#8b949e]">NO DATA - LOADING FROM EQUITIES...</div>';
-                return;
+            d3.select("#map-container svg").remove();
+
+            // Hierarchy
+            const root = d3.hierarchy({ children: allData })
+                .sum(d => d.value) // Size by equal value (or market cap if we had it)
+                .sort((a, b) => b.value - a.value);
+
+            // Treemap Layout
+            d3.treemap()
+                .size([width, height])
+                .paddingInner(1)
+                .paddingOuter(4)
+                .paddingTop(20) // Space for titles
+                .round(true)
+                (root);
+
+            // Group by Sector manually to create containers? 
+            // Better: Hierarchy should be Sector -> Ticker.
+            // Let's restructure logic quickly
+            const grouped = d3.group(allData, d => d.sector);
+            const hierarchyData = { name: "Market", children: Array.from(grouped, ([key, value]) => ({ name: key, children: value })) };
+
+            const root2 = d3.hierarchy(hierarchyData)
+                .sum(d => d.value ? d.value : 0) // Leaf nodes have value 1
+                .sort((a, b) => b.value - a.value);
+
+            d3.treemap()
+                .size([width, height])
+                .paddingInner(2)
+                .paddingOuter(4)
+                .paddingTop(24) // Title bar
+                .round(true)
+                (root2);
+
+            const svg = d3.select("#map-container")
+                .append("svg")
+                .attr("width", width)
+                .attr("height", height)
+                .style("font-family", "Inter, sans-serif");
+
+            // Cell Groups
+            const cell = svg.selectAll("g")
+                .data(root2.leaves())
+                .join("g")
+                .attr("transform", d => `translate(${d.x0},${d.y0})`);
+
+            // Rectangles
+            cell.append("rect")
+                .attr("width", d => d.x1 - d.x0)
+                .attr("height", d => d.y1 - d.y0)
+                .attr("fill", d => getColor(d.data))
+                .attr("class", "node")
+                .on("mouseover", (e, d) => showTooltip(e, d.data))
+                .on("mousemove", (e) => moveTooltip(e))
+                .on("mouseout", hideTooltip)
+                .on("click", (e, d) => window.location.href = `sector_detail.html?sector=${d.data.sector}`); // Navigate on click?
+
+            // Ticker Labels
+            cell.append("text")
+                .attr("class", "node-label")
+                .attr("x", 4)
+                .attr("y", 14)
+                .text(d => (d.x1 - d.x0 > 30) ? d.data.ticker : "")
+                .attr("font-size", d => Math.min(14, (d.x1 - d.x0) / 4) + "px"); // Scale font
+
+            // Sector Titles (Parent Nodes)
+            svg.selectAll("text.sector-title")
+                .data(root2.descendants().filter(d => d.depth === 1)) // Sector level
+                .join("text")
+                .attr("class", "sector-title")
+                .attr("x", d => d.x0 + 4)
+                .attr("y", d => d.y0 + 16)
+                .text(d => d.data.name.toUpperCase())
+                .attr("fill", "#8b949e")
+                .attr("font-size", "10px")
+                .attr("font-weight", "bold")
+                .style("pointer-events", "none");
+        }
+
+        function getColor(d) {
+            if (currentView === 'momentum') {
+                if (d.trendScore > 5) return "#c586c0"; // High Mom
+                if (d.trendScore > 0) return "#9cdcfe"; // Pos Mom
+                if (d.trendScore > -2) return "#2d2d2d"; // Neutral
+                return "#f48771"; // Neg Mom
+            } else {
+                // Risk
+                if (d.riskScore <= 2) return "#b5cea8"; // Low Risk (Green)
+                if (d.riskScore === 4) return "#dcdcaa"; // Med Risk
+                if (d.riskScore >= 7) return "#f48771"; // High Risk
+                return "#ce9178"; // Med-High
             }
-
-            container.innerHTML = data.map(a => {
-                const signal = getSignalStrength(a.score);
-                // Color Logic synced with getSignalStrength
-                // Positive: Green (#b5cea8), Negative: Red (#f48771), Zero: Grey
-                let scoreColor = '#8b949e';
-                if (a.score > 0) scoreColor = '#b5cea8';
-                if (a.score < 0) scoreColor = '#f48771';
-
-                // Bar Width based on magnitude (Abs Value)
-                // Assuming max score around 5-10? Scaling factor 20 means max 5.
-                // If score is 100 or something larger, we might need a different scale.
-                // For now sticking to * 20.
-                const barWidth = Math.min(100, Math.abs(a.score) * 20);
-
-                return `
-                    <div class="terminal-card p-4">
-                        <div class="flex items-center justify-between mb-3">
-                            <div class="flex items-center gap-2">
-                                <span class="text-[#c586c0] font-bold text-lg">${a.ticker}</span>
-                                <span class="text-[#444] text-xs">${a.sector.toUpperCase()}</span>
-                            </div>
-                            <span class="badge ${signal.badge}">${signal.text}</span>
-                        </div>
-                        <div class="flex items-center justify-between">
-                            <span class="text-[#8b949e] text-xs">SIGNAL SCORE</span>
-                            <span class="text-3xl font-bold ${signal.class}">${a.score.toFixed(2)}</span>
-                        </div>
-                        <div class="risk-bar mt-3">
-                            <div class="risk-fill" style="width:${barWidth}%; background:${scoreColor}"></div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
         }
+
+        function showTooltip(e, d) {
+            const el = document.getElementById('tooltip');
+            el.style.display = 'block';
+            el.innerHTML = `
+                <div class="font-bold text-[#c586c0]">${d.ticker}</div>
+                <div class="text-[10px] text-[#8b949e] mb-1">${d.sector}</div>
+                <div class="grid grid-cols-2 gap-x-4 text-xs">
+                    <span>Trend:</span> <span class="${d.trendScore > 0 ? 'text-[#9cdcfe]' : 'text-[#f48771]'}">${d.trendScore.toFixed(2)}</span>
+                    <span>Risk:</span> <span class="text-white">${d.riskScore}</span>
+                </div>
+            `;
+            moveTooltip(e);
+        }
+
+        function moveTooltip(e) {
+            const el = document.getElementById('tooltip');
+            el.style.left = (e.clientX + 10) + 'px';
+            el.style.top = (e.clientY + 10) + 'px';
+        }
+
+        function hideTooltip() {
+            document.getElementById('tooltip').style.display = 'none';
+        }
+
+        window.setView = function (v) {
+            currentView = v;
+            document.getElementById('btn-mom').classList.toggle('active', v === 'momentum');
+            document.getElementById('btn-risk').classList.toggle('active', v === 'risk');
+
+            // Legend
+            const legTitle = document.getElementById('legend-title');
+            if (v === 'momentum') {
+                legTitle.textContent = "MOMENTUM SCORE";
+            } else {
+                legTitle.textContent = "RISK SCORE";
+            }
+            drawMap();
+        }
+
+        window.addEventListener('resize', drawMap);
+        init();
+
+        window.setView = setView;
     </script>
 </body>
 
