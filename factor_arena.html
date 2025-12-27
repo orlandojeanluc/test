@@ -244,7 +244,7 @@
                     if (typeof riskData === 'object' && riskData) riskScore = parseFloat(riskData.EquityRisk) || 0;
                     else if (typeof riskData === 'number') riskScore = riskData;
 
-                    return { ticker: config.ticker, sector: config.sector, x: riskScore, y: trendScore };
+                    return { ticker: config.ticker, sector: config.sector, risk: riskScore, mom: trendScore, x: riskScore, y: trendScore };
                 } catch (e) { return null; }
             }));
 
@@ -341,31 +341,56 @@
                 .style("font-size", "12px")
                 .text("MOMENTUM SCORE");
 
-            // Nodes
-            const nodes = g.selectAll(".dot")
+            // Nodes Group
+            const nodeGroup = g.append("g").attr("class", "nodes");
+
+            // Initialize simulation (use 'risk' and 'mom' for targets, let D3 manage x/y)
+            // We initialize x/y to target to reduce initial jitter
+            allData.forEach(d => {
+                d.x = xScale(d.risk);
+                d.y = yScale(d.mom);
+            });
+
+            const simulation = d3.forceSimulation(allData)
+                .force("x", d3.forceX(d => xScale(d.risk)).strength(0.1)) // Weakened Anchor to Risk
+                .force("y", d3.forceY(d => yScale(d.mom)).strength(0.9)) // Strong Anchor to Momentum
+                .force("collide", d3.forceCollide(20)) // Separation radius
+                .force("bound", () => {
+                    // Custom force to keep nodes inside the visible chart area
+                    allData.forEach(d => {
+                        d.x = Math.max(30, Math.min(innerWidth - 30, d.x)); // Side padding for text
+                        d.y = Math.max(20, Math.min(innerHeight - 20, d.y)); // Top/Bottom padding
+                    });
+                })
+                .stop();
+
+            // Run simulation for enough ticks to settle
+            for (let i = 0; i < 300; ++i) simulation.tick();
+
+            const cell = nodeGroup.selectAll("g")
                 .data(allData)
-                .enter().append("g")
-                .attr("class", "dot")
-                .attr("transform", d => `translate(${xScale(d.x)},${yScale(d.y)})`)
+                .join("g")
+                .attr("transform", d => `translate(${d.x},${d.y})`)
                 .style("cursor", "pointer")
                 .on("mouseover", (e, d) => showTooltip(e, d))
                 .on("mousemove", moveTooltip)
                 .on("mouseout", hideTooltip);
 
-            nodes.append("circle")
+            cell.append("circle")
                 .attr("r", 5)
-                .attr("fill", d => d.y > 0 ? "#9cdcfe" : "#f48771") // Blue pos, Red neg
+                .attr("fill", d => d.mom > 0 ? "#9cdcfe" : "#f48771") // Blue pos, Red neg
                 .attr("stroke", "#0d1117")
                 .attr("stroke-width", 1);
 
-            nodes.append("text")
+            cell.append("text")
                 .text(d => d.ticker)
                 .attr("dy", -8)
                 .attr("text-anchor", "middle")
                 .attr("fill", "white")
                 .style("font-size", "10px")
                 .style("font-weight", "bold")
-                .style("text-shadow", "0 1px 2px black");
+                .style("text-shadow", "0 1px 2px black")
+                .style("pointer-events", "none");
 
             // Annotations
             g.append("text").attr("x", 20).attr("y", 30).text("SWEET SPOT 💎").attr("fill", "#b5cea8").style("font-size", "12px").style("opacity", 0.5);
@@ -379,8 +404,8 @@
             el.innerHTML = `
                 <div class="font-bold text-[#c586c0]">${d.ticker}</div>
                 <div class="grid grid-cols-2 gap-x-2 text-xs text-[#8b949e]">
-                    <span>Y: Mom</span> <span class="text-white">${d.y.toFixed(2)}</span>
-                    <span>X: Risk</span> <span class="text-white">${d.x.toFixed(1)}</span>
+                    <span>Y: Mom</span> <span class="text-white">${d.mom.toFixed(2)}</span>
+                    <span>X: Risk</span> <span class="text-white">${d.risk.toFixed(1)}</span>
                 </div>
             `;
             moveTooltip(e);
