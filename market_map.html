@@ -308,7 +308,8 @@
             const height = isMobile ? 1400 : container.clientHeight; // 1400px height on mobile
 
             // Adjust container height for mobile (D3 needs explicit height)
-            if (isMobile) container.style.height = '1400px';
+            // Add buffer (150px) so the SVG clears the nav bar when scrolling
+            if (isMobile) container.style.height = (height + 150) + 'px';
             else container.style.height = '100%';
 
             d3.select("#map-container svg").remove();
