@@ -72,7 +72,7 @@
     </style>
 </head>
 
-<body class="h-screen flex flex-col">
+<body class="min-h-screen flex flex-col overflow-y-auto lg:overflow-hidden bg-[#0d1117]">
     <!-- Sidebar Navigation -->
     <nav id="sidebar" class="fixed z-50 bg-[#0d1117] flex items-center
                 bottom-0 w-full h-14 border-t border-[#21262d] flex-row justify-around py-0
@@ -172,10 +172,10 @@
         </div>
     </nav>
 
-    <div class="ml-0 lg:ml-12 h-screen flex flex-col transition-all">
+    <div class="ml-0 lg:ml-12 h-auto lg:h-screen flex flex-col transition-all overflow-visible">
         <!-- Header -->
         <header
-            class="terminal-header px-4 py-2 flex flex-col md:flex-row md:items-center justify-between gap-2 md:gap-0 bg-[#161b22]">
+            class="terminal-header px-4 py-2 flex flex-col md:flex-row md:items-center justify-between gap-2 md:gap-0 bg-[#161b22] sticky top-0 z-40">
             <div class="flex items-center gap-2 md:gap-4">
                 <span class="text-[#c586c0] font-bold text-sm">CALTROPIA</span>
                 <span class="text-[#8b949e]">|</span>
@@ -191,7 +191,7 @@
         </header>
 
         <!-- Main Content -->
-        <div id="arena-container" class="flex-1 w-full relative bg-[#0d1117]">
+        <div id="arena-container" class="w-full flex-grow relative bg-[#0d1117] pb-20 lg:pb-0">
             <div id="loading"
                 class="absolute inset-0 flex items-center justify-center text-[#8b949e] animate-pulse pointer-events-none">
                 Fetching Factor Data...</div>
@@ -256,7 +256,13 @@
         function drawChart() {
             const container = document.getElementById('arena-container');
             const width = container.clientWidth;
-            const height = container.clientHeight;
+
+            // Mobile Optimization: Unlock height and increase legibility
+            const isMobile = window.innerWidth < 768;
+            const height = isMobile ? 1200 : container.clientHeight; // 1200px on mobile
+
+            if (isMobile) container.style.height = (height + 150) + 'px'; // +150px buffer
+            else container.style.height = '100%';
 
             const margin = { top: 40, right: 40, bottom: 40, left: 50 };
             const innerWidth = width - margin.left - margin.right;
@@ -344,6 +350,11 @@
             // Nodes Group
             const nodeGroup = g.append("g").attr("class", "nodes");
 
+            // Mobile Size Adjustments
+            const circleRadius = isMobile ? 8 : 5;
+            const fontSize = isMobile ? "12px" : "10px";
+            const collideRadius = isMobile ? 24 : 20;
+
             // Initialize simulation (use 'risk' and 'mom' for targets, let D3 manage x/y)
             // We initialize x/y to target to reduce initial jitter
             allData.forEach(d => {
@@ -354,7 +365,7 @@
             const simulation = d3.forceSimulation(allData)
                 .force("x", d3.forceX(d => xScale(d.risk)).strength(0.1)) // Weakened Anchor to Risk
                 .force("y", d3.forceY(d => yScale(d.mom)).strength(0.9)) // Strong Anchor to Momentum
-                .force("collide", d3.forceCollide(20)) // Separation radius
+                .force("collide", d3.forceCollide(collideRadius)) // Separation radius
                 .force("bound", () => {
                     // Custom force to keep nodes inside the visible chart area
                     allData.forEach(d => {
@@ -377,17 +388,17 @@
                 .on("mouseout", hideTooltip);
 
             cell.append("circle")
-                .attr("r", 5)
+                .attr("r", circleRadius)
                 .attr("fill", d => d.mom > 0 ? "#9cdcfe" : "#f48771") // Blue pos, Red neg
                 .attr("stroke", "#0d1117")
                 .attr("stroke-width", 1);
 
             cell.append("text")
                 .text(d => d.ticker)
-                .attr("dy", -8)
+                .attr("dy", isMobile ? -12 : -8)
                 .attr("text-anchor", "middle")
                 .attr("fill", "white")
-                .style("font-size", "10px")
+                .style("font-size", fontSize)
                 .style("font-weight", "bold")
                 .style("text-shadow", "0 1px 2px black")
                 .style("pointer-events", "none");
@@ -413,8 +424,18 @@
 
         function moveTooltip(e) {
             const el = document.getElementById('tooltip');
-            el.style.left = (e.clientX + 10) + 'px';
-            el.style.top = (e.clientY + 10) + 'px';
+            const tooltipWidth = el.offsetWidth;
+            const windowWidth = window.innerWidth;
+
+            let left = e.pageX + 10; // Use pageX for scroll support
+
+            // Smart Positioning: Flip to left if too close to right edge
+            if ((e.clientX + 10 + tooltipWidth) > (windowWidth - 10)) {
+                left = e.pageX - tooltipWidth - 10;
+            }
+
+            el.style.left = left + 'px';
+            el.style.top = (e.pageY + 10) + 'px'; // Use pageY for scroll support
         }
 
         function hideTooltip() { document.getElementById('tooltip').style.display = 'none'; }
