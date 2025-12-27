@@ -399,7 +399,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
+        import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-functions.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBxG5qf6mb8E_-b2TeXlRNseMZ26L9DRYg",
@@ -409,7 +409,7 @@
         };
 
         const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
+        const functions = getFunctions(app);
 
         // Global variables for chart data and instance
         let fullStrategyData = null;
@@ -435,13 +435,6 @@
                     currentRange = e.target.getAttribute('data-range');
 
                     if (fullStrategyData) {
-                        // Strategy Name is needed. decodeURIComponent(urlParams.get('strategy')) is done below.
-                        // We need to access it here. It is safe because click happens after DOMContentLoaded executions.
-                        // However, decodedName const is declared below. Let's grab it fresh or move declaration up.
-                        // Moving declaration up is safer. But simple fix: Use URL params again here or rely on scoping if defined.
-                        // Let's try passing it. If it fails, I'll move definition up.
-                        // Safest: Use window.location inside handler or grab the declared variable.
-                        // Actually, let's just grab it from URL inside the handler to be 100% safe and simple.
                         const urlParams = new URLSearchParams(window.location.search);
                         const stratName = urlParams.get('strategy') ? decodeURIComponent(urlParams.get('strategy')) : 'UNKNOWN';
                         renderSpDailyChart(fullStrategyData, document.getElementById('chart-container'), stratName);
@@ -462,262 +455,103 @@
                 document.title = `Caltropia | ${decodedName}`;
             }
 
-            // Strategy Name to Firebase Path Mapping
-            const strategyPathMap = {
-                "Caltropia Managed Futures EW": "investmentStrategies/Managed Futures Equal Weight",
-                "S&P Daily Rebalance": "investmentStrategies/S&P 500 Daily Regime",
-                "Caltropia Mean Reversion Factor": "investmentStrategies/Mean Reversion Factor",
-                "Caltropia Momentum Factor": "investmentStrategies/Momentum Factor",
-                "Caltropia Low Vol Factor": "investmentStrategies/Low Vol Factor",
-                "S&P Dip/Rip": "investmentStrategies/S&P 500 Dip Rip",
-                "Caltropia Bond Regime Model": "investmentStrategies/Bond Regime Model",
-                "Caltropia Volatility Regimes": "investmentStrategies/Volatility Regimes",
-                "Caltropia Sector Regime Model": "investmentStrategies/Sector Regime Model",
-                "Caltropia Bitcoin Regime Model": "investmentStrategies/Bitcoin Regime Model",
-                "Caltropia Relative Val Vol": "investmentStrategies/Relative Value Volatility",
-                "Caltropia Vol Tail Risk": "investmentStrategies/Volatility Tail Risk",
-                "Caltropia L/S Equity": "investmentStrategies/Long Short Equity",
-                "Caltropia Active Core Equity": "investmentStrategies/US Core Equity"
-            };
-
-            // Fetch Key Statistics
-            const statsPath = strategyPathMap[decodedName];
-            if (statsPath) {
-                console.log(`Fetching stats from: ${statsPath}`);
-                onValue(ref(db, statsPath), (snapshot) => {
-                    const data = snapshot.val();
-                    if (data) {
-                        updateKeyStatistics(data);
-                    }
-                });
-            }
-
-            // Connection Check
-            onValue(ref(db, '.info/connected'), (snap) => {
-                if (snap.val() === true) {
-                    console.log('Firebase: Connected');
-                } else {
-                    console.error('Firebase: Disconnected');
-                }
-            });
-
-            // Logic for Data Fetching & Charts
-            const chartContainer = document.getElementById('chart-container');
-
-            // 1. Chart Data Fetching (Generic)
-            let chartDataPath = null;
-            if (decodedName === 'S&P Daily Rebalance') {
-                chartDataPath = 'monthlyspy';
-            } else if (decodedName === 'Caltropia Mean Reversion Factor') {
-                chartDataPath = 'equityReversionperf';
-            } else if (decodedName === 'S&P Dip/Rip') {
-                chartDataPath = 'monthlyspyagg';
-            } else if (decodedName === 'Caltropia Bond Regime Model') {
-                chartDataPath = 'monthlybondregime';
-            } else if (decodedName === 'Caltropia Momentum Factor') {
-                chartDataPath = 'MomentumFactorReturns';
-            } else if (decodedName === 'Caltropia Low Vol Factor') {
-                chartDataPath = 'LowVolFactorReturns';
-            }
-
-            if (chartDataPath) {
-                chartContainer.innerHTML = '<div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-[#c586c0] animate-pulse">LOADING LIVE DATA...</div>';
-                console.log(`Fetching chart data from: ${chartDataPath}`);
-
-                onValue(ref(db, chartDataPath), (snapshot) => {
-                    const data = snapshot.val();
-                    if (data) {
-                        try {
-                            fullStrategyData = data;
-                            renderSpDailyChart(data, chartContainer, decodedName); // Pass decodedName
-                        } catch (e) {
-                            console.error('Error rendering chart:', e);
-                        }
-                    } else {
-                        console.warn(`No chart data found for ${chartDataPath}.`);
-                        chartContainer.innerHTML = '<div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-[#f48771]">NO CHART DATA AVAILABLE</div>';
-                    }
-                }, (error) => {
-                    console.error(`Fetch Error: ${error.message}`);
-                    chartContainer.innerHTML = '<div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-[#f48771]">ERROR LOADING DATA</div>';
-                });
-            } else {
-                console.log('No specific chart path configured for this strategy.');
-                chartContainer.innerHTML = '<div class="flex items-center justify-center h-full text-[#8b949e]">NO CHART DATA LIVE</div>';
-            }
-
-            // 2. Fetch Latest Positions
-            if (decodedName === 'S&P Daily Rebalance') {
-                onValue(ref(db, 'spDailyRebalance'), (snapshot) => {
-                    const data = snapshot.val();
-                    if (data) renderPositionsTable(data, decodedName);
-                    else document.getElementById('positions-body').innerHTML = '<tr><td colspan="5" class="py-3 text-center text-[#f48771]">NO POSITIONS DATA FOUND</td></tr>';
-                });
-            } else if (decodedName === 'Caltropia Mean Reversion Factor') {
-                onValue(ref(db, 'equityMeanReversionholdings'), (snapshot) => {
-                    const data = snapshot.val();
-                    if (data) {
-                        renderPositionsTable(data, decodedName);
-                        // Render Sector Chart
-                        if (typeof renderSectorChart === 'function') {
-                            renderSectorChart(data);
-                        }
-                    }
-                    else document.getElementById('positions-body').innerHTML = '<tr><td colspan="5" class="py-3 text-center text-[#f48771]">NO POSITIONS DATA FOUND</td></tr>';
-                });
-
-                // Show Sector Container (ensure element exists)
-                const secChart = document.getElementById('sector-chart-container');
-                if (secChart) secChart.classList.remove('hidden');
-
-            } else if (decodedName === 'S&P Dip/Rip') {
-                onValue(ref(db, 'SPYDailyAggressive'), (snapshot) => {
-                    const data = snapshot.val();
-                    if (data) renderPositionsTable(data, decodedName);
-                    else document.getElementById('positions-body').innerHTML = '<tr><td colspan="5" class="py-3 text-center text-[#f48771]">NO POSITIONS DATA FOUND</td></tr>';
-                });
-            } else if (decodedName === 'Caltropia Bond Regime Model') {
-                onValue(ref(db, 'TLTDailyRebalance'), (snapshot) => {
-                    const data = snapshot.val();
-                    if (data) renderPositionsTable(data, decodedName);
-                    else document.getElementById('positions-body').innerHTML = '<tr><td colspan="5" class="py-3 text-center text-[#f48771]">NO POSITIONS DATA FOUND</td></tr>';
-                });
-            } else if (decodedName === 'Caltropia Momentum Factor') {
-                onValue(ref(db, 'MomentumFactorHoldings'), (snapshot) => {
-                    const data = snapshot.val();
-                    if (data) {
-                        renderPositionsTable(data, decodedName);
-                        // Similar to Mean Reversion, render Sector Chart
-                        if (typeof renderSectorChart === 'function') {
-                            renderSectorChart(data);
-                        }
-                        const secChart = document.getElementById('sector-chart-container');
-                        if (secChart) secChart.classList.remove('hidden');
-                    }
-                    else document.getElementById('positions-body').innerHTML = '<tr><td colspan="5" class="py-3 text-center text-[#f48771]">NO POSITIONS DATA FOUND</td></tr>';
-                });
-            } else if (decodedName === 'Caltropia Low Vol Factor') {
-                onValue(ref(db, 'LowVolFactorHoldings'), (snapshot) => {
-                    const data = snapshot.val();
-                    if (data) {
-                        renderPositionsTable(data, decodedName);
-                        // Render Sector Chart
-                        if (typeof renderSectorChart === 'function') {
-                            renderSectorChart(data);
-                        }
-                        const secChart = document.getElementById('sector-chart-container');
-                        if (secChart) secChart.classList.remove('hidden');
-                    }
-                    else document.getElementById('positions-body').innerHTML = '<tr><td colspan="5" class="py-3 text-center text-[#f48771]">NO POSITIONS DATA FOUND</td></tr>';
-                });
-            } else {
-                document.getElementById('positions-body').innerHTML = '<tr><td colspan="5" class="py-3 text-center text-[#8b949e]">NO POSITIONS DATA</td></tr>';
-            }
-
-            // 3. Fetch Historical Data (Allocations & Returns)
-            if (decodedName === 'S&P Daily Rebalance') {
-                // Determine layout
-                document.getElementById('allocation-chart-container').style.display = 'block';
-
-                // Allocation Chart
-                onValue(ref(db, 'SpDailyHistAlloc'), (snapshot) => {
-                    const data = snapshot.val();
-                    if (data) renderAllocationChart(data);
-                });
-
-                // Monthly Returns
-                onValue(ref(db, 'monthlyspyperf'), (snapshot) => {
-                    const data = snapshot.val();
-                    if (data) renderMonthlyReturnsTable(data);
-                    else document.getElementById('monthly-returns-body').innerHTML = '<tr><td colspan="14" class="py-4 text-center text-[#f48771]">NO RETURNS DATA FOUND</td></tr>';
-                });
-            } else if (decodedName === 'Caltropia Mean Reversion Factor') {
-                // Hide Allocation Chart for this strategy
-                const allocContainer = document.querySelector('#allocation-chart').closest('.terminal-card');
-                if (allocContainer) allocContainer.style.display = 'none';
-
-                // Monthly Returns specific to Mean Reversion
-                onValue(ref(db, 'monthlyequityReversionrtns'), (snapshot) => {
-                    const data = snapshot.val();
-                    if (data) renderMonthlyReturnsTable(data);
-                    else document.getElementById('monthly-returns-body').innerHTML = '<tr><td colspan="14" class="py-4 text-center text-[#f48771]">NO RETURNS DATA FOUND</td></tr>';
-                });
-            } else if (decodedName === 'S&P Dip/Rip') {
-                // Ensure Allocation Chart is Visible
-                document.getElementById('allocation-chart-container').style.display = 'block';
-
-                // Historical Allocations
-                onValue(ref(db, 'SpAggHistAlloc'), (snapshot) => {
-                    const data = snapshot.val();
-                    if (data) renderAllocationChart(data);
-                });
-
-                // Monthly Returns
-                onValue(ref(db, 'monthlyspyaggperf'), (snapshot) => {
-                    const data = snapshot.val();
-                    if (data) renderMonthlyReturnsTable(data, decodedName);
-                    else document.getElementById('monthly-returns-body').innerHTML = '<tr><td colspan="14" class="py-4 text-center text-[#f48771]">NO RETURNS DATA FOUND</td></tr>';
-                });
-            } else if (decodedName === 'Caltropia Bond Regime Model') {
-                // Ensure Allocation Chart is Visible
-                document.getElementById('allocation-chart-container').style.display = 'block';
-
-                // Historical Allocations
-                onValue(ref(db, 'BondRegimeHistAlloc'), (snapshot) => {
-                    const data = snapshot.val();
-                    if (data) renderAllocationChart(data, decodedName);
-                });
-
-                // Monthly Returns
-                onValue(ref(db, 'monthlybondregime'), (snapshot) => {
-                    const data = snapshot.val();
-                    if (data) {
-                        // Bond Regime data is Cumulative Price/Index (e.g., 2000+).
-                        // We must calculate Monthly Returns from these prices.
-                        const returnsData = convertPricesToReturns(data);
-                        renderMonthlyReturnsTable(returnsData, decodedName);
-                    }
-                    else document.getElementById('monthly-returns-body').innerHTML = '<tr><td colspan="14" class="py-4 text-center text-[#f48771]">NO RETURNS DATA FOUND</td></tr>';
-                });
-            } else if (decodedName === 'Caltropia Momentum Factor') {
-                // HIDE Historical Allocation Chart for this strategy
-                const allocContainer = document.getElementById('allocation-chart-container');
-                if (allocContainer) allocContainer.style.display = 'none';
-
-                onValue(ref(db, 'MomentumFactorMonthlyRtns'), (snapshot) => {
-                    const data = snapshot.val();
-                    if (data) renderMonthlyReturnsTable(data, decodedName);
-                    else document.getElementById('monthly-returns-body').innerHTML = '<tr><td colspan="14" class="py-4 text-center text-[#f48771]">NO RETURNS DATA FOUND</td></tr>';
-                });
-            } else if (decodedName === 'Caltropia Low Vol Factor') {
-                // HIDE Historical Allocation Chart
-                const allocContainer = document.getElementById('allocation-chart-container');
-                if (allocContainer) allocContainer.style.display = 'none';
-
-                onValue(ref(db, 'LowVolFactorMonthlyRtns'), (snapshot) => {
-                    const data = snapshot.val();
-                    if (data) renderMonthlyReturnsTable(data, decodedName);
-                    else document.getElementById('monthly-returns-body').innerHTML = '<tr><td colspan="14" class="py-4 text-center text-[#f48771]">NO RETURNS DATA FOUND</td></tr>';
-                });
-            } else {
-                // Clean up / Placeholder for others
-                document.getElementById('monthly-returns-body').innerHTML = '<tr><td colspan="14" class="py-4 text-center text-[#8b949e]">NO RETURNS DATA FOR THIS STRATEGY</td></tr>';
-            }
+            // Load Data via Cloud Function
+            loadData(decodedName);
         });
+
+        async function loadData(strategyName) {
+            const chartContainer = document.getElementById('chart-container');
+            const positionsBody = document.getElementById('positions-body');
+            const returnsBody = document.getElementById('monthly-returns-body');
+
+            // Set loading states
+            chartContainer.innerHTML = '<div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-[#c586c0] animate-pulse">LOADING DATA...</div>';
+
+            try {
+                const getPortfolioDetailData = httpsCallable(functions, 'getPortfolioDetailData');
+                const result = await getPortfolioDetailData({ strategy: strategyName });
+                const data = result.data;
+
+                if (!data) {
+                    throw new Error("No data returned from server");
+                }
+
+                // 1. Update Key Stats
+                if (data.stats) {
+                    updateKeyStatistics(data.stats);
+                }
+
+                // 2. Render Main Chart
+                if (data.chartData) {
+                    fullStrategyData = data.chartData;
+                    renderSpDailyChart(data.chartData, chartContainer, strategyName);
+                } else {
+                    chartContainer.innerHTML = '<div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-[#f48771]">NO CHART DATA AVAILABLE</div>';
+                }
+
+                // 3. Render Positions
+                if (data.positions) {
+                    renderPositionsTable(data.positions, strategyName);
+
+                    // Render Sector Chart if applicable
+                    if (['Caltropia Mean Reversion Factor', 'Caltropia Momentum Factor', 'Caltropia Low Vol Factor'].includes(strategyName)) {
+                        if (typeof renderSectorChart === 'function') {
+                            renderSectorChart(data.positions);
+                        }
+                        const secChart = document.getElementById('sector-chart-container');
+                        if (secChart) secChart.classList.remove('hidden');
+                    }
+                } else {
+                    positionsBody.innerHTML = '<tr><td colspan="5" class="py-3 text-center text-[#f48771]">NO POSITIONS DATA FOUND</td></tr>';
+                }
+
+                // 4. Render Historical Allocation Chart
+                const allocContainer = document.getElementById('allocation-chart-container');
+                if (['S&P Daily Rebalance', 'S&P Dip/Rip', 'Caltropia Bond Regime Model'].includes(strategyName)) {
+                    if (allocContainer) allocContainer.style.display = 'block';
+                    if (data.allocations) {
+                        renderAllocationChart(data.allocations, strategyName);
+                    }
+                } else {
+                    if (allocContainer) allocContainer.style.display = 'none';
+                }
+
+                // 5. Render Monthly Returns
+                if (data.returns) {
+                    // Specific check for Bond Regime which returns prices that need conversion
+                    if (strategyName === 'Caltropia Bond Regime Model') {
+                        const returnsData = convertPricesToReturns(data.returns);
+                        renderMonthlyReturnsTable(returnsData, strategyName);
+                    } else {
+                        renderMonthlyReturnsTable(data.returns, strategyName);
+                    }
+                } else {
+                    returnsBody.innerHTML = '<tr><td colspan="14" class="py-4 text-center text-[#f48771]">NO RETURNS DATA FOUND</td></tr>';
+                }
+
+                console.log('Firebase Cloud Function: Data Loaded Successfully');
+
+            } catch (error) {
+                console.error("Error loading portfolio data:", error);
+                chartContainer.innerHTML = '<div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-[#f48771]">ERROR LOADING DATA</div>';
+                positionsBody.innerHTML = '<tr><td colspan="5" class="py-3 text-center text-[#f48771]">ERROR LOADING DATA</td></tr>';
+                returnsBody.innerHTML = '<tr><td colspan="14" class="py-4 text-center text-[#f48771]">ERROR LOADING DATA</td></tr>';
+            }
+        }
 
         function renderMonthlyReturnsTable(data, strategyName) {
             const tbody = document.getElementById('monthly-returns-body');
             tbody.innerHTML = '';
 
-            // Debug: Log first entry to check value structure
-            const entries = Object.entries(data);
-            if (entries.length > 0) {
-                console.log('Sample Monthly Return:', entries[0]);
-            }
-
             // Parse flat data: "Fri Apr 01 2011..." -> Value
             // Aggregate into: { 2011: { 0: val, 1: val... } }
             const yearMap = {};
+
+            const entries = Object.entries(data);
+            if (entries.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="14" class="py-4 text-center text-[#8b949e]">NO VALID DATE DATA FOUND</td></tr>';
+                return;
+            }
 
             entries.forEach(entry => {
                 const dateRaw = entry[0]; // "Fri Apr 01 2011..."
@@ -1363,36 +1197,29 @@
             const statsMap = {
                 'CAGR': { val: data['CAGR'], fmt: fmtPct },
                 'Sharpe Ratio': { val: data['Sharpe'], fmt: fmtNum },
-                'Max Drawdown': { val: data['Max DD'], fmt: fmtPct, color: '#f48771' }, // Force red? Or keep green logic? User screenshot shows Green Max DD actually!
+                'Max Drawdown': { val: data['Max DD'], fmt: fmtPct, color: '#f48771' },
                 'Volatility': { val: data['Volatility'], fmt: fmtPct },
                 'YTD Return': { val: data['YTD Return'], fmt: fmtPct },
-                'Sortino': { val: data['Sortino'], fmt: fmtNum } // Note: Sortino might not be in all generic data, check logic
+                'Sortino': { val: data['Sortino'], fmt: fmtNum }
             };
 
-            // Map to the grid cells (Naive approach: finding by label text or predefined order)
-            // Ideally, we should add IDs to the HTML elements. 
-            // Letting's simply iterate the stats container divs.
-
             const cards = document.querySelectorAll('.terminal-card .grid > div');
-            // Expected Order in HTML: CAGR, Sharpe, Max DD, Volatility, YTD, Sortino
-            // Let's rely on text content matching of the header label
 
             cards.forEach(card => {
-                const label = card.querySelector('.uppercase').textContent.trim();
-                const valueDiv = card.querySelector('.font-mono');
+                const labelEl = card.querySelector('.uppercase');
+                // The value div is usually the second div, or has text-xl
+                // HTML: <div class="text-[#b5cea8] text-xl font-bold">14.2%</div>
+                const valueDiv = card.querySelector('.text-xl');
 
-                if (statsMap[label]) {
-                    const conf = statsMap[label];
-                    valueDiv.textContent = conf.fmt(conf.val);
+                if (labelEl && valueDiv) {
+                    const label = labelEl.textContent.trim();
 
-                    // Color logic based on user request/screenshot
-                    // Screenshot shows: CAGR(Green), Sharpe(Green), Vol(Green), Max DD(Green), YTD(Green).
-                    // This implies a "Terminal Green" for values, except maybe Errors.
-                    // Let's stick to the screenshot: All Green (#b5cea8).
-                    valueDiv.className = `text-[#b5cea8] text-xl font-bold`;
-
-                    // Special case: If user wants Max DD red, I'll stick to Green as per screenshot 
-                    // (Screenshot shows -15.4% in Green)
+                    if (statsMap[label]) {
+                        const conf = statsMap[label];
+                        valueDiv.textContent = conf.fmt(conf.val);
+                        // Ensure green styling (resetting potentially red or other states)
+                        valueDiv.className = `text-[#b5cea8] text-xl font-bold`;
+                    }
                 }
             });
         }

@@ -242,7 +242,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
+        import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-functions.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBxG5qf6mb8E_-b2TeXlRNseMZ26L9DRYg",
@@ -252,7 +252,7 @@
         };
 
         const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
+        const functions = getFunctions(app);
 
         const portfolios = [
             "Caltropia Managed Futures EW",
@@ -377,93 +377,37 @@
              `;
         }
 
-        // Fetch Bitcoin Data
-        onValue(ref(db, 'investmentStrategies/Bitcoin Regime Model'), (snapshot) => {
-            const data = snapshot.val();
-            if (data) { bitcoinData = data; renderPortfolios(); }
-        });
+        async function loadData() {
+            try {
+                const getPortfoliosData = httpsCallable(functions, 'getPortfoliosData');
+                const result = await getPortfoliosData();
+                const data = result.data || {};
 
-        // Fetch Managed Futures Data
-        onValue(ref(db, 'investmentStrategies/Managed Futures Equal Weight'), (snapshot) => {
-            const data = snapshot.val();
-            if (data) { managedFuturesData = data; renderPortfolios(); }
-        });
+                // Map the data
+                bitcoinData = data["Bitcoin Regime Model"];
+                managedFuturesData = data["Managed Futures Equal Weight"];
+                spDailyData = data["S&P 500 Daily Regime"];
+                dipRipData = data["S&P 500 Dip Rip"];
+                bondRegimeData = data["Bond Regime Model"];
+                volatilityRegimeData = data["Volatility Regimes"];
+                sectorRegimeData = data["Sector Regime Model"];
+                relativeValVolData = data["Relative Value Volatility"];
+                volTailRiskData = data["Volatility Tail Risk"];
+                lsEquityData = data["Long Short Equity"];
+                activeCoreEquityData = data["US Core Equity"];
+                momentumFactorData = data["Momentum Factor"];
+                meanReversionFactorData = data["Mean Reversion Factor"];
+                lowVolFactorData = data["Low Vol Factor"];
 
-        // Fetch S&P Daily Rebalance Data
-        onValue(ref(db, 'investmentStrategies/S&P 500 Daily Regime'), (snapshot) => {
-            const data = snapshot.val();
-            if (data) { spDailyData = data; renderPortfolios(); }
-        });
+                renderPortfolios();
 
-        // Fetch S&P Dip/Rip
-        onValue(ref(db, 'investmentStrategies/S&P 500 Dip Rip'), (snapshot) => {
-            const data = snapshot.val();
-            if (data) { dipRipData = data; renderPortfolios(); }
-        });
+            } catch (error) {
+                console.error("Error loading portfolios data:", error);
+            }
+        }
 
-        // Fetch Bond Regime Model
-        onValue(ref(db, 'investmentStrategies/Bond Regime Model'), (snapshot) => {
-            const data = snapshot.val();
-            if (data) { bondRegimeData = data; renderPortfolios(); }
-        });
-
-        // Fetch Volatility Regimes
-        onValue(ref(db, 'investmentStrategies/Volatility Regimes'), (snapshot) => {
-            const data = snapshot.val();
-            if (data) { volatilityRegimeData = data; renderPortfolios(); }
-        });
-
-        // Fetch Sector Regime Model
-        onValue(ref(db, 'investmentStrategies/Sector Regime Model'), (snapshot) => {
-            const data = snapshot.val();
-            if (data) { sectorRegimeData = data; renderPortfolios(); }
-        });
-
-        // Fetch Relative Value Volatility
-        onValue(ref(db, 'investmentStrategies/Relative Value Volatility'), (snapshot) => {
-            const data = snapshot.val();
-            if (data) { relativeValVolData = data; renderPortfolios(); }
-        });
-
-        // Fetch Volatility Tail Risk
-        onValue(ref(db, 'investmentStrategies/Volatility Tail Risk'), (snapshot) => {
-            const data = snapshot.val();
-            if (data) { volTailRiskData = data; renderPortfolios(); }
-        });
-
-        // Fetch Long Short Equity
-        onValue(ref(db, 'investmentStrategies/Long Short Equity'), (snapshot) => {
-            const data = snapshot.val();
-            if (data) { lsEquityData = data; renderPortfolios(); }
-        });
-
-        // Fetch Active Core Equity (US Core Equity)
-        onValue(ref(db, 'investmentStrategies/US Core Equity'), (snapshot) => {
-            const data = snapshot.val();
-            if (data) { activeCoreEquityData = data; renderPortfolios(); }
-        });
-
-        // Fetch Momentum Factor
-        onValue(ref(db, 'investmentStrategies/Momentum Factor'), (snapshot) => {
-            const data = snapshot.val();
-            // console.log("Momentum Factor Data:", data); 
-            if (data) { momentumFactorData = data; renderPortfolios(); }
-        });
-
-        // Fetch Mean Reversion Factor
-        onValue(ref(db, 'investmentStrategies/Mean Reversion Factor'), (snapshot) => {
-            const data = snapshot.val();
-            if (data) { meanReversionFactorData = data; renderPortfolios(); }
-        });
-
-        // Fetch Low Vol Factor
-        onValue(ref(db, 'investmentStrategies/Low Vol Factor'), (snapshot) => {
-            const data = snapshot.val();
-            if (data) { lowVolFactorData = data; renderPortfolios(); }
-        });
-
-        // Initial Render
-        renderPortfolios();
+        // Initial Load
+        loadData();
     </script>
 </body>
 

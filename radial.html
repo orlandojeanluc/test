@@ -603,7 +603,7 @@
     <!-- Scripts -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
+        import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-functions.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
 
         const firebaseConfig = {
@@ -614,21 +614,10 @@
         };
 
         const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
+        const functions = getFunctions(app);
         const auth = getAuth(app);
 
         // Configuration
-        const tickerConfig = [
-            { ticker: "NVDA", sector: "Tech" }, { ticker: "MSFT", sector: "Tech" }, { ticker: "AAPL", sector: "Tech" }, { ticker: "AMZN", sector: "Tech" }, { ticker: "META", sector: "Tech" }, { ticker: "AVGO", sector: "Tech" }, { ticker: "GOOGL", sector: "Tech" }, { ticker: "TSLA", sector: "Tech" }, { ticker: "ORCL", sector: "Tech" }, { ticker: "PLTR", sector: "Tech" }, { ticker: "CSCO", sector: "Tech" }, { ticker: "AMD", sector: "Tech" }, { ticker: "CRM", sector: "Tech" }, { ticker: "IBM", sector: "Tech" }, { ticker: "NOW", sector: "Tech" }, { ticker: "QCOM", sector: "Tech" }, { ticker: "TXN", sector: "Tech" }, { ticker: "ADBE", sector: "Tech" }, { ticker: "ANET", sector: "Tech" }, { ticker: "MU", sector: "Tech" }, { ticker: "AMAT", sector: "Tech" }, { ticker: "LRCX", sector: "Tech" }, { ticker: "PANW", sector: "Tech" }, { ticker: "ADI", sector: "Tech" }, { ticker: "KLAC", sector: "Tech" }, { ticker: "SNPS", sector: "Tech" }, { ticker: "INTC", sector: "Tech" }, { ticker: "CRWD", sector: "Tech" }, { ticker: "CDNS", sector: "Tech" }, { ticker: "NXPI", sector: "Tech" }, { ticker: "GLW", sector: "Tech" },
-            { ticker: "JPM", sector: "Finance" }, { ticker: "V", sector: "Finance" }, { ticker: "MA", sector: "Finance" }, { ticker: "BAC", sector: "Finance" }, { ticker: "WFC", sector: "Finance" }, { ticker: "GS", sector: "Finance" }, { ticker: "MS", sector: "Finance" }, { ticker: "AXP", sector: "Finance" }, { ticker: "C", sector: "Finance" }, { ticker: "SPGI", sector: "Finance" }, { ticker: "SCHW", sector: "Finance" }, { ticker: "BLK", sector: "Finance" }, { ticker: "COF", sector: "Finance" }, { ticker: "PNC", sector: "Finance" }, { ticker: "USB", sector: "Finance" }, { ticker: "BK", sector: "Finance" }, { ticker: "FI", sector: "Finance" }, { ticker: "MCO", sector: "Finance" }, { ticker: "ICE", sector: "Finance" }, { ticker: "CME", sector: "Finance" }, { ticker: "KKR", sector: "Finance" }, { ticker: "MMC", sector: "Finance" }, { ticker: "AON", sector: "Finance" }, { ticker: "AJG", sector: "Finance" }, { ticker: "TFC", sector: "Finance" }, { ticker: "APO", sector: "Finance" }, { ticker: "TRV", sector: "Finance" }, { ticker: "ALL", sector: "Finance" }, { ticker: "AFL", sector: "Finance" }, { ticker: "BX", sector: "Finance" }, { ticker: "PYPL", sector: "Finance" }, { ticker: "COIN", sector: "Finance" },
-            { ticker: "LLY", sector: "Health" }, { ticker: "UNH", sector: "Health" }, { ticker: "JNJ", sector: "Health" }, { ticker: "ABBV", sector: "Health" }, { ticker: "MRK", sector: "Health" }, { ticker: "PFE", sector: "Health" }, { ticker: "TMO", sector: "Health" }, { ticker: "ABT", sector: "Health" }, { ticker: "AMGN", sector: "Health" }, { ticker: "GILD", sector: "Health" }, { ticker: "VRTX", sector: "Health" }, { ticker: "BMY", sector: "Health" }, { ticker: "CVS", sector: "Health" }, { ticker: "CI", sector: "Health" }, { ticker: "ELV", sector: "Health" }, { ticker: "SYK", sector: "Health" }, { ticker: "MDT", sector: "Health" }, { ticker: "DHR", sector: "Health" }, { ticker: "BSX", sector: "Health" }, { ticker: "ISRG", sector: "Health" }, { ticker: "ZTS", sector: "Health" }, { ticker: "REGN", sector: "Health" }, { ticker: "HCA", sector: "Health" }, { ticker: "MCK", sector: "Health" }, { ticker: "BDX", sector: "Health" },
-            { ticker: "XOM", sector: "Energy" }, { ticker: "CVX", sector: "Energy" }, { ticker: "COP", sector: "Energy" }, { ticker: "EOG", sector: "Energy" }, { ticker: "SLB", sector: "Energy" }, { ticker: "MPC", sector: "Energy" }, { ticker: "WMB", sector: "Energy" }, { ticker: "PSX", sector: "Energy" }, { ticker: "VST", sector: "Energy" }, { ticker: "CEG", sector: "Energy" },
-            { ticker: "WMT", sector: "Consumer" }, { ticker: "COST", sector: "Consumer" }, { ticker: "HD", sector: "Consumer" }, { ticker: "PG", sector: "Consumer" }, { ticker: "KO", sector: "Consumer" }, { ticker: "PEP", sector: "Consumer" }, { ticker: "MCD", sector: "Consumer" }, { ticker: "NKE", sector: "Consumer" }, { ticker: "SBUX", sector: "Consumer" }, { ticker: "TJX", sector: "Consumer" }, { ticker: "LOW", sector: "Consumer" }, { ticker: "ORLY", sector: "Consumer" }, { ticker: "AZO", sector: "Consumer" }, { ticker: "MDLZ", sector: "Consumer" }, { ticker: "CL", sector: "Consumer" }, { ticker: "CMG", sector: "Consumer" }, { ticker: "MAR", sector: "Consumer" }, { ticker: "HLT", sector: "Consumer" }, { ticker: "RCL", sector: "Consumer" }, { ticker: "ABNB", sector: "Consumer" }, { ticker: "DIS", sector: "Consumer" }, { ticker: "NFLX", sector: "Consumer" }, { ticker: "BKNG", sector: "Consumer" },
-            { ticker: "CAT", sector: "Industrial" }, { ticker: "DE", sector: "Industrial" }, { ticker: "UNP", sector: "Industrial" }, { ticker: "HON", sector: "Industrial" }, { ticker: "GE", sector: "Industrial" }, { ticker: "BA", sector: "Industrial" }, { ticker: "RTX", sector: "Industrial" }, { ticker: "LMT", sector: "Industrial" }, { ticker: "GD", sector: "Industrial" }, { ticker: "NOC", sector: "Industrial" }, { ticker: "MMM", sector: "Industrial" }, { ticker: "EMR", sector: "Industrial" }, { ticker: "ETN", sector: "Industrial" }, { ticker: "PH", sector: "Industrial" }, { ticker: "ITW", sector: "Industrial" }, { ticker: "CMI", sector: "Industrial" }, { ticker: "CSX", sector: "Industrial" }, { ticker: "NSC", sector: "Industrial" }, { ticker: "UPS", sector: "Industrial" }, { ticker: "FAST", sector: "Industrial" }, { ticker: "URI", sector: "Industrial" }, { ticker: "PWR", sector: "Industrial" }, { ticker: "CTAS", sector: "Industrial" }, { ticker: "TDG", sector: "Industrial" }, { ticker: "HWM", sector: "Industrial" }, { ticker: "AXON", sector: "Industrial" }, { ticker: "JCI", sector: "Industrial" }, { ticker: "TT", sector: "Industrial" }, { ticker: "MSI", sector: "Industrial" }, { ticker: "ROP", sector: "Industrial" },
-            { ticker: "NEE", sector: "Utilities" }, { ticker: "DUK", sector: "Utilities" }, { ticker: "SO", sector: "Utilities" }, { ticker: "AEP", sector: "Utilities" }, { ticker: "SRE", sector: "Utilities" }, { ticker: "PLD", sector: "Utilities" }, { ticker: "AMT", sector: "Utilities" }, { ticker: "EQIX", sector: "Utilities" }, { ticker: "WELL", sector: "Utilities" }, { ticker: "SPG", sector: "Utilities" }, { ticker: "O", sector: "Utilities" },
-            { ticker: "T", sector: "Other" }, { ticker: "VZ", sector: "Other" }, { ticker: "TMUS", sector: "Other" }, { ticker: "UBER", sector: "Other" }, { ticker: "DASH", sector: "Other" }, { ticker: "INTU", sector: "Other" }, { ticker: "ADSK", sector: "Other" }, { ticker: "ACN", sector: "Other" }, { ticker: "ADP", sector: "Other" }, { ticker: "APH", sector: "Other" }, { ticker: "TEL", sector: "Other" }, { ticker: "APD", sector: "Other" }, { ticker: "ECL", sector: "Other" }, { ticker: "SHW", sector: "Other" }, { ticker: "LIN", sector: "Other" }, { ticker: "FCX", sector: "Other" }, { ticker: "NEM", sector: "Other" }, { ticker: "CB", sector: "Other" }, { ticker: "PGR", sector: "Other" }, { ticker: "WM", sector: "Other" }, { ticker: "GM", sector: "Other" }, { ticker: "PM", sector: "Other" }, { ticker: "MO", sector: "Other" }
-        ];
-
         const sectors = ["Tech", "Finance", "Health", "Energy", "Consumer", "Industrial", "Utilities", "Other"];
         const sectorColors = {
             Tech: "#818cf8", Finance: "#9cdcfe", Health: "#34d399", Energy: "#dcdcaa",
@@ -650,26 +639,15 @@
 
         // Define loadData first
         async function loadData() {
-            const results = await Promise.all(tickerConfig.map(async config => {
-                try {
-                    const snapshot = await get(ref(db, "equities/" + config.ticker));
-                    const data = snapshot.val();
-                    if (data) {
-                        const p = v => parseFloat(v) || 0;
-                        const stTrend = p(data.shortTermTrend) + p(data.shortTermStrength);
-                        const itTrend = p(data.intermTrend) + p(data.intermStrength);
-                        const meanReversion = p(data.meanReversion);
-                        const breakout = p(data.breakoutAndDown);
-                        return {
-                            ticker: config.ticker, sector: config.sector,
-                            overallScore: stTrend + itTrend + meanReversion + breakout,
-                            stTrend, itTrend, meanReversion, breakout
-                        };
-                    }
-                } catch (e) { }
-                return null;
-            }));
-            assetsData = results.filter(r => r);
+            try {
+                const getRadialData = httpsCallable(functions, 'getRadialData');
+                const result = await getRadialData();
+                assetsData = result.data;
+            } catch (error) {
+                console.error("Error loading radial data:", error);
+                assetsData = [];
+            }
+
             filteredData = [...assetsData];
             document.getElementById('last-updated').textContent = new Date().toLocaleTimeString();
 
