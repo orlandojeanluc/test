@@ -191,10 +191,16 @@
         </header>
 
         <!-- Main Content -->
-        <div id="arena-container" class="w-full flex-grow relative bg-[#0d1117] pb-20 lg:pb-0">
+        <!-- Desktop Chart View (Hidden on Mobile) -->
+        <div id="arena-container" class="hidden lg:block flex-1 w-full relative bg-[#0d1117] overflow-hidden">
             <div id="loading"
                 class="absolute inset-0 flex items-center justify-center text-[#8b949e] animate-pulse pointer-events-none">
                 Fetching Factor Data...</div>
+        </div>
+
+        <!-- Mobile List View (Visible on Mobile Only) -->
+        <div id="mobile-list-view" class="lg:hidden flex-1 w-full bg-[#0d1117] overflow-y-auto p-4 space-y-6 pb-20">
+            <!-- Content Injected by JS -->
         </div>
 
         <div id="tooltip" class="arena-tooltip"></div>
@@ -250,7 +256,75 @@
 
             allData = results.filter(r => r);
             document.getElementById('loading').style.display = 'none';
-            drawChart();
+
+            // Render correct view based on device
+            if (window.innerWidth < 1024) {
+                renderMobileList();
+            } else {
+                drawChart();
+            }
+
+            // Handle resize
+            window.addEventListener('resize', () => {
+                if (window.innerWidth < 1024) {
+                    document.getElementById('mobile-list-view').style.display = 'block';
+                    document.getElementById('arena-container').classList.add('hidden');
+                    renderMobileList();
+                } else {
+                    document.getElementById('mobile-list-view').style.display = 'none';
+                    document.getElementById('arena-container').classList.remove('hidden');
+                    drawChart();
+                }
+            });
+        }
+
+        function renderMobileList() {
+            const container = document.getElementById('mobile-list-view');
+            container.innerHTML = '';
+
+            // 1. Sweet Spot (Mom > 0, Risk < 4) - Sorted by Mom Desc
+            const sweetSpot = allData.filter(d => d.mom > 0 && d.risk < 4).sort((a, b) => b.mom - a.mom);
+
+            // 2. Danger Zone (Mom < 0, Risk > 6) - Sorted by Mom Asc (Worst first)
+            const dangerZone = allData.filter(d => d.mom < 0 && d.risk > 6).sort((a, b) => a.mom - b.mom);
+
+            // 3. Battlefield (Rest) - Sorted by Mom Desc
+            const field = allData.filter(d => !sweetSpot.includes(d) && !dangerZone.includes(d)).sort((a, b) => b.mom - a.mom);
+
+            const createSection = (title, icon, color, data) => {
+                if (data.length === 0) return '';
+                return `
+                    <div class="mb-6">
+                        <div class="flex items-center gap-2 mb-3 border-b border-[#21262d] pb-2">
+                             <span class="text-lg">${icon}</span>
+                             <span class="font-bold text-sm tracking-widest uppercase" style="color: ${color}">${title}</span>
+                             <span class="text-[#8b949e] text-xs ml-auto">${data.length} ASSETS</span>
+                        </div>
+                        <div class="grid grid-cols-1 gap-3">
+                            ${data.map(d => `
+                                <div class="bg-[#161b22] border border-[#21262d] p-3 rounded flex items-center justify-between">
+                                    <div>
+                                        <div class="font-bold text-[#c9d1d9] text-base">${d.ticker}</div>
+                                        <div class="text-[#8b949e] text-[10px] uppercase">${d.sector}</div>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="text-xs font-mono font-bold ${d.mom > 0 ? 'text-[#9cdcfe]' : 'text-[#f48771]'}">
+                                            MOM: ${d.mom > 0 ? '+' : ''}${d.mom.toFixed(2)}
+                                        </div>
+                                        <div class="text-[10px] text-[#8b949e]">RISK: <span class="text-[#c9d1d9]">${d.risk.toFixed(1)}</span></div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            };
+
+            container.innerHTML = `
+                ${createSection('The Sweet Spot', '💎', '#b5cea8', sweetSpot)}
+                ${createSection('The Danger Zone', '💀', '#f48771', dangerZone)}
+                ${createSection('The Battlefield', '⚖️', '#dcdcaa', field)}
+            `;
         }
 
         function drawChart() {
