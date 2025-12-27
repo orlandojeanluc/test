@@ -239,18 +239,20 @@
     <!-- Scripts -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
-        import { getAuth } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+        import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-functions.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBxG5qf6mb8E_-b2TeXlRNseMZ26L9DRYg",
             authDomain: "trendscores-df341.firebaseapp.com",
             projectId: "trendscores-df341",
-            databaseURL: "https://trendscores-df341-default-rtdb.firebaseio.com"
+            storageBucket: "trendscores-df341.firebasestorage.app",
+            messagingSenderId: "128695232870",
+            appId: "1:128695232870:web:96e8d1964175b5b4819280",
+            measurementId: "G-RJD2K2XW68"
         };
 
         const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
+        const functions = getFunctions(app);
 
         // Get Params
         const urlParams = new URLSearchParams(window.location.search);
@@ -266,12 +268,12 @@
             document.getElementById('last-updated').textContent = "Syncing...";
 
             try {
-                // Fetch Current Score
-                const currentScoreSnap = await get(ref(db, `equitiesRiskSignals/${ticker}`));
-                const currentData = currentScoreSnap.val();
-                let currentScore = 0;
-                if (typeof currentData === 'object') currentScore = parseFloat(currentData.EquityRisk) || 0;
-                else currentScore = parseFloat(currentData) || 0;
+                const getLowVolDetailData = httpsCallable(functions, 'getLowVolDetailData');
+                const result = await getLowVolDetailData({ ticker: ticker });
+                const data = result.data;
+
+                const currentScore = data.currentRisk;
+                const perfData = data.performance;
 
                 const scoreEl = document.getElementById('current-risk-score');
                 const glowEl = document.getElementById('score-glow');
@@ -287,16 +289,12 @@
                 glowEl.className = `absolute inset-0 opacity-20 bg-gradient-to-br ${styles.gradient}`;
                 cardEl.style.boxShadow = `0 0 40px ${styles.shadowColor}`;
 
-                // Fetch Performance Data
-                const perfSnap = await get(ref(db, `equityRiskScoresbyPerformance/${ticker}`));
-                const perfData = perfSnap.val();
-
                 renderRiskGrid(perfData, currentScore); // Pass current score
                 document.getElementById('last-updated').textContent = new Date().toLocaleTimeString();
 
             } catch (e) {
                 console.error("Error fetching details", e);
-                document.getElementById('risk-grid').innerHTML = '<div class="col-span-full text-center text-[#f48771]">ERROR LOADING DATA</div>';
+                document.getElementById('risk-grid').innerHTML = '<div class="col-span-full text-center text-[#f48771]">ERROR LOADING DATA: ' + e.message + '</div>';
             }
         }
 
