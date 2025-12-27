@@ -210,6 +210,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
         import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
+        import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-functions.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBxG5qf6mb8E_-b2TeXlRNseMZ26L9DRYg",
@@ -219,6 +220,7 @@
         };
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
+        const functions = getFunctions(app);
 
         // Minimal Ticker Config
         const tickerConfig = [
@@ -235,26 +237,17 @@
         let allData = [];
 
         async function init() {
-            const results = await Promise.all(tickerConfig.map(async config => {
-                try {
-                    const [momSnap, riskSnap] = await Promise.all([
-                        get(ref(db, `equities/${config.ticker}`)),
-                        get(ref(db, `equitiesRiskSignals/${config.ticker}`))
-                    ]);
-                    const momData = momSnap.val() || {};
-                    const riskData = riskSnap.val();
-                    const p = v => parseFloat(v) || 0;
+            try {
+                // Call Cloud Function
+                const getFactorArenaData = httpsCallable(functions, 'getFactorArenaData');
+                const result = await getFactorArenaData();
+                allData = result.data;
 
-                    const trendScore = p(momData.shortTermTrend) + p(momData.intermTrend);
-                    let riskScore = 4;
-                    if (typeof riskData === 'object' && riskData) riskScore = parseFloat(riskData.EquityRisk) || 0;
-                    else if (typeof riskData === 'number') riskScore = riskData;
+            } catch (error) {
+                console.error("Error fetching arena data:", error);
+                // Optional: Show error UI
+            }
 
-                    return { ticker: config.ticker, sector: config.sector, risk: riskScore, mom: trendScore, x: riskScore, y: trendScore };
-                } catch (e) { return null; }
-            }));
-
-            allData = results.filter(r => r);
             document.getElementById('loading').style.display = 'none';
 
             // Render correct view based on device
