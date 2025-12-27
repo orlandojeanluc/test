@@ -431,8 +431,8 @@
 
         function moveTooltip(e) {
             const el = document.getElementById('tooltip');
-            el.style.left = (e.clientX + 10) + 'px';
-            el.style.top = (e.clientY + 10) + 'px';
+            el.style.left = (e.pageX + 10) + 'px';
+            el.style.top = (e.pageY + 10) + 'px';
         }
 
         function hideTooltip() {
