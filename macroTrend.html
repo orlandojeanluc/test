@@ -317,6 +317,9 @@
                                 TERM</button>
                             <button onclick="switchTab('IT')" id="tab-IT"
                                 class="px-2 py-1 text-[10px] bg-[#21262d] text-[#8b949e] hover:text-white rounded border border-[#21262d] whitespace-nowrap">INTERMEDIATE</button>
+                            <button onclick="switchTab('MR')" id="tab-MR"
+                                class="px-2 py-1 text-[10px] bg-[#21262d] text-[#8b949e] hover:text-white rounded border border-[#21262d] whitespace-nowrap">MEAN
+                                REV</button>
                         </div>
                     </div>
                     <div class="flex gap-2 self-start md:self-auto">
@@ -577,14 +580,14 @@
             // Update Tab UI
             const stBtn = document.getElementById('tab-ST');
             const itBtn = document.getElementById('tab-IT');
+            const mrBtn = document.getElementById('tab-MR');
 
-            if (tab === 'ST') {
-                stBtn.className = "px-2 py-1 text-[10px] bg-[#c586c0] text-black rounded font-bold whitespace-nowrap";
-                itBtn.className = "px-2 py-1 text-[10px] bg-[#21262d] text-[#8b949e] hover:text-white rounded border border-[#21262d] whitespace-nowrap";
-            } else {
-                itBtn.className = "px-2 py-1 text-[10px] bg-[#c586c0] text-black rounded font-bold whitespace-nowrap";
-                stBtn.className = "px-2 py-1 text-[10px] bg-[#21262d] text-[#8b949e] hover:text-white rounded border border-[#21262d] whitespace-nowrap";
-            }
+            const activeClass = "px-2 py-1 text-[10px] bg-[#c586c0] text-black rounded font-bold whitespace-nowrap";
+            const inactiveClass = "px-2 py-1 text-[10px] bg-[#21262d] text-[#8b949e] hover:text-white rounded border border-[#21262d] whitespace-nowrap";
+
+            stBtn.className = (tab === 'ST') ? activeClass : inactiveClass;
+            itBtn.className = (tab === 'IT') ? activeClass : inactiveClass;
+            mrBtn.className = (tab === 'MR') ? activeClass : inactiveClass;
 
             if (!currentTicker) return;
 
@@ -594,9 +597,12 @@
                 if (tab === 'ST') {
                     const getMacroDetailData = httpsCallable(functions, 'getMacroDetailData');
                     result = await getMacroDetailData({ ticker: currentTicker });
-                } else {
+                } else if (tab === 'IT') {
                     const getMacroIntermediateDetailData = httpsCallable(functions, 'getMacroIntermediateDetailData');
                     result = await getMacroIntermediateDetailData({ ticker: currentTicker });
+                } else {
+                    const getMacroMeanReversionDetailData = httpsCallable(functions, 'getMacroMeanReversionDetailData');
+                    result = await getMacroMeanReversionDetailData({ ticker: currentTicker });
                 }
 
                 globalHistory = result.data; // Store globally
@@ -673,15 +679,19 @@
                 trendChartInstance.destroy();
             }
 
-            // Parse Data: Map either stTrend or itTrend
+            // Parse Data: Map either stTrend, itTrend or mrTrend
             const labels = history.map(d => formatDate(d.date));
             const dataSeries = history.map(d => {
                 if (d.stTrend !== undefined) return d.stTrend;
                 if (d.itTrend !== undefined) return d.itTrend;
+                if (d.mrTrend !== undefined) return d.mrTrend;
                 return d.overall || 0;
             });
 
-            const labelText = currentTab === 'IT' ? 'Intermediate Trend' : 'Short Term Trend';
+            let labelText = 'Trend';
+            if (currentTab === 'IT') labelText = 'Intermediate Trend';
+            else if (currentTab === 'ST') labelText = 'Short Term Trend';
+            else if (currentTab === 'MR') labelText = 'Mean Reversion';
 
             try {
                 // Create Gradient
@@ -735,8 +745,8 @@
                             y: {
                                 grid: { color: '#21262d' },
                                 ticks: { color: '#8b949e' },
-                                min: -5,
-                                max: 5
+                                min: (currentTab === 'MR') ? -3 : -5,
+                                max: (currentTab === 'MR') ? 3 : 5
                             }
                         }
                     }
