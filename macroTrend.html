@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Caltropia | Macro Terminal</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
         rel="stylesheet">
@@ -134,6 +135,50 @@
             border-color: #c586c0 !important;
             outline: none !important;
         }
+
+        /* Detail Panel */
+        #detail-panel {
+            position: fixed;
+            inset: 0;
+            /* Full screen */
+            width: 100%;
+            height: 100%;
+            background: #0d1117;
+            /* Darker background for full immersion */
+            z-index: 100;
+            padding: 2rem;
+
+            /* Animation - Start state */
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(0.98);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+
+            display: flex;
+            flex-direction: column;
+        }
+
+        #detail-panel.open {
+            opacity: 1;
+            pointer-events: auto;
+            transform: scale(1);
+        }
+
+        #detail-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(2px);
+            z-index: 99;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        #detail-overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
     </style>
 </head>
 
@@ -243,6 +288,58 @@
             </a>
         </div>
     </nav>
+
+    <!-- Detail Panel -->
+    <div id="detail-overlay" onclick="closeDetailPanel()"></div>
+    <div id="detail-panel">
+        <div class="flex items-center justify-between mb-6 border-b border-[#21262d] pb-4">
+            <div>
+                <h2 id="detail-ticker" class="text-2xl font-bold text-[#c586c0]">--</h2>
+                <div class="text-[#8b949e] text-xs uppercase" id="detail-subtitle">Historical Trend Analysis</div>
+            </div>
+            <button onclick="closeDetailPanel()" class="text-[#8b949e] hover:text-white transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                    </path>
+                </svg>
+            </button>
+        </div>
+
+        <div class="space-y-6">
+            <!-- Chart Container -->
+            <div class="bg-[#0d1117] border border-[#21262d] rounded-lg p-4">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+                    <div class="flex flex-wrap items-center gap-4">
+                        <span class="text-[#b5cea8] text-xs font-bold">DAILY TREND SCORE</span>
+                        <div class="flex gap-2">
+                            <button onclick="switchTab('ST')" id="tab-ST"
+                                class="px-2 py-1 text-[10px] bg-[#c586c0] text-black rounded font-bold whitespace-nowrap">SHORT
+                                TERM</button>
+                            <button onclick="switchTab('IT')" id="tab-IT"
+                                class="px-2 py-1 text-[10px] bg-[#21262d] text-[#8b949e] hover:text-white rounded border border-[#21262d] whitespace-nowrap">INTERMEDIATE</button>
+                        </div>
+                    </div>
+                    <div class="flex gap-2 self-start md:self-auto">
+                        <button onclick="setTimeframe('1Y')"
+                            class="time-btn px-2 py-1 text-[10px] bg-[#21262d] text-[#8b949e] hover:text-white rounded border border-[#21262d]"
+                            id="btn-1Y">1Y</button>
+                        <button onclick="setTimeframe('3Y')"
+                            class="time-btn px-2 py-1 text-[10px] bg-[#21262d] text-[#8b949e] hover:text-white rounded border border-[#21262d]"
+                            id="btn-3Y">3Y</button>
+                        <button onclick="setTimeframe('MAX')"
+                            class="time-btn px-2 py-1 text-[10px] bg-[#21262d] text-[#8b949e] hover:text-white rounded border border-[#21262d]"
+                            id="btn-MAX">MAX</button>
+                    </div>
+                </div>
+                <!-- Canvas height fixed for stability -->
+                <div style="height: 60vh; position: relative;">
+                    <canvas id="trendChart"></canvas>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
 
     <!-- Main Content Container -->
     <div class="ml-0 lg:ml-12 pb-20 lg:pb-0 transition-all">
@@ -421,7 +518,7 @@
                 }).join('');
 
                 return `
-                    <div class="terminal-card p-4">
+                    <div class="terminal-card p-4 cursor-pointer" onclick="openDetail('${a.ticker}')">
                         <div class="flex items-center justify-between mb-3">
                             <div class="flex items-center gap-2">
                                 <span class="text-[#c586c0] font-bold text-lg">${a.ticker}</span>
@@ -432,8 +529,11 @@
                         <div class="space-y-1 border-t border-[#21262d] pt-2">
                             ${factorRows}
                         </div>
+                        <div class="mt-2 text-center text-[#21262d] text-[10px] group-hover:text-[#c586c0] transition-colors">
+                            CLICK FOR HISTORY
+                        </div>
                     </div>
-                `;
+                    `;
             }).join('');
         }
 
@@ -448,6 +548,199 @@
             menuIcon.classList.toggle('hidden');
             closeIcon.classList.toggle('hidden');
         };
+
+        // --- Detail Panel Logic ---
+        let trendChartInstance = null;
+        let globalHistory = [];
+        let currentFilter = '1Y';
+        let currentTab = 'ST';
+        let currentTicker = null;
+
+        window.openDetail = async function (ticker) {
+            currentTicker = ticker;
+            const panel = document.getElementById('detail-panel');
+            const overlay = document.getElementById('detail-overlay');
+
+            // 1. Show Panel
+            document.getElementById('detail-ticker').textContent = ticker;
+            panel.classList.add('open');
+            overlay.classList.add('show');
+
+            // Reset UI
+            setActiveButton('1Y');
+            switchTab('ST');
+        };
+
+        window.switchTab = async function (tab) {
+            currentTab = tab;
+
+            // Update Tab UI
+            const stBtn = document.getElementById('tab-ST');
+            const itBtn = document.getElementById('tab-IT');
+
+            if (tab === 'ST') {
+                stBtn.className = "px-2 py-1 text-[10px] bg-[#c586c0] text-black rounded font-bold whitespace-nowrap";
+                itBtn.className = "px-2 py-1 text-[10px] bg-[#21262d] text-[#8b949e] hover:text-white rounded border border-[#21262d] whitespace-nowrap";
+            } else {
+                itBtn.className = "px-2 py-1 text-[10px] bg-[#c586c0] text-black rounded font-bold whitespace-nowrap";
+                stBtn.className = "px-2 py-1 text-[10px] bg-[#21262d] text-[#8b949e] hover:text-white rounded border border-[#21262d] whitespace-nowrap";
+            }
+
+            if (!currentTicker) return;
+
+            // Fetch Data
+            try {
+                let result;
+                if (tab === 'ST') {
+                    const getMacroDetailData = httpsCallable(functions, 'getMacroDetailData');
+                    result = await getMacroDetailData({ ticker: currentTicker });
+                } else {
+                    const getMacroIntermediateDetailData = httpsCallable(functions, 'getMacroIntermediateDetailData');
+                    result = await getMacroIntermediateDetailData({ ticker: currentTicker });
+                }
+
+                globalHistory = result.data; // Store globally
+
+                // Re-apply current timeframe filter
+                setTimeframe(currentFilter);
+
+            } catch (error) {
+                console.error("Error fetching detail:", error);
+            }
+        };
+
+        window.setTimeframe = function (period) {
+            currentFilter = period;
+            setActiveButton(period);
+
+            if (!globalHistory || globalHistory.length === 0) return;
+
+            const now = new Date();
+            let filtered = globalHistory;
+
+            if (period === '1Y') {
+                const cutoff = new Date();
+                cutoff.setFullYear(now.getFullYear() - 1);
+                filtered = globalHistory.filter(d => new Date(d.date) >= cutoff);
+            } else if (period === '3Y') {
+                const cutoff = new Date();
+                cutoff.setFullYear(now.getFullYear() - 3);
+                filtered = globalHistory.filter(d => new Date(d.date) >= cutoff);
+            }
+            // MAX uses all data
+
+            renderChart(filtered);
+        };
+
+        function setActiveButton(id) {
+            document.querySelectorAll('.time-btn').forEach(b => {
+                b.classList.remove('bg-[#c586c0]', 'text-black');
+                b.classList.add('bg-[#21262d]', 'text-[#8b949e]');
+            });
+            const activeById = document.getElementById(`btn-${id}`);
+            if (activeById) {
+                activeById.classList.remove('bg-[#21262d]', 'text-[#8b949e]');
+                activeById.classList.add('bg-[#c586c0]', 'text-black');
+            }
+        }
+
+        window.closeDetailPanel = function () {
+            document.getElementById('detail-panel').classList.remove('open');
+            document.getElementById('detail-overlay').classList.remove('show');
+        };
+
+        function renderChart(history) {
+            // Basic Safety Check
+            if (typeof Chart === 'undefined' || !document.getElementById('trendChart')) {
+                console.error('Chart lib or canvas missing');
+                return;
+            }
+
+            const ctx = document.getElementById('trendChart').getContext('2d');
+
+            if (trendChartInstance) {
+                trendChartInstance.destroy();
+            }
+
+            // Parse Data: Map either stTrend or itTrend
+            const labels = history.map(d => formatDate(d.date));
+            const dataSeries = history.map(d => {
+                if (d.stTrend !== undefined) return d.stTrend;
+                if (d.itTrend !== undefined) return d.itTrend;
+                return d.overall || 0;
+            });
+
+            const labelText = currentTab === 'IT' ? 'Intermediate Trend' : 'Short Term Trend';
+
+            try {
+                // Create Gradient
+                const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+                gradient.addColorStop(0, 'rgba(197, 134, 192, 0.5)'); // Top: stronger purple
+                gradient.addColorStop(1, 'rgba(197, 134, 192, 0.0)'); // Bottom: transparent
+
+                trendChartInstance = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: labelText,
+                            data: dataSeries,
+                            borderColor: '#c586c0',
+                            backgroundColor: gradient,
+                            borderWidth: 1.5, // Thinner line
+                            stepped: true,    // Stepped line for clearer transitions
+                            fill: true,
+                            pointRadius: 0,
+                            pointHoverRadius: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        interaction: {
+                            mode: 'index',
+                            intersect: false,
+                        },
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                backgroundColor: '#161b22',
+                                borderColor: '#21262d',
+                                borderWidth: 1,
+                                titleColor: '#8b949e',
+                                bodyColor: '#c9d1d9',
+                                callbacks: {
+                                    label: function (context) {
+                                        return `${labelText}: ${context.parsed.y}`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                grid: { color: '#21262d', display: false },
+                                ticks: { color: '#8b949e', maxTicksLimit: 6 }
+                            },
+                            y: {
+                                grid: { color: '#21262d' },
+                                ticks: { color: '#8b949e' },
+                                min: -5,
+                                max: 5
+                            }
+                        }
+                    }
+                });
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        function formatDate(dateStr) {
+            // dateStr assumed "MM-DD-YYYY" or standard ISO
+            const date = new Date(dateStr);
+            if (isNaN(date)) return dateStr;
+            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: '2-digit' });
+        }
     </script>
 </body>
 
