@@ -615,17 +615,28 @@
 
             if (!globalHistory || globalHistory.length === 0) return;
 
-            const now = new Date();
+            const now = new Date(); // Browser's now is always valid
+
+            // Safe Filter Logic
             let filtered = globalHistory;
 
             if (period === '1Y') {
-                const cutoff = new Date();
+                const cutoff = new Date(now);
                 cutoff.setFullYear(now.getFullYear() - 1);
-                filtered = globalHistory.filter(d => new Date(d.date) >= cutoff);
+
+                filtered = globalHistory.filter(d => {
+                    const dateObj = parseDateSafe(d.date);
+                    return dateObj && dateObj >= cutoff;
+                });
+
             } else if (period === '3Y') {
-                const cutoff = new Date();
+                const cutoff = new Date(now);
                 cutoff.setFullYear(now.getFullYear() - 3);
-                filtered = globalHistory.filter(d => new Date(d.date) >= cutoff);
+
+                filtered = globalHistory.filter(d => {
+                    const dateObj = parseDateSafe(d.date);
+                    return dateObj && dateObj >= cutoff;
+                });
             }
             // MAX uses all data
 
@@ -736,10 +747,32 @@
         }
 
         function formatDate(dateStr) {
-            // dateStr assumed "MM-DD-YYYY" or standard ISO
-            const date = new Date(dateStr);
-            if (isNaN(date)) return dateStr;
+            const date = parseDateSafe(dateStr);
+            if (!date) return dateStr;
             return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: '2-digit' });
+        }
+
+        // Helper to parse "MM-DD-YYYY" safely on all browsers
+        function parseDateSafe(dateString) {
+            if (!dateString) return null;
+
+            // Check if matches MM-DD-YYYY
+            // Matches 01-01-2018 or 1-1-2018
+            const parts = dateString.split('-');
+            if (parts.length === 3) {
+                const month = parseInt(parts[0], 10) - 1; // JS months 0-11
+                const day = parseInt(parts[1], 10);
+                const year = parseInt(parts[2], 10);
+
+                // Validate
+                if (!isNaN(month) && !isNaN(day) && !isNaN(year)) {
+                    return new Date(year, month, day);
+                }
+            }
+
+            // Fallback to standard parser (ISO strings etc)
+            const d = new Date(dateString);
+            return isNaN(d) ? null : d;
         }
     </script>
 </body>
