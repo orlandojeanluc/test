@@ -310,7 +310,7 @@
             <div class="bg-[#0d1117] border border-[#21262d] rounded-lg p-4">
                 <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
                     <div class="flex flex-wrap items-center gap-4">
-                        <span class="text-[#b5cea8] text-xs font-bold">DAILY TREND SCORE</span>
+                        <span id="chart-title-label" class="text-[#b5cea8] text-xs font-bold">SHORT TERM TREND</span>
                         <div class="flex gap-2">
                             <button onclick="switchTab('ST')" id="tab-ST"
                                 class="px-2 py-1 text-[10px] bg-[#c586c0] text-black rounded font-bold whitespace-nowrap">SHORT
@@ -588,6 +588,11 @@
             stBtn.className = (tab === 'ST') ? activeClass : inactiveClass;
             itBtn.className = (tab === 'IT') ? activeClass : inactiveClass;
             mrBtn.className = (tab === 'MR') ? activeClass : inactiveClass;
+
+            const titleEl = document.getElementById('chart-title-label');
+            if (tab === 'ST') titleEl.textContent = 'SHORT TERM TREND';
+            else if (tab === 'IT') titleEl.textContent = 'INTERMEDIATE';
+            else if (tab === 'MR') titleEl.textContent = 'MEAN REV';
 
             if (!currentTicker) return;
 
