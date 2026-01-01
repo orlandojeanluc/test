@@ -237,9 +237,9 @@
             class="absolute bottom-4 right-4 bg-[#161b22] border border-[#21262d] p-3 rounded text-xs z-40 hidden md:block">
             <div id="legend-title" class="text-[#8b949e] mb-1 font-bold">MOMENTUM</div>
             <div class="flex items-center gap-1">
-                <div class="w-3 h-3 bg-[#f48771]"></div><span class="text-[#8b949e] mr-2">Bearish</span>
-                <div class="w-3 h-3 bg-[#1e1e1e]"></div><span class="text-[#8b949e] mr-2">Neutral</span>
-                <div class="w-3 h-3 bg-[#9cdcfe]"></div><span class="text-[#8b949e]">Bullish</span>
+                <div class="w-3 h-3 bg-[#f87171]"></div><span class="text-[#8b949e] mr-2">Bearish</span>
+                <div class="w-3 h-3 bg-[#374151]"></div><span class="text-[#8b949e] mr-2">Neutral</span>
+                <div class="w-3 h-3 bg-[#4ade80]"></div><span class="text-[#8b949e]">Bullish</span>
             </div>
         </div>
 
@@ -333,9 +333,9 @@
 
             d3.treemap()
                 .size([width, height])
-                .paddingInner(2)
-                .paddingOuter(4)
-                .paddingTop(24) // Title bar
+                .paddingInner(4) // More gap
+                .paddingOuter(6)
+                .paddingTop(28) // Title bar
                 .round(true)
                 (root2);
 
@@ -355,6 +355,8 @@
             cell.append("rect")
                 .attr("width", d => d.x1 - d.x0)
                 .attr("height", d => d.y1 - d.y0)
+                .attr("rx", 6) // Rounded corners
+                .attr("ry", 6)
                 .attr("fill", d => getColor(d.data))
                 .attr("class", "node")
                 .on("mouseover", (e, d) => showTooltip(e, d.data))
@@ -363,11 +365,9 @@
                 .on("click", (e, d) => {
                     const isMobile = window.innerWidth < 768;
                     if (isMobile) {
-                        // Mobile: Just show/update tooltip on tap, don't navigate
-                        e.stopPropagation(); // Prevent affecting parents
+                        e.stopPropagation();
                         showTooltip(e, d.data);
                     } else {
-                        // Desktop: Navigate to sector detail
                         window.location.href = `sector_detail.html?sector=${d.data.sector}`;
                     }
                 });
@@ -375,9 +375,10 @@
             // Ticker Labels
             cell.append("text")
                 .attr("class", "node-label")
-                .attr("x", 4)
-                .attr("y", 14)
+                .attr("x", 6) // Slightly more padding
+                .attr("y", 16)
                 .text(d => (d.x1 - d.x0 > 30) ? d.data.ticker : "")
+                .attr("font-weight", 700) // Bold
                 .attr("font-size", d => Math.min(14, (d.x1 - d.x0) / 4) + "px"); // Scale font
 
             // Sector Titles (Parent Nodes)
@@ -396,10 +397,11 @@
 
         function getColor(d) {
             if (currentView === 'momentum') {
-                if (d.trendScore > 5) return "#c586c0"; // High Mom
-                if (d.trendScore > 0) return "#9cdcfe"; // Pos Mom
-                if (d.trendScore > -2) return "#2d2d2d"; // Neutral
-                return "#f48771"; // Neg Mom
+                if (d.trendScore > 5) return "#4ade80"; // Strong Bullish (Green-400)
+                if (d.trendScore > 0) return "#86efac"; // Bullish (Green-300)
+                if (d.trendScore > -2) return "#374151"; // Neutral (Gray-700)
+                if (d.trendScore > -5) return "#f87171"; // Bearish (Red-400)
+                return "#ef4444"; // Strong Bearish (Red-500)
             } else {
                 // Risk
                 if (d.riskScore <= 2) return "#b5cea8"; // Low Risk (Green)

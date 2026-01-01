@@ -1,0 +1,1292 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caltropia | Volatility Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        mono: ['"JetBrains Mono"', '"IBM Plex Mono"', 'monospace'],
+                        sans: ['"Inter"', 'sans-serif']
+                    },
+                    colors: {
+                        terminal: {
+                            bg: '#0d1117',
+                            panel: '#161b22',
+                            border: '#21262d',
+                            orange: '#c586c0',
+                            amber: '#dcdcaa',
+                            green: '#b5cea8',
+                            red: '#f48771',
+                            blue: '#9cdcfe',
+                            muted: '#8b949e'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        body {
+            background-color: #0d1117;
+            color: #c9d1d9;
+            font-size: 12px;
+            overflow-y: auto;
+            /* Allow scroll */
+        }
+
+        /* D3 Map Styles */
+        .node {
+            cursor: pointer;
+            stroke: #0d1117;
+            stroke-width: 1px;
+            transition: opacity 0.2s;
+        }
+
+        .node:hover {
+            opacity: 0.8;
+            stroke: #fff;
+            stroke-width: 2px;
+        }
+
+        .node-label {
+            pointer-events: none;
+            font-weight: bold;
+            fill: white;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+        }
+
+        .map-tooltip {
+            position: absolute;
+            background: #161b22;
+            border: 1px solid #30363d;
+            padding: 8px;
+            border-radius: 4px;
+            pointer-events: none;
+            display: none;
+            z-index: 100;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+            min-width: 120px;
+        }
+
+        /* Modal Styles */
+        #chart-modal {
+            backdrop-filter: blur(4px);
+            background-color: rgba(13, 17, 23, 0.8);
+        }
+
+        .axis path,
+        .axis line {
+            stroke: #30363d;
+        }
+
+        .axis text {
+            fill: #8b949e;
+        }
+
+        /* ... existing styles ... */
+        .scatter-dot {
+            transition: r 0.2s, stroke-width 0.2s;
+            cursor: pointer;
+        }
+
+        .scatter-dot:hover {
+            stroke: #fff;
+            stroke-width: 2px;
+            r: 6;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex flex-col overflow-y-auto lg:overflow-hidden bg-[#0d1117]">
+
+    <!-- Sidebar Navigation (Duplicated from market_map.html) -->
+    <nav id="sidebar" class="fixed z-50 bg-[#0d1117] flex items-center
+                bottom-0 w-full h-14 border-t border-[#21262d] flex-row justify-around py-0
+                lg:left-0 lg:top-0 lg:h-full lg:w-12 lg:border-r lg:border-t-0 lg:flex-col lg:py-4">
+        <div class="hidden lg:block text-[#c586c0] font-bold text-xs mb-6">C</div>
+
+        <div
+            class="flex-1 flex flex-row w-full justify-around items-center lg:flex-col lg:w-auto lg:justify-start lg:gap-4 lg:items-center">
+            <a href="radial.html"
+                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22]"
+                title="Radial View">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </a>
+
+            <a href="market_map.html"
+                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22]"
+                title="Market Map">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 6h16M4 10h16M4 14h16M4 18h16">
+                    </path>
+                </svg>
+            </a>
+
+            <a href="lowvol.html"
+                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22]"
+                title="Risk Terminal">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path>
+                </svg>
+            </a>
+
+            <a href="macroTrend.html"
+                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22]"
+                title="Macro Terminal">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                </svg>
+            </a>
+
+            <a href="mean_reversion.html"
+                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22]"
+                title="Mean Reversion">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path>
+                </svg>
+            </a>
+
+            <a href="portfolios.html"
+                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22]"
+                title="Portfolios">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
+                    </path>
+                </svg>
+            </a>
+
+            <a href="voldashboard.html"
+                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#c586c0] bg-[#161b22]"
+                title="Volatility Dashboard">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path>
+                </svg>
+            </a>
+        </div>
+    </nav>
+
+    <div class="ml-0 lg:ml-12 h-auto lg:h-screen flex flex-col transition-all overflow-visible">
+        <!-- Header -->
+        <header
+            class="h-12 border-b border-[#21262d] bg-[#161b22] px-4 flex items-center justify-between sticky top-0 z-30">
+            <div class="flex items-center gap-3">
+                <h1 class="text-sm font-bold text-[#c9d1d9] tracking-tight">VOLATILITY DASHBOARD</h1>
+                <span
+                    class="text-[10px] bg-[#21262d] px-1.5 py-0.5 rounded text-[#8b949e] border border-[#30363d]">LIVE</span>
+            </div>
+
+            <!-- Controls -->
+            <div class="flex items-center gap-4">
+                <!-- Color Mode Toggle -->
+                <div class="flex items-center bg-[#21262d] rounded p-0.5 border border-[#30363d]">
+                    <button onclick="setColorMode('abs')" id="btn-abs"
+                        class="px-2 py-0.5 text-[10px] rounded font-medium text-[#c9d1d9] bg-[#30363d]">ABS VOL</button>
+                    <button onclick="setColorMode('pctl')" id="btn-pctl"
+                        class="px-2 py-0.5 text-[10px] rounded font-medium text-[#8b949e] hover:text-[#c9d1d9]">PERCENTILE</button>
+                </div>
+
+                <!-- View Toggle -->
+                <div class="flex items-center bg-[#21262d] rounded p-0.5 border border-[#30363d]">
+                    <button onclick="setView('map')" id="btn-map"
+                        class="px-2 py-0.5 text-[10px] rounded font-medium text-[#c9d1d9] bg-[#30363d]">MAP</button>
+                    <button onclick="setView('scatter')" id="btn-scatter"
+                        class="px-2 py-0.5 text-[10px] rounded font-medium text-[#8b949e] hover:text-[#c9d1d9]">SCATTER</button>
+                    <button onclick="setView('table')" id="btn-table"
+                        class="px-2 py-0.5 text-[10px] rounded font-medium text-[#8b949e] hover:text-[#c9d1d9]">TABLE</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content (Allow Height Growth) -->
+        <div id="content-container" class="w-full flex-grow relative overflow-y-auto bg-[#0d1117] pb-20 lg:pb-0">
+            <!-- Views injected here -->
+            <div id="loading"
+                class="absolute inset-0 flex items-center justify-center text-[#8b949e] animate-pulse pointer-events-none">
+                Fetching Volatility Data...</div>
+        </div>
+
+        <!-- Legend -->
+        <div id="legend-container"
+            class="absolute bottom-4 right-4 bg-[#161b22] border border-[#21262d] p-3 rounded text-xs z-20 hidden md:block">
+            <div id="legend-title" class="text-[#8b949e] mb-1 font-bold">REALIZED VOLATILITY (Current)</div>
+            <div class="flex items-center gap-1">
+                <div class="w-3 h-3 bg-[#4ade80]"></div><span class="text-[#8b949e] mr-2">Low</span>
+                <div class="w-3 h-3 bg-[#374151]"></div><span class="text-[#8b949e] mr-2">Normal</span>
+                <div class="w-3 h-3 bg-[#f87171]"></div><span class="text-[#8b949e]">High</span>
+            </div>
+        </div>
+
+        <div id="tooltip" class="map-tooltip"></div>
+    </div>
+
+    <!-- Modal for Historical Chart -->
+    <div id="chart-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center">
+        <div
+            class="bg-[#161b22] border border-[#30363d] rounded-lg shadow-2xl p-6 w-[95%] max-w-4xl h-[85vh] flex flex-col relative">
+            <button id="close-modal" class="absolute top-4 right-4 text-[#8b949e] hover:text-white">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                    </path>
+                </svg>
+            </button>
+
+            <div class="mb-4">
+                <h2 id="modal-ticker" class="text-xl font-bold text-[#c586c0]">TICKER</h2>
+                <div id="modal-sector" class="text-xs text-[#8b949e]">SECTOR</div>
+            </div>
+
+            <div id="chart-container" class="flex-grow w-full relative">
+                <!-- D3 Chart Rendered Here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
+        import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-functions.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBxG5qf6mb8E_-b2TeXlRNseMZ26L9DRYg",
+            authDomain: "trendscores-df341.firebaseapp.com",
+            projectId: "trendscores-df341",
+            databaseURL: "https://trendscores-df341-default-rtdb.firebaseio.com"
+        };
+        const app = initializeApp(firebaseConfig);
+        const functions = getFunctions(app);
+
+        let allData = [];
+
+        async function init() {
+            try {
+                const getVolatilityData = httpsCallable(functions, 'getVolatilityData');
+                const result = await getVolatilityData();
+                allData = calculateAdvancedMetrics(result.data); // Process data
+
+                document.getElementById('loading').style.display = 'none';
+                renderView();
+            } catch (error) {
+                console.error("Error fetching volatility data:", error);
+                document.getElementById('loading').textContent = "Error loading data. Check console.";
+            }
+        }
+
+        let currentView = 'map'; // map | scatter | table
+        let colorMode = 'abs';   // abs | pctl
+
+        function calculateAdvancedMetrics(data) {
+            return data.map(item => {
+                if (!item.history || item.history.length === 0) return item;
+
+                // 1. Percentile Rank (vs last 252 days - ~1 year)
+                const histVals = item.history.slice(-252).map(h => h.value).sort((a, b) => a - b);
+                const rank = histVals.filter(v => v <= item.currentRv).length;
+                const percentile = (rank / histVals.length) * 100;
+
+                // 2. Vol Regime (Fast vs Slow)
+                // Fast = 5d avg, Slow = 60d avg
+                const last5 = item.history.slice(-5);
+                const last60 = item.history.slice(-60);
+                const avg = arr => arr.reduce((a, b) => a + b.value, 0) / arr.length;
+
+                const fastVol = avg(last5);
+                const slowVol = avg(last60);
+                const volRegime = (fastVol > slowVol) ? 'Inverted' : 'Normal';
+
+                return { ...item, percentile, volRegime, fastVol, slowVol };
+            });
+        }
+
+        // --- View & Color State Management ---
+        window.setView = function (v) {
+            currentView = v;
+            document.getElementById('btn-map').className = v === 'map' ? "px-2 py-0.5 text-[10px] rounded font-medium text-[#c9d1d9] bg-[#30363d]" : "px-2 py-0.5 text-[10px] rounded font-medium text-[#8b949e] hover:text-[#c9d1d9]";
+            document.getElementById('btn-scatter').className = v === 'scatter' ? "px-2 py-0.5 text-[10px] rounded font-medium text-[#c9d1d9] bg-[#30363d]" : "px-2 py-0.5 text-[10px] rounded font-medium text-[#8b949e] hover:text-[#c9d1d9]";
+            document.getElementById('btn-table').className = v === 'table' ? "px-2 py-0.5 text-[10px] rounded font-medium text-[#c9d1d9] bg-[#30363d]" : "px-2 py-0.5 text-[10px] rounded font-medium text-[#8b949e] hover:text-[#c9d1d9]";
+            renderView();
+        }
+
+        window.setColorMode = function (m) {
+            colorMode = m;
+            document.getElementById('btn-abs').className = m === 'abs' ? "px-2 py-0.5 text-[10px] rounded font-medium text-[#c9d1d9] bg-[#30363d]" : "px-2 py-0.5 text-[10px] rounded font-medium text-[#8b949e] hover:text-[#c9d1d9]";
+            document.getElementById('btn-pctl').className = m === 'pctl' ? "px-2 py-0.5 text-[10px] rounded font-medium text-[#c9d1d9] bg-[#30363d]" : "px-2 py-0.5 text-[10px] rounded font-medium text-[#8b949e] hover:text-[#c9d1d9]";
+            renderView();
+        }
+
+        function renderView() {
+            const container = document.getElementById('content-container');
+            // Clear content
+            d3.select("#content-container svg").remove();
+
+            if (currentView === 'map') {
+                drawMap();
+                document.getElementById('legend-container').style.display = 'block';
+            } else if (currentView === 'scatter') {
+                drawScatter();
+                document.getElementById('legend-container').style.display = 'none';
+            } else {
+                drawTable();
+                document.getElementById('legend-container').style.display = 'none';
+            }
+        }
+
+        function drawMap() {
+            const container = document.getElementById('content-container');
+            container.innerHTML = ''; // Clear previous view (e.g. table)
+            const width = container.clientWidth;
+            const isMobile = window.innerWidth < 768;
+            const height = isMobile ? 1400 : container.clientHeight || 800; // Fallback height
+
+            if (isMobile) container.style.height = (height + 150) + 'px';
+            // else container.style.height = '100%'; // Handled by flexbox usually
+
+            const root = d3.hierarchy({ name: "Market", children: Array.from(d3.group(allData, d => d.sector), ([key, value]) => ({ name: key, children: value })) })
+                .sum(d => 1)
+                .sort((a, b) => b.value - a.value);
+
+            d3.treemap()
+                .size([width, height])
+                .paddingInner(4) // More gap
+                .paddingOuter(6)
+                .paddingTop(28) // Title bar
+                .round(true)(root);
+
+            const svg = d3.select("#content-container")
+                .append("svg")
+                .attr("width", width)
+                .attr("height", height)
+                .style("font-family", "Inter, sans-serif");
+
+            const cell = svg.selectAll("g")
+                .data(root.leaves())
+                .join("g")
+                .attr("transform", d => `translate(${d.x0},${d.y0})`);
+
+            cell.append("rect")
+                .attr("width", d => d.x1 - d.x0)
+                .attr("height", d => d.y1 - d.y0)
+                .attr("rx", 6) // Rounded corners
+                .attr("ry", 6)
+                .attr("fill", d => getColor(d.data))
+                .attr("class", "node")
+                .on("mouseover", (e, d) => showTooltip(e, d.data))
+                .on("mousemove", moveTooltip)
+                .on("mouseout", hideTooltip)
+                .on("click", (e, d) => openChartModal(d.data));
+
+            cell.append("text")
+                .attr("class", "node-label")
+                .attr("x", 6) // Slightly more padding
+                .attr("y", 16)
+                .text(d => (d.x1 - d.x0 > 30) ? d.data.ticker : "")
+                .attr("font-weight", 700) // Bold
+                .attr("font-size", d => Math.min(14, (d.x1 - d.x0) / 4) + "px");
+
+            svg.selectAll("text.sector-title")
+                .data(root.descendants().filter(d => d.depth === 1))
+                .join("text")
+                .attr("class", "sector-title")
+                .attr("x", d => d.x0 + 4)
+                .attr("y", d => d.y0 + 16)
+                .text(d => d.data.name.toUpperCase())
+                .attr("fill", "#8b949e")
+                .attr("font-size", "10px")
+                .attr("font-weight", "bold")
+                .style("pointer-events", "none");
+        }
+
+        function drawScatter() {
+            const container = document.getElementById('content-container');
+            container.innerHTML = ''; // Clear previous view
+            const width = container.clientWidth;
+            const height = container.clientHeight || 800;
+            const margin = { top: 60, right: 60, bottom: 60, left: 60 };
+
+            const svg = d3.select("#content-container")
+                .append("svg")
+                .attr("width", width)
+                .attr("height", height)
+                .style("font-family", "Inter, sans-serif");
+
+            // --- DEFS: Gradients and Filters for Premium Look ---
+            const defs = svg.append("defs");
+
+            // 1. Glow Filter
+            const filter = defs.append("filter")
+                .attr("id", "glow")
+                .attr("x", "-50%")
+                .attr("y", "-50%")
+                .attr("width", "200%")
+                .attr("height", "200%");
+            filter.append("feGaussianBlur")
+                .attr("stdDeviation", "2.5")
+                .attr("result", "coloredBlur");
+            const merge = filter.append("feMerge");
+            merge.append("feMergeNode").attr("in", "coloredBlur");
+            merge.append("feMergeNode").attr("in", "SourceGraphic");
+
+            // 2. Gems Spotlight (Green Radial)
+            const gemGrad = defs.append("radialGradient")
+                .attr("id", "gemGradient")
+                .attr("cx", "0%")
+                .attr("cy", "0%")
+                .attr("r", "80%");
+            gemGrad.append("stop").attr("offset", "0%").attr("stop-color", "#1a2d21").attr("stop-opacity", 0.6); // Center
+            gemGrad.append("stop").attr("offset", "100%").attr("stop-color", "#0d1117").attr("stop-opacity", 0); // Fade
+
+            // 3. Danger Spotlight (Red Radial)
+            const dangerGrad = defs.append("radialGradient")
+                .attr("id", "dangerGradient")
+                .attr("cx", "100%")
+                .attr("cy", "100%") // Bottom Right
+                .attr("r", "80%");
+            dangerGrad.append("stop").attr("offset", "0%").attr("stop-color", "#3b1219").attr("stop-opacity", 0.6);
+            dangerGrad.append("stop").attr("offset", "100%").attr("stop-color", "#0d1117").attr("stop-opacity", 0);
+
+            // --- Scales ---
+            const xVal = d => d.currentRv;
+            const yVal = d => d.trendScore || 0;
+
+            const xMax = d3.max(allData, xVal) * 1.1;
+            const yMin = d3.min(allData, yVal) - 4;
+            const yMax = d3.max(allData, yVal) + 4;
+
+            const x = d3.scaleLinear().domain([0, xMax]).range([margin.left, width - margin.right]);
+            const y = d3.scaleLinear().domain([yMin, yMax]).range([height - margin.bottom, margin.top]);
+
+            // --- Background Zones (Spotlights) ---
+            const statsX = d3.median(allData, xVal);
+
+            // Top Left (Gems)
+            svg.append("rect")
+                .attr("x", 0)
+                .attr("y", 0)
+                .attr("width", x(statsX))
+                .attr("height", y(0))
+                .attr("fill", "url(#gemGradient)")
+                .style("pointer-events", "none");
+
+            svg.append("text")
+                .attr("x", margin.left)
+                .attr("y", margin.top - 10)
+                .text("GEMS ZONE")
+                .attr("fill", "#3fb950")
+                .attr("opacity", 0.8)
+                .attr("font-size", "10px")
+                .attr("font-weight", "bold")
+                .attr("letter-spacing", "0.1em");
+
+            // Bottom Right (Danger)
+            svg.append("rect")
+                .attr("x", x(statsX))
+                .attr("y", y(0))
+                .attr("width", width - x(statsX))
+                .attr("height", height - y(0))
+                .attr("fill", "url(#dangerGradient)")
+                .style("pointer-events", "none");
+
+            // --- Grid ---
+            const xAxis = d3.axisBottom(x).ticks(8).tickSize(-height + margin.top + margin.bottom).tickFormat("");
+            const yAxis = d3.axisLeft(y).ticks(8).tickSize(-width + margin.left + margin.right).tickFormat("");
+
+            svg.append("g")
+                .attr("class", "grid")
+                .attr("transform", `translate(0,${height - margin.bottom})`)
+                .call(xAxis)
+                .style("stroke-opacity", 0.05)
+                .style("stroke-dasharray", "4,4")
+                .select(".domain").remove();
+
+            svg.append("g")
+                .attr("class", "grid")
+                .attr("transform", `translate(${margin.left},0)`)
+                .call(yAxis)
+                .style("stroke-opacity", 0.05)
+                .style("stroke-dasharray", "4,4")
+                .select(".domain").remove();
+
+            // Zero Line (Trend = 0)
+            svg.append("line")
+                .attr("x1", margin.left)
+                .attr("x2", width - margin.right)
+                .attr("y1", y(0))
+                .attr("y2", y(0))
+                .attr("stroke", "#ffffff")
+                .attr("stroke-width", 1)
+                .attr("stroke-opacity", 0.1);
+
+            // --- Dots ---
+            // Render logic with Glow for gems
+            const dots = svg.append("g")
+                .selectAll("circle")
+                .data(allData)
+                .join("circle")
+                .attr("cx", d => x(xVal(d)))
+                .attr("cy", d => y(yVal(d)))
+                .attr("r", 5)
+                .attr("fill", d => getColor(d))
+                .attr("class", "cursor-pointer transition-all duration-300")
+                .attr("stroke", "#0d1117")
+                .attr("stroke-width", 1.5)
+                .attr("opacity", 0.9)
+                .style("filter", d => (xVal(d) < statsX && yVal(d) > 2) ? "url(#glow)" : "none");
+
+            // --- Crosshairs (Hidden by default) ---
+            const crosshairG = svg.append("g").style("display", "none");
+            const chX = crosshairG.append("line").attr("stroke", "#8b949e").attr("stroke-dasharray", "3,3").attr("stroke-opacity", 0.5);
+            const chY = crosshairG.append("line").attr("stroke", "#8b949e").attr("stroke-dasharray", "3,3").attr("stroke-opacity", 0.5);
+            const chLabel = crosshairG.append("text").attr("fill", "#c9d1d9").attr("font-size", "10px").attr("font-family", "monospace");
+
+            // Interaction Overlay
+            svg.append("rect")
+                .attr("class", "overlay")
+                .attr("width", width)
+                .attr("height", height)
+                .style("opacity", 0)
+                .on("mouseover", () => crosshairG.style("display", null))
+                .on("mouseout", () => {
+                    crosshairG.style("display", "none");
+                    hideTooltip();
+                    dots.attr("r", 5).attr("stroke", "#0d1117"); // Reset dot size/stroke
+                })
+                .on("mousemove", function (event) {
+                    const [mx, my] = d3.pointer(event);
+                    // Update Crosshairs
+                    chX.attr("x1", mx).attr("x2", mx).attr("y1", margin.top).attr("y2", height - margin.bottom);
+                    chY.attr("x1", margin.left).attr("x2", width - margin.right).attr("y1", my).attr("y2", my);
+
+                    // Find nearest dot for tooltip
+                    // Simple distance check
+                    let minDist = 20; // Hit radius
+                    let nearest = null;
+                    allData.forEach(d => {
+                        const dx = x(xVal(d)) - mx;
+                        const dy = y(yVal(d)) - my;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < minDist) {
+                            minDist = dist;
+                            nearest = d;
+                        }
+                    });
+
+                    if (nearest) {
+                        showTooltip(event, nearest);
+                        // Highlight dot
+                        dots.attr("r", d => d === nearest ? 8 : 5).attr("stroke", d => d === nearest ? "#fff" : "#0d1117");
+                    } else {
+                        hideTooltip();
+                        dots.attr("r", 5).attr("stroke", "#0d1117");
+                    }
+                })
+                .on("click", function (event) {
+                    const [mx, my] = d3.pointer(event);
+                    // Find click target
+                    let minDist = 20;
+                    let nearest = null;
+                    allData.forEach(d => {
+                        const dx = x(xVal(d)) - mx;
+                        const dy = y(yVal(d)) - my;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < minDist) {
+                            minDist = dist;
+                            nearest = d;
+                        }
+                    });
+                    if (nearest) openChartModalWithId(nearest.ticker);
+                });
+
+
+            // --- Axes Rendering ---
+            const xAxisReal = d3.axisBottom(x).ticks(5);
+            const yAxisReal = d3.axisLeft(y).ticks(5);
+
+            svg.append("g")
+                .attr("transform", `translate(0,${height - margin.bottom})`)
+                .call(xAxisReal)
+                .attr("color", "#8b949e")
+                .style("font-size", "10px")
+                .call(g => g.select(".domain").attr("stroke", "#30363d"))
+                .call(g => g.selectAll(".tick line").attr("stroke", "#30363d"));
+
+            svg.append("text")
+                .attr("x", width / 2)
+                .attr("y", height - 20)
+                .attr("fill", "#8b949e")
+                .attr("font-size", "11px")
+                .attr("text-anchor", "middle")
+                .text("Volatility (Risk)");
+
+            svg.append("g")
+                .attr("transform", `translate(${margin.left},0)`)
+                .call(yAxisReal)
+                .attr("color", "#8b949e")
+                .style("font-size", "10px")
+                .call(g => g.select(".domain").attr("stroke", "#30363d"))
+                .call(g => g.selectAll(".tick line").attr("stroke", "#30363d"));
+
+            svg.append("text")
+                .attr("transform", "rotate(-90)")
+                .attr("x", -height / 2)
+                .attr("y", 20)
+                .attr("fill", "#8b949e")
+                .attr("font-size", "11px")
+                .attr("text-anchor", "middle")
+                .text("Trend Score (Reward)");
+
+            // --- Smart Labels (Gems) ---
+            // 1. Filter for Gems (Top Left) with decent trend
+            const gems = allData
+                .filter(d => xVal(d) < statsX && yVal(d) > 2)
+                .sort((a, b) => yVal(b) - yVal(a)); // Priority to higher trend
+
+            const placedLabels = [];
+            const labelPadding = 4; // Space around text
+            const dotRadius = 5;
+
+            svg.append("g")
+                .selectAll("text")
+                .data(gems)
+                .join("text")
+                .attr("fill", "#c9d1d9")
+                .attr("font-size", "10px")
+                .attr("font-family", "Inter, sans-serif")
+                .attr("font-weight", "600")
+                .style("pointer-events", "none")
+                .style("filter", "drop-shadow(0px 1px 2px rgba(0,0,0,0.8))")
+                .each(function (d) {
+                    const el = d3.select(this);
+                    const labelW = 30; // approx width guess (since we can't measure before render easily without appending)
+                    // Actually let's use a rough char width estimation or pre-measure content
+                    const estimatedW = d.ticker.length * 7;
+                    const labelH = 10;
+
+                    const ox = x(xVal(d));
+                    const oy = y(yVal(d));
+
+                    // Potential positions [dx, dy, anchor]
+                    const positions = [
+                        { dx: dotRadius + 4, dy: 4, anchor: "start" },   // Right
+                        { dx: 0, dy: -dotRadius - 4, anchor: "middle" }, // Top
+                        { dx: 0, dy: dotRadius + 12, anchor: "middle" }, // Bottom
+                        { dx: -dotRadius - 4, dy: 4, anchor: "end" }     // Left
+                    ];
+
+                    let bestPos = null;
+
+                    for (const pos of positions) {
+                        // Calculate bounding box for this position
+                        let bx = ox + pos.dx;
+                        let by = oy + pos.dy - labelH; // y is baseline, so box starts higher
+
+                        // Adjust box x based on anchor
+                        if (pos.anchor === "middle") bx -= estimatedW / 2;
+                        if (pos.anchor === "end") bx -= estimatedW;
+
+                        // Check collision with all previously placed labels
+                        const isOverlap = placedLabels.some(box => {
+                            return !(bx + estimatedW + labelPadding < box.x ||
+                                bx > box.x + box.w + labelPadding ||
+                                by + labelH + labelPadding < box.y ||
+                                by > box.y + box.h + labelPadding);
+                        });
+
+                        if (!isOverlap) {
+                            // Check bounds (don't draw off canvas)
+                            if (bx > 0 && bx + estimatedW < width && by > 0 && by + labelH < height) {
+                                bestPos = pos;
+                                placedLabels.push({ x: bx, y: by, w: estimatedW, h: labelH });
+                                break;
+                            }
+                        }
+                    }
+
+                    if (bestPos) {
+                        el.attr("x", ox + bestPos.dx)
+                            .attr("y", oy + bestPos.dy)
+                            .attr("text-anchor", bestPos.anchor)
+                            .text(d.ticker)
+                            .attr("opacity", 0.9);
+                    } else {
+                        el.remove(); // Don't draw if no space
+                    }
+                });
+        }
+
+        function drawTable() {
+            const container = document.getElementById('content-container');
+            container.innerHTML = '';
+            // container.style.height = 'auto'; // Let table expand naturally
+
+            // Add Table Container
+            const tableDiv = document.createElement('div');
+            tableDiv.className = "w-full overflow-x-auto";
+
+            let html = `
+                <table class="w-full text-left text-sm text-[#c9d1d9]">
+                    <thead class="text-xs uppercase bg-[#161b22] text-[#8b949e] sticky top-0 z-10 shadow-sm">
+                        <tr>
+                            <th scope="col" class="px-6 py-4 font-semibold tracking-wider">Ticker</th>
+                            <th scope="col" class="px-6 py-4 font-semibold tracking-wider">Regime</th>
+                            <th scope="col" class="px-6 py-4 font-semibold tracking-wider">Percentile</th>
+                            <th scope="col" class="px-6 py-4 font-semibold tracking-wider">Trend Signal</th>
+                            <th scope="col" class="px-6 py-4 font-semibold tracking-wider text-right">Vol (Annual)</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-[#21262d]">
+            `;
+
+            // Sort by Pctl descending (most stressed top)
+            const sortedData = [...allData].sort((a, b) => (b.percentile || 0) - (a.percentile || 0));
+
+            sortedData.forEach(d => {
+                // Logic for Badges
+                // Regime: Post Stress | Stress | Calm | Normal
+                const isStress = d.percentile >= 75 || d.volRegime === 'Inverted';
+                const isCalm = d.percentile <= 25;
+
+                let regimeBadge = `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-[#161b22] text-[#c9d1d9] border border-[#30363d]">
+                    <span class="w-1.5 h-1.5 rounded-full bg-[#8b949e]"></span>Normal
+                </span>`;
+
+                if (isStress) regimeBadge = `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-[#3b1219] text-[#ff7b72] border border-[#82071e]/30">
+                    <span class="w-1.5 h-1.5 rounded-full bg-[#ff7b72]"></span>Stress
+                </span>`;
+                else if (isCalm) regimeBadge = `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-[#1a2d21] text-[#3fb950] border border-[#2ea043]/30">
+                    <span class="w-1.5 h-1.5 rounded-full bg-[#3fb950]"></span>Calm
+                </span>`;
+
+                if (d.volRegime === 'Inverted' && d.percentile < 50) {
+                    regimeBadge = `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-[#373e28] text-[#d2a8ff] border border-[#a371f7]/30">
+                        <span class="w-1.5 h-1.5 rounded-full bg-[#d2a8ff]"></span>Post-Stress
+                    </span>`;
+                }
+
+                // Signal: LONG (Green) | SHORT (Red) based on Trend
+                const trend = d.trendScore || 0;
+                let signalBadge = '<span class="text-[#8b949e] font-mono text-xs">--</span>';
+                if (trend > 2) signalBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-[#1a2d21] text-[#3fb950] border border-[#2ea043]/30">LONG</span>`;
+                else if (trend < -2) signalBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-[#3b1219] text-[#ff7b72] border border-[#82071e]/30">SHORT</span>`;
+
+                // Percentile Pill
+                const pctlVal = d.percentile ? d.percentile.toFixed(0) : 0;
+                // Color scale for progress bar/text
+                let pctlColor = "#8b949e";
+                if (pctlVal > 75) pctlColor = "#ff7b72";
+                else if (pctlVal < 25) pctlColor = "#3fb950";
+                else pctlColor = "#c9d1d9";
+
+                const pctlDisplay = `
+                    <div class="flex items-center gap-3">
+                        <span class="font-mono text-xs w-8 text-right text-[${pctlColor}]">${pctlVal}%</span>
+                        <div class="w-24 h-1.5 bg-[#21262d] rounded-full overflow-hidden">
+                            <div class="h-full rounded-full" style="width: ${pctlVal}%; background-color: ${pctlColor}"></div>
+                        </div>
+                    </div>
+                `;
+
+                html += `
+                    <tr class="hover:bg-[#161b22] transition-colors cursor-pointer group" onclick="openChartModalWithId('${d.ticker}')">
+                        <td class="px-6 py-4 font-medium text-[#c9d1d9] group-hover:text-white transition-colors">
+                            <div class="flex flex-col">
+                                <span class="text-sm font-bold">${d.ticker}</span>
+                                <span class="text-[10px] text-[#8b949e] uppercase tracking-wide">${d.sector}</span>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">${regimeBadge}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">${pctlDisplay}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">${signalBadge}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right font-mono text-[#c9d1d9]">${d.currentRv.toFixed(2)}</td>
+                    </tr>
+                `;
+            });
+
+            html += `</tbody></table>`;
+            tableDiv.innerHTML = html;
+            container.appendChild(tableDiv);
+        }
+
+        // Helper to find data object by ticker for onClick
+        window.openChartModalWithId = function (ticker) {
+            const d = allData.find(item => item.ticker === ticker);
+            if (d) openChartModal(d);
+        }
+        function getColor(d) {
+            // Helper to determine color based on Mode
+            if (colorMode === 'pctl') {
+                // Percentile Heatmap
+                // High Percentile (90+) = Red (Stressed)
+                // Low Percentile (10-) = Green (Calm)
+                const p = d.percentile;
+                if (p >= 90) return "#ef4444"; // Strong Stressed (Red-500)
+                if (p >= 75) return "#f87171"; // Stressed (Red-400)
+                if (p <= 10) return "#4ade80"; // Strong Calm (Green-400)
+                if (p <= 25) return "#86efac"; // Calm (Green-300)
+                return "#374151"; // Normal/Dark Grey
+            } else {
+                // Absolute Vol (Legacy) - Updated to match Percentile Palette
+                const rv = d.currentRv;
+                if (rv >= 0.60) return "#ef4444"; // Strong Stressed (Red-500)
+                if (rv >= 0.40) return "#f87171"; // Stressed (Red-400)
+                if (rv <= 0.15) return "#4ade80"; // Strong Calm (Green-400)
+                if (rv <= 0.25) return "#86efac"; // Calm (Green-300)
+                return "#374151"; // Normal/Dark Grey
+            }
+        }
+
+        function showTooltip(e, d) {
+            const el = document.getElementById('tooltip');
+            el.style.display = 'block';
+            el.innerHTML = `
+                <div class="font-bold text-[#c586c0]">${d.ticker}</div>
+                <div class="text-[10px] text-[#8b949e] mb-1">${d.sector}</div>
+                <div class="text-xs grid grid-cols-2 gap-x-2">
+                    <span>Vol:</span> <span class="text-white font-mono">${d.currentRv.toFixed(4)}</span>
+                    <span>Pctl:</span> <span class="text-white font-mono">${d.percentile ? d.percentile.toFixed(0) + '%' : '--'}</span>
+                    <span>Trend:</span> <span class="${(d.trendScore || 0) > 0 ? 'text-[#9cdcfe]' : 'text-[#f48771]'} font-mono">${(d.trendScore || 0).toFixed(1)}</span>
+                    <span>Regime:</span> <span class="${d.volRegime === 'Inverted' ? 'text-[#f48771]' : 'text-[#b5cea8]'} font-mono">${d.volRegime}</span>
+                </div>
+            `;
+            moveTooltip(e);
+        }
+
+        function moveTooltip(e) {
+            const el = document.getElementById('tooltip');
+            const tooltipWidth = el.offsetWidth;
+            const windowWidth = window.innerWidth;
+            let left = e.pageX + 10;
+            if ((e.clientX + 10 + tooltipWidth) > (windowWidth - 10)) {
+                left = e.pageX - tooltipWidth - 10;
+            }
+            el.style.left = left + 'px';
+            el.style.top = (e.pageY + 10) + 'px';
+        }
+
+        function hideTooltip() {
+            document.getElementById('tooltip').style.display = 'none';
+        }
+
+        // --- Modal & Chart Logic ---
+
+        // --- Modal & Chart Logic ---
+
+        let currentModalData = null; // Store current data for re-drawing
+
+        function openChartModal(data) {
+            currentModalData = data;
+            const modal = document.getElementById('chart-modal');
+            modal.classList.remove('hidden');
+
+            const hStart = document.getElementById('modal-ticker').parentElement;
+
+            // Stats Render Function
+            function renderStats(d1, d2 = null) {
+                const existingStats = document.getElementById('modal-stats');
+                if (existingStats) existingStats.remove();
+
+                const statsDiv = document.createElement('div');
+                statsDiv.id = 'modal-stats';
+                statsDiv.className = "grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 p-4 bg-[#0d1117] border border-[#21262d] rounded-lg";
+
+                // Generic Decorator for Alignment
+                // Primary: Purple border to match Primary Chart Line
+                // Secondary: Cyan border to match Secondary Chart Line
+                const decorate = (html, color) =>
+                    `<div class="flex flex-col justify-end h-20 border-l-2 pl-3" style="border-color: ${color}">${html}</div>`;
+
+                // 1. Realized Vol
+                const getVolHTML = (d, color) => `<span class="text-2xl font-mono tracking-tight" style="color: ${color}">${d.currentRv.toFixed(4)}</span>`;
+
+                const volDiv = `
+                    <div class="flex flex-col gap-1">
+                        <span class="font-sans text-[11px] font-semibold tracking-wider text-[#8b949e] uppercase">Realized Vol</span>
+                        <div class="flex flex-col gap-3 mt-2">
+                            ${decorate(getVolHTML(d1, '#e6edf3'), '#c586c0')}
+                            ${d2 ? decorate(getVolHTML(d2, '#9cdcfe'), '#9cdcfe') : ''}
+                        </div>
+                    </div>`;
+
+                // 2. Percentile Rank
+                const getRankHTML = (d, color, size = "text-2xl") => {
+                    const pctl = d.percentile ? Math.round(d.percentile) : 0;
+                    let pColor = color || (pctl > 75 ? "#ff7b72" : (pctl > 50 ? "#c586c0" : "#3fb950"));
+                    return `
+                        <div class="flex flex-col w-full">
+                            <span class="${size} font-mono" style="color: ${pColor}">${pctl}%</span>
+                            <div class="w-full h-1.5 bg-[#21262d] rounded-full mt-1 overflow-hidden">
+                                <div class="h-full rounded-full" style="width: ${pctl}%; background-color: ${pColor}"></div>
+                            </div>
+                        </div>
+                    `;
+                };
+
+                const rankDiv = `
+                     <div class="flex flex-col gap-1">
+                        <span class="font-sans text-[11px] font-semibold tracking-wider text-[#8b949e] uppercase">Pctl Rank</span>
+                        <div class="flex flex-col gap-3 mt-2">
+                            ${decorate(getRankHTML(d1, null), '#c586c0')}
+                            ${d2 ? decorate(getRankHTML(d2, '#9cdcfe', "text-xl"), '#9cdcfe') : ''}
+                        </div>
+                    </div>
+                `;
+
+                // 3. Trend
+                const getTrendHTML = (d, size = "text-2xl") => {
+                    const t = d.trendScore || 0;
+                    const c = t > 0 ? "#3fb950" : (t < 0 ? "#ff7b72" : "#8b949e");
+                    const a = t > 0 ? "▲" : (t < 0 ? "▼" : "•");
+                    return `
+                        <div class="flex flex-col">
+                            <span class="${size} font-bold font-mono tracking-tight" style="color: ${c}">${a} ${t.toFixed(1)}</span>
+                            <span class="text-[10px] text-[#8b949e] font-sans opacity-80">${t > 0 ? 'Bullish' : (t < 0 ? 'Bearish' : 'Neutral')}</span>
+                        </div>
+                    `;
+                };
+                const trendDiv = `
+                     <div class="flex flex-col gap-1">
+                        <span class="font-sans text-[11px] font-semibold tracking-wider text-[#8b949e] uppercase">Equity Trend</span>
+                        <div class="flex flex-col gap-3 mt-2">
+                             ${decorate(getTrendHTML(d1), '#c586c0')}
+                             ${d2 ? decorate(getTrendHTML(d2, "text-xl"), '#9cdcfe') : ''}
+                        </div>
+                    </div>
+                `;
+
+                // 4. Term Structure
+                const getTSHTML = (d) => {
+                    const fast = d.fastVol ? d.fastVol.toFixed(3) : '-';
+                    const slow = d.slowVol ? d.slowVol.toFixed(3) : '-';
+                    const inv = d.volRegime === 'Inverted';
+                    const c = inv ? "#ff7b72" : "#3fb950";
+                    return `
+                        <div class="flex flex-col gap-0.5 text-xs font-mono text-[#c9d1d9]">
+                             <div class="flex justify-between w-24"><span class="text-[#8b949e]">Fast:</span> <span>${fast}</span></div>
+                             <div class="flex justify-between w-24"><span class="text-[#8b949e]">Slow:</span> <span>${slow}</span></div>
+                             <span class="text-[10px] font-bold mt-1 px-1.5 py-0.5 rounded-full w-max uppercase" style="color:${c}; border:1px solid ${c}40">${d.volRegime || 'Normal'}</span>
+                        </div>
+                    `;
+                };
+                const tsDiv = `
+                     <div class="flex flex-col gap-1">
+                        <span class="font-sans text-[11px] font-semibold tracking-wider text-[#8b949e] uppercase">Term Structure</span>
+                        <div class="flex flex-col gap-3 mt-2">
+                             ${decorate(getTSHTML(d1), '#c586c0')}
+                             ${d2 ? decorate(getTSHTML(d2), '#9cdcfe') : ''}
+                        </div>
+                    </div>
+                `;
+
+                statsDiv.innerHTML = volDiv + rankDiv + trendDiv + tsDiv;
+                hStart.parentNode.insertBefore(statsDiv, hStart.nextSibling);
+            }
+
+            renderStats(data);
+
+            document.getElementById('modal-ticker').textContent = data.ticker;
+            document.getElementById('modal-sector').textContent = data.sector;
+
+            // --- Comparison Dropdown Injection ---
+            // Remove existing comparison controls if any
+            const existingComp = document.getElementById('compare-controls');
+            if (existingComp) existingComp.remove();
+
+            const compDiv = document.createElement('div');
+            compDiv.id = 'compare-controls';
+            compDiv.className = "absolute top-6 right-16 flex items-center";
+
+            // Populate select options
+            const tickers = allData.map(d => d.ticker).sort();
+            let options = `<option value="">Compare vs...</option>`;
+            tickers.forEach(t => {
+                if (t !== data.ticker) options += `<option value="${t}">${t}</option>`;
+            });
+
+            compDiv.innerHTML = `
+                <select id="compare-select" class="bg-[#0d1117] text-[#c9d1d9] text-xs border border-[#30363d] rounded px-2 py-1 outline-none focus:border-[#58a6ff]">
+                    ${options}
+                </select>
+            `;
+
+            // Insert into modal header area (absolute positioned)
+            // chart-modal div is relative so this works
+            modal.children[0].appendChild(compDiv);
+
+            // Event Listener
+            document.getElementById('compare-select').addEventListener('change', (e) => {
+                const targetTicker = e.target.value;
+                if (targetTicker) {
+                    const targetData = allData.find(d => d.ticker === targetTicker);
+                    if (targetData) {
+                        renderStats(data, targetData); // Update Stats FIRST
+                        requestAnimationFrame(() => {
+                            drawHistoryChart(data.history, targetData.history, targetTicker);
+                        });
+                    }
+                } else {
+                    renderStats(data); // Reset Stats FIRST
+                    requestAnimationFrame(() => {
+                        drawHistoryChart(data.history);
+                    });
+                }
+            });
+
+            drawHistoryChart(data.history);
+        }
+
+        document.getElementById('close-modal').addEventListener('click', () => {
+            document.getElementById('chart-modal').classList.add('hidden');
+        });
+
+        function drawHistoryChart(history, comparisonHistory = null, comparisonTicker = null) {
+            const container = document.getElementById('chart-container');
+            container.innerHTML = ''; // Clear previous
+
+            if (!history || history.length === 0) {
+                container.innerHTML = '<div class="absolute inset-0 flex items-center justify-center text-[#8b949e]">No Historical Data</div>';
+                return;
+            }
+
+            const margin = { top: 20, right: 30, bottom: 30, left: 40 };
+            const width = container.clientWidth - margin.left - margin.right;
+            const height = container.clientHeight - margin.top - margin.bottom;
+
+            const svg = d3.select("#chart-container")
+                .append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", `translate(${margin.left},${margin.top})`);
+
+            // Parse Dates
+            const parseTime = d3.timeParse("%m-%d-%Y");
+            const process = (arr) => arr.map(d => ({
+                date: (typeof d.date === 'string' ? parseTime(d.date) : d.date) || new Date(d.date),
+                value: d.value
+            }));
+
+            const data1 = process(history);
+            let combinedData = [...data1];
+            let data2 = null;
+
+            if (comparisonHistory) {
+                data2 = process(comparisonHistory);
+                combinedData = [...combinedData, ...data2];
+            }
+
+            // Scales
+            const x = d3.scaleTime()
+                .domain(d3.extent(combinedData, d => d.date))
+                .range([0, width]);
+
+            const y = d3.scaleLinear()
+                .domain([0, d3.max(combinedData, d => d.value) * 1.1])
+                .range([height, 0]);
+
+            // Grid lines
+            svg.append("g")
+                .attr("class", "grid")
+                .style("stroke-opacity", 0.1)
+                .call(d3.axisLeft(y).tickSize(-width).tickFormat(""));
+
+            // Axes
+            svg.append("g")
+                .attr("transform", `translate(0,${height})`)
+                .attr("class", "axis")
+                .call(d3.axisBottom(x).ticks(5).tickSizeOuter(0));
+
+            svg.append("g")
+                .attr("class", "axis")
+                .call(d3.axisLeft(y).ticks(5));
+
+            // Line Generator
+            const line = d3.line()
+                .x(d => x(d.date))
+                .y(d => y(d.value))
+                .defined(d => !isNaN(d.value));
+
+            // Draw Primary Line
+            svg.append("path")
+                .datum(data1)
+                .attr("fill", "none")
+                .attr("stroke", "#c586c0") // Purple
+                .attr("stroke-width", 2)
+                .attr("d", line);
+
+            // Draw Secondary Line (if valid)
+            if (data2) {
+                svg.append("path")
+                    .datum(data2)
+                    .attr("fill", "none")
+                    .attr("stroke", "#9cdcfe") // Cyan
+                    .attr("stroke-width", 2)
+                    .attr("stroke-dasharray", "4,4") // Optional styling shift
+                    .attr("d", line);
+
+                // Legend
+                const legend = svg.append("g")
+                    .attr("transform", `translate(10, 0)`);
+
+                // Primary
+                legend.append("line").attr("x1", 0).attr("x2", 15).attr("y1", 0).attr("y2", 0).attr("stroke", "#c586c0").attr("stroke-width", 2);
+                legend.append("text").attr("x", 20).attr("y", 4).text(document.getElementById('modal-ticker').textContent).attr("fill", "#c586c0").attr("font-size", "10px");
+
+                // Secondary
+                legend.append("line").attr("x1", 0).attr("x2", 15).attr("y1", 15).attr("y2", 15).attr("stroke", "#9cdcfe").attr("stroke-width", 2).attr("stroke-dasharray", "4,4");
+                legend.append("text").attr("x", 20).attr("y", 19).text(comparisonTicker).attr("fill", "#9cdcfe").attr("font-size", "10px");
+            }
+            // --- Interaction ---
+            // --- Interaction ---
+            const focus = svg.append("g")
+                .attr("class", "focus")
+                .style("display", "none");
+
+            // Focus Circles (Fixed on the point)
+            focus.append("circle")
+                .attr("id", "focus-circle-1")
+                .attr("r", 4)
+                .attr("fill", "#c586c0")
+                .attr("stroke", "#0d1117")
+                .attr("stroke-width", 2);
+
+            if (data2) {
+                focus.append("circle")
+                    .attr("id", "focus-circle-2")
+                    .attr("r", 4)
+                    .attr("fill", "#9cdcfe")
+                    .attr("stroke", "#0d1117")
+                    .attr("stroke-width", 2);
+            }
+
+            // Tooltip Content Group (Movable relative to focus)
+            const tooltipG = focus.append("g").attr("class", "tooltip-content");
+
+            // Text Label Background
+            tooltipG.append("rect")
+                .attr("class", "tooltip-bg")
+                .attr("width", 140)
+                .attr("height", 50)
+                .attr("x", 10)
+                .attr("y", -22)
+                .attr("rx", 4)
+                .attr("fill", "#161b22")
+                .attr("stroke", "#30363d")
+                .attr("opacity", 0.95); // Slightly higher opacity
+
+            const focusText = tooltipG.append("text")
+                .attr("x", 18)
+                .attr("y", -2);
+
+            // Overlay Rect
+            svg.append("rect")
+                .attr("class", "overlay")
+                .attr("width", width)
+                .attr("height", height)
+                .style("fill", "transparent")
+                .style("cursor", "crosshair")
+                .on("mouseover", () => focus.style("display", null))
+                .on("mouseout", () => focus.style("display", "none"))
+                .on("mousemove", mousemove);
+
+            const bisect = d3.bisector(d => d.date).left;
+
+            function mousemove(event) {
+                const x0 = x.invert(d3.pointer(event)[0]);
+
+                // 1. Primary Data
+                const i1 = bisect(data1, x0, 1);
+                const d0_1 = data1[i1 - 1];
+                const d1_1 = data1[i1];
+                let d1 = null;
+                if (d0_1 && d1_1) {
+                    d1 = x0 - d0_1.date > d1_1.date - x0 ? d1_1 : d0_1;
+                } else if (d0_1) {
+                    d1 = d0_1;
+                } else if (d1_1) {
+                    d1 = d1_1;
+                }
+
+                if (d1) {
+                    // Position Focus Group
+                    const px = x(d1.date);
+                    const py = y(d1.value);
+                    focus.attr("transform", `translate(${px},${py})`);
+                    focus.select("#focus-circle-1").attr("cy", 0);
+
+                    // Smart Flip Logic
+                    if (px > width - 160) {
+                        tooltipG.attr("transform", "translate(-160, 0)"); // Flip Left
+                    } else {
+                        tooltipG.attr("transform", "translate(0, 0)"); // Normal Right
+                    }
+
+                    // Update Text
+                    const dateStr = d3.timeFormat("%b %d, %Y")(d1.date);
+                    focusText.html(null);
+                    focusText.append("tspan").attr("x", 18).attr("dy", "0em").text(dateStr).attr("fill", "#8b949e").attr("font-size", "10px");
+                    focusText.append("tspan").attr("x", 18).attr("dy", "1.2em").text(`${document.getElementById('modal-ticker').textContent}: ${d1.value.toFixed(4)}`).attr("fill", "#c586c0").attr("font-weight", "bold");
+
+                    // 2. Secondary Data (if exists)
+                    if (data2) {
+                        const i2 = bisect(data2, x0, 1);
+                        const d0_2 = data2[i2 - 1];
+                        const d1_2 = data2[i2];
+                        let d2 = null;
+                        if (d0_2 && d1_2) {
+                            d2 = x0 - d0_2.date > d1_2.date - x0 ? d1_2 : d0_2;
+                        } else if (d0_2) d2 = d0_2;
+                        else if (d1_2) d2 = d1_2;
+
+                        if (d2) {
+                            const y2 = y(d2.value) - y(d1.value); // Relative Y
+                            focus.select("#focus-circle-2")
+                                .attr("cx", x(d2.date) - x(d1.date))
+                                .attr("cy", y2);
+
+                            focusText.append("tspan").attr("x", 18).attr("dy", "1.2em").text(`${comparisonTicker}: ${d2.value.toFixed(4)}`).attr("fill", "#9cdcfe").attr("font-weight", "bold");
+
+                            focus.select(".tooltip-bg").attr("height", 65);
+                        }
+                    } else {
+                        focus.select(".tooltip-bg").attr("height", 50);
+                    }
+                }
+            }
+
+        }
+
+        window.addEventListener('resize', () => {
+            renderView();
+        });
+
+        init();
+    </script>
+</body>
+
+</html>
