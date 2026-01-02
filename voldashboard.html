@@ -271,7 +271,9 @@
 
         <!-- Legend -->
         <div id="legend-container"
-            class="absolute bottom-4 right-4 bg-[#161b22] border border-[#21262d] p-3 rounded text-xs z-20 hidden md:block">
+            class="fixed bottom-20 md:bottom-8 right-4 bg-[#161b22] border border-[#21262d] p-3 rounded text-xs z-40 hidden md:block"
+            style="display: block;">
+            <!-- Force block for now since we manage via JS logic too, but class ensures mobile styling -->
             <div id="legend-title" class="text-[#8b949e] mb-1 font-bold">REALIZED VOLATILITY (Current)</div>
             <div class="flex items-center gap-1">
                 <div class="w-3 h-3 bg-[#4ade80]"></div><span class="text-[#8b949e] mr-2">Low</span>
@@ -280,8 +282,12 @@
             </div>
         </div>
 
-        <div id="tooltip" class="map-tooltip"></div>
+        <div id="tooltip"
+            class="map-tooltip fixed z-50 pointer-events-none bg-[#161b22] border border-[#30363d] p-3 rounded shadow-xl hidden">
+        </div>
     </div>
+
+
 
     <!-- Modal for Historical Chart -->
     <div id="chart-modal"
@@ -923,13 +929,24 @@
         function moveTooltip(e) {
             const el = document.getElementById('tooltip');
             const tooltipWidth = el.offsetWidth;
+            const tooltipHeight = el.offsetHeight;
             const windowWidth = window.innerWidth;
-            let left = e.pageX + 10;
-            if ((e.clientX + 10 + tooltipWidth) > (windowWidth - 10)) {
-                left = e.pageX - tooltipWidth - 10;
+            const windowHeight = window.innerHeight;
+
+            // Horizontal Collision
+            let left = e.clientX + 10;
+            if (left + tooltipWidth > windowWidth - 10) {
+                left = e.clientX - tooltipWidth - 10;
             }
+
+            // Vertical Collision
+            let top = e.clientY + 10;
+            if (top + tooltipHeight > windowHeight - 10) {
+                top = e.clientY - tooltipHeight - 10;
+            }
+
             el.style.left = left + 'px';
-            el.style.top = (e.pageY + 10) + 'px';
+            el.style.top = top + 'px';
         }
 
         function hideTooltip() {
