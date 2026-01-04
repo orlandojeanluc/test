@@ -241,11 +241,14 @@
             <!-- Controls -->
             <div class="flex flex-wrap items-center gap-2 md:gap-4 justify-end">
                 <!-- Color Mode Toggle -->
-                <div class="flex items-center bg-[#21262d] rounded p-0.5 border border-[#30363d]">
+                <div class="flex items-center bg-[#21262d] rounded p-0.5 border border-[#30363d] mr-4">
                     <button onclick="setColorMode('abs')" id="btn-abs"
                         class="px-2 py-0.5 text-[10px] rounded font-medium text-[#c9d1d9] bg-[#30363d]">ABS VOL</button>
                     <button onclick="setColorMode('pctl')" id="btn-pctl"
                         class="px-2 py-0.5 text-[10px] rounded font-medium text-[#8b949e] hover:text-[#c9d1d9]">PERCENTILE</button>
+                    <button onclick="setColorMode('vrp')" id="btn-vrp"
+                        class="px-2 py-0.5 text-[10px] rounded font-medium text-[#8b949e] hover:text-[#c9d1d9]"
+                        title="Vol Risk Premium">VRP</button>
                 </div>
 
                 <!-- View Toggle -->
@@ -336,7 +339,7 @@
 
         async function init() {
             try {
-                const getVolatilityData = httpsCallable(functions, 'getVolatilityData');
+                const getVolatilityData = httpsCallable(functions, 'getVolatilityData', { timeout: 540000 }); // 9 minutes in ms
                 const result = await getVolatilityData();
                 allData = calculateAdvancedMetrics(result.data); // Process data
 
@@ -899,6 +902,18 @@
                 if (p <= 10) return "#4ade80"; // Strong Calm (Green-400)
                 if (p <= 25) return "#86efac"; // Calm (Green-300)
                 return "#374151"; // Normal/Dark Grey
+            } else if (colorMode === 'vrp') {
+                // Vol Risk Premium (IV / RV - 1)
+                // > 15% = Expensive (Red)
+                // < -5% = Cheap (Green)
+                const v = d.vrp;
+                if (v === undefined || v === null) return "#374151"; // No Data
+
+                if (v >= 0.20) return "#ef4444"; // Strong Premium (Red-500)
+                if (v >= 0.05) return "#f87171"; // Mild Premium (Red-400)
+                if (v <= -0.15) return "#4ade80"; // Strong Discount (Green-400)
+                if (v <= -0.05) return "#86efac"; // Mild Discount (Green-300)
+                return "#374151"; // Fair/Flat
             } else {
                 // Absolute Vol (Legacy) - Updated to match Percentile Palette
                 const rv = d.currentRv;
@@ -917,7 +932,9 @@
                 <div class="font-bold text-[#c586c0]">${d.ticker}</div>
                 <div class="text-[10px] text-[#8b949e] mb-1">${d.sector}</div>
                 <div class="text-xs grid grid-cols-2 gap-x-2">
-                    <span>Vol:</span> <span class="text-white font-mono">${d.currentRv.toFixed(4)}</span>
+                    <span>Vol (RV):</span> <span class="text-white font-mono">${d.currentRv.toFixed(4)}</span>
+                    <span>IV (30d):</span> <span class="text-white font-mono">${d.impliedVol ? (d.impliedVol * 100).toFixed(1) + '%' : '--'}</span>
+                    <span>VRP:</span> <span class="${d.vrp > 0 ? 'text-[#f87171]' : 'text-[#4ade80]'} font-mono">${d.vrp ? (d.vrp * 100).toFixed(1) + '%' : '--'}</span>
                     <span>Pctl:</span> <span class="text-white font-mono">${d.percentile ? d.percentile.toFixed(0) + '%' : '--'}</span>
                     <span>Trend:</span> <span class="${(d.trendScore || 0) > 0 ? 'text-[#9cdcfe]' : 'text-[#f48771]'} font-mono">${(d.trendScore || 0).toFixed(1)}</span>
                     <span>Regime:</span> <span class="${d.volRegime === 'Inverted' ? 'text-[#f48771]' : 'text-[#b5cea8]'} font-mono">${d.volRegime}</span>
