@@ -57,7 +57,7 @@
             border: 1px solid #30363d;
             transition: all 0.15s ease;
             position: relative;
-            border-radius: 8px;
+            border-radius: 16px;
         }
 
         .terminal-card:hover {
@@ -90,7 +90,7 @@
             border: 1px solid #30363d;
             color: #8b949e;
             transition: all 0.2s;
-            border-radius: 6px;
+            border-radius: 12px;
         }
 
         .filter-chip:hover {
@@ -141,7 +141,7 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
             opacity: 0;
             transition: opacity 0.2s;
-            border-radius: 6px;
+            border-radius: 12px;
         }
 
         #tooltip.show {
@@ -188,7 +188,7 @@
             background: #161b22 !important;
             border: 1px solid #30363d !important;
             color: #fff !important;
-            border-radius: 6px;
+            border-radius: 12px;
         }
 
         input:focus {
@@ -202,107 +202,159 @@
 
     <!-- Sidebar Navigation -->
     <!-- Navigation: Bottom on Mobile, Left on Desktop -->
-    <nav id="sidebar" class="fixed z-50 bg-[#0d1117] flex items-center
+    <nav id="sidebar"
+        class="fixed z-50 bg-[#0d1117] flex items-center
                 bottom-0 w-full h-14 border-t border-[#30363d] flex-row justify-around py-0
-                lg:left-0 lg:top-0 lg:h-full lg:w-12 lg:border-r lg:border-t-0 lg:flex-col lg:py-4">
+                lg:left-0 lg:top-0 lg:h-full lg:w-12 lg:border-r lg:border-t-0 lg:flex-col lg:py-4 transition-all duration-300 lg:rounded-r-[32px]">
 
         <!-- Logo (Hidden on Mobile, Visible on Desktop) -->
-        <div class="hidden lg:block text-[#c586c0] font-bold text-xs mb-6">C</div>
+        <div class="hidden lg:block text-[#c586c0] font-bold text-xs mb-6 w-full text-center relative">
+            <span class="logo-icon">C</span>
+            <span class="logo-text hidden ml-2">CALTROPIA</span>
+        </div>
 
         <!-- Links Container -->
         <div
-            class="flex-1 flex flex-row w-full justify-around items-center lg:flex-col lg:w-auto lg:justify-start lg:gap-4 lg:items-center">
+            class="flex-1 flex flex-row w-full justify-around items-center lg:flex-col lg:w-full lg:justify-start lg:gap-2">
+
             <a href="radial.html"
-                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#c586c0] lg:bg-[#161b22] border-t-2 lg:border-t-0 lg:border-l-2 border-[#c586c0]"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#c586c0] lg:bg-[#161b22] border-t-2 lg:border-t-0 lg:border-l-2 lg:border-r-0 border-[#c586c0] group overflow-hidden"
                 title="Dashboard">
-                <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z">
                     </path>
                 </svg>
+                <span
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Dashboard</span>
             </a>
+
             <a href="momentum.html"
-                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22]"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
                 title="Momentum">
-                <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path>
                 </svg>
+                <span
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Momentum</span>
             </a>
+
             <a href="macroTrend.html"
-                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22]"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
                 title="Macro Terminal">
-                <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
                     </path>
                 </svg>
+                <span
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Macro</span>
             </a>
+
             <a href="lowvol.html"
-                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22]"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
                 title="Risk Terminal">
-                <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10">
                     </path>
                 </svg>
+                <span
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Risk</span>
             </a>
+
             <a href="momentum_factor.html"
-                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22]"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
                 title="Momentum Factor">
-                <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                 </svg>
+                <span
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Factor</span>
             </a>
+
             <a href="mean_reversion.html"
-                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22]"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
                 title="Mean Reversion">
-                <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
                     </path>
                 </svg>
+                <span
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Mean
+                    Rev</span>
             </a>
+
             <a href="sectors.html"
-                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22]"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
                 title="Sectors">
-                <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path>
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path>
                 </svg>
+                <span
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Sectors</span>
             </a>
+
             <a href="portfolios.html"
-                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22]"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
                 title="Portfolios">
-                <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
                     </path>
                 </svg>
+                <span
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Portfolios</span>
             </a>
 
 
             <a href="market_map.html"
-                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22]"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
                 title="Market Map">
-                <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7">
                     </path>
                 </svg>
+                <span
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Map</span>
             </a>
             <a href="factor_arena.html"
-                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22]"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
                 title="Factor Arena">
-                <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3v18h18"></path>
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12l4-4 4 4 4-4"></path>
                 </svg>
+                <span
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Arena</span>
+            </a>
+            <a href="voldashboard.html"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
+                title="Vol Dashboard">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                </svg>
+                <span
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Volatility</span>
             </a>
         </div>
+
+        <!-- Toggle Button -->
+        <button onclick="toggleSidebar()"
+            class="hidden lg:flex items-center justify-center w-full h-10 text-[#8b949e] hover:text-white mt-auto">
+            <svg id="toggle-icon" class="w-4 h-4 transform transition-transform duration-300" fill="none"
+                stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+        </button>
     </nav>
 
     <div id="tooltip"></div>
@@ -315,32 +367,41 @@
         <div id="detail-content" class="space-y-6"></div>
     </div>
 
-    <div class="ml-0 lg:ml-12 pb-20 lg:pb-0 transition-all">
+    <div id="main-content" class="ml-0 lg:ml-12 pb-20 lg:pb-0 transition-all duration-300">
         <!-- Header -->
         <header
             class="terminal-header px-4 py-3 flex flex-col md:flex-row md:items-center justify-between gap-4 sticky top-0 z-40">
             <div class="flex items-center gap-2 md:gap-4 w-full md:w-auto justify-between md:justify-start">
                 <div class="flex items-center gap-2">
-                    <span class="text-[#c586c0] font-bold text-sm">CALTROPIA</span>
+                    <span class="text-[#c586c0] font-bold text-sm">Caltropia</span>
                     <span class="text-[#8b949e]">|</span>
-                    <span class="text-white text-xs whitespace-nowrap">MARKET TERMINAL</span>
+                    <span class="text-white text-xs whitespace-nowrap">Market Terminal</span>
                 </div>
-                <span class="text-[#b5cea8] text-[10px] md:text-xs blink">● LIVE</span>
+                <span class="text-[#b5cea8] text-[10px] md:text-xs blink flex items-center gap-1"><svg
+                        class="w-2 h-2 fill-gray-400" viewBox="0 0 8 8">
+                        <circle cx="4" cy="4" r="3" />
+                    </svg> Live</span>
             </div>
             <div class="flex flex-col md:flex-row items-start md:items-center gap-3 md:gap-4 text-xs w-full md:w-auto">
                 <div class="flex items-center gap-2 w-full md:w-auto">
-                    <span class="text-[#8b949e] whitespace-nowrap">SEARCH:</span>
+                    <span class="text-[#8b949e] whitespace-nowrap">Search:</span>
                     <div class="flex-1 md:flex-none flex items-center gap-2">
                         <input type="text" id="search-input"
                             class="px-2 py-1 text-base md:text-xs w-full md:w-48 bg-[#161b22] border border-[#30363d] text-white focus:border-[#c586c0] outline-none"
-                            placeholder="TICKER..." oninput="handleSearch(this.value)">
+                            placeholder="Ticker..." oninput="handleSearch(this.value)">
                         <button onclick="refreshData()"
-                            class="px-2 py-1 bg-[#161b22] border border-[#30363d] text-[#c586c0] hover:bg-[#c586c0] hover:text-black transition-all">↻</button>
+                            class="px-2 py-1 bg-[#161b22] border border-[#30363d] text-[#c586c0] hover:bg-[#c586c0] hover:text-black transition-all flex items-center justify-center">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
+                                </path>
+                            </svg>
+                        </button>
                     </div>
                 </div>
                 <!-- Last Update: Hidden on very small screens or stacked -->
                 <div class="flex items-center gap-2 hidden lg:flex">
-                    <span class="text-[#8b949e]">UPDATED:</span>
+                    <span class="text-[#8b949e]">Updated:</span>
                     <span id="last-updated" class="text-[#dcdcaa]">--:--:--</span>
                 </div>
             </div>
@@ -352,36 +413,56 @@
             <!-- Filter Group: Horizontal Scroll -->
             <div class="flex items-center gap-2 w-full md:w-auto overflow-x-auto pb-2 md:pb-0 no-scrollbar">
                 <span
-                    class="text-[#8b949e] text-xs font-bold uppercase whitespace-nowrap sticky left-0 bg-[#0d1117] z-10 pr-2">FILTERS:</span>
+                    class="text-[#8b949e] text-xs font-bold whitespace-nowrap sticky left-0 bg-[#0d1117] z-10 pr-2">Filters:</span>
                 <button class="filter-chip active px-2 py-1 text-xs whitespace-nowrap" data-filter="all"
-                    onclick="setFilter('all')">ALL</button>
-                <button class="filter-chip px-2 py-1 text-xs whitespace-nowrap" data-filter="bullish"
-                    onclick="setFilter('bullish')"><span class="text-[#b5cea8]">●</span> BULL</button>
-                <button class="filter-chip px-2 py-1 text-xs whitespace-nowrap" data-filter="bearish"
-                    onclick="setFilter('bearish')"><span class="text-[#f48771]">●</span> BEAR</button>
-                <button class="filter-chip px-2 py-1 text-xs whitespace-nowrap" data-filter="divergence"
-                    onclick="setFilter('divergence')">⚡ DIV</button>
-                <button class="filter-chip px-2 py-1 text-xs whitespace-nowrap" data-filter="meanrev"
-                    onclick="setFilter('meanrev')">🔄
-                    REV</button>
-                <button class="filter-chip px-2 py-1 text-xs whitespace-nowrap" data-filter="chop"
-                    onclick="setFilter('chop')">⚠️
-                    CHOP</button>
+                    onclick="setFilter('all')">All</button>
+                <button class="filter-chip px-2 py-1 text-xs whitespace-nowrap flex items-center gap-1"
+                    data-filter="bullish" onclick="setFilter('bullish')"><span><svg class="w-2 h-2 fill-current"
+                            viewBox="0 0 8 8">
+                            <circle cx="4" cy="4" r="3" />
+                        </svg></span> Bull</button>
+                <button class="filter-chip px-2 py-1 text-xs whitespace-nowrap flex items-center gap-1"
+                    data-filter="bearish" onclick="setFilter('bearish')"><span><svg class="w-2 h-2 fill-current"
+                            viewBox="0 0 8 8">
+                            <circle cx="4" cy="4" r="3" />
+                        </svg></span> Bear</button>
+                <button class="filter-chip px-2 py-1 text-xs whitespace-nowrap flex items-center gap-1"
+                    data-filter="divergence" onclick="setFilter('divergence')"><svg class="w-3 h-3" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg> Div</button>
+                <button class="filter-chip px-2 py-1 text-xs whitespace-nowrap flex items-center gap-1"
+                    data-filter="meanrev" onclick="setFilter('meanrev')"><svg class="w-3 h-3" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
+                        </path>
+                    </svg>
+                    Rev</button>
+                <button class="filter-chip px-2 py-1 text-xs whitespace-nowrap flex items-center gap-1"
+                    data-filter="chop" onclick="setFilter('chop')"><svg class="w-3 h-3" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
+                        </path>
+                    </svg>
+                    Chop</button>
             </div>
 
             <!-- Sort Group -->
             <div class="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0">
                 <span
-                    class="text-[#8b949e] text-xs font-bold uppercase whitespace-nowrap sticky left-0 bg-[#0d1117] z-10 pr-2">SORT:</span>
+                    class="text-[#8b949e] text-xs font-bold whitespace-nowrap sticky left-0 bg-[#0d1117] z-10 pr-2">Sort:</span>
                 <button
                     class="sort-btn active px-2 py-1 text-xs bg-[#1a1a1a] border border-[#333] text-[#8b949e] whitespace-nowrap"
-                    data-sort="score" onclick="setSort('score')">SCORE</button>
+                    data-sort="score" onclick="setSort('score')">Score</button>
                 <button
                     class="sort-btn px-2 py-1 text-xs bg-[#1a1a1a] border border-[#333] text-[#8b949e] whitespace-nowrap"
-                    data-sort="alpha" onclick="setSort('alpha')">NAME</button>
+                    data-sort="alpha" onclick="setSort('alpha')">Name</button>
                 <button
                     class="sort-btn px-2 py-1 text-xs bg-[#1a1a1a] border border-[#333] text-[#8b949e] whitespace-nowrap"
-                    data-sort="sector" onclick="setSort('sector')">SECTOR</button>
+                    data-sort="sector" onclick="setSort('sector')">Sector</button>
             </div>
         </div>
 
@@ -389,11 +470,11 @@
             <!-- Metrics Grid -->
             <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2">
                 <div class="terminal-card p-3 cursor-pointer" onclick="showMetricDetail('total')">
-                    <div class="text-[#8b949e] text-[10px] font-bold uppercase mb-1">TOTAL ASSETS</div>
+                    <div class="text-[#8b949e] text-[10px] font-bold mb-1">Total Assets</div>
                     <div id="total-assets" class="text-2xl font-bold text-white count-up">--</div>
                 </div>
                 <div class="terminal-card p-3 cursor-pointer" onclick="showMetricDetail('bullish')">
-                    <div class="text-[#8b949e] text-[10px] font-bold uppercase mb-1 hover:text-[#b5cea8]">BULLISH TREND
+                    <div class="text-[#8b949e] text-[10px] font-bold mb-1 hover:text-[#b5cea8]">Bullish Trend
                     </div>
                     <div class="flex items-baseline gap-2 mb-1">
                         <span id="bullish-count" class="text-2xl font-bold text-[#b5cea8] count-up">--</span>
@@ -404,7 +485,7 @@
                     </div>
                 </div>
                 <div class="terminal-card p-3 cursor-pointer" onclick="showMetricDetail('neutral')">
-                    <div class="text-[#8b949e] text-[10px] font-bold uppercase mb-1 hover:text-[#dcdcaa]">NEUTRAL</div>
+                    <div class="text-[#8b949e] text-[10px] font-bold mb-1 hover:text-[#dcdcaa]">Neutral</div>
                     <div class="flex items-baseline gap-2 mb-1">
                         <span id="neutral-count" class="text-2xl font-bold text-[#dcdcaa] count-up">--</span>
                         <span id="neutral-pct" class="text-xs font-mono text-[#dcdcaa]">--%</span>
@@ -414,7 +495,7 @@
                     </div>
                 </div>
                 <div class="terminal-card p-3 cursor-pointer" onclick="showMetricDetail('bearish')">
-                    <div class="text-[#8b949e] text-[10px] font-bold uppercase mb-1 hover:text-[#f48771]">BEARISH TREND
+                    <div class="text-[#8b949e] text-[10px] font-bold mb-1 hover:text-[#f48771]">Bearish Trend
                     </div>
                     <div class="flex items-baseline gap-2 mb-1">
                         <span id="bearish-count" class="text-2xl font-bold text-[#f48771] count-up">--</span>
@@ -425,11 +506,20 @@
                     </div>
                 </div>
                 <div class="terminal-card p-3 cursor-pointer hover:border-[#bc8cff]" onclick="setFilter('divergence')">
-                    <div class="text-[#8b949e] text-[10px] font-bold uppercase mb-1">DIVERGENCES ⚡</div>
+                    <div class="text-[#8b949e] text-[10px] font-bold mb-1 flex items-center gap-1">Divergences <svg
+                            class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg></div>
                     <div id="divergence-count" class="text-2xl font-bold text-white count-up">--</div>
                 </div>
                 <div class="terminal-card p-3 cursor-pointer hover:border-[#39c5cf]" onclick="setFilter('meanrev')">
-                    <div class="text-[#8b949e] text-[10px] font-bold uppercase mb-1">MEAN REV 🔄</div>
+                    <div class="text-[#8b949e] text-[10px] font-bold mb-1 flex items-center gap-1">Mean Rev <svg
+                            class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
+                            </path>
+                        </svg></div>
                     <div id="meanrev-count" class="text-2xl font-bold text-white count-up">--</div>
                 </div>
             </div>
@@ -440,20 +530,20 @@
                     <div
                         class="flex flex-col md:flex-row items-start md:items-center justify-between mb-4 border-b border-[#333] pb-2 gap-2">
                         <div>
-                            <h2 id="chart-title" class="text-lg font-bold text-white flex items-center gap-2">MARKET
-                                CONSTELLATION <span class="w-2 h-2 rounded-full bg-[#c586c0] animate-pulse"></span></h2>
-                            <p id="chart-subtitle" class="text-xs text-[#8b949e]">SPATIAL VISUALIZATION</p>
+                            <h2 id="chart-title" class="text-lg font-bold text-white flex items-center gap-2">Market
+                                Constellation <span class="w-2 h-2 rounded-full bg-[#c586c0] animate-pulse"></span></h2>
+                            <p id="chart-subtitle" class="text-xs text-[#8b949e]">Spatial Visualization</p>
                         </div>
                         <div class="flex items-center gap-2 w-full md:w-auto">
                             <div class="flex gap-1 overflow-x-auto flex-1 md:flex-none">
                                 <button onclick="switchConstellation('overall')" id="const-overall"
-                                    class="const-tab px-3 py-1 text-[10px] font-bold bg-[#c586c0] text-black whitespace-nowrap flex-1 md:flex-none text-center">OVERALL</button>
+                                    class="const-tab px-3 py-1 text-[10px] font-bold bg-[#c586c0] text-black whitespace-nowrap flex-1 md:flex-none text-center">Overall</button>
                                 <button onclick="switchConstellation('st')" id="const-st"
-                                    class="const-tab px-3 py-1 text-[10px] font-bold bg-[#1a1a1a] text-[#8b949e] hover:text-white whitespace-nowrap flex-1 md:flex-none text-center">SHORT
-                                    TERM</button>
+                                    class="const-tab px-3 py-1 text-[10px] font-bold bg-[#1a1a1a] text-[#8b949e] hover:text-white whitespace-nowrap flex-1 md:flex-none text-center">Short
+                                    Term</button>
                                 <button onclick="switchConstellation('it')" id="const-it"
-                                    class="const-tab px-3 py-1 text-[10px] font-bold bg-[#1a1a1a] text-[#8b949e] hover:text-white whitespace-nowrap flex-1 md:flex-none text-center">INTERM
-                                    TERM</button>
+                                    class="const-tab px-3 py-1 text-[10px] font-bold bg-[#1a1a1a] text-[#8b949e] hover:text-white whitespace-nowrap flex-1 md:flex-none text-center">Interm
+                                    Term</button>
                             </div>
                             <button onclick="toggleChartFullscreen()"
                                 class="p-1 text-[#8b949e] hover:text-[#c586c0] border border-[#333] bg-[#1a1a1a]"
@@ -535,8 +625,8 @@
                 <div class="xl:col-span-4 space-y-4">
                     <div class="terminal-card p-4">
                         <div class="flex justify-between items-center mb-4">
-                            <h3 class="text-sm font-bold text-[#dcdcaa]">SECTOR RADAR</h3>
-                            <div id="radar-info" class="text-[10px] font-mono text-[#8b949e]">HOVER SECTOR</div>
+                            <h3 class="text-sm font-bold text-[#dcdcaa]">Sector Radar</h3>
+                            <div id="radar-info" class="text-[10px] font-mono text-[#8b949e]">Hover Sector</div>
                         </div>
                         <div class="flex justify-center">
                             <svg id="radar-chart" width="280" height="280" viewBox="0 0 280 280"></svg>
@@ -545,12 +635,12 @@
 
                     <div class="terminal-card p-4 flex-1">
                         <div class="flex items-center justify-between mb-4">
-                            <h3 class="text-sm font-bold text-[#dcdcaa]">TOP MOVERS</h3>
+                            <h3 class="text-sm font-bold text-[#dcdcaa]">Top Movers</h3>
                             <div class="flex">
                                 <button onclick="switchMovers('bulls')" id="movers-bulls"
-                                    class="px-2 py-0.5 text-[10px] font-bold bg-[#1a1a1a] text-[#b5cea8] border border-[#333]">BULLS</button>
+                                    class="px-2 py-0.5 text-[10px] font-bold bg-[#1a1a1a] text-[#b5cea8] border border-[#333]">Bulls</button>
                                 <button onclick="switchMovers('bears')" id="movers-bears"
-                                    class="px-2 py-0.5 text-[10px] font-bold bg-[#1a1a1a] text-[#8b949e] border border-[#333]">BEARS</button>
+                                    class="px-2 py-0.5 text-[10px] font-bold bg-[#1a1a1a] text-[#8b949e] border border-[#333]">Bears</button>
                             </div>
                         </div>
                         <div id="movers-list" class="space-y-2"></div>
@@ -561,8 +651,8 @@
             <!-- Momentum Grid -->
             <div class="terminal-card p-4">
                 <div class="flex justify-between mb-4">
-                    <h3 id="grid-title" class="text-sm font-bold text-white">MOMENTUM LEADERS</h3>
-                    <span id="showing-count" class="text-xs text-[#8b949e] font-mono">LOADING...</span>
+                    <h3 id="grid-title" class="text-sm font-bold text-white">Momentum Leaders</h3>
+                    <span id="showing-count" class="text-xs text-[#8b949e] font-mono">Loading...</span>
                 </div>
                 <div id="momentum-grid" class="flex gap-2 overflow-x-auto pb-2"></div>
             </div>
@@ -570,11 +660,11 @@
             <!-- Bottom Grid -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 <div class="terminal-card p-4">
-                    <h3 class="text-sm font-bold text-white mb-2">SCORE DISTRIBUTION</h3>
+                    <h3 class="text-sm font-bold text-white mb-2">Score Distribution</h3>
                     <svg id="histogram-chart" width="100%" height="200" viewBox="0 0 500 200" class="w-full"></svg>
                 </div>
                 <div class="terminal-card p-4">
-                    <h3 class="text-sm font-bold text-white mb-2">TREND CORRELATION</h3>
+                    <h3 class="text-sm font-bold text-white mb-2">Trend Correlation</h3>
                     <svg id="scatter-chart" width="100%" height="200" viewBox="0 0 500 200" class="w-full"></svg>
                 </div>
             </div>
@@ -582,21 +672,35 @@
             <!-- Detailed Lists -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div class="terminal-card p-4">
-                    <h3 class="font-bold text-white mb-4">DIVERGENCES ⚡</h3>
+                    <h3 class="font-bold text-white mb-4 flex items-center gap-2">Divergences <svg class="w-4 h-4"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg></h3>
                     <div id="divergence-list" class="space-y-2 h-[300px] overflow-y-auto custom-scrollbar"></div>
                 </div>
                 <div class="terminal-card p-4">
-                    <h3 class="font-bold text-white mb-4">MEAN REVERSION 🔄</h3>
+                    <h3 class="font-bold text-white mb-4 flex items-center gap-2">Mean Rev <svg class="w-4 h-4"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
+                            </path>
+                        </svg></h3>
                     <div id="meanrev-list" class="space-y-2 h-[300px] overflow-y-auto custom-scrollbar"></div>
                 </div>
                 <div class="terminal-card p-4">
-                    <h3 class="font-bold text-white mb-4">CHOP ZONE ⚠️</h3>
+                    <h3 class="font-bold text-white mb-4 flex items-center gap-2">Chop Zone <svg class="w-4 h-4"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
+                            </path>
+                        </svg></h3>
                     <div id="chop-list" class="space-y-2 h-[300px] overflow-y-auto custom-scrollbar"></div>
                 </div>
             </div>
 
             <div class="terminal-card p-4 mt-4">
-                <h3 class="text-sm font-bold text-white mb-4">SECTOR PERFORMANCE</h3>
+                <h3 class="text-sm font-bold text-white mb-4">Sector Performance</h3>
                 <div id="sector-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4"></div>
             </div>
         </div>
@@ -721,7 +825,7 @@
 
         window.showTooltip = function (e, ticker, sector, score) {
             const el = document.getElementById('tooltip');
-            el.innerHTML = `<div class="font-bold text-[#c586c0]">${ticker}</div><div class="text-xs text-white">${sector}</div><div class="text-xs mt-1">Score: ${score}</div>`;
+            el.innerHTML = `<div class="font-bold text-[#c586c0] uppercase">${ticker}</div><div class="text-xs text-white">${sector}</div><div class="text-xs mt-1">Score: ${score}</div>`;
             el.style.left = (e.clientX + 10) + 'px';
             el.style.top = (e.clientY + 10) + 'px';
             el.classList.add('show');
@@ -744,8 +848,8 @@
             const color = asset.overallScore > 0 ? '#b5cea8' : '#f48771';
             el.innerHTML = `
                 <div class="mb-2">
-                    <div class="text-3xl font-bold text-[#c586c0]">${asset.ticker}</div>
-                    <div class="text-xs text-[#8b949e] font-mono">${asset.sector.toUpperCase()}</div>
+                    <div class="text-3xl font-bold text-[#c586c0] uppercase">${asset.ticker}</div>
+                    <div class="text-xs text-[#8b949e] font-mono">${asset.sector}</div>
                 </div>
                 <div class="text-4xl font-bold mb-4" style="color:${color}">${asset.overallScore}</div>
                 <div class="grid grid-cols-2 gap-4 text-sm">
@@ -939,7 +1043,7 @@
                     const deg = p.ang * 180 / Math.PI;
                     const rot = (deg > -90 && deg < 90) ? deg : deg + 180;
                     const anchor = (deg > -90 && deg < 90) ? "start" : "end";
-                    html += `<text x="${lx}" y="${ly}" transform="rotate(${rot},${lx},${ly})" text-anchor="${anchor}" font-size="12" font-weight="bold" fill="#c9d1d9" font-family="Inter, sans-serif">${p.ticker}</text>`;
+                    html += `<text x="${lx}" y="${ly}" transform="rotate(${rot},${lx},${ly})" text-anchor="${anchor}" font-size="12" font-weight="bold" class="uppercase" fill="#c9d1d9" font-family="Inter, sans-serif">${p.ticker}</text>`;
                 }
             });
             svg.innerHTML = html;
@@ -995,7 +1099,7 @@
                 return `
                     <div class="min-w-[160px] bg-[#1a1a1a] p-3 border border-[#333] hover:border-[#c586c0] cursor-pointer" onclick="openAssetDetail('${a.ticker}')">
                         <div class="flex justify-between mb-2">
-                            <span class="font-bold text-[#fff]">${a.ticker}</span>
+                            <span class="font-bold text-[#fff] uppercase">${a.ticker}</span>
                             <span class="font-mono text-xs" style="color:${color}">${displayVal}</span>
                         </div>
                         <div class="flex gap-1">${bars}</div>
@@ -1014,7 +1118,7 @@
                 return `
                     <div class="flex items-center justify-between p-2 hover:bg-[#1a1a1a] cursor-pointer border-b border-[#1a1a1a]" onclick="openAssetDetail('${a.ticker}')">
                         <span class="text-[#8b949e] w-4">${i + 1}</span>
-                        <span class="text-white font-bold w-12">${a.ticker}</span>
+                        <span class="text-white font-bold w-12 uppercase">${a.ticker}</span>
                         <div class="flex-1 mx-2 h-1 bg-[#333]"><div class="h-full" style="width:${Math.min(100, Math.abs(a.overallScore) * 10)}%; background:${color}"></div></div>
                         <span class="font-mono text-xs" style="color:${color}">${a.overallScore}</span>
                     </div>
@@ -1098,7 +1202,7 @@
 
             document.getElementById('divergence-list').innerHTML = divs.map(a => `
                 <div class="flex justify-between p-2 bg-[#1a1a1a] mb-1 cursor-pointer" onclick="openAssetDetail('${a.ticker}')">
-                    <span class="text-white font-bold">${a.ticker}</span>
+                    <span class="text-white font-bold uppercase">${a.ticker}</span>
                     <span class="text-xs text-white">ST: ${a.stTrend} | IT: ${a.itTrend}</span>
                 </div>
             `).join('');
@@ -1108,7 +1212,7 @@
             const mr = assetsData.filter(a => targetValues.includes(parseFloat(a.meanReversion))).slice(0, 10);
             document.getElementById('meanrev-list').innerHTML = mr.map(a => `
                  <div class="flex justify-between p-2 bg-[#1a1a1a] mb-1 cursor-pointer" onclick="openAssetDetail('${a.ticker}')">
-                    <span class="text-white font-bold">${a.ticker}</span>
+                    <span class="text-white font-bold uppercase">${a.ticker}</span>
                     <span class="text-xs text-white">${a.meanReversion}</span>
                 </div>
             `).join('');
@@ -1117,12 +1221,48 @@
             const chop = assetsData.filter(a => Math.abs(a.overallScore) <= 2 && Math.abs(a.stTrend) <= 1).slice(0, 10);
             document.getElementById('chop-list').innerHTML = chop.map(a => `
                  <div class="flex justify-between p-2 bg-[#1a1a1a] mb-1 cursor-pointer" onclick="openAssetDetail('${a.ticker}')">
-                    <span class="text-white font-bold">${a.ticker}</span>
+                    <span class="text-white font-bold uppercase">${a.ticker}</span>
                     <span class="text-xs text-white">Range Bound</span>
                 </div>
             `).join('');
         }
     </script>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('main-content');
+            const navTexts = document.querySelectorAll('.nav-text');
+            const logoText = document.querySelector('.logo-text');
+            const toggleIcon = document.getElementById('toggle-icon');
+
+            const isExpanded = sidebar.classList.contains('w-48');
+
+            if (isExpanded) {
+                // Collapse
+                sidebar.classList.remove('w-48');
+                sidebar.classList.add('lg:w-12');
+                mainContent.classList.remove('lg:ml-48');
+                mainContent.classList.add('lg:ml-12');
+
+                navTexts.forEach(t => t.classList.add('opacity-0'));
+                logoText.classList.add('hidden');
+                toggleIcon.classList.remove('rotate-180');
+            } else {
+                // Expand
+                sidebar.classList.remove('lg:w-12');
+                sidebar.classList.add('w-48');
+                mainContent.classList.remove('lg:ml-12');
+                mainContent.classList.add('lg:ml-48');
+
+                setTimeout(() => {
+                    navTexts.forEach(t => t.classList.remove('opacity-0'));
+                    logoText.classList.remove('hidden');
+                }, 100);
+                toggleIcon.classList.add('rotate-180');
+            }
+        }
+    </script>
 </body>
 
-</html>
+</html>```
