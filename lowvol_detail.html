@@ -59,26 +59,22 @@
         .terminal-card {
             background: #161b22;
             border: 1px solid #21262d;
-            transition: all 0.15s ease;
+            transition: all 0.2s ease;
             position: relative;
             border-radius: 0.5rem;
         }
 
         .terminal-card:hover {
-            border-color: #c586c0;
-            box-shadow: 0 0 20px rgba(197, 134, 192, 0.15);
-            transform: translateY(-2px);
+            border-color: #30363d;
+            background: #1c2128;
         }
 
         .risk-card-active {
             border-color: #c586c0 !important;
-            background: linear-gradient(145deg, #161b22, #1f242d) !important;
-            box-shadow: 0 0 25px rgba(197, 134, 192, 0.15) !important;
+            background: #1c2128 !important;
         }
 
-        .text-glow {
-            text-shadow: 0 0 20px currentColor;
-        }
+
 
         .risk-lowest {
             color: #b5cea8;
@@ -178,6 +174,14 @@
                     </path>
                 </svg>
             </a>
+            <a href="voldashboard.html"
+                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22]"
+                title="Vol Dashboard">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                </svg>
+            </a>
         </div>
     </nav>
 
@@ -192,14 +196,14 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7">
                         </path>
                     </svg>
-                    BACK
+                    Back
                 </a>
                 <span class="text-[#8b949e] hidden md:inline">|</span>
-                <span id="ticker-header" class="text-white text-xs font-bold uppercase">LOADING...</span>
-                <span class="text-[#b5cea8] text-[10px] md:text-xs blink">● LIVE</span>
+                <span id="ticker-header" class="text-white text-xs font-bold uppercase">Loading...</span>
+                <span class="text-[#b5cea8] text-[10px] md:text-xs blink">● Live</span>
             </div>
             <div class="flex items-center gap-4 text-xs">
-                <span class="text-[#8b949e]">UPDATED:</span>
+                <span class="text-[#8b949e]">Updated:</span>
                 <span id="last-updated" class="text-[#dcdcaa]">--:--:--</span>
             </div>
         </header>
@@ -208,28 +212,22 @@
         <div class="p-6 max-w-7xl mx-auto space-y-6">
 
             <!-- Current Risk Score Card -->
-            <div id="top-score-card"
-                class="terminal-card p-10 flex flex-col items-center justify-center text-center relative overflow-hidden transition-all duration-500">
-                <!-- Background Glow -->
-                <div id="score-glow"
-                    class="absolute inset-0 opacity-20 bg-gradient-to-r from-transparent via-transparent to-transparent">
-                </div>
-
-                <h2 class="text-[#8b949e] text-sm uppercase tracking-[0.2em] mb-4 font-bold relative z-10">Current Risk
-                    Score</h2>
-                <div id="current-risk-score" class="text-8xl font-bold text-white relative z-10 text-glow">--</div>
+            <div id="top-score-card" class="terminal-card p-8 flex flex-col items-center justify-center text-center">
+                <span class="text-[#8b949e] text-xs tracking-[0.15em] mb-2">Current Risk Score</span>
+                <div id="current-risk-score" class="text-7xl font-bold text-white">--</div>
+                <span id="risk-label" class="text-[#8b949e] text-sm mt-2"></span>
             </div>
 
-            <div class="space-y-4">
-                <h3 class="text-xl text-[#c9d1d9] font-bold border-b border-[#21262d] pb-2">
-                    Performance and Volatility by Risk Regime Scores
+            <div class="space-y-4 mt-6">
+                <h3 class="text-lg text-[#c9d1d9] font-semibold border-b border-[#21262d] pb-2">
+                    Performance by Risk Regime
                 </h3>
 
                 <!-- Risk Grid -->
                 <!-- Grid of 5 Equal Cards -->
                 <div id="risk-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
                     <!-- Cards injected by JS -->
-                    <div class="col-span-full text-center text-[#8b949e] py-12">LOADING DATA...</div>
+                    <div class="col-span-full text-center text-[#8b949e] py-12">Loading data...</div>
                 </div>
             </div>
 
@@ -262,7 +260,7 @@
             window.location.href = 'lowvol.html';
         }
 
-        document.getElementById('ticker-header').textContent = `${ticker} RISK ANALYSIS`;
+        document.getElementById('ticker-header').textContent = `${ticker} Risk Analysis`;
 
         async function loadDetailData() {
             document.getElementById('last-updated').textContent = "Syncing...";
@@ -276,32 +274,29 @@
                 const perfData = data.performance;
 
                 const scoreEl = document.getElementById('current-risk-score');
-                const glowEl = document.getElementById('score-glow');
-                const cardEl = document.getElementById('top-score-card');
+                const labelEl = document.getElementById('risk-label');
 
                 scoreEl.textContent = currentScore;
 
-                // Colorize Main Score & Glow
+                // Colorize Main Score
                 const styles = getRiskClasses(currentScore);
-                scoreEl.className = `text-8xl font-bold relative z-10 text-glow ${styles.textClass}`;
-
-                // Dynamic Gradient Glow
-                glowEl.className = `absolute inset-0 opacity-20 bg-gradient-to-br ${styles.gradient}`;
-                cardEl.style.boxShadow = `0 0 40px ${styles.shadowColor}`;
+                scoreEl.className = `text-7xl font-bold ${styles.textClass}`;
+                labelEl.textContent = styles.label;
+                labelEl.className = `text-sm mt-2 ${styles.textClass}`;
 
                 renderRiskGrid(perfData, currentScore); // Pass current score
                 document.getElementById('last-updated').textContent = new Date().toLocaleTimeString();
 
             } catch (e) {
                 console.error("Error fetching details", e);
-                document.getElementById('risk-grid').innerHTML = '<div class="col-span-full text-center text-[#f48771]">ERROR LOADING DATA: ' + e.message + '</div>';
+                document.getElementById('risk-grid').innerHTML = '<div class="col-span-full text-center text-[#f48771]">Error loading data: ' + e.message + '</div>';
             }
         }
 
         function renderRiskGrid(data, currentScore) {
             const container = document.getElementById('risk-grid');
             if (!data) {
-                container.innerHTML = '<div class="col-span-full text-center text-[#8b949e]">NO HISTORICAL PERFORMANCE DATA AVAILABLE</div>';
+                container.innerHTML = '<div class="col-span-full text-center text-[#8b949e]">No historical performance data available</div>';
                 return;
             }
 
@@ -329,24 +324,24 @@
                 // Color Logic
                 const retColor = retVal >= 0 ? 'text-[#b5cea8]' : 'text-[#f48771]';
                 const isActive = k === activeKey ? 'risk-card-active' : '';
-                const activeLabel = k === activeKey ? '<div class="absolute top-2 right-2 text-[10px] text-[#c586c0] font-bold border border-[#c586c0] px-1 rounded">CURRENT</div>' : '';
+                const activeLabel = k === activeKey ? '<span class="absolute top-3 right-3 text-[10px] text-[#c586c0] font-medium bg-[#c586c0]/10 px-2 py-0.5 rounded">Current</span>' : '';
 
                 return `
-                    <div class="terminal-card p-6 flex flex-col items-center justify-between min-h-[200px] hover:border-[#c586c0] transition-colors relative ${isActive}">
+                    <div class="terminal-card p-5 flex flex-col min-h-[180px] relative ${isActive}">
                         ${activeLabel}
-                        <div class="text-left w-full border-b border-[#30363d] pb-4 mb-4">
-                            <h3 class="text-3xl font-bold text-[#c9d1d9] mb-1">Risk</h3>
-                            <div class="text-5xl font-bold text-white">${displayScore}</div>
+                        <div class="flex items-baseline gap-2 mb-4 pb-3 border-b border-[#21262d]">
+                            <span class="text-[#8b949e] text-sm">Risk</span>
+                            <span class="text-3xl font-bold text-white">${displayScore}</span>
                         </div>
                         
-                        <div class="w-full space-y-4">
-                            <div class="flex flex-col items-start">
-                                <span class="text-[#8b949e] text-xs font-bold uppercase tracking-wider">Annual Return</span>
-                                <span class="text-2xl font-bold ${retColor}">${displayRet}</span>
+                        <div class="space-y-3 flex-1">
+                            <div class="flex justify-between items-center">
+                                <span class="text-[#8b949e] text-xs">Annual Return</span>
+                                <span class="text-lg font-semibold ${retColor}">${displayRet}</span>
                             </div>
-                             <div class="flex flex-col items-start">
-                                <span class="text-[#8b949e] text-xs font-bold uppercase tracking-wider">Volatility</span>
-                                <span class="text-2xl font-bold text-white">${displayVol}</span>
+                            <div class="flex justify-between items-center">
+                                <span class="text-[#8b949e] text-xs">Volatility</span>
+                                <span class="text-lg font-semibold text-white">${displayVol}</span>
                             </div>
                         </div>
                     </div>
@@ -355,11 +350,11 @@
         }
 
         function getRiskClasses(score) {
-            if (score <= 0) return { textClass: 'text-[#b5cea8]', gradient: 'from-[#b5cea8] via-[#0d1117] to-[#0d1117]', shadowColor: 'rgba(181, 206, 168, 0.1)' }; // Green
-            if (score <= 2) return { textClass: 'text-[#b5cea8]', gradient: 'from-[#b5cea8] via-[#0d1117] to-[#0d1117]', shadowColor: 'rgba(181, 206, 168, 0.1)' };
-            if (score <= 4) return { textClass: 'text-[#dcdcaa]', gradient: 'from-[#dcdcaa] via-[#0d1117] to-[#0d1117]', shadowColor: 'rgba(220, 220, 170, 0.1)' }; // Yellow
-            if (score <= 6) return { textClass: 'text-[#f48771]', gradient: 'from-[#f48771] via-[#0d1117] to-[#0d1117]', shadowColor: 'rgba(244, 135, 113, 0.1)' }; // Orange
-            return { textClass: 'text-[#f48771]', gradient: 'from-[#f48771] via-[#0d1117] to-[#0d1117]', shadowColor: 'rgba(244, 135, 113, 0.2)' }; // Red
+            if (score <= 0) return { textClass: 'text-[#b5cea8]', label: 'Lowest Risk' };
+            if (score <= 2) return { textClass: 'text-[#b5cea8]', label: 'Low Risk' };
+            if (score <= 4) return { textClass: 'text-[#dcdcaa]', label: 'Moderate Risk' };
+            if (score <= 6) return { textClass: 'text-[#f48771]', label: 'High Risk' };
+            return { textClass: 'text-[#f48771]', label: 'Highest Risk' };
         }
 
         // Initialize

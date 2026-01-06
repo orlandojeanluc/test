@@ -174,6 +174,14 @@
                     </path>
                 </svg>
             </a>
+            <a href="voldashboard.html"
+                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22]"
+                title="Vol Dashboard">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                </svg>
+            </a>
         </div>
     </nav>
 
@@ -188,16 +196,16 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7">
                         </path>
                     </svg>
-                    BACK
+                    Back
                 </a>
                 <span class="text-[#8b949e] hidden md:inline">|</span>
-                <span class="text-white text-xs font-bold uppercase truncate max-w-[200px] md:max-w-none"
-                    id="strategy-name">LOADING...</span>
-                <span class="text-[#b5cea8] text-[10px] md:text-xs blink">● LIVE</span>
+                <span class="text-white text-xs font-bold truncate max-w-[200px] md:max-w-none"
+                    id="strategy-name">Loading...</span>
+                <span class="text-[#b5cea8] text-[10px] md:text-xs blink">● Live</span>
             </div>
             <div class="flex items-center gap-4 text-xs justify-end w-full md:w-auto">
                 <div class="flex items-center gap-2">
-                    <span class="text-[#8b949e]">UPDATED:</span>
+                    <span class="text-[#8b949e]">Updated:</span>
                     <span id="last-updated" class="text-[#dcdcaa]">--:--:--</span>
                 </div>
             </div>
@@ -212,10 +220,10 @@
                     LOADING STRATEGY...
                 </h1>
                 <div class="flex flex-wrap items-center gap-2 md:gap-4 text-xs font-bold">
-                    <span class="px-2 py-0.5 bg-[#21262d] border border-[#dcdcaa] text-[#dcdcaa]">ACTIVE</span>
+                    <span class="px-2 py-0.5 bg-[#21262d] border border-[#dcdcaa] text-[#dcdcaa]">Active</span>
                     <span class="text-[#8b949e]">ID: <span class="text-white">STRAT-8821</span></span>
-                    <span class="text-[#8b949e]">RISK PROFILE: <span
-                            class="text-white">MODERATE-AGGRESSIVE</span></span>
+                    <span class="text-[#8b949e]">Risk Profile: <span
+                            class="text-white">Moderate-Aggressive</span></span>
                 </div>
             </div>
 
@@ -225,7 +233,7 @@
                 <div class="col-span-12 lg:col-span-8 terminal-card p-4 min-h-[400px] flex flex-col">
                     <div class="flex flex-col sm:flex-row justify-between items-center mb-4 gap-4 sm:gap-0">
                         <h3 class="text-[#c586c0] font-bold text-sm w-full sm:w-auto text-center sm:text-left">
-                            CUMULATIVE PERFORMANCE</h3>
+                            Cumulative Performance</h3>
                         <div
                             class="flex gap-2 text-[10px] w-full sm:w-auto justify-center sm:justify-end overflow-x-auto pb-2 sm:pb-0">
                             <button id="btn-1m"
@@ -267,30 +275,30 @@
                 <div class="col-span-12 lg:col-span-4 flex flex-col gap-4">
                     <!-- Key Stats -->
                     <div class="terminal-card p-4">
-                        <h3 class="text-white font-bold text-sm mb-4 border-b border-[#21262d] pb-2">KEY STATISTICS</h3>
+                        <h3 class="text-white font-bold text-sm mb-4 border-b border-[#21262d] pb-2">Key Statistics</h3>
                         <div class="grid grid-cols-2 gap-4">
                             <div>
-                                <div class="text-[#8b949e] text-[10px] uppercase">CAGR</div>
+                                <div class="text-[#8b949e] text-[10px]">CAGR</div>
                                 <div class="text-[#b5cea8] text-xl font-bold">14.2%</div>
                             </div>
                             <div>
-                                <div class="text-[#8b949e] text-[10px] uppercase">Sharpe Ratio</div>
+                                <div class="text-[#8b949e] text-[10px]">Sharpe Ratio</div>
                                 <div class="text-white text-xl font-bold">1.82</div>
                             </div>
                             <div>
-                                <div class="text-[#8b949e] text-[10px] uppercase">Max Drawdown</div>
+                                <div class="text-[#8b949e] text-[10px]">Max Drawdown</div>
                                 <div class="text-[#f48771] text-xl font-bold">-12.5%</div>
                             </div>
                             <div>
-                                <div class="text-[#8b949e] text-[10px] uppercase">Volatility</div>
+                                <div class="text-[#8b949e] text-[10px]">Volatility</div>
                                 <div class="text-white text-xl font-bold">9.8%</div>
                             </div>
                             <div>
-                                <div class="text-[#8b949e] text-[10px] uppercase">YTD Return</div>
+                                <div class="text-[#8b949e] text-[10px]">YTD Return</div>
                                 <div class="text-[#b5cea8] text-xl font-bold">8.4%</div>
                             </div>
                             <div>
-                                <div class="text-[#8b949e] text-[10px] uppercase">Sortino</div>
+                                <div class="text-[#8b949e] text-[10px]">Sortino</div>
                                 <div class="text-white text-xl font-bold">2.15</div>
                             </div>
                         </div>
@@ -298,11 +306,11 @@
 
                     <!-- Allocation / Exposure -->
                     <div class="terminal-card p-4 flex-1">
-                        <h3 class="text-white font-bold text-sm mb-4 border-b border-[#21262d] pb-2">ALLOCATION</h3>
+                        <h3 class="text-white font-bold text-sm mb-4 border-b border-[#21262d] pb-2">Allocation</h3>
                         <div class="space-y-4">
                             <div>
                                 <div class="flex justify-between text-xs mb-1">
-                                    <span id="alloc-equity-label" class="text-[#aaa]">EQUITY (SPY)</span>
+                                    <span id="alloc-equity-label" class="text-[#aaa]">Equity (SPY)</span>
                                     <span id="alloc-equity-val" class="text-white font-bold">--%</span>
                                 </div>
                                 <div class="w-full h-1 bg-[#21262d] overflow-hidden">
@@ -312,7 +320,7 @@
                             <!-- Fixed Income Removed as requested -->
                             <div>
                                 <div class="flex justify-between text-xs mb-1">
-                                    <span class="text-[#aaa]">CASH</span>
+                                    <span class="text-[#aaa]">Cash</span>
                                     <span id="alloc-cash-val" class="text-white font-bold">--%</span>
                                 </div>
                                 <div class="w-full h-1 bg-[#21262d] overflow-hidden">
@@ -327,18 +335,18 @@
             <!-- Holdings / Log Table -->
             <div class="terminal-card p-4">
                 <h3 class="text-white font-bold text-sm mb-4 flex justify-between items-center">
-                    <span>LATEST POSITIONS</span>
-                    <span id="positions-header-extra" class="text-[#8b949e] text-xs font-normal">DISPLAYING TOP 5</span>
+                    <span>Latest Positions</span>
+                    <span id="positions-header-extra" class="text-[#8b949e] text-xs font-normal">Displaying Top 5</span>
                 </h3>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse">
                         <thead>
                             <tr class="text-[#8b949e] text-[10px] border-b border-[#21262d]">
-                                <th class="py-2 font-normal">TICKER</th>
-                                <th class="py-2 font-normal">NAME</th>
-                                <th class="py-2 font-normal text-right">WEIGHT</th>
-                                <th class="py-2 font-normal text-right">P/L DAY</th>
-                                <th class="py-2 font-normal text-right">STATUS</th>
+                                <th class="py-2 font-normal">Ticker</th>
+                                <th class="py-2 font-normal">Name</th>
+                                <th class="py-2 font-normal text-right">Weight</th>
+                                <th class="py-2 font-normal text-right">P/L Day</th>
+                                <th class="py-2 font-normal text-right">Status</th>
                             </tr>
                         </thead>
                         <tbody id="positions-body" class="text-xs font-bold">
@@ -352,8 +360,8 @@
 
             <!-- Historical Allocation Chart -->
             <div id="allocation-chart-container" class="terminal-card p-4">
-                <h3 class="text-white font-bold text-sm mb-4 border-b border-[#21262d] pb-2">HISTORICAL STRATEGY
-                    ALLOCATION
+                <h3 class="text-white font-bold text-sm mb-4 border-b border-[#21262d] pb-2">Historical Strategy
+                    Allocation
                 </h3>
                 <div class="w-full h-[300px] relative">
                     <canvas id="allocation-chart"></canvas>
@@ -362,7 +370,7 @@
 
             <!-- Sector Allocation Chart (Mean Reversion Only) -->
             <div id="sector-chart-container" class="terminal-card p-4 hidden">
-                <h3 class="text-white font-bold text-sm mb-4 border-b border-[#21262d] pb-2">SECTOR ALLOCATION</h3>
+                <h3 class="text-white font-bold text-sm mb-4 border-b border-[#21262d] pb-2">Sector Allocation</h3>
                 <div class="w-full h-[300px] relative flex justify-center">
                     <canvas id="sector-chart"></canvas>
                 </div>
@@ -371,17 +379,17 @@
 
             <!-- New Signals Table (Hidden by Default) -->
             <div id="signals-container" class="terminal-card p-4 mt-6 hidden">
-                <h3 class="text-white font-bold text-sm mb-4 border-b border-[#21262d] pb-2">LATEST SIGNALS</h3>
+                <h3 class="text-white font-bold text-sm mb-4 border-b border-[#21262d] pb-2">Latest Signals</h3>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse">
                         <thead>
                             <tr class="text-[#8b949e] text-[10px] border-b border-[#21262d]">
-                                <th class="py-2 font-normal">TICKER</th>
-                                <th class="py-2 font-normal">PROXY</th>
-                                <th class="py-2 font-normal text-right">SHORT TERM TREND</th>
-                                <th class="py-2 font-normal text-right">INTERM TREND</th>
-                                <th class="py-2 font-normal text-right">MEAN REVERSION</th>
-                                <th class="py-2 font-normal text-right">BREAKOUT/DOWN</th>
+                                <th class="py-2 font-normal">Ticker</th>
+                                <th class="py-2 font-normal">Proxy</th>
+                                <th class="py-2 font-normal text-right">Short Term Trend</th>
+                                <th class="py-2 font-normal text-right">Interm Trend</th>
+                                <th class="py-2 font-normal text-right">Mean Reversion</th>
+                                <th class="py-2 font-normal text-right">Breakout/Down</th>
                             </tr>
                         </thead>
                         <tbody id="signals-body" class="text-xs font-bold">
@@ -393,12 +401,12 @@
 
             <!-- Monthly Returns Table -->
             <div class="terminal-card p-4 mt-6" id="returns-container">
-                <h3 class="text-white font-bold text-sm mb-4 border-b border-[#21262d] pb-2">MONTHLY RETURNS</h3>
+                <h3 class="text-white font-bold text-sm mb-4 border-b border-[#21262d] pb-2">Monthly Returns</h3>
                 <div class="overflow-x-auto">
                     <table class="w-full text-center border-collapse text-xs font-bold">
                         <thead>
                             <tr class="text-[#8b949e] border-b border-[#21262d]">
-                                <th class="py-2 text-left">YEAR</th>
+                                <th class="py-2 text-left">Year</th>
                                 <th class="py-2">JAN</th>
                                 <th class="py-2">FEB</th>
                                 <th class="py-2">MAR</th>
@@ -481,9 +489,9 @@
             if (strategyName) {
                 document.getElementById('strategy-title').innerHTML = `
                     <span class="w-2 h-8 bg-[#c586c0]"></span>
-                    ${decodedName.toUpperCase()}
+                    ${decodedName}
                 `;
-                document.getElementById('strategy-name').innerText = decodedName.toUpperCase();
+                document.getElementById('strategy-name').innerText = decodedName;
                 document.title = `Caltropia | ${decodedName}`;
             }
 
@@ -497,7 +505,7 @@
             const returnsBody = document.getElementById('monthly-returns-body');
 
             // Set loading states
-            chartContainer.innerHTML = '<div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-[#c586c0] animate-pulse">LOADING DATA...</div>';
+            chartContainer.innerHTML = '<div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-[#c586c0] animate-pulse">Loading data...</div>';
 
             try {
                 const getPortfolioDetailData = httpsCallable(functions, 'getPortfolioDetailData');
@@ -522,7 +530,7 @@
                     fullStrategyData = data.chartData;
                     renderSpDailyChart(data.chartData, chartContainer, strategyName);
                 } else {
-                    chartContainer.innerHTML = '<div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-[#f48771]">NO CHART DATA AVAILABLE</div>';
+                    chartContainer.innerHTML = '<div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-[#f48771]">No chart data available</div>';
                 }
 
                 // 3. Render Positions
@@ -538,7 +546,7 @@
                         if (secChart) secChart.classList.remove('hidden');
                     }
                 } else {
-                    positionsBody.innerHTML = '<tr><td colspan="5" class="py-3 text-center text-[#f48771]">NO POSITIONS DATA FOUND</td></tr>';
+                    positionsBody.innerHTML = '<tr><td colspan="5" class="py-3 text-center text-[#f48771]">No positions data found</td></tr>';
                 }
 
                 // 4. Render Historical Allocation Chart
@@ -562,7 +570,7 @@
                         renderMonthlyReturnsTable(data.returns, strategyName);
                     }
                 } else {
-                    returnsBody.innerHTML = '<tr><td colspan="14" class="py-4 text-center text-[#f48771]">NO RETURNS DATA FOUND</td></tr>';
+                    returnsBody.innerHTML = '<tr><td colspan="14" class="py-4 text-center text-[#f48771]">No returns data found</td></tr>';
                 }
 
                 // 6. Render Signals (Managed Futures Only)
@@ -580,9 +588,9 @@
 
             } catch (error) {
                 console.error("Error loading portfolio data:", error);
-                chartContainer.innerHTML = '<div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-[#f48771]">ERROR LOADING DATA</div>';
-                positionsBody.innerHTML = '<tr><td colspan="5" class="py-3 text-center text-[#f48771]">ERROR LOADING DATA</td></tr>';
-                returnsBody.innerHTML = '<tr><td colspan="14" class="py-4 text-center text-[#f48771]">ERROR LOADING DATA</td></tr>';
+                chartContainer.innerHTML = '<div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-[#f48771]">Error loading data</div>';
+                positionsBody.innerHTML = '<tr><td colspan="5" class="py-3 text-center text-[#f48771]">Error loading data</td></tr>';
+                returnsBody.innerHTML = '<tr><td colspan="14" class="py-4 text-center text-[#f48771]">Error loading data</td></tr>';
             }
         }
 
@@ -596,7 +604,7 @@
 
             const entries = Object.entries(data);
             if (entries.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="14" class="py-4 text-center text-[#8b949e]">NO VALID DATE DATA FOUND</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="14" class="py-4 text-center text-[#8b949e]">No valid date data found</td></tr>';
                 return;
             }
 
@@ -640,7 +648,7 @@
             const sortedYears = Object.keys(yearMap).sort((a, b) => b - a);
 
             if (sortedYears.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="14" class="py-4 text-center text-[#8b949e]">NO VALID DATE DATA FOUND</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="14" class="py-4 text-center text-[#8b949e]">No valid date data found</td></tr>';
                 return;
             }
 
@@ -676,7 +684,7 @@
             tbody.innerHTML = '';
 
             if (!signals || signals.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" class="py-3 text-center text-[#8b949e]">NO SIGNALS DATA FOUND</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="5" class="py-3 text-center text-[#8b949e]">No signals data found</td></tr>';
                 return;
             }
 
@@ -684,31 +692,31 @@
                 const shortTermClass = sig.shortTermTrend > 0 ? "text-[#b5cea8]" : (sig.shortTermTrend < 0 ? "text-[#f48771]" : "text-[#8b949e]");
                 const intermClass = sig.intermTrend > 0 ? "text-[#b5cea8]" : (sig.intermTrend < 0 ? "text-[#f48771]" : "text-[#8b949e]");
 
-                // Mean Reversion: > 0 is BUY (OVERSOLD), < 0 is SELL (OVERBOUGHT)
-                const meanRevLabel = sig.meanReversion > 0 ? "BUY" : (sig.meanReversion < 0 ? "SELL" : "NEUTRAL");
-                // Color: Keep Green/Red logic but apply to BUY/SELL label
-                // BUY (Oversold) -> Green, SELL (Overbought) -> Red
+                // Mean Reversion: > 0 is Buy (Oversold), < 0 is Sell (Overbought)
+                const meanRevLabel = sig.meanReversion > 0 ? "Buy" : (sig.meanReversion < 0 ? "Sell" : "Neutral");
+                // Color: Keep Green/Red logic but apply to Buy/Sell label
+                // Buy (Oversold) -> Green, Sell (Overbought) -> Red
                 const meanRevClass = sig.meanReversion > 0 ? "text-[#b5cea8]" : (sig.meanReversion < 0 ? "text-[#f48771]" : "text-[#8b949e]");
 
                 // Breakout: > 0 (Green), < 0 (Red), 0 (Gray)
-                let breakoutLabel = "NEUTRAL";
+                let breakoutLabel = "Neutral";
                 let breakoutClass = "text-[#8b949e]";
                 if (sig.breakoutScore > 0) {
-                    breakoutLabel = "BREAKOUT";
+                    breakoutLabel = "Breakout";
                     breakoutClass = "text-[#b5cea8]";
                 } else if (sig.breakoutScore < 0) {
-                    breakoutLabel = "BREAKDOWN";
+                    breakoutLabel = "Breakdown";
                     breakoutClass = "text-[#f48771]";
                 }
 
                 const rowHtml = `
                     <tr class="border-b border-[#21262d] hover:bg-[#111]">
-                        <td class="py-3 font-bold text-white">${sig.ticker}</td>
-                        <td class="py-3 text-[#8b949e] font-mono">${sig.proxy}</td>
-                        <td class="py-3 text-right ${shortTermClass} font-mono">${sig.shortTermTrend > 0 ? '+' : ''}${sig.shortTermTrend.toFixed(2)}</td>
-                        <td class="py-3 text-right ${intermClass} font-mono">${sig.intermTrend > 0 ? '+' : ''}${sig.intermTrend.toFixed(2)}</td>
-                        <td class="py-3 text-right ${meanRevClass} font-mono">${meanRevLabel} (${sig.meanReversion.toFixed(2)})</td>
-                        <td class="py-3 text-right ${breakoutClass} font-mono">${breakoutLabel}</td>
+                        <td class="py-3 text-[#dcdcaa]">${sig.ticker}</td>
+                        <td class="py-3 text-[#ccc]">${sig.proxy}</td>
+                        <td class="py-3 text-right ${shortTermClass}">${sig.shortTermTrend > 0 ? '+' : ''}${sig.shortTermTrend.toFixed(2)}</td>
+                        <td class="py-3 text-right ${intermClass}">${sig.intermTrend > 0 ? '+' : ''}${sig.intermTrend.toFixed(2)}</td>
+                        <td class="py-3 text-right ${meanRevClass}">${meanRevLabel} (${sig.meanReversion.toFixed(2)})</td>
+                        <td class="py-3 text-right ${breakoutClass}">${breakoutLabel}</td>
                     </tr>
                 `;
                 tbody.insertAdjacentHTML('beforeend', rowHtml);
@@ -1141,13 +1149,13 @@
                 }
 
                 // Determine Status and Color
-                let status = 'FLAT';
+                let status = 'Flat';
                 let statusColor = 'text-[#aaa]';
                 if (weight > 0) {
-                    status = 'LONG';
+                    status = 'Long';
                     statusColor = 'text-[#b5cea8]';
                 } else if (weight < 0) {
-                    status = 'SHORT';
+                    status = 'Short';
                     statusColor = 'text-[#f48771]';
                 }
 
@@ -1225,13 +1233,13 @@
             // Logic: Equity = SPY Weight (or TLT for Bond Regime). Cash = 100% - Equity.
             let equityWeight = 0;
             let targetTicker = 'SPY';
-            let labelText = 'EQUITY (SPY)';
+            let labelText = 'Equity (SPY)';
 
+            // Override for Specific Strategies
             if (strategyName === 'Caltropia Bond Regime Model') {
-                targetTicker = 'TLT';
-                labelText = 'FIXED INCOME (TLT)';
-            } else if (strategyName === 'Caltropia Momentum Factor' || strategyName === 'Caltropia Low Vol Factor') {
-                labelText = 'EQUITY';
+                labelText = 'Fixed Income (TLT)';
+            } else if (['Caltropia Momentum Factor', 'Caltropia Mean Reversion Factor', 'Caltropia Low Vol Factor', 'Caltropia L/S Equity', 'Caltropia Active Core Equity', 'Caltropia Value Factor'].includes(strategyName)) {
+                labelText = 'Equity';
                 // For Momentum, sum ALL weights
                 let totalWeight = 0;
                 Object.values(data).forEach(item => {
@@ -1298,12 +1306,12 @@
 
             // Default Labels
             if (equityLabelEl) equityLabelEl.textContent = labelText;
-            if (cashLabelEl) cashLabelEl.textContent = 'CASH';
+            if (cashLabelEl) cashLabelEl.textContent = 'Cash';
 
             // Special Handling for Managed Futures EW
             if (strategyName === 'Caltropia Managed Futures EW') {
-                if (equityLabelEl) equityLabelEl.textContent = 'GROSS';
-                if (cashLabelEl) cashLabelEl.textContent = 'NET';
+                if (equityLabelEl) equityLabelEl.textContent = 'Gross';
+                if (cashLabelEl) cashLabelEl.textContent = 'Net';
 
                 // Calculate Gross (Sum of Abs) and Net (Sum of Signed)
                 let sumAbs = 0;
@@ -1392,7 +1400,7 @@
             const cards = document.querySelectorAll('.terminal-card .grid > div');
 
             cards.forEach(card => {
-                const labelEl = card.querySelector('.uppercase');
+                const labelEl = card.querySelector('.text-\\[10px\\]');
                 // The value div is usually the second div, or has text-xl
                 // HTML: <div class="text-[#b5cea8] text-xl font-bold">14.2%</div>
                 const valueDiv = card.querySelector('.text-xl');
