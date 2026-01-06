@@ -7,8 +7,9 @@
     <title>Caltropia | Ticker Risk Detail</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
         rel="stylesheet">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -19,15 +20,15 @@
                     },
                     colors: {
                         terminal: {
-                            bg: '#0d1117',
-                            panel: '#161b22',
-                            border: '#21262d',
-                            orange: '#c586c0',
-                            amber: '#dcdcaa',
-                            green: '#b5cea8',
-                            red: '#f48771',
-                            blue: '#9cdcfe',
-                            muted: '#8b949e'
+                            bg: '#0B1121', // Darker Unify BG
+                            panel: '#151E32', // Unify Card BG
+                            border: 'rgba(255,255,255,0.08)',
+                            primary: '#8B5CF6',
+                            active: '#A78BFA',
+                            success: '#10B981',
+                            warning: '#F59E0B',
+                            danger: '#EC4899',
+                            muted: '#64748B'
                         }
                     }
                 }
@@ -45,147 +46,305 @@
 
         body {
             background-color: #0d1117;
-            color: #c9d1d9;
+            color: #E2E8F0;
             font-size: 14px;
-            line-height: 1.4;
             overflow-x: hidden;
         }
 
         .terminal-header {
-            background: #161b22;
-            border-bottom: 1px solid #21262d;
+            background: rgba(22, 27, 34, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .terminal-card {
             background: #161b22;
-            border: 1px solid #21262d;
-            transition: all 0.2s ease;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
-            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+        }
+
+        .terminal-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            opacity: 0.5;
         }
 
         .terminal-card:hover {
-            border-color: #30363d;
-            background: #1c2128;
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border-color: rgba(139, 92, 246, 0.3);
         }
 
         .risk-card-active {
-            border-color: #c586c0 !important;
-            background: #1c2128 !important;
+            background: linear-gradient(145deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.95) 100%) !important;
+            border: 1px solid rgba(139, 92, 246, 0.4) !important;
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.15) !important;
         }
 
-
-
-        .risk-lowest {
-            color: #b5cea8;
+        /* Gauge Styles */
+        .gauge-background {
+            stroke: #1E293B;
         }
 
-        .risk-low {
-            color: #b5cea8;
+        .gauge-value-arc {
+            filter: drop-shadow(0 0 8px rgba(139, 92, 246, 0.3));
         }
 
-        .risk-medium {
-            color: #dcdcaa;
+        /* Chart tooltip */
+        .chart-tooltip {
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+            padding: 12px 16px;
+            color: #fff;
         }
 
-        .risk-high {
-            color: #f48771;
+        /* Bar chart */
+        .bar-bg {
+            fill: #1E293B;
+            rx: 6;
         }
 
-        .risk-highest {
-            color: #f48771;
+        .bar-fill {
+            rx: 6;
         }
 
-        .blink {
-            animation: blink 1s infinite;
+        .bar-positive {
+            fill: url(#gradient-positive);
+            filter: drop-shadow(0 0 4px rgba(16, 185, 129, 0.3));
         }
 
-        @keyframes blink {
-            50% {
-                opacity: 0.5;
-            }
+        .bar-negative {
+            fill: url(#gradient-negative);
+            filter: drop-shadow(0 0 4px rgba(236, 72, 153, 0.3));
+        }
+
+        .bar-vol-fill {
+            fill: url(#gradient-vol);
+        }
+
+        /* Scatter points */
+        .scatter-point {
+            transition: all 0.3s ease;
+        }
+
+        .scatter-point:hover {
+            r: 8;
+            filter: drop-shadow(0 0 6px currentColor);
+        }
+
+        .scatter-active {
+            stroke: #fff;
+            stroke-width: 2;
+            filter: drop-shadow(0 0 10px rgba(139, 92, 246, 0.5));
+        }
+
+        /* Modern Gradients for Text */
+        .text-gradient-purple {
+            background: linear-gradient(to right, #A78BFA, #F472B6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .effect-title {
+            position: relative;
+            padding-left: 14px;
+        }
+
+        .effect-title::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 14px;
+            background: #A78BFA;
+            border-radius: 4px;
+            box-shadow: 0 0 8px rgba(167, 139, 250, 0.4);
         }
     </style>
 </head>
 
 <body class="min-h-screen">
-    <!-- Navigation: Sidebar (Desktop) / Hidden (Mobile) - Copied from lowvol.html -->
-    <nav id="sidebar" class="fixed z-50 bg-[#0d1117] flex items-center
-                bottom-0 w-full h-14 border-t border-[#21262d] flex-row justify-around py-0
-                lg:left-0 lg:top-0 lg:h-full lg:w-12 lg:border-r lg:border-t-0 lg:flex-col lg:py-4">
+    <!-- Navigation: Sidebar (Desktop) / Hidden (Mobile) -->
+    <nav id="sidebar"
+        class="fixed z-50 bg-[#0d1117] flex items-center
+                bottom-0 w-full h-14 border-t border-[#30363d] flex-row justify-around py-0
+                lg:left-0 lg:top-0 lg:h-full lg:w-12 lg:border-r lg:border-t-0 lg:flex-col lg:py-4 transition-all duration-300 lg:rounded-r-3xl">
 
         <!-- Logo (Hidden on Mobile, Visible on Desktop) -->
-        <div class="hidden lg:block text-[#c586c0] font-bold text-xs mb-6">C</div>
+        <div class="hidden lg:block text-[#c586c0] font-bold text-xs mb-6 w-full text-center relative">
+            <span class="logo-icon">C</span>
+            <span class="logo-text hidden ml-2">CALTROPIA</span>
+        </div>
 
         <!-- Links Container -->
         <div
-            class="flex-1 flex flex-row w-full justify-around items-center lg:flex-col lg:w-auto lg:justify-start lg:gap-4 lg:items-center">
+            class="flex-1 flex flex-row w-full justify-around items-center lg:flex-col lg:w-full lg:justify-start lg:gap-2">
+
             <a href="radial.html"
-                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22]"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
                 title="Dashboard">
-                <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z">
                     </path>
                 </svg>
+                <span
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Home</span>
             </a>
+
+            <a href="momentum.html"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
+                title="Momentum">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path>
+                </svg>
+                <span
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Trend
+                    Signals</span>
+            </a>
+
+            <a href="macroTrend.html"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
+                title="Macro Terminal">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                    </path>
+                </svg>
+                <span
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Macro
+                    Signals</span>
+            </a>
+
             <a href="lowvol.html"
-                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#c586c0] border-t-2 lg:border-t-0 lg:bg-[#161b22] lg:border-l-2 border-[#c586c0]"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#c586c0] lg:bg-[#161b22] border-t-2 lg:border-t-0 lg:border-l-2 lg:border-r-0 border-[#c586c0] group overflow-hidden"
                 title="Risk Terminal">
-                <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10">
                     </path>
                 </svg>
+                <span
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Low
+                    Vol Factor</span>
             </a>
+
             <a href="momentum_factor.html"
-                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22]"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
                 title="Momentum Factor">
-                <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                 </svg>
+                <span
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Momentum
+                    Factor</span>
             </a>
+
             <a href="mean_reversion.html"
-                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22]"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
                 title="Mean Reversion">
-                <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
                     </path>
                 </svg>
+                <span
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Mean
+                    Rev Factor</span>
             </a>
+
             <a href="sectors.html"
-                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22]"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
                 title="Sectors">
-                <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path>
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path>
                 </svg>
+                <span
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Sector
+                    Inspection</span>
             </a>
+
             <a href="portfolios.html"
-                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22]"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
                 title="Portfolios">
-                <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
                     </path>
                 </svg>
+                <span
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Caltropia
+                    Strategies</span>
             </a>
+
             <a href="voldashboard.html"
-                class="w-10 h-full lg:w-8 lg:h-8 flex items-center justify-center text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22]"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
                 title="Vol Dashboard">
-                <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
                 </svg>
+                <span
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Volatility
+                    Dashboard</span>
+            </a>
+
+            <a href="market_map.html"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
+                title="Market Map">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7">
+                    </path>
+                </svg>
+                <span
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Market
+                    Map</span>
+            </a>
+
+            <a href="factor_arena.html"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
+                title="Factor Arena">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3v18h18"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12l4-4 4 4 4-4"></path>
+                </svg>
+                <span
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Arena</span>
             </a>
         </div>
+
+        <!-- Toggle Button -->
+        <button onclick="toggleSidebar()"
+            class="hidden lg:flex items-center justify-center w-full h-10 text-[#8b949e] hover:text-white mt-auto">
+            <svg id="toggle-icon" class="w-4 h-4 transform transition-transform duration-300" fill="none"
+                stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+        </button>
     </nav>
 
-    <div class="ml-0 lg:ml-12 pb-20 lg:pb-0 transition-all">
+    <div id="main-content" class="ml-0 lg:ml-12 pb-20 lg:pb-0 transition-all duration-300">
         <!-- Header -->
         <header
             class="terminal-header px-4 py-2 flex flex-col md:flex-row md:items-center justify-between gap-2 md:gap-0 sticky top-0 z-40 bg-[#161b22]">
@@ -199,7 +358,7 @@
                     Back
                 </a>
                 <span class="text-[#8b949e] hidden md:inline">|</span>
-                <span id="ticker-header" class="text-white text-xs font-bold uppercase">Loading...</span>
+                <span id="ticker-header" class="text-white text-xs font-bold uppercase"></span>
                 <span class="text-[#b5cea8] text-[10px] md:text-xs blink">● Live</span>
             </div>
             <div class="flex items-center gap-4 text-xs">
@@ -209,22 +368,102 @@
         </header>
 
         <!-- Main Content -->
-        <div class="p-6 max-w-7xl mx-auto space-y-6">
+        <div class="p-3 md:p-6 max-w-7xl mx-auto space-y-4 md:space-y-6">
 
-            <!-- Current Risk Score Card -->
-            <div id="top-score-card" class="terminal-card p-8 flex flex-col items-center justify-center text-center">
-                <span class="text-[#8b949e] text-xs tracking-[0.15em] mb-2">Current Risk Score</span>
-                <div id="current-risk-score" class="text-7xl font-bold text-white">--</div>
-                <span id="risk-label" class="text-[#8b949e] text-sm mt-2"></span>
+            <!-- Global SVG Filters & Gradients -->
+            <svg width="0" height="0" class="absolute block">
+                <defs>
+                    <!-- Purple Gradient -->
+                    <linearGradient id="gradient-purple" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" style="stop-color:#8B5CF6;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#EC4899;stop-opacity:1" />
+                    </linearGradient>
+
+                    <!-- Positive Gradient (Green) -->
+                    <linearGradient id="gradient-positive" x1="0%" y1="100%" x2="0%" y2="0%">
+                        <stop offset="0%" style="stop-color:#059669;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#34D399;stop-opacity:1" />
+                    </linearGradient>
+
+                    <!-- Negative Gradient (Red/Pink) -->
+                    <linearGradient id="gradient-negative" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" style="stop-color:#BE185D;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#F472B6;stop-opacity:1" />
+                    </linearGradient>
+
+                    <!-- Volatility Gradient (Blue/Gray) -->
+                    <linearGradient id="gradient-vol" x1="0%" y1="100%" x2="0%" y2="0%">
+                        <stop offset="0%" style="stop-color:#475569;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#94A3B8;stop-opacity:1" />
+                    </linearGradient>
+
+                    <!-- Glow Filter -->
+                    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+                        <feGaussianBlur stdDeviation="4" result="coloredBlur" />
+                        <feMerge>
+                            <feMergeNode in="coloredBlur" />
+                            <feMergeNode in="SourceGraphic" />
+                        </feMerge>
+                    </filter>
+                </defs>
+            </svg>
+
+            <!-- Page Title Header -->
+            <div class="flex items-center justify-between mb-2">
+                <h2 id="page-risk-title"
+                    class="text-3xl md:text-4xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-200 to-slate-400 drop-shadow-sm">
+                </h2>
             </div>
 
-            <div class="space-y-4 mt-6">
-                <h3 class="text-lg text-[#c9d1d9] font-semibold border-b border-[#21262d] pb-2">
-                    Performance by Risk Regime
+            <!-- Top Row: Risk Gauge & Scatter Plot -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+                <!-- Left: Gauge & Score -->
+                <div
+                    class="terminal-card p-6 flex flex-col items-center justify-center text-center relative overflow-hidden min-h-[300px]">
+                    <h3 class="text-[#8b949e] text-xs uppercase tracking-wider mb-4 font-mono">Current Risk Profile</h3>
+
+                    <div id="gauge-chart" class="gauge-container mb-4 w-full flex justify-center"></div>
+
+                    <div class="absolute inset-0 flex flex-col items-center justify-center pt-16 pointer-events-none">
+                        <div id="current-risk-score" class="text-6xl font-bold text-white count-animate">--</div>
+                        <div id="risk-label" class="text-sm mt-2 font-medium"></div>
+                    </div>
+                </div>
+
+                <!-- Right: Risk vs Return Scatter -->
+                <div class="terminal-card p-6 flex flex-col min-h-[300px]">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-[#8b949e] text-xs uppercase tracking-wider font-mono">Risk / Return Landscape
+                        </h3>
+                        <div class="flex gap-2 text-[10px] text-[#8b949e]">
+                            <span class="flex items-center gap-1"><span
+                                    class="w-2 h-2 rounded-full bg-[#c586c0]"></span> Current</span>
+                            <span class="flex items-center gap-1"><span
+                                    class="w-2 h-2 rounded-full bg-[#30363d]"></span> Others</span>
+                        </div>
+                    </div>
+                    <div id="scatter-chart" class="flex-1 w-full h-full min-h-[220px]"></div>
+                </div>
+            </div>
+
+            <!-- Low Vol Bar Chart -->
+            <div class="terminal-card p-4 md:p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-[#8b949e] text-xs uppercase tracking-wider font-mono effect-title">Regime
+                        Performance Comparison</h3>
+                </div>
+                <!-- D3 Bar Chart Container -->
+                <div id="bar-chart" class="w-full h-[200px] md:h-[250px]"></div>
+            </div>
+
+            <!-- Bottom Row: Detailed Cards -->
+            <div class="space-y-4">
+                <h3 class="text-lg text-[#c9d1d9] font-semibold border-b border-[#21262d] pb-2 flex items-center gap-2">
+                    <span>Performance by Risk Regime</span>
                 </h3>
 
                 <!-- Risk Grid -->
-                <!-- Grid of 5 Equal Cards -->
                 <div id="risk-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
                     <!-- Cards injected by JS -->
                     <div class="col-span-full text-center text-[#8b949e] py-12">Loading data...</div>
@@ -233,6 +472,12 @@
 
         </div>
     </div>
+    </div>
+
+    <!-- Shared Tooltip -->
+    <div id="chart-tooltip"
+        class="fixed pointer-events-none opacity-0 bg-slate-800/90 backdrop-blur-sm border border-slate-700 text-white text-xs rounded-lg p-3 shadow-xl z-50 transition-opacity duration-200"
+        style="top: 0; left: 0;"></div>
 
     <!-- Scripts -->
     <script type="module">
@@ -260,7 +505,7 @@
             window.location.href = 'lowvol.html';
         }
 
-        document.getElementById('ticker-header').textContent = `${ticker} Risk Analysis`;
+        document.getElementById('page-risk-title').textContent = `${ticker} Risk Analysis`;
 
         async function loadDetailData() {
             document.getElementById('last-updated').textContent = "Syncing...";
@@ -276,35 +521,395 @@
                 const scoreEl = document.getElementById('current-risk-score');
                 const labelEl = document.getElementById('risk-label');
 
-                scoreEl.textContent = currentScore;
+                // Animate number
+                animateValue(scoreEl, 0, currentScore, 1000);
 
-                // Colorize Main Score
+                // Risk Label color
                 const styles = getRiskClasses(currentScore);
-                scoreEl.className = `text-7xl font-bold ${styles.textClass}`;
+                scoreEl.className = `text-6xl font-bold count-animate ${styles.textClass}`;
                 labelEl.textContent = styles.label;
-                labelEl.className = `text-sm mt-2 ${styles.textClass}`;
+                labelEl.className = `text-sm mt-2 font-medium ${styles.textClass}`;
 
-                renderRiskGrid(perfData, currentScore); // Pass current score
+                // Render Charts
+                renderRiskGauge(currentScore);
+                renderBarChart(perfData);
+                renderScatterPlot(perfData, currentScore);
+                renderRiskGrid(perfData, currentScore);
+
+                // Add resize listener
+                window.addEventListener('resize', () => {
+                    if (window.resizeTimer) clearTimeout(window.resizeTimer);
+                    window.resizeTimer = setTimeout(() => {
+                        renderRiskGauge(currentScore);
+                        renderBarChart(perfData);
+                        renderScatterPlot(perfData, currentScore);
+                    }, 200);
+                });
+
                 document.getElementById('last-updated').textContent = new Date().toLocaleTimeString();
 
             } catch (e) {
                 console.error("Error fetching details", e);
-                document.getElementById('risk-grid').innerHTML = '<div class="col-span-full text-center text-[#f48771]">Error loading data: ' + e.message + '</div>';
+                document.getElementById('risk-grid').innerHTML = '<div class="col-span-full text-center text-red-400">Error loading data: ' + e.message + '</div>';
             }
+        }
+
+        // Animate Value Helper
+        function animateValue(obj, start, end, duration) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                obj.innerHTML = Math.floor(progress * (end - start) + start);
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        function renderRiskGauge(score) {
+            const container = document.getElementById('gauge-chart');
+            // Responsive sizing
+            const width = Math.min(container.clientWidth, 280);
+            const height = width * 0.65; // Aspect ratio
+            const radius = Math.min(width, height) / 1.4;
+
+            d3.select("#gauge-chart").selectAll("*").remove();
+
+            const svg = d3.select("#gauge-chart")
+                .append("svg")
+                .attr("width", width)
+                .attr("height", height)
+                .append("g")
+                .attr("transform", `translate(${width / 2},${height - 20})`);
+
+            // Scale: 0 to 10
+            const scale = d3.scaleLinear().range([-Math.PI / 2, Math.PI / 2]).domain([0, 10]);
+
+            // Arc Generator with Rounded corners
+            const arc = d3.arc()
+                .innerRadius(radius - 25)
+                .outerRadius(radius)
+                .cornerRadius(12)
+                .startAngle(-Math.PI / 2);
+
+            // Background Arc
+            svg.append("path")
+                .datum({ endAngle: Math.PI / 2 })
+                .attr("class", "gauge-background")
+                .style("fill", "#1E293B")
+                .attr("d", arc);
+
+            // Value Arc (Animated)
+            const foreground = svg.append("path")
+                .datum({ endAngle: -Math.PI / 2 })
+                .attr("class", "gauge-value-arc")
+                .style("fill", getGradientForScore(score))
+                .attr("d", arc);
+
+            foreground.transition()
+                .duration(2000)
+                .ease(d3.easeElasticOut)
+                .attrTween("d", function (d) {
+                    const interpolate = d3.interpolate(d.endAngle, scale(score));
+                    return function (t) {
+                        d.endAngle = interpolate(t);
+                        return arc(d);
+                    };
+                });
+
+            // Ticks
+            const ticks = [0, 2, 4, 6, 8, 10];
+            ticks.forEach(t => {
+                const angle = scale(t) - Math.PI / 2;
+                const r = radius - 45;
+                svg.append("text")
+                    .attr("x", r * Math.cos(angle))
+                    .attr("y", r * Math.sin(angle))
+                    .attr("text-anchor", "middle")
+                    .attr("alignment-baseline", "middle")
+                    .style("fill", "#64748B")
+                    .style("font-size", "11px")
+                    .style("font-weight", "500")
+                    .text(t);
+            });
+        }
+
+        function renderBarChart(data) {
+            const container = document.getElementById('bar-chart');
+            const width = container.clientWidth;
+            const height = container.clientHeight;
+            // Responsive margins
+            const isMobile = width < 500;
+            const margin = {
+                top: 20,
+                right: isMobile ? 10 : 30,
+                bottom: 40,
+                left: isMobile ? 35 : 50
+            };
+
+            d3.select("#bar-chart").selectAll("*").remove();
+
+            const svg = d3.select("#bar-chart")
+                .append("svg")
+                .attr("width", width)
+                .attr("height", height)
+                .append("g")
+                .attr("transform", `translate(${margin.left},${margin.top})`);
+
+            const keys = ['0', '2', '4', '6', '10'];
+            const plotData = keys.map(k => {
+                const d = data[k] || { AnnualizedReturn: 0, AnnualizedVolatility: 0 };
+                return {
+                    risk: k === '10' ? '10' : k,
+                    ret: parseFloat(d.AnnualizedReturn || d.Return || 0),
+                    vol: parseFloat(d.AnnualizedVolatility || d.Volatility || 0)
+                };
+            });
+
+            // X Axis
+            const x = d3.scaleBand()
+                .range([0, width - margin.left - margin.right])
+                .domain(plotData.map(d => d.risk))
+                .padding(0.35);
+
+            svg.append("g")
+                .attr("transform", `translate(0,${height - margin.top - margin.bottom})`)
+                .call(d3.axisBottom(x).tickSize(0))
+                .selectAll("text")
+                .style("fill", "#94A3B8")
+                .style("font-family", "Inter")
+                .attr("dy", "1em");
+
+            svg.select(".domain").remove();
+
+            // Y Axis
+            const yMax = d3.max(plotData, d => Math.max(d.ret, d.vol));
+            const yMin = d3.min(plotData, d => Math.min(d.ret, 0));
+
+            const y = d3.scaleLinear()
+                .domain([Math.min(yMin, -10), Math.max(yMax, 10)])
+                .range([height - margin.top - margin.bottom, 0]);
+
+            // Grid
+            svg.append("g")
+                .attr("class", "grid")
+                .call(d3.axisLeft(y).ticks(5).tickSize(-(width - margin.left - margin.right)).tickFormat(""))
+                .call(g => g.select(".domain").remove())
+                .call(g => g.selectAll(".tick line")
+                    .attr("stroke", "#334155")
+                    .attr("stroke-opacity", 0.3)
+                    .attr("stroke-dasharray", "4,4"));
+
+            // Axis labels
+            const yAxis = svg.append("g")
+                .call(d3.axisLeft(y).ticks(5).tickFormat(d => d + "%"));
+
+            yAxis.select(".domain").remove();
+            yAxis.selectAll(".tick line").remove();
+            yAxis.selectAll("text").style("fill", "#64748B");
+
+            // Zero line
+            svg.append("line")
+                .attr("x1", 0)
+                .attr("x2", width - margin.left - margin.right)
+                .attr("y1", y(0))
+                .attr("y2", y(0))
+                .attr("stroke", "#475569")
+                .attr("stroke-width", 1);
+
+            // Subgroups
+            const xSubgroup = d3.scaleBand()
+                .domain(['Return', 'Vol'])
+                .range([0, x.bandwidth()])
+                .padding(0.15);
+
+            // Bars
+            const barGroups = svg.selectAll(".bar-group")
+                .data(plotData)
+                .enter()
+                .append("g")
+                .attr("transform", d => `translate(${x(d.risk)},0)`);
+
+            // Return Bars
+            barGroups.append("rect")
+                .attr("class", d => d.ret >= 0 ? "bar-return bar-positive" : "bar-return bar-negative")
+                .attr("x", d => xSubgroup('Return'))
+                .attr("y", d => y(Math.max(0, d.ret)))
+                .attr("width", xSubgroup.bandwidth())
+                .attr("height", d => Math.abs(y(d.ret) - y(0)))
+                .attr("rx", 4);
+
+            // Vol Bars
+            barGroups.append("rect")
+                .attr("class", "bar-vol bar-vol-fill")
+                .attr("x", d => xSubgroup('Vol'))
+                .attr("y", d => y(d.vol))
+                .attr("width", xSubgroup.bandwidth())
+                .attr("height", d => Math.abs(y(d.vol) - y(0)))
+                .attr("rx", 4)
+                .on("mouseover", function (event, d) {
+                    const tooltip = document.getElementById('chart-tooltip');
+                    tooltip.style.opacity = '1';
+                    tooltip.innerHTML = `
+                        <div class="font-bold border-b border-slate-600 pb-1 mb-1">Risk Profile ${d.risk}</div>
+                        <div class="flex justify-between gap-4"><span class="text-slate-400">Volatility:</span> <span class="font-mono text-slate-200">${d.vol.toFixed(2)}%</span></div>
+                    `;
+                    d3.select(this).style("opacity", 0.8);
+                })
+                .on("mousemove", function (event) {
+                    const tooltip = document.getElementById('chart-tooltip');
+                    tooltip.style.left = (event.clientX + 10) + 'px';
+                    tooltip.style.top = (event.clientY + 10) + 'px';
+                })
+                .on("mouseout", function () {
+                    document.getElementById('chart-tooltip').style.opacity = '0';
+                    d3.select(this).style("opacity", 1);
+                });
+
+            // Return Bars Interaction
+            svg.selectAll(".bar-return")
+                .on("mouseover", function (event, d) {
+                    const tooltip = document.getElementById('chart-tooltip');
+                    tooltip.style.opacity = '1';
+                    tooltip.innerHTML = `
+                        <div class="font-bold border-b border-slate-600 pb-1 mb-1">Risk Profile ${d.risk}</div>
+                        <div class="flex justify-between gap-4"><span class="text-slate-400">Return:</span> <span class="font-mono ${d.ret >= 0 ? 'text-emerald-400' : 'text-pink-400'}">${d.ret.toFixed(2)}%</span></div>
+                    `;
+                    d3.select(this).style("opacity", 0.8);
+                })
+                .on("mousemove", function (event) {
+                    const tooltip = document.getElementById('chart-tooltip');
+                    tooltip.style.left = (event.clientX + 10) + 'px';
+                    tooltip.style.top = (event.clientY + 10) + 'px';
+                })
+                .on("mouseout", function () {
+                    document.getElementById('chart-tooltip').style.opacity = '0';
+                    d3.select(this).style("opacity", 1);
+                });
+        }
+
+        function renderScatterPlot(data, currentScore) {
+            const container = document.getElementById('scatter-chart');
+            const width = container.clientWidth;
+            const height = container.clientHeight;
+            // Responsive margins
+            const isMobile = width < 500;
+            const margin = {
+                top: 20,
+                right: isMobile ? 15 : 30,
+                bottom: 30,
+                left: isMobile ? 35 : 40
+            };
+
+            d3.select("#scatter-chart").selectAll("*").remove();
+
+            const svg = d3.select("#scatter-chart")
+                .append("svg")
+                .attr("width", width)
+                .attr("height", height)
+                .append("g")
+                .attr("transform", `translate(${margin.left},${margin.top})`);
+
+            const keys = ['0', '2', '4', '6', '10'];
+            const plotData = keys.map(k => {
+                const d = data[k] || { AnnualizedReturn: 0, AnnualizedVolatility: 0 };
+                return {
+                    id: k,
+                    risk: k === '10' ? '10' : k,
+                    ret: parseFloat(d.AnnualizedReturn || d.Return || 0),
+                    vol: parseFloat(d.AnnualizedVolatility || d.Volatility || 0)
+                };
+            });
+
+            // X Axis
+            const x = d3.scaleLinear()
+                .domain([0, d3.max(plotData, d => d.vol) * 1.1])
+                .range([0, width - margin.left - margin.right]);
+
+            svg.append("g")
+                .attr("transform", `translate(0,${height - margin.top - margin.bottom})`)
+                .call(d3.axisBottom(x).ticks(5))
+                .attr("class", "axis-text")
+                .call(g => g.select(".domain").attr("stroke", "#334155"))
+                .selectAll("text").style("fill", "#94A3B8");
+
+            // Y Axis
+            const y = d3.scaleLinear()
+                .domain([d3.min(plotData, d => d.ret) * 1.1, d3.max(plotData, d => d.ret) * 1.1])
+                .range([height - margin.top - margin.bottom, 0]);
+
+            svg.append("g")
+                .call(d3.axisLeft(y).ticks(5))
+                .call(g => g.select(".domain").remove())
+                .call(g => g.selectAll("line").attr("stroke", "#334155").attr("stroke-dasharray", "4,4").attr("stroke-opacity", 0.5))
+                .selectAll("text").style("fill", "#94A3B8");
+
+            // Points with Glow
+            svg.selectAll("circle")
+                .data(plotData)
+                .enter()
+                .append("circle")
+                .attr("cx", d => x(d.vol))
+                .attr("cy", d => y(d.ret))
+                .attr("r", 6)
+                .attr("class", d => d.id === String(currentScore) ? "scatter-point scatter-active" : "scatter-point")
+                .attr("fill", d => d.id === String(currentScore) ? "url(#gradient-purple)" : "#334155")
+                .on("mouseover", function (event, d) {
+                    const tooltip = document.getElementById('chart-tooltip');
+                    tooltip.style.opacity = '1';
+                    tooltip.innerHTML = `
+                        <div class="font-bold border-b border-slate-600 pb-1 mb-1">Risk Profile ${d.risk}</div>
+                        <div class="space-y-1">
+                            <div class="flex justify-between gap-4"><span class="text-slate-400">Return:</span> <span class="font-mono ${d.ret >= 0 ? 'text-emerald-400' : 'text-pink-400'}">${d.ret.toFixed(2)}%</span></div>
+                            <div class="flex justify-between gap-4"><span class="text-slate-400">Vol:</span> <span class="font-mono text-slate-200">${d.vol.toFixed(2)}%</span></div>
+                        </div>
+                    `;
+                    d3.select(this).attr("r", 8).style("filter", "drop-shadow(0 0 4px rgba(139, 92, 246, 0.5))");
+                })
+                .on("mousemove", function (event) {
+                    const tooltip = document.getElementById('chart-tooltip');
+                    tooltip.style.left = (event.clientX + 10) + 'px';
+                    tooltip.style.top = (event.clientY + 10) + 'px';
+                })
+                .on("mouseout", function (event, d) {
+                    document.getElementById('chart-tooltip').style.opacity = '0';
+                    d3.select(this)
+                        .attr("r", 6)
+                        .style("filter", null);
+                });
+
+            // Labels
+            svg.selectAll("text.label")
+                .data(plotData)
+                .enter()
+                .append("text")
+                .attr("x", d => x(d.vol) + 12)
+                .attr("y", d => y(d.ret))
+                .text(d => `Risk ${d.risk}`)
+                .attr("font-size", "11px")
+                .attr("fill", "#64748B")
+                .attr("alignment-baseline", "middle");
+
+            // X Axis Label
+            svg.append("text")
+                .attr("x", (width - margin.left - margin.right) / 2)
+                .attr("y", height - margin.bottom + 10)
+                .style("text-anchor", "middle")
+                .style("fill", "#8b949e")
+                .style("font-size", "10px")
+                .text("Volatility");
         }
 
         function renderRiskGrid(data, currentScore) {
             const container = document.getElementById('risk-grid');
             if (!data) {
-                container.innerHTML = '<div class="col-span-full text-center text-[#8b949e]">No historical performance data available</div>';
+                container.innerHTML = '<div class="col-span-full text-center text-[#8B949E]">No historical performance data available</div>';
                 return;
             }
 
-            // Expected keys: 0, 2, 4, 6, 10
             const keys = ['0', '2', '4', '6', '10'];
-
-            // Normalize current score to nearest key for highlighting (0, 2, 4, 6, 10)
-            // Just finding exact match or closest bucket? Assuming exact match logic for "Active Regime" highlighting
             let activeKey = null;
             if (keys.includes(String(currentScore))) activeKey = String(currentScore);
 
@@ -312,7 +917,6 @@
                 const item = data[k];
                 if (!item) return '';
 
-                // Keys from Firebase: AnnualizedReturn, AnnualizedVolatility
                 const ret = item.AnnualizedReturn !== undefined ? item.AnnualizedReturn : (item.Return || 0);
                 const vol = item.AnnualizedVolatility !== undefined ? item.AnnualizedVolatility : (item.Volatility || 0);
 
@@ -321,27 +925,27 @@
                 const displayVol = parseFloat(vol).toFixed(2) + '%';
                 const displayScore = k === '10' ? '10' : k;
 
-                // Color Logic
-                const retColor = retVal >= 0 ? 'text-[#b5cea8]' : 'text-[#f48771]';
+                const retColor = retVal >= 0 ? 'text-emerald-400' : 'text-pink-400';
                 const isActive = k === activeKey ? 'risk-card-active' : '';
-                const activeLabel = k === activeKey ? '<span class="absolute top-3 right-3 text-[10px] text-[#c586c0] font-medium bg-[#c586c0]/10 px-2 py-0.5 rounded">Current</span>' : '';
+                // Unify Active Label (Pill)
+                const activeLabel = k === activeKey ? '<span class="absolute top-4 right-4 text-[10px] text-white font-bold bg-gradient-to-r from-violet-500 to-pink-500 px-3 py-1 rounded-full shadow-lg shadow-violet-500/20 tracking-wider">CURRENT</span>' : '';
 
                 return `
-                    <div class="terminal-card p-5 flex flex-col min-h-[180px] relative ${isActive}">
+                    <div class="terminal-card p-6 flex flex-col min-h-[170px] relative justify-between ${isActive}">
                         ${activeLabel}
-                        <div class="flex items-baseline gap-2 mb-4 pb-3 border-b border-[#21262d]">
-                            <span class="text-[#8b949e] text-sm">Risk</span>
-                            <span class="text-3xl font-bold text-white">${displayScore}</span>
+                        <div>
+                            <span class="text-slate-500 text-xs font-semibold tracking-wider uppercase">Risk Score</span>
+                            <div class="text-4xl font-bold text-white mt-1">${displayScore}</div>
                         </div>
                         
-                        <div class="space-y-3 flex-1">
+                        <div class="space-y-3 pt-4 border-t border-slate-700/30">
                             <div class="flex justify-between items-center">
-                                <span class="text-[#8b949e] text-xs">Annual Return</span>
-                                <span class="text-lg font-semibold ${retColor}">${displayRet}</span>
+                                <span class="text-slate-400 text-xs">Return</span>
+                                <span class="text-sm font-bold font-mono ${retColor}">${displayRet}</span>
                             </div>
                             <div class="flex justify-between items-center">
-                                <span class="text-[#8b949e] text-xs">Volatility</span>
-                                <span class="text-lg font-semibold text-white">${displayVol}</span>
+                                <span class="text-slate-400 text-xs">Vol</span>
+                                <span class="text-sm font-mono text-slate-300">${displayVol}</span>
                             </div>
                         </div>
                     </div>
@@ -349,17 +953,59 @@
             }).join('');
         }
 
+        function getGradientForScore(score) {
+            if (score <= 4) return 'url(#gradient-positive)';
+            return 'url(#gradient-negative)';
+        }
+
         function getRiskClasses(score) {
-            if (score <= 0) return { textClass: 'text-[#b5cea8]', label: 'Lowest Risk' };
-            if (score <= 2) return { textClass: 'text-[#b5cea8]', label: 'Low Risk' };
-            if (score <= 4) return { textClass: 'text-[#dcdcaa]', label: 'Moderate Risk' };
-            if (score <= 6) return { textClass: 'text-[#f48771]', label: 'High Risk' };
-            return { textClass: 'text-[#f48771]', label: 'Highest Risk' };
+            // Simplified return for just label text since style is handled elsewhere
+            if (score <= 0) return { label: 'Lowest Risk Profile' };
+            if (score <= 2) return { label: 'Low Risk Profile' };
+            if (score <= 4) return { label: 'Moderate Risk Profile' };
+            if (score <= 6) return { label: 'High Risk Profile' };
+            return { label: 'Highest Risk Profile' };
         }
 
         // Initialize
         loadDetailData();
 
+    </script>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('main-content');
+            const navTexts = document.querySelectorAll('.nav-text');
+            const logoText = document.querySelector('.logo-text');
+            const toggleIcon = document.getElementById('toggle-icon');
+
+            const isExpanded = sidebar.classList.contains('w-48');
+
+            if (isExpanded) {
+                // Collapse
+                sidebar.classList.remove('w-48');
+                sidebar.classList.add('lg:w-12');
+                mainContent.classList.remove('lg:ml-48');
+                mainContent.classList.add('lg:ml-12');
+
+                navTexts.forEach(t => t.classList.add('opacity-0'));
+                logoText.classList.add('hidden');
+                toggleIcon.classList.remove('rotate-180');
+            } else {
+                // Expand
+                sidebar.classList.remove('lg:w-12');
+                sidebar.classList.add('w-48');
+                mainContent.classList.remove('lg:ml-12');
+                mainContent.classList.add('lg:ml-48');
+
+                setTimeout(() => {
+                    navTexts.forEach(t => t.classList.remove('opacity-0'));
+                    logoText.classList.remove('hidden');
+                }, 100);
+                toggleIcon.classList.add('rotate-180');
+            }
+        }
     </script>
 </body>
 

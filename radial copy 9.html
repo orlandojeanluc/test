@@ -20,14 +20,14 @@
                     colors: {
                         terminal: {
                             bg: '#0d1117',
-                            panel: '#161b22',
-                            border: '#30363d',
-                            orange: '#c586c0',
-                            amber: '#dcdcaa',
-                            green: '#b5cea8',
-                            red: '#f48771',
-                            blue: '#9cdcfe',
-                            muted: '#8b949e'
+                            panel: '#1E1E2E',
+                            border: '#313244',
+                            orange: '#CBA6F7',
+                            amber: '#F9E2AF',
+                            green: '#A6E3A1',
+                            red: '#CBA6F7',
+                            blue: '#89B4FA',
+                            muted: '#6C7086'
                         }
                     }
                 }
@@ -48,21 +48,30 @@
         }
 
         .terminal-header {
-            background: #161b22;
-            border-bottom: 1px solid #30363d;
+            background: linear-gradient(180deg, #1a1f26 0%, #1E1E2E 100%);
+            border-bottom: 1px solid #313244;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
         }
 
         .terminal-card {
-            background: #161b22;
-            border: 1px solid #30363d;
-            transition: all 0.15s ease;
+            background: linear-gradient(145deg, #1a1f26 0%, #1E1E2E 100%);
+            border: 1px solid #313244;
+            transition: all 0.2s ease;
             position: relative;
-            border-radius: 16px;
+            border-radius: 20px;
+            box-shadow:
+                0 4px 16px rgba(0, 0, 0, 0.3),
+                0 1px 3px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.03);
         }
 
         .terminal-card:hover {
-            border-color: #c586c0;
-            box-shadow: 0 0 20px rgba(197, 134, 192, 0.1);
+            border-color: #CBA6F7;
+            box-shadow:
+                0 8px 32px rgba(197, 134, 192, 0.15),
+                0 4px 16px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            transform: translateY(-2px);
         }
 
         .bar-fill {
@@ -81,27 +90,40 @@
             }
         }
 
+        .sort-btn {
+            border-radius: 10px;
+            transition: all 0.2s ease;
+        }
+
         .sort-btn.active {
-            background-color: #c586c0;
+            background-color: #CBA6F7;
             color: black;
+            box-shadow: 0 2px 8px rgba(197, 134, 192, 0.3);
         }
 
         .filter-chip {
-            border: 1px solid #30363d;
-            color: #8b949e;
-            transition: all 0.2s;
-            border-radius: 12px;
+            border: 1px solid #313244;
+            color: #6C7086;
+            transition: all 0.2s ease;
+            border-radius: 16px;
+            background: linear-gradient(145deg, #1a1f26 0%, #1E1E2E 100%);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
         }
 
         .filter-chip:hover {
             color: #fff;
             border-color: #666;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
         }
 
         .filter-chip.active {
-            background: #252526;
-            border-color: #c586c0;
-            color: #c586c0;
+            background: linear-gradient(145deg, #2a2a2c 0%, #252526 100%);
+            border-color: #CBA6F7;
+            color: #CBA6F7;
+            box-shadow:
+                0 2px 8px rgba(197, 134, 192, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
         }
 
         ::-webkit-scrollbar {
@@ -118,7 +140,7 @@
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: #c586c0;
+            background: #CBA6F7;
         }
 
         .blink {
@@ -135,13 +157,17 @@
             position: fixed;
             pointer-events: none;
             z-index: 10000;
-            background: rgba(22, 27, 34, 0.95);
-            border: 1px solid #30363d;
-            padding: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            background: linear-gradient(145deg, rgba(26, 31, 38, 0.98) 0%, rgba(22, 27, 34, 0.98) 100%);
+            border: 1px solid #313244;
+            padding: 14px;
+            box-shadow:
+                0 8px 32px rgba(0, 0, 0, 0.5),
+                0 2px 8px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
             opacity: 0;
             transition: opacity 0.2s;
-            border-radius: 12px;
+            border-radius: 16px;
+            backdrop-filter: blur(8px);
         }
 
         #tooltip.show {
@@ -156,13 +182,16 @@
             width: 100%;
             max-width: 500px;
             height: 100vh;
-            background: #161b22;
-            border-left: 1px solid #30363d;
+            background: linear-gradient(180deg, #1a1f26 0%, #1E1E2E 100%);
+            border-left: 1px solid #313244;
             z-index: 100;
             padding: 32px;
             transition: right 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-            box-shadow: -20px 0 50px rgba(0, 0, 0, 0.8);
+            box-shadow:
+                -24px 0 64px rgba(0, 0, 0, 0.6),
+                -8px 0 24px rgba(0, 0, 0, 0.4);
             overflow-y: auto;
+            border-radius: 24px 0 0 24px;
         }
 
         #detail-panel.open {
@@ -172,11 +201,12 @@
         #detail-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.85);
             z-index: 99;
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.3s;
+            backdrop-filter: blur(4px);
         }
 
         #detail-overlay.show {
@@ -185,15 +215,22 @@
         }
 
         input {
-            background: #161b22 !important;
-            border: 1px solid #30363d !important;
+            background: linear-gradient(145deg, #1a1f26 0%, #1E1E2E 100%) !important;
+            border: 1px solid #313244 !important;
             color: #fff !important;
-            border-radius: 12px;
+            border-radius: 14px;
+            box-shadow:
+                0 2px 6px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.03);
+            transition: all 0.2s ease;
         }
 
         input:focus {
-            border-color: #c586c0 !important;
+            border-color: #CBA6F7 !important;
             outline: none !important;
+            box-shadow:
+                0 0 0 3px rgba(197, 134, 192, 0.15),
+                0 2px 6px rgba(0, 0, 0, 0.2);
         }
     </style>
 </head>
@@ -204,11 +241,11 @@
     <!-- Navigation: Bottom on Mobile, Left on Desktop -->
     <nav id="sidebar"
         class="fixed z-50 bg-[#0d1117] flex items-center
-                bottom-0 w-full h-14 border-t border-[#30363d] flex-row justify-around py-0
+                bottom-0 w-full h-14 border-t border-[#313244] flex-row justify-around py-0
                 lg:left-0 lg:top-0 lg:h-full lg:w-12 lg:border-r lg:border-t-0 lg:flex-col lg:py-4 transition-all duration-300 lg:rounded-r-[32px]">
 
         <!-- Logo (Hidden on Mobile, Visible on Desktop) -->
-        <div class="hidden lg:block text-[#c586c0] font-bold text-xs mb-6 w-full text-center relative">
+        <div class="hidden lg:block text-[#CBA6F7] font-bold text-xs mb-6 w-full text-center relative">
             <span class="logo-icon">C</span>
             <span class="logo-text hidden ml-2">CALTROPIA</span>
         </div>
@@ -218,7 +255,7 @@
             class="flex-1 flex flex-row w-full justify-around items-center lg:flex-col lg:w-full lg:justify-start lg:gap-2">
 
             <a href="radial.html"
-                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#c586c0] lg:bg-[#161b22] border-t-2 lg:border-t-0 lg:border-l-2 lg:border-r-0 border-[#c586c0] group overflow-hidden"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#CBA6F7] lg:bg-[#1E1E2E] border-t-2 lg:border-t-0 lg:border-l-2 lg:border-r-0 border-[#CBA6F7] group overflow-hidden"
                 title="Dashboard">
                 <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -226,23 +263,22 @@
                     </path>
                 </svg>
                 <span
-                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Home</span>
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Dashboard</span>
             </a>
 
             <a href="momentum.html"
-                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#6C7086] hover:text-[#CBA6F7] lg:hover:bg-[#1E1E2E] group overflow-hidden"
                 title="Momentum">
                 <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path>
                 </svg>
                 <span
-                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Trend
-                    Signals</span>
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Momentum</span>
             </a>
 
             <a href="macroTrend.html"
-                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#6C7086] hover:text-[#CBA6F7] lg:hover:bg-[#1E1E2E] group overflow-hidden"
                 title="Macro Terminal">
                 <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -250,12 +286,11 @@
                     </path>
                 </svg>
                 <span
-                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Macro
-                    Signals</span>
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Macro</span>
             </a>
 
             <a href="lowvol.html"
-                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#6C7086] hover:text-[#CBA6F7] lg:hover:bg-[#1E1E2E] group overflow-hidden"
                 title="Risk Terminal">
                 <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -263,24 +298,22 @@
                     </path>
                 </svg>
                 <span
-                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Low
-                    Vol Factor</span>
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Risk</span>
             </a>
 
             <a href="momentum_factor.html"
-                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#6C7086] hover:text-[#CBA6F7] lg:hover:bg-[#1E1E2E] group overflow-hidden"
                 title="Momentum Factor">
                 <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                 </svg>
                 <span
-                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Momentum
-                    Factor</span>
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Factor</span>
             </a>
 
             <a href="mean_reversion.html"
-                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#6C7086] hover:text-[#CBA6F7] lg:hover:bg-[#1E1E2E] group overflow-hidden"
                 title="Mean Reversion">
                 <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -289,11 +322,11 @@
                 </svg>
                 <span
                     class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Mean
-                    Rev Factor</span>
+                    Rev</span>
             </a>
 
             <a href="sectors.html"
-                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#6C7086] hover:text-[#CBA6F7] lg:hover:bg-[#1E1E2E] group overflow-hidden"
                 title="Sectors">
                 <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -302,12 +335,11 @@
                         d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path>
                 </svg>
                 <span
-                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Sector
-                    Inspection</span>
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Sectors</span>
             </a>
 
             <a href="portfolios.html"
-                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#6C7086] hover:text-[#CBA6F7] lg:hover:bg-[#1E1E2E] group overflow-hidden"
                 title="Portfolios">
                 <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -315,13 +347,12 @@
                     </path>
                 </svg>
                 <span
-                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Caltropia
-                    Strategies</span>
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Portfolios</span>
             </a>
 
 
             <a href="market_map.html"
-                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#6C7086] hover:text-[#CBA6F7] lg:hover:bg-[#1E1E2E] group overflow-hidden"
                 title="Market Map">
                 <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -329,11 +360,10 @@
                     </path>
                 </svg>
                 <span
-                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Market
-                    Map</span>
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Map</span>
             </a>
             <a href="factor_arena.html"
-                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#6C7086] hover:text-[#CBA6F7] lg:hover:bg-[#1E1E2E] group overflow-hidden"
                 title="Factor Arena">
                 <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3v18h18"></path>
@@ -343,21 +373,20 @@
                     class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Arena</span>
             </a>
             <a href="voldashboard.html"
-                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#6C7086] hover:text-[#CBA6F7] lg:hover:bg-[#1E1E2E] group overflow-hidden"
                 title="Vol Dashboard">
                 <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
                 </svg>
                 <span
-                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Volatility
-                    Dashboard</span>
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Volatility</span>
             </a>
         </div>
 
         <!-- Toggle Button -->
         <button onclick="toggleSidebar()"
-            class="hidden lg:flex items-center justify-center w-full h-10 text-[#8b949e] hover:text-white mt-auto">
+            class="hidden lg:flex items-center justify-center w-full h-10 text-[#6C7086] hover:text-white mt-auto">
             <svg id="toggle-icon" class="w-4 h-4 transform transition-transform duration-300" fill="none"
                 stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -369,8 +398,8 @@
     <div id="detail-overlay" onclick="closeDetailPanel()"></div>
     <div id="detail-panel">
         <div class="flex items-center justify-between mb-8 border-b border-[#333] pb-4">
-            <h2 id="detail-title" class="text-xl font-bold text-[#c586c0]">ASSET DETAILS</h2>
-            <button onclick="closeDetailPanel()" class="w-6 h-6 text-[#8b949e] hover:text-white">✕</button>
+            <h2 id="detail-title" class="text-xl font-bold text-[#CBA6F7]">ASSET DETAILS</h2>
+            <button onclick="closeDetailPanel()" class="w-6 h-6 text-[#6C7086] hover:text-white">✕</button>
         </div>
         <div id="detail-content" class="space-y-6"></div>
     </div>
@@ -381,24 +410,24 @@
             class="terminal-header px-4 py-3 flex flex-col md:flex-row md:items-center justify-between gap-4 sticky top-0 z-40">
             <div class="flex items-center gap-2 md:gap-4 w-full md:w-auto justify-between md:justify-start">
                 <div class="flex items-center gap-2">
-                    <span class="text-[#c586c0] font-bold text-sm">Caltropia</span>
-                    <span class="text-[#8b949e]">|</span>
+                    <span class="text-[#CBA6F7] font-bold text-sm">Caltropia</span>
+                    <span class="text-[#6C7086]">|</span>
                     <span class="text-white text-xs whitespace-nowrap">Market Terminal</span>
                 </div>
-                <span class="text-[#b5cea8] text-[10px] md:text-xs blink flex items-center gap-1"><svg
+                <span class="text-[#A6E3A1] text-[10px] md:text-xs blink flex items-center gap-1"><svg
                         class="w-2 h-2 fill-gray-400" viewBox="0 0 8 8">
                         <circle cx="4" cy="4" r="3" />
                     </svg> Live</span>
             </div>
             <div class="flex flex-col md:flex-row items-start md:items-center gap-3 md:gap-4 text-xs w-full md:w-auto">
                 <div class="flex items-center gap-2 w-full md:w-auto">
-                    <span class="text-[#8b949e] whitespace-nowrap">Search:</span>
+                    <span class="text-[#6C7086] whitespace-nowrap">Search:</span>
                     <div class="flex-1 md:flex-none flex items-center gap-2">
                         <input type="text" id="search-input"
-                            class="px-2 py-1 text-base md:text-xs w-full md:w-48 bg-[#161b22] border border-[#30363d] text-white focus:border-[#c586c0] outline-none"
+                            class="px-2 py-1 text-base md:text-xs w-full md:w-48 bg-[#1E1E2E] border border-[#313244] text-white focus:border-[#CBA6F7] outline-none"
                             placeholder="Ticker..." oninput="handleSearch(this.value)">
                         <button onclick="refreshData()"
-                            class="px-2 py-1 bg-[#161b22] border border-[#30363d] text-[#c586c0] hover:bg-[#c586c0] hover:text-black transition-all flex items-center justify-center">
+                            class="px-2 py-1 bg-[#1E1E2E] border border-[#313244] text-[#CBA6F7] hover:bg-[#CBA6F7] hover:text-black transition-all flex items-center justify-center">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
@@ -409,19 +438,19 @@
                 </div>
                 <!-- Last Update: Hidden on very small screens or stacked -->
                 <div class="flex items-center gap-2 hidden lg:flex">
-                    <span class="text-[#8b949e]">Updated:</span>
-                    <span id="last-updated" class="text-[#dcdcaa]">--:--:--</span>
+                    <span class="text-[#6C7086]">Updated:</span>
+                    <span id="last-updated" class="text-[#F9E2AF]">--:--:--</span>
                 </div>
             </div>
         </header>
 
         <!-- Controls Bar: Horizontal Scroll on Mobile -->
         <div
-            class="bg-[#0d1117] border-b border-[#30363d] px-4 py-2 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 overflow-x-hidden">
+            class="bg-[#0d1117] border-b border-[#313244] px-4 py-2 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 overflow-x-hidden">
             <!-- Filter Group: Horizontal Scroll -->
             <div class="flex items-center gap-2 w-full md:w-auto overflow-x-auto pb-2 md:pb-0 no-scrollbar">
                 <span
-                    class="text-[#8b949e] text-xs font-bold whitespace-nowrap sticky left-0 bg-[#0d1117] z-10 pr-2">Filters:</span>
+                    class="text-[#6C7086] text-xs font-bold whitespace-nowrap sticky left-0 bg-[#0d1117] z-10 pr-2">Filters:</span>
                 <button class="filter-chip active px-2 py-1 text-xs whitespace-nowrap" data-filter="all"
                     onclick="setFilter('all')">All</button>
                 <button class="filter-chip px-2 py-1 text-xs whitespace-nowrap flex items-center gap-1"
@@ -461,15 +490,15 @@
             <!-- Sort Group -->
             <div class="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0">
                 <span
-                    class="text-[#8b949e] text-xs font-bold whitespace-nowrap sticky left-0 bg-[#0d1117] z-10 pr-2">Sort:</span>
+                    class="text-[#6C7086] text-xs font-bold whitespace-nowrap sticky left-0 bg-[#0d1117] z-10 pr-2">Sort:</span>
                 <button
-                    class="sort-btn active px-2 py-1 text-xs bg-[#1a1a1a] border border-[#333] text-[#8b949e] whitespace-nowrap"
+                    class="sort-btn active px-2 py-1 text-xs bg-[#1a1a1a] border border-[#333] text-[#6C7086] whitespace-nowrap"
                     data-sort="score" onclick="setSort('score')">Score</button>
                 <button
-                    class="sort-btn px-2 py-1 text-xs bg-[#1a1a1a] border border-[#333] text-[#8b949e] whitespace-nowrap"
+                    class="sort-btn px-2 py-1 text-xs bg-[#1a1a1a] border border-[#333] text-[#6C7086] whitespace-nowrap"
                     data-sort="alpha" onclick="setSort('alpha')">Name</button>
                 <button
-                    class="sort-btn px-2 py-1 text-xs bg-[#1a1a1a] border border-[#333] text-[#8b949e] whitespace-nowrap"
+                    class="sort-btn px-2 py-1 text-xs bg-[#1a1a1a] border border-[#333] text-[#6C7086] whitespace-nowrap"
                     data-sort="sector" onclick="setSort('sector')">Sector</button>
             </div>
         </div>
@@ -478,43 +507,43 @@
             <!-- Metrics Grid -->
             <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2">
                 <div class="terminal-card p-3 cursor-pointer" onclick="showMetricDetail('total')">
-                    <div class="text-[#8b949e] text-[10px] font-bold mb-1">Total Assets</div>
+                    <div class="text-[#6C7086] text-[10px] font-bold mb-1">Total Assets</div>
                     <div id="total-assets" class="text-2xl font-bold text-white count-up">--</div>
                 </div>
                 <div class="terminal-card p-3 cursor-pointer" onclick="showMetricDetail('bullish')">
-                    <div class="text-[#8b949e] text-[10px] font-bold mb-1 hover:text-[#b5cea8]">Bullish Trend
+                    <div class="text-[#6C7086] text-[10px] font-bold mb-1 hover:text-[#A6E3A1]">Bullish Trend
                     </div>
                     <div class="flex items-baseline gap-2 mb-1">
-                        <span id="bullish-count" class="text-2xl font-bold text-[#b5cea8] count-up">--</span>
-                        <span id="bullish-pct" class="text-xs font-mono text-[#b5cea8]">--%</span>
+                        <span id="bullish-count" class="text-2xl font-bold text-[#A6E3A1] count-up">--</span>
+                        <span id="bullish-pct" class="text-xs font-mono text-[#A6E3A1]">--%</span>
                     </div>
                     <div class="w-full bg-[#1a1a1a] h-1">
-                        <div id="bullish-bar" class="h-full bg-[#b5cea8] bar-fill" style="width: 0%"></div>
+                        <div id="bullish-bar" class="h-full bg-[#A6E3A1] bar-fill" style="width: 0%"></div>
                     </div>
                 </div>
                 <div class="terminal-card p-3 cursor-pointer" onclick="showMetricDetail('neutral')">
-                    <div class="text-[#8b949e] text-[10px] font-bold mb-1 hover:text-[#dcdcaa]">Neutral</div>
+                    <div class="text-[#6C7086] text-[10px] font-bold mb-1 hover:text-[#F9E2AF]">Neutral</div>
                     <div class="flex items-baseline gap-2 mb-1">
-                        <span id="neutral-count" class="text-2xl font-bold text-[#dcdcaa] count-up">--</span>
-                        <span id="neutral-pct" class="text-xs font-mono text-[#dcdcaa]">--%</span>
+                        <span id="neutral-count" class="text-2xl font-bold text-[#F9E2AF] count-up">--</span>
+                        <span id="neutral-pct" class="text-xs font-mono text-[#F9E2AF]">--%</span>
                     </div>
                     <div class="w-full bg-[#1a1a1a] h-1">
-                        <div id="neutral-bar" class="h-full bg-[#dcdcaa] bar-fill" style="width: 0%"></div>
+                        <div id="neutral-bar" class="h-full bg-[#F9E2AF] bar-fill" style="width: 0%"></div>
                     </div>
                 </div>
                 <div class="terminal-card p-3 cursor-pointer" onclick="showMetricDetail('bearish')">
-                    <div class="text-[#8b949e] text-[10px] font-bold mb-1 hover:text-[#f48771]">Bearish Trend
+                    <div class="text-[#6C7086] text-[10px] font-bold mb-1 hover:text-[#CBA6F7]">Bearish Trend
                     </div>
                     <div class="flex items-baseline gap-2 mb-1">
-                        <span id="bearish-count" class="text-2xl font-bold text-[#f48771] count-up">--</span>
-                        <span id="bearish-pct" class="text-xs font-mono text-[#f48771]">--%</span>
+                        <span id="bearish-count" class="text-2xl font-bold text-[#CBA6F7] count-up">--</span>
+                        <span id="bearish-pct" class="text-xs font-mono text-[#CBA6F7]">--%</span>
                     </div>
                     <div class="w-full bg-[#1a1a1a] h-1">
-                        <div id="bearish-bar" class="h-full bg-[#f48771] bar-fill" style="width: 0%"></div>
+                        <div id="bearish-bar" class="h-full bg-[#CBA6F7] bar-fill" style="width: 0%"></div>
                     </div>
                 </div>
                 <div class="terminal-card p-3 cursor-pointer hover:border-[#bc8cff]" onclick="setFilter('divergence')">
-                    <div class="text-[#8b949e] text-[10px] font-bold mb-1 flex items-center gap-1">Divergences <svg
+                    <div class="text-[#6C7086] text-[10px] font-bold mb-1 flex items-center gap-1">Divergences <svg
                             class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M13 10V3L4 14h7v7l9-11h-7z"></path>
@@ -522,7 +551,7 @@
                     <div id="divergence-count" class="text-2xl font-bold text-white count-up">--</div>
                 </div>
                 <div class="terminal-card p-3 cursor-pointer hover:border-[#39c5cf]" onclick="setFilter('meanrev')">
-                    <div class="text-[#8b949e] text-[10px] font-bold mb-1 flex items-center gap-1">Mean Rev <svg
+                    <div class="text-[#6C7086] text-[10px] font-bold mb-1 flex items-center gap-1">Mean Rev <svg
                             class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
@@ -539,22 +568,22 @@
                         class="flex flex-col md:flex-row items-start md:items-center justify-between mb-4 border-b border-[#333] pb-2 gap-2">
                         <div>
                             <h2 id="chart-title" class="text-lg font-bold text-white flex items-center gap-2">Market
-                                Constellation <span class="w-2 h-2 rounded-full bg-[#c586c0] animate-pulse"></span></h2>
-                            <p id="chart-subtitle" class="text-xs text-[#8b949e]">Spatial Visualization</p>
+                                Constellation <span class="w-2 h-2 rounded-full bg-[#CBA6F7] animate-pulse"></span></h2>
+                            <p id="chart-subtitle" class="text-xs text-[#6C7086]">Spatial Visualization</p>
                         </div>
                         <div class="flex items-center gap-2 w-full md:w-auto">
                             <div class="flex gap-1 overflow-x-auto flex-1 md:flex-none">
                                 <button onclick="switchConstellation('overall')" id="const-overall"
-                                    class="const-tab px-3 py-1 text-[10px] font-bold bg-[#c586c0] text-black whitespace-nowrap flex-1 md:flex-none text-center">Overall</button>
+                                    class="const-tab px-3 py-1 text-[10px] font-bold bg-[#CBA6F7] text-black whitespace-nowrap flex-1 md:flex-none text-center">Overall</button>
                                 <button onclick="switchConstellation('st')" id="const-st"
-                                    class="const-tab px-3 py-1 text-[10px] font-bold bg-[#1a1a1a] text-[#8b949e] hover:text-white whitespace-nowrap flex-1 md:flex-none text-center">Short
+                                    class="const-tab px-3 py-1 text-[10px] font-bold bg-[#1a1a1a] text-[#6C7086] hover:text-white whitespace-nowrap flex-1 md:flex-none text-center">Short
                                     Term</button>
                                 <button onclick="switchConstellation('it')" id="const-it"
-                                    class="const-tab px-3 py-1 text-[10px] font-bold bg-[#1a1a1a] text-[#8b949e] hover:text-white whitespace-nowrap flex-1 md:flex-none text-center">Interm
+                                    class="const-tab px-3 py-1 text-[10px] font-bold bg-[#1a1a1a] text-[#6C7086] hover:text-white whitespace-nowrap flex-1 md:flex-none text-center">Interm
                                     Term</button>
                             </div>
                             <button onclick="toggleChartFullscreen()"
-                                class="p-1 text-[#8b949e] hover:text-[#c586c0] border border-[#333] bg-[#1a1a1a]"
+                                class="p-1 text-[#6C7086] hover:text-[#CBA6F7] border border-[#333] bg-[#1a1a1a]"
                                 title="Maximize Chart">
                                 <svg id="expand-icon" class="w-4 h-4" fill="none" stroke="currentColor"
                                     viewBox="0 0 24 24">
@@ -570,9 +599,11 @@
                             </button>
                         </div>
                     </div>
-                    <div id="constellation-container" class="flex justify-center items-center py-4 relative">
+                    <div id="constellation-container"
+                        class="flex justify-center items-center py-4 relative select-none">
                         <svg id="constellation-chart" width="600" height="600" viewBox="0 0 700 700"
-                            class="w-full max-w-[600px] h-auto"></svg>
+                            class="w-full max-w-[600px] h-auto"
+                            style="user-select: none; -webkit-user-select: none;"></svg>
                     </div>
                 </div>
 
@@ -631,10 +662,34 @@
                 </script>
 
                 <div class="xl:col-span-4 space-y-4">
+                    <!-- Spotlight Card -->
+                    <div class="terminal-card p-4" id="spotlight-card">
+                        <div class="flex items-center justify-between mb-3">
+                            <h3 class="text-sm font-bold text-[#CBA6F7] flex items-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+                                    </path>
+                                </svg>
+                                Spotlight
+                            </h3>
+                            <button onclick="toggleAutoSpin()" id="auto-spin-btn"
+                                class="px-2 py-1 text-[10px] font-bold border border-[#333] rounded-lg transition-all"
+                                title="Toggle auto-spin">
+                                <span id="auto-spin-label">Auto</span>
+                            </button>
+                        </div>
+                        <div id="spotlight-content" class="text-center py-4">
+                            <div class="text-[#6C7086] text-xs">Spin the constellation to spotlight an asset</div>
+                        </div>
+                    </div>
+
                     <div class="terminal-card p-4">
                         <div class="flex justify-between items-center mb-4">
-                            <h3 class="text-sm font-bold text-[#dcdcaa]">Sector Radar</h3>
-                            <div id="radar-info" class="text-[10px] font-mono text-[#8b949e]">Hover Sector</div>
+                            <h3 class="text-sm font-bold text-[#F9E2AF]">Sector Radar</h3>
+                            <div id="radar-info" class="text-[10px] font-mono text-[#6C7086]">Hover Sector</div>
                         </div>
                         <div class="flex justify-center">
                             <svg id="radar-chart" width="280" height="280" viewBox="0 0 280 280"></svg>
@@ -643,12 +698,12 @@
 
                     <div class="terminal-card p-4 flex-1">
                         <div class="flex items-center justify-between mb-4">
-                            <h3 class="text-sm font-bold text-[#dcdcaa]">Top Movers</h3>
+                            <h3 class="text-sm font-bold text-[#F9E2AF]">Top Movers</h3>
                             <div class="flex">
                                 <button onclick="switchMovers('bulls')" id="movers-bulls"
-                                    class="px-2 py-0.5 text-[10px] font-bold bg-[#1a1a1a] text-[#b5cea8] border border-[#333]">Bulls</button>
+                                    class="px-2 py-0.5 text-[10px] font-bold bg-[#1a1a1a] text-[#A6E3A1] border border-[#333]">Bulls</button>
                                 <button onclick="switchMovers('bears')" id="movers-bears"
-                                    class="px-2 py-0.5 text-[10px] font-bold bg-[#1a1a1a] text-[#8b949e] border border-[#333]">Bears</button>
+                                    class="px-2 py-0.5 text-[10px] font-bold bg-[#1a1a1a] text-[#6C7086] border border-[#333]">Bears</button>
                             </div>
                         </div>
                         <div id="movers-list" class="space-y-2"></div>
@@ -660,7 +715,7 @@
             <div class="terminal-card p-4">
                 <div class="flex justify-between mb-4">
                     <h3 id="grid-title" class="text-sm font-bold text-white">Momentum Leaders</h3>
-                    <span id="showing-count" class="text-xs text-[#8b949e] font-mono">Loading...</span>
+                    <span id="showing-count" class="text-xs text-[#6C7086] font-mono">Loading...</span>
                 </div>
                 <div id="momentum-grid" class="flex gap-2 overflow-x-auto pb-2"></div>
             </div>
@@ -734,13 +789,13 @@
         // Configuration
         const sectors = ["Tech", "Finance", "Health", "Energy", "Consumer", "Industrial", "Utilities", "Other"];
         const sectorColors = {
-            Tech: "#818cf8", Finance: "#9cdcfe", Health: "#34d399", Energy: "#dcdcaa",
-            Consumer: "#f472b6", Industrial: "#a78bfa", Utilities: "#c586c0", Other: "#94a3b8"
+            Tech: "#89B4FA", Finance: "#89B4FA", Health: "#A6E3A1", Energy: "#F9E2AF",
+            Consumer: "#F5C2E7", Industrial: "#CBA6F7", Utilities: "#A6E3A1", Other: "#6C7086"
         };
         const chartConfigs = {
-            overall: { title: "Overall Score", color: "#c586c0", key: "overallScore", range: [-8, 8] },
-            st: { title: "Short Term Trend", color: "#9cdcfe", key: "stTrend", range: [-4, 4] },
-            it: { title: "Intermediate Trend", color: "#dcdcaa", key: "itTrend", range: [-4, 4] }
+            overall: { title: "Overall Score", color: "#CBA6F7", key: "overallScore", range: [-8, 8] },
+            st: { title: "Short Term Trend", color: "#89B4FA", key: "stTrend", range: [-4, 4] },
+            it: { title: "Intermediate Trend", color: "#F9E2AF", key: "itTrend", range: [-4, 4] }
         };
 
         let assetsData = [];
@@ -751,12 +806,42 @@
         let currentMovers = 'bulls';
         let highlightedCategory = null;
 
+        // Volatility data storage (keyed by ticker)
+        let volDataMap = {};
+
+        // Constellation spin state
+        let rotationOffset = 0;
+        let spinVelocity = 0;
+        let isSpinning = false;
+        let autoSpinEnabled = false;
+        let spotlightTicker = null;
+        let constellationPoints = [];
+        let isDragging = false;
+        let lastDragX = 0;
+        let spinAnimationId = null;
+
         // Define loadData first
         async function loadData() {
             try {
+                // Fetch radial data
                 const getRadialData = httpsCallable(functions, 'getRadialData');
                 const result = await getRadialData();
                 assetsData = result.data;
+
+                // Also fetch volatility data in parallel
+                try {
+                    const getVolatilityData = httpsCallable(functions, 'getVolatilityData', { timeout: 540000 });
+                    const volResult = await getVolatilityData();
+                    const volData = volResult.data.data || volResult.data;
+                    // Index by ticker for quick lookup
+                    volDataMap = {};
+                    volData.forEach(item => {
+                        volDataMap[item.ticker] = item;
+                    });
+                    console.log(`Loaded volatility data for ${Object.keys(volDataMap).length} tickers`);
+                } catch (volError) {
+                    console.warn("Could not load volatility data:", volError);
+                }
             } catch (error) {
                 console.error("Error loading radial data:", error);
                 assetsData = [];
@@ -804,10 +889,10 @@
             currentConstellation = type;
             document.querySelectorAll('.const-tab').forEach(t => {
                 const isActive = t.id === `const-${type}`;
-                t.classList.toggle('bg-[#c586c0]', isActive);
+                t.classList.toggle('bg-[#CBA6F7]', isActive);
                 t.classList.toggle('text-black', isActive);
                 t.classList.toggle('bg-[#1a1a1a]', !isActive);
-                t.classList.toggle('text-[#8b949e]', !isActive);
+                t.classList.toggle('text-[#6C7086]', !isActive);
             });
             drawConstellation();
         };
@@ -817,11 +902,11 @@
             const bulls = document.getElementById('movers-bulls');
             const bears = document.getElementById('movers-bears');
             if (type === 'bulls') {
-                bulls.classList.add('text-[#b5cea8]', 'border-[#333]'); bulls.classList.remove('text-[#8b949e]');
-                bears.classList.add('text-[#8b949e]'); bears.classList.remove('text-[#f48771]');
+                bulls.classList.add('text-[#A6E3A1]', 'border-[#333]'); bulls.classList.remove('text-[#6C7086]');
+                bears.classList.add('text-[#6C7086]'); bears.classList.remove('text-[#CBA6F7]');
             } else {
-                bears.classList.add('text-[#f48771]', 'border-[#333]'); bears.classList.remove('text-[#8b949e]');
-                bulls.classList.add('text-[#8b949e]'); bulls.classList.remove('text-[#b5cea8]');
+                bears.classList.add('text-[#CBA6F7]', 'border-[#333]'); bears.classList.remove('text-[#6C7086]');
+                bulls.classList.add('text-[#6C7086]'); bulls.classList.remove('text-[#A6E3A1]');
             }
             drawMovers();
         };
@@ -833,7 +918,7 @@
 
         window.showTooltip = function (e, ticker, sector, score) {
             const el = document.getElementById('tooltip');
-            el.innerHTML = `<div class="font-bold text-[#c586c0] uppercase">${ticker}</div><div class="text-xs text-white">${sector}</div><div class="text-xs mt-1">Score: ${score}</div>`;
+            el.innerHTML = `<div class="font-bold text-[#CBA6F7] uppercase">${ticker}</div><div class="text-xs text-white">${sector}</div><div class="text-xs mt-1">Score: ${score}</div>`;
             el.style.left = (e.clientX + 10) + 'px';
             el.style.top = (e.clientY + 10) + 'px';
             el.classList.add('show');
@@ -841,7 +926,7 @@
 
         window.showGenericTooltip = function (e, title, content) {
             const el = document.getElementById('tooltip');
-            el.innerHTML = `<div class="font-bold text-[#c586c0]">${title}</div><div class="text-xs text-white">${content}</div>`;
+            el.innerHTML = `<div class="font-bold text-[#CBA6F7]">${title}</div><div class="text-xs text-white">${content}</div>`;
             el.style.left = (e.clientX + 10) + 'px';
             el.style.top = (e.clientY + 10) + 'px';
             el.classList.add('show');
@@ -853,27 +938,100 @@
             const asset = assetsData.find(a => a.ticker === ticker);
             if (!asset) return;
             const el = document.getElementById('detail-content');
-            const color = asset.overallScore > 0 ? '#b5cea8' : '#f48771';
+
+            // Color logic
+            const scoreColor = asset.overallScore > 0 ? '#A6E3A1' : asset.overallScore < 0 ? '#F38BA8' : '#6C7086';
+            const trendColor = (v) => v > 0 ? '#A6E3A1' : v < 0 ? '#F38BA8' : '#6C7086';
+
+            // Get volatility data if available
+            const volData = volDataMap[ticker];
+            const cs = volData?.crossSectional || {};
+
+            // Clean signal badge (no emojis)
+            const getSignalBadge = (signal) => {
+                const config = {
+                    'SELL_VOL': { bg: '#166534', text: '#4ADE80', label: 'SELL' },
+                    'BUY_VOL': { bg: '#9A3412', text: '#FB923C', label: 'BUY' },
+                    'RICH': { bg: '#1E40AF', text: '#60A5FA', label: 'RICH' },
+                    'CHEAP': { bg: '#6B21A8', text: '#C084FC', label: 'CHEAP' },
+                    'NEUTRAL': { bg: '#374151', text: '#9CA3AF', label: 'NEUTRAL' }
+                };
+                const c = config[signal] || config.NEUTRAL;
+                if (!signal) return '';
+                return `<span class="px-3 py-1 text-[10px] font-bold tracking-widest uppercase" style="background:${c.bg};color:${c.text}">${c.label}</span>`;
+            };
+
+            // Volatility section
+            let volHtml = '';
+            if (volData) {
+                const vrpColor = volData.vrp > 0 ? '#F38BA8' : '#A6E3A1';
+                const vsSectorColor = cs.vrpVsSector > 0 ? '#F38BA8' : '#A6E3A1';
+                volHtml = `
+                    <div class="mt-8">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-[11px] font-semibold tracking-widest uppercase text-[#6C7086]">Volatility</span>
+                            ${getSignalBadge(cs.signal)}
+                        </div>
+                        <div class="space-y-1">
+                            <div class="flex justify-between py-2 border-b border-[#1E1E2E]">
+                                <span class="text-[11px] text-[#6C7086]">Implied Vol (30d)</span>
+                                <span class="text-[13px] font-mono font-semibold text-[#89B4FA]">${volData.impliedVol ? (volData.impliedVol * 100).toFixed(1) + '%' : '--'}</span>
+                            </div>
+                            <div class="flex justify-between py-2 border-b border-[#1E1E2E]">
+                                <span class="text-[11px] text-[#6C7086]">Realized Vol (30d)</span>
+                                <span class="text-[13px] font-mono font-semibold text-white">${volData.currentRv ? (volData.currentRv * 100).toFixed(1) + '%' : '--'}</span>
+                            </div>
+                            <div class="flex justify-between py-2 border-b border-[#1E1E2E]">
+                                <span class="text-[11px] text-[#6C7086]">Vol Risk Premium</span>
+                                <span class="text-[13px] font-mono font-semibold" style="color:${vrpColor}">${volData.vrp != null ? (volData.vrp > 0 ? '+' : '') + (volData.vrp * 100).toFixed(1) + '%' : '--'}</span>
+                            </div>
+                            <div class="flex justify-between py-2 border-b border-[#1E1E2E]">
+                                <span class="text-[11px] text-[#6C7086]">VRP Percentile</span>
+                                <span class="text-[13px] font-mono font-semibold text-[#CBA6F7]">${cs.vrpPctlUniverse ?? '--'}%</span>
+                            </div>
+                            <div class="flex justify-between py-2 border-b border-[#1E1E2E]">
+                                <span class="text-[11px] text-[#6C7086]">RV Percentile</span>
+                                <span class="text-[13px] font-mono font-semibold text-white">${cs.rvPctlUniverse ?? '--'}%</span>
+                            </div>
+                            <div class="flex justify-between py-2">
+                                <span class="text-[11px] text-[#6C7086]">vs Sector</span>
+                                <span class="text-[13px] font-mono font-semibold" style="color:${vsSectorColor}">${cs.vrpVsSector ? (cs.vrpVsSector > 0 ? '+' : '') + (cs.vrpVsSector * 100).toFixed(1) + '%' : '--'}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
             el.innerHTML = `
-                <div class="mb-2">
-                    <div class="text-3xl font-bold text-[#c586c0] uppercase">${asset.ticker}</div>
-                    <div class="text-xs text-[#8b949e] font-mono">${asset.sector}</div>
-                </div>
-                <div class="text-4xl font-bold mb-4" style="color:${color}">${asset.overallScore}</div>
-                <div class="grid grid-cols-2 gap-4 text-sm">
-                    <div class="terminal-card p-3">
-                        <div class="text-[#8b949e]">ST TREND</div>
-                        <div class="font-bold text-white">${asset.stTrend}</div>
+                <div class="flex items-start justify-between mb-6">
+                    <div>
+                        <div class="text-[32px] font-bold tracking-tight text-white uppercase">${asset.ticker}</div>
+                        <div class="text-[11px] tracking-widest uppercase text-[#6C7086] mt-1">${asset.sector}</div>
                     </div>
-                    <div class="terminal-card p-3">
-                        <div class="text-[#8b949e]">IT TREND</div>
-                        <div class="font-bold text-white">${asset.itTrend}</div>
-                    </div>
-                     <div class="terminal-card p-3">
-                        <div class="text-[#8b949e]">MEAN REV</div>
-                        <div class="font-bold text-white">${asset.meanReversion}</div>
+                    <div class="text-right">
+                        <div class="text-[40px] font-bold font-mono leading-none" style="color:${scoreColor}">${asset.overallScore > 0 ? '+' : ''}${asset.overallScore}</div>
+                        <div class="text-[10px] tracking-widest uppercase text-[#6C7086] mt-1">Score</div>
                     </div>
                 </div>
+                
+                <div class="mb-8">
+                    <div class="text-[11px] font-semibold tracking-widest uppercase text-[#6C7086] mb-4">Trend Analysis</div>
+                    <div class="space-y-1">
+                        <div class="flex justify-between py-2 border-b border-[#1E1E2E]">
+                            <span class="text-[11px] text-[#6C7086]">Short Term</span>
+                            <span class="text-[13px] font-mono font-semibold" style="color:${trendColor(asset.stTrend)}">${asset.stTrend > 0 ? '+' : ''}${asset.stTrend}</span>
+                        </div>
+                        <div class="flex justify-between py-2 border-b border-[#1E1E2E]">
+                            <span class="text-[11px] text-[#6C7086]">Intermediate</span>
+                            <span class="text-[13px] font-mono font-semibold" style="color:${trendColor(asset.itTrend)}">${asset.itTrend > 0 ? '+' : ''}${asset.itTrend}</span>
+                        </div>
+                        <div class="flex justify-between py-2">
+                            <span class="text-[11px] text-[#6C7086]">Mean Reversion</span>
+                            <span class="text-[13px] font-mono font-semibold text-[#F9E2AF]">${asset.meanReversion}</span>
+                        </div>
+                    </div>
+                </div>
+                ${volHtml}
             `;
             document.getElementById('detail-panel').classList.add('open');
             document.getElementById('detail-overlay').classList.add('show');
@@ -882,6 +1040,174 @@
             document.getElementById('detail-panel').classList.remove('open');
             document.getElementById('detail-overlay').classList.remove('show');
         };
+
+        // --- Constellation Spin Interaction ---
+        function updateSpotlight(point) {
+            const content = document.getElementById('spotlight-content');
+            if (!point) {
+                content.innerHTML = `<div class="text-[#6C7086] text-xs">Spin the constellation to spotlight an asset</div>`;
+                spotlightTicker = null;
+                return;
+            }
+
+            if (spotlightTicker === point.ticker) return; // No change
+            spotlightTicker = point.ticker;
+
+            const config = chartConfigs[currentConstellation];
+            const color = getScoreColor(point.score, config.range);
+
+            content.innerHTML = `
+                <div class="flex items-center justify-between mb-3">
+                    <div class="text-left">
+                        <div class="text-2xl font-bold text-white uppercase">${point.ticker}</div>
+                        <div class="text-xs text-[#6C7086]">${point.sector}</div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-3xl font-bold" style="color:${color}">${point.score}</div>
+                        <div class="text-[10px] text-[#6C7086]">${config.title}</div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-2 text-xs">
+                    <div class="bg-[#0d1117] rounded-lg p-2 text-center">
+                        <div class="text-[#6C7086]">ST Trend</div>
+                        <div class="font-bold text-white">${point.stTrend}</div>
+                    </div>
+                    <div class="bg-[#0d1117] rounded-lg p-2 text-center">
+                        <div class="text-[#6C7086]">IT Trend</div>
+                        <div class="font-bold text-white">${point.itTrend}</div>
+                    </div>
+                </div>
+                <button onclick="openAssetDetail('${point.ticker}')" 
+                    class="w-full mt-3 py-2 text-xs font-bold bg-[#CBA6F7] text-black rounded-lg hover:bg-[#d8a8d2] transition-all">
+                    View Details
+                </button>
+            `;
+        }
+
+        window.toggleAutoSpin = function () {
+            autoSpinEnabled = !autoSpinEnabled;
+            const btn = document.getElementById('auto-spin-btn');
+            const label = document.getElementById('auto-spin-label');
+
+            if (autoSpinEnabled) {
+                btn.classList.add('bg-[#CBA6F7]', 'text-black', 'border-[#CBA6F7]');
+                btn.classList.remove('text-[#6C7086]');
+                label.textContent = 'Stop';
+                startSpinAnimation();
+            } else {
+                btn.classList.remove('bg-[#CBA6F7]', 'text-black', 'border-[#CBA6F7]');
+                btn.classList.add('text-[#6C7086]');
+                label.textContent = 'Auto';
+                stopSpinAnimation();
+            }
+        };
+
+        function startSpinAnimation() {
+            if (spinAnimationId) return;
+
+            function animate() {
+                if (autoSpinEnabled) {
+                    rotationOffset += 0.003; // Slow rotation
+                    if (rotationOffset > Math.PI * 2) rotationOffset -= Math.PI * 2;
+                    drawConstellation();
+                    spinAnimationId = requestAnimationFrame(animate);
+                } else if (Math.abs(spinVelocity) > 0.0001) {
+                    // Momentum decay
+                    rotationOffset += spinVelocity;
+                    spinVelocity *= 0.95;
+                    if (rotationOffset > Math.PI * 2) rotationOffset -= Math.PI * 2;
+                    if (rotationOffset < -Math.PI * 2) rotationOffset += Math.PI * 2;
+                    drawConstellation();
+                    spinAnimationId = requestAnimationFrame(animate);
+                } else {
+                    spinAnimationId = null;
+                    spinVelocity = 0;
+                }
+            }
+            animate();
+        }
+
+        function stopSpinAnimation() {
+            if (spinAnimationId) {
+                cancelAnimationFrame(spinAnimationId);
+                spinAnimationId = null;
+            }
+        }
+
+        // Drag handlers for constellation
+        function initConstellationDrag() {
+            const svg = document.getElementById('constellation-chart');
+            const container = document.getElementById('constellation-container');
+
+            let startX = 0;
+            let lastX = 0;
+            let lastTime = 0;
+
+            function onDragStart(e) {
+                if (autoSpinEnabled) {
+                    toggleAutoSpin(); // Stop auto-spin when dragging
+                }
+                isDragging = true;
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                startX = clientX;
+                lastX = clientX;
+                lastTime = Date.now();
+                spinVelocity = 0;
+                svg.style.cursor = 'grabbing';
+            }
+
+            function onDragMove(e) {
+                if (!isDragging) return;
+                e.preventDefault();
+
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const deltaX = clientX - lastX;
+                const now = Date.now();
+                const dt = now - lastTime;
+
+                // Convert pixel movement to rotation (adjust sensitivity)
+                const rotationDelta = deltaX * 0.005;
+                rotationOffset += rotationDelta;
+
+                // Track velocity for momentum
+                if (dt > 0) {
+                    spinVelocity = rotationDelta;
+                }
+
+                lastX = clientX;
+                lastTime = now;
+
+                drawConstellation();
+            }
+
+            function onDragEnd(e) {
+                if (!isDragging) return;
+                isDragging = false;
+                svg.style.cursor = 'grab';
+
+                // Start momentum animation if velocity exists
+                if (Math.abs(spinVelocity) > 0.001) {
+                    startSpinAnimation();
+                }
+            }
+
+            // Mouse events
+            svg.addEventListener('mousedown', onDragStart);
+            document.addEventListener('mousemove', onDragMove);
+            document.addEventListener('mouseup', onDragEnd);
+
+            // Touch events
+            svg.addEventListener('touchstart', onDragStart, { passive: false });
+            document.addEventListener('touchmove', onDragMove, { passive: false });
+            document.addEventListener('touchend', onDragEnd);
+
+            // Set initial cursor
+            svg.style.cursor = 'grab';
+        }
+
+        // Initialize drag on load
+        document.addEventListener('DOMContentLoaded', initConstellationDrag);
+
         window.showMetricDetail = function (type) {
             if (type === 'total') setFilter('all');
             else setFilter(type);
@@ -904,10 +1230,10 @@
         // --- Styles & Helpers ---
         function getScoreColor(score, range = [-8, 8]) {
             const [min, max] = range;
-            if (score >= max * 0.6) return "#b5cea8"; // Strong Green
-            if (score > 0) return "#9cdcfe"; // Blue
-            if (score <= min * 0.6) return "#f48771"; // Red
-            if (score < 0) return "#c586c0"; // Orange (actually make it red-ish/orange for bear)
+            if (score >= max * 0.6) return "#A6E3A1"; // Strong Green
+            if (score > 0) return "#89B4FA"; // Blue
+            if (score <= min * 0.6) return "#CBA6F7"; // Red
+            if (score < 0) return "#CBA6F7"; // Orange (actually make it red-ish/orange for bear)
             return "#666666";
         }
 
@@ -1004,57 +1330,123 @@
             sectors.forEach(s => filteredData.filter(a => a.sector === s).forEach(a => ordered.push(a)));
 
             if (ordered.length === 0) {
-                svg.innerHTML = `<text x="${cx}" y="${cy}" text-anchor="middle" fill="#8b949e" font-size="14">NO DATA</text>`;
+                svg.innerHTML = `<text x="${cx}" y="${cy}" text-anchor="middle" fill="#6C7086" font-size="14">NO DATA</text>`;
+                constellationPoints = [];
+                updateSpotlight(null);
                 return;
             }
 
+            // Add concentric score zone rings and clean structure
+            const zoneRadii = [0.25, 0.5, 0.75, 1].map(f => innerR + (outerR - innerR) * f);
             let html = `
-                <circle cx="${cx}" cy="${cy}" r="${outerR}" fill="none" stroke="${config.color}" stroke-width="1" stroke-opacity="0.2" stroke-dasharray="4 4"/>
-                <circle cx="${cx}" cy="${cy}" r="${innerR}" fill="none" stroke="#21262d" stroke-width="1"/>
+                <!-- Score zone rings -->
+                ${zoneRadii.map((r, i) => `
+                    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#21262d" stroke-width="1" stroke-opacity="${0.15 + i * 0.1}"/>
+                `).join('')}
+                
+                <!-- Outer boundary -->
+                <circle cx="${cx}" cy="${cy}" r="${outerR}" fill="none" stroke="${config.color}" stroke-width="1.5" stroke-opacity="0.3"/>
+                
+                <!-- Inner core -->
+                <circle cx="${cx}" cy="${cy}" r="${innerR}" fill="#0d1117" stroke="#313244" stroke-width="1"/>
+                
+                <!-- Spotlight indicator - simple triangle -->
+                <polygon points="${cx},${cy - outerR - 8} ${cx - 6},${cy - outerR - 18} ${cx + 6},${cy - outerR - 18}" 
+                         fill="#CBA6F7" opacity="0.9"/>
             `;
 
-            const points = ordered.map((a, i) => {
-                const ang = (2 * Math.PI * i / ordered.length) - Math.PI / 2;
+            // Apply rotation offset to points
+            constellationPoints = ordered.map((a, i) => {
+                const baseAng = (2 * Math.PI * i / ordered.length) - Math.PI / 2;
+                const ang = baseAng + rotationOffset;
                 let scoreToUse = a[config.key];
                 const rangeToUse = config.range;
 
                 const norm = Math.max(0.15, Math.min(0.95, (scoreToUse - rangeToUse[0]) / (rangeToUse[1] - rangeToUse[0])));
                 const r = innerR + (outerR - innerR) * norm;
-                return { x: cx + r * Math.cos(ang), y: cy + r * Math.sin(ang), ang, score: scoreToUse, ...a };
+                return {
+                    x: cx + r * Math.cos(ang),
+                    y: cy + r * Math.sin(ang),
+                    ang,
+                    baseAng,
+                    score: scoreToUse,
+                    r,
+                    ...a
+                };
             });
 
-            // Grid lines
-            points.forEach(p => {
-                const ex = cx + outerR * Math.cos(p.ang), ey = cy + outerR * Math.sin(p.ang);
-                const sx = cx + innerR * Math.cos(p.ang), sy = cy + innerR * Math.sin(p.ang);
-                html += `<line x1="${sx}" y1="${sy}" x2="${ex}" y2="${ey}" stroke="#21262d" stroke-width="1" opacity="0.3"/>`;
+            // Find spotlight ticker (closest to 12 o'clock = -PI/2)
+            const targetAngle = -Math.PI / 2;
+            let minDist = Infinity;
+            let spotlightPoint = null;
+            constellationPoints.forEach(p => {
+                // Normalize angle difference to [-PI, PI]
+                let diff = p.ang - targetAngle;
+                while (diff > Math.PI) diff -= 2 * Math.PI;
+                while (diff < -Math.PI) diff += 2 * Math.PI;
+                const dist = Math.abs(diff);
+                if (dist < minDist) {
+                    minDist = dist;
+                    spotlightPoint = p;
+                }
             });
+
+            // Sector divider arcs (subtle)
+            const sectorCounts = {};
+            ordered.forEach(a => sectorCounts[a.sector] = (sectorCounts[a.sector] || 0) + 1);
+            let sectorIdx = 0;
+            sectors.forEach(s => {
+                if (!sectorCounts[s]) return;
+                const startAng = (2 * Math.PI * sectorIdx / ordered.length) - Math.PI / 2 + rotationOffset;
+                sectorIdx += sectorCounts[s];
+                // Draw sector start line
+                const sx = cx + innerR * Math.cos(startAng), sy = cy + innerR * Math.sin(startAng);
+                const ex = cx + outerR * Math.cos(startAng), ey = cy + outerR * Math.sin(startAng);
+                html += `<line x1="${sx}" y1="${sy}" x2="${ex}" y2="${ey}" stroke="#313244" stroke-width="1" opacity="0.5"/>`;
+            });
+
+            // Connection lines between adjacent points in same sector
+            for (let i = 0; i < constellationPoints.length; i++) {
+                const curr = constellationPoints[i];
+                const next = constellationPoints[(i + 1) % constellationPoints.length];
+                if (curr.sector === next.sector) {
+                    const color = sectorColors[curr.sector] || '#666';
+                    html += `<line x1="${curr.x}" y1="${curr.y}" x2="${next.x}" y2="${next.y}" 
+                             stroke="${color}" stroke-width="1" opacity="0.25"/>`;
+                }
+            }
 
             // Data Points
-            points.forEach((p, i) => {
+            constellationPoints.forEach((p, i) => {
                 const color = getScoreColor(p.score, config.range);
-                const opacity = 1;
-                const size = 5;
+                const sectorColor = sectorColors[p.sector] || '#666';
+                const isSpotlight = spotlightPoint && p.ticker === spotlightPoint.ticker;
+                const size = isSpotlight ? 7 : 4;
 
                 html += `
                     <g style="cursor:pointer" onclick="openAssetDetail('${p.ticker}')"
                        onmouseenter="showTooltip(event, '${p.ticker}', '${p.sector}', ${p.score}, '${p.stTrend}', '${p.itTrend}')"
                        onmouseleave="hideTooltip()">
-                        <circle cx="${p.x}" cy="${p.y}" r="15" fill="transparent"/>
-                        <circle cx="${p.x}" cy="${p.y}" r="${size}" fill="${color}"/>
+                        <circle cx="${p.x}" cy="${p.y}" r="12" fill="transparent"/>
+                        <circle cx="${p.x}" cy="${p.y}" r="${size}" fill="${color}" stroke="${isSpotlight ? '#fff' : sectorColor}" stroke-width="${isSpotlight ? 2 : 1}" stroke-opacity="${isSpotlight ? 1 : 0.4}"/>
                     </g>
                 `;
 
                 // Labels
-                if (ordered.length < 50 || i % 2 === 0) {
-                    const lx = cx + (outerR + 25) * Math.cos(p.ang), ly = cy + (outerR + 25) * Math.sin(p.ang);
+                if (ordered.length < 50 || i % 2 === 0 || isSpotlight) {
+                    const lx = cx + (outerR + 20) * Math.cos(p.ang), ly = cy + (outerR + 20) * Math.sin(p.ang);
                     const deg = p.ang * 180 / Math.PI;
                     const rot = (deg > -90 && deg < 90) ? deg : deg + 180;
                     const anchor = (deg > -90 && deg < 90) ? "start" : "end";
-                    html += `<text x="${lx}" y="${ly}" transform="rotate(${rot},${lx},${ly})" text-anchor="${anchor}" font-size="12" font-weight="bold" class="uppercase" fill="#c9d1d9" font-family="Inter, sans-serif">${p.ticker}</text>`;
+                    const fillColor = isSpotlight ? '#CBA6F7' : '#9ca3af';
+                    const fontSize = isSpotlight ? 13 : 10;
+                    html += `<text x="${lx}" y="${ly}" transform="rotate(${rot},${lx},${ly})" text-anchor="${anchor}" font-size="${fontSize}" font-weight="${isSpotlight ? 'bold' : '500'}" class="uppercase" fill="${fillColor}" font-family="Inter, sans-serif">${p.ticker}</text>`;
                 }
             });
             svg.innerHTML = html;
+
+            // Update spotlight card
+            updateSpotlight(spotlightPoint);
         }
 
         function drawRadarChart() {
@@ -1077,7 +1469,7 @@
 
             // Connect lines
             const path = points.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x},${p.y}`).join(' ') + 'Z';
-            html += `<path d="${path}" fill="#c586c0" fill-opacity="0.1" stroke="#c586c0" stroke-width="2"/>`;
+            html += `<path d="${path}" fill="#CBA6F7" fill-opacity="0.1" stroke="#CBA6F7" stroke-width="2"/>`;
 
             points.forEach((p, i) => {
                 const lx = cx + (maxR + 15) * Math.cos(p.ang), ly = cy + (maxR + 15) * Math.sin(p.ang);
@@ -1096,7 +1488,7 @@
             const data = filteredData;
             container.innerHTML = data.map((a, i) => {
                 const valNum = a.overallScore;
-                const color = valNum > 0 ? '#b5cea8' : '#f48771';
+                const color = valNum > 0 ? '#A6E3A1' : '#CBA6F7';
                 const displayVal = (valNum > 0 ? '+' : '') + valNum;
                 // Bar representation
                 const numBars = Math.min(5, Math.ceil(Math.abs(valNum) / 2));
@@ -1105,13 +1497,13 @@
                 `).join('');
 
                 return `
-                    <div class="min-w-[160px] bg-[#1a1a1a] p-3 border border-[#333] hover:border-[#c586c0] cursor-pointer" onclick="openAssetDetail('${a.ticker}')">
+                    <div class="min-w-[160px] bg-[#1a1a1a] p-3 border border-[#333] hover:border-[#CBA6F7] cursor-pointer" onclick="openAssetDetail('${a.ticker}')">
                         <div class="flex justify-between mb-2">
                             <span class="font-bold text-[#fff] uppercase">${a.ticker}</span>
                             <span class="font-mono text-xs" style="color:${color}">${displayVal}</span>
                         </div>
                         <div class="flex gap-1">${bars}</div>
-                        <div class="text-[9px] text-[#8b949e] mt-2">${a.sector}</div>
+                        <div class="text-[9px] text-[#6C7086] mt-2">${a.sector}</div>
                     </div>
                 `;
             }).join('');
@@ -1122,10 +1514,10 @@
                 currentMovers === 'bulls' ? b.overallScore - a.overallScore : a.overallScore - b.overallScore
             ).slice(0, 5);
             document.getElementById('movers-list').innerHTML = sorted.map((a, i) => {
-                const color = a.overallScore > 0 ? '#b5cea8' : '#f48771';
+                const color = a.overallScore > 0 ? '#A6E3A1' : '#CBA6F7';
                 return `
                     <div class="flex items-center justify-between p-2 hover:bg-[#1a1a1a] cursor-pointer border-b border-[#1a1a1a]" onclick="openAssetDetail('${a.ticker}')">
-                        <span class="text-[#8b949e] w-4">${i + 1}</span>
+                        <span class="text-[#6C7086] w-4">${i + 1}</span>
                         <span class="text-white font-bold w-12 uppercase">${a.ticker}</span>
                         <div class="flex-1 mx-2 h-1 bg-[#333]"><div class="h-full" style="width:${Math.min(100, Math.abs(a.overallScore) * 10)}%; background:${color}"></div></div>
                         <span class="font-mono text-xs" style="color:${color}">${a.overallScore}</span>
@@ -1147,7 +1539,7 @@
                 const x = 30 + i * 27;
                 const h = (count / max) * 150;
                 const y = 170 - h;
-                const color = (i - 8) > 0 ? '#b5cea8' : '#f48771';
+                const color = (i - 8) > 0 ? '#A6E3A1' : '#CBA6F7';
                 html += `<rect x="${x}" y="${y}" width="18" height="${h}" fill="${color}" fill-opacity="0.7"
                          onmouseenter="showGenericTooltip(event, 'Score: ${i - 8}', '${count} Assets')"
                          onmouseleave="hideTooltip()"/>`;
@@ -1187,14 +1579,14 @@
                 const assets = assetsData.filter(a => a.sector === s);
                 if (!assets.length) return '';
                 const avg = assets.reduce((sum, a) => sum + a.overallScore, 0) / assets.length;
-                const color = avg > 0 ? 'text-[#b5cea8]' : 'text-[#f48771]';
+                const color = avg > 0 ? 'text-[#A6E3A1]' : 'text-[#CBA6F7]';
                 return `
-                    <div class="bg-[#1a1a1a] p-3 border border-[#333] cursor-pointer hover:border-[#c586c0]" onclick="filterBySector('${s}')">
+                    <div class="bg-[#1a1a1a] p-3 border border-[#333] cursor-pointer hover:border-[#CBA6F7]" onclick="filterBySector('${s}')">
                         <div class="flex justify-between items-center">
                             <span class="text-white font-bold">${s}</span>
                             <span class="font-mono ${color} font-bold">${avg > 0 ? '+' : ''}${avg.toFixed(1)}</span>
                         </div>
-                        <div class="text-xs text-[#8b949e] mt-1">${assets.length} Assets</div>
+                        <div class="text-xs text-[#6C7086] mt-1">${assets.length} Assets</div>
                     </div>
                  `;
             }).join('');

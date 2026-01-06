@@ -48,21 +48,30 @@
         }
 
         .terminal-header {
-            background: #161b22;
+            background: linear-gradient(180deg, #1a1f26 0%, #161b22 100%);
             border-bottom: 1px solid #30363d;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
         }
 
         .terminal-card {
-            background: #161b22;
+            background: linear-gradient(145deg, #1a1f26 0%, #161b22 100%);
             border: 1px solid #30363d;
-            transition: all 0.15s ease;
+            transition: all 0.2s ease;
             position: relative;
-            border-radius: 16px;
+            border-radius: 20px;
+            box-shadow:
+                0 4px 16px rgba(0, 0, 0, 0.3),
+                0 1px 3px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.03);
         }
 
         .terminal-card:hover {
             border-color: #c586c0;
-            box-shadow: 0 0 20px rgba(197, 134, 192, 0.1);
+            box-shadow:
+                0 8px 32px rgba(197, 134, 192, 0.15),
+                0 4px 16px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            transform: translateY(-2px);
         }
 
         .bar-fill {
@@ -81,27 +90,40 @@
             }
         }
 
+        .sort-btn {
+            border-radius: 10px;
+            transition: all 0.2s ease;
+        }
+
         .sort-btn.active {
             background-color: #c586c0;
             color: black;
+            box-shadow: 0 2px 8px rgba(197, 134, 192, 0.3);
         }
 
         .filter-chip {
             border: 1px solid #30363d;
             color: #8b949e;
-            transition: all 0.2s;
-            border-radius: 12px;
+            transition: all 0.2s ease;
+            border-radius: 16px;
+            background: linear-gradient(145deg, #1a1f26 0%, #161b22 100%);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
         }
 
         .filter-chip:hover {
             color: #fff;
             border-color: #666;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
         }
 
         .filter-chip.active {
-            background: #252526;
+            background: linear-gradient(145deg, #2a2a2c 0%, #252526 100%);
             border-color: #c586c0;
             color: #c586c0;
+            box-shadow:
+                0 2px 8px rgba(197, 134, 192, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
         }
 
         ::-webkit-scrollbar {
@@ -135,13 +157,17 @@
             position: fixed;
             pointer-events: none;
             z-index: 10000;
-            background: rgba(22, 27, 34, 0.95);
+            background: linear-gradient(145deg, rgba(26, 31, 38, 0.98) 0%, rgba(22, 27, 34, 0.98) 100%);
             border: 1px solid #30363d;
-            padding: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            padding: 14px;
+            box-shadow:
+                0 8px 32px rgba(0, 0, 0, 0.5),
+                0 2px 8px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
             opacity: 0;
             transition: opacity 0.2s;
-            border-radius: 12px;
+            border-radius: 16px;
+            backdrop-filter: blur(8px);
         }
 
         #tooltip.show {
@@ -156,13 +182,16 @@
             width: 100%;
             max-width: 500px;
             height: 100vh;
-            background: #161b22;
+            background: linear-gradient(180deg, #1a1f26 0%, #161b22 100%);
             border-left: 1px solid #30363d;
             z-index: 100;
             padding: 32px;
             transition: right 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-            box-shadow: -20px 0 50px rgba(0, 0, 0, 0.8);
+            box-shadow:
+                -24px 0 64px rgba(0, 0, 0, 0.6),
+                -8px 0 24px rgba(0, 0, 0, 0.4);
             overflow-y: auto;
+            border-radius: 24px 0 0 24px;
         }
 
         #detail-panel.open {
@@ -172,11 +201,12 @@
         #detail-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.85);
             z-index: 99;
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.3s;
+            backdrop-filter: blur(4px);
         }
 
         #detail-overlay.show {
@@ -185,15 +215,22 @@
         }
 
         input {
-            background: #161b22 !important;
+            background: linear-gradient(145deg, #1a1f26 0%, #161b22 100%) !important;
             border: 1px solid #30363d !important;
             color: #fff !important;
-            border-radius: 12px;
+            border-radius: 14px;
+            box-shadow:
+                0 2px 6px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.03);
+            transition: all 0.2s ease;
         }
 
         input:focus {
             border-color: #c586c0 !important;
             outline: none !important;
+            box-shadow:
+                0 0 0 3px rgba(197, 134, 192, 0.15),
+                0 2px 6px rgba(0, 0, 0, 0.2);
         }
     </style>
 </head>
@@ -226,7 +263,7 @@
                     </path>
                 </svg>
                 <span
-                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Home</span>
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Dashboard</span>
             </a>
 
             <a href="momentum.html"
@@ -237,8 +274,7 @@
                         d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path>
                 </svg>
                 <span
-                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Trend
-                    Signals</span>
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Momentum</span>
             </a>
 
             <a href="macroTrend.html"
@@ -250,8 +286,7 @@
                     </path>
                 </svg>
                 <span
-                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Macro
-                    Signals</span>
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Macro</span>
             </a>
 
             <a href="lowvol.html"
@@ -263,8 +298,7 @@
                     </path>
                 </svg>
                 <span
-                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Low
-                    Vol Factor</span>
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Risk</span>
             </a>
 
             <a href="momentum_factor.html"
@@ -275,8 +309,7 @@
                         d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                 </svg>
                 <span
-                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Momentum
-                    Factor</span>
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Factor</span>
             </a>
 
             <a href="mean_reversion.html"
@@ -289,7 +322,7 @@
                 </svg>
                 <span
                     class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Mean
-                    Rev Factor</span>
+                    Rev</span>
             </a>
 
             <a href="sectors.html"
@@ -302,8 +335,7 @@
                         d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path>
                 </svg>
                 <span
-                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Sector
-                    Inspection</span>
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Sectors</span>
             </a>
 
             <a href="portfolios.html"
@@ -315,8 +347,7 @@
                     </path>
                 </svg>
                 <span
-                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Caltropia
-                    Strategies</span>
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Portfolios</span>
             </a>
 
 
@@ -329,8 +360,7 @@
                     </path>
                 </svg>
                 <span
-                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Market
-                    Map</span>
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Map</span>
             </a>
             <a href="factor_arena.html"
                 class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
@@ -350,8 +380,7 @@
                         d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
                 </svg>
                 <span
-                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Volatility
-                    Dashboard</span>
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Volatility</span>
             </a>
         </div>
 
@@ -570,9 +599,11 @@
                             </button>
                         </div>
                     </div>
-                    <div id="constellation-container" class="flex justify-center items-center py-4 relative">
+                    <div id="constellation-container"
+                        class="flex justify-center items-center py-4 relative select-none">
                         <svg id="constellation-chart" width="600" height="600" viewBox="0 0 700 700"
-                            class="w-full max-w-[600px] h-auto"></svg>
+                            class="w-full max-w-[600px] h-auto"
+                            style="user-select: none; -webkit-user-select: none;"></svg>
                     </div>
                 </div>
 
@@ -631,6 +662,30 @@
                 </script>
 
                 <div class="xl:col-span-4 space-y-4">
+                    <!-- Spotlight Card -->
+                    <div class="terminal-card p-4" id="spotlight-card">
+                        <div class="flex items-center justify-between mb-3">
+                            <h3 class="text-sm font-bold text-[#c586c0] flex items-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+                                    </path>
+                                </svg>
+                                Spotlight
+                            </h3>
+                            <button onclick="toggleAutoSpin()" id="auto-spin-btn"
+                                class="px-2 py-1 text-[10px] font-bold border border-[#333] rounded-lg transition-all"
+                                title="Toggle auto-spin">
+                                <span id="auto-spin-label">Auto</span>
+                            </button>
+                        </div>
+                        <div id="spotlight-content" class="text-center py-4">
+                            <div class="text-[#8b949e] text-xs">Spin the constellation to spotlight an asset</div>
+                        </div>
+                    </div>
+
                     <div class="terminal-card p-4">
                         <div class="flex justify-between items-center mb-4">
                             <h3 class="text-sm font-bold text-[#dcdcaa]">Sector Radar</h3>
@@ -750,6 +805,17 @@
         let currentConstellation = 'overall';
         let currentMovers = 'bulls';
         let highlightedCategory = null;
+
+        // Constellation spin state
+        let rotationOffset = 0;
+        let spinVelocity = 0;
+        let isSpinning = false;
+        let autoSpinEnabled = false;
+        let spotlightTicker = null;
+        let constellationPoints = [];
+        let isDragging = false;
+        let lastDragX = 0;
+        let spinAnimationId = null;
 
         // Define loadData first
         async function loadData() {
@@ -882,6 +948,174 @@
             document.getElementById('detail-panel').classList.remove('open');
             document.getElementById('detail-overlay').classList.remove('show');
         };
+
+        // --- Constellation Spin Interaction ---
+        function updateSpotlight(point) {
+            const content = document.getElementById('spotlight-content');
+            if (!point) {
+                content.innerHTML = `<div class="text-[#8b949e] text-xs">Spin the constellation to spotlight an asset</div>`;
+                spotlightTicker = null;
+                return;
+            }
+
+            if (spotlightTicker === point.ticker) return; // No change
+            spotlightTicker = point.ticker;
+
+            const config = chartConfigs[currentConstellation];
+            const color = getScoreColor(point.score, config.range);
+
+            content.innerHTML = `
+                <div class="flex items-center justify-between mb-3">
+                    <div class="text-left">
+                        <div class="text-2xl font-bold text-white uppercase">${point.ticker}</div>
+                        <div class="text-xs text-[#8b949e]">${point.sector}</div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-3xl font-bold" style="color:${color}">${point.score}</div>
+                        <div class="text-[10px] text-[#8b949e]">${config.title}</div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-2 text-xs">
+                    <div class="bg-[#0d1117] rounded-lg p-2 text-center">
+                        <div class="text-[#8b949e]">ST Trend</div>
+                        <div class="font-bold text-white">${point.stTrend}</div>
+                    </div>
+                    <div class="bg-[#0d1117] rounded-lg p-2 text-center">
+                        <div class="text-[#8b949e]">IT Trend</div>
+                        <div class="font-bold text-white">${point.itTrend}</div>
+                    </div>
+                </div>
+                <button onclick="openAssetDetail('${point.ticker}')" 
+                    class="w-full mt-3 py-2 text-xs font-bold bg-[#c586c0] text-black rounded-lg hover:bg-[#d8a8d2] transition-all">
+                    View Details
+                </button>
+            `;
+        }
+
+        window.toggleAutoSpin = function () {
+            autoSpinEnabled = !autoSpinEnabled;
+            const btn = document.getElementById('auto-spin-btn');
+            const label = document.getElementById('auto-spin-label');
+
+            if (autoSpinEnabled) {
+                btn.classList.add('bg-[#c586c0]', 'text-black', 'border-[#c586c0]');
+                btn.classList.remove('text-[#8b949e]');
+                label.textContent = 'Stop';
+                startSpinAnimation();
+            } else {
+                btn.classList.remove('bg-[#c586c0]', 'text-black', 'border-[#c586c0]');
+                btn.classList.add('text-[#8b949e]');
+                label.textContent = 'Auto';
+                stopSpinAnimation();
+            }
+        };
+
+        function startSpinAnimation() {
+            if (spinAnimationId) return;
+
+            function animate() {
+                if (autoSpinEnabled) {
+                    rotationOffset += 0.003; // Slow rotation
+                    if (rotationOffset > Math.PI * 2) rotationOffset -= Math.PI * 2;
+                    drawConstellation();
+                    spinAnimationId = requestAnimationFrame(animate);
+                } else if (Math.abs(spinVelocity) > 0.0001) {
+                    // Momentum decay
+                    rotationOffset += spinVelocity;
+                    spinVelocity *= 0.95;
+                    if (rotationOffset > Math.PI * 2) rotationOffset -= Math.PI * 2;
+                    if (rotationOffset < -Math.PI * 2) rotationOffset += Math.PI * 2;
+                    drawConstellation();
+                    spinAnimationId = requestAnimationFrame(animate);
+                } else {
+                    spinAnimationId = null;
+                    spinVelocity = 0;
+                }
+            }
+            animate();
+        }
+
+        function stopSpinAnimation() {
+            if (spinAnimationId) {
+                cancelAnimationFrame(spinAnimationId);
+                spinAnimationId = null;
+            }
+        }
+
+        // Drag handlers for constellation
+        function initConstellationDrag() {
+            const svg = document.getElementById('constellation-chart');
+            const container = document.getElementById('constellation-container');
+
+            let startX = 0;
+            let lastX = 0;
+            let lastTime = 0;
+
+            function onDragStart(e) {
+                if (autoSpinEnabled) {
+                    toggleAutoSpin(); // Stop auto-spin when dragging
+                }
+                isDragging = true;
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                startX = clientX;
+                lastX = clientX;
+                lastTime = Date.now();
+                spinVelocity = 0;
+                svg.style.cursor = 'grabbing';
+            }
+
+            function onDragMove(e) {
+                if (!isDragging) return;
+                e.preventDefault();
+
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const deltaX = clientX - lastX;
+                const now = Date.now();
+                const dt = now - lastTime;
+
+                // Convert pixel movement to rotation (adjust sensitivity)
+                const rotationDelta = deltaX * 0.005;
+                rotationOffset += rotationDelta;
+
+                // Track velocity for momentum
+                if (dt > 0) {
+                    spinVelocity = rotationDelta;
+                }
+
+                lastX = clientX;
+                lastTime = now;
+
+                drawConstellation();
+            }
+
+            function onDragEnd(e) {
+                if (!isDragging) return;
+                isDragging = false;
+                svg.style.cursor = 'grab';
+
+                // Start momentum animation if velocity exists
+                if (Math.abs(spinVelocity) > 0.001) {
+                    startSpinAnimation();
+                }
+            }
+
+            // Mouse events
+            svg.addEventListener('mousedown', onDragStart);
+            document.addEventListener('mousemove', onDragMove);
+            document.addEventListener('mouseup', onDragEnd);
+
+            // Touch events
+            svg.addEventListener('touchstart', onDragStart, { passive: false });
+            document.addEventListener('touchmove', onDragMove, { passive: false });
+            document.addEventListener('touchend', onDragEnd);
+
+            // Set initial cursor
+            svg.style.cursor = 'grab';
+        }
+
+        // Initialize drag on load
+        document.addEventListener('DOMContentLoaded', initConstellationDrag);
+
         window.showMetricDetail = function (type) {
             if (type === 'total') setFilter('all');
             else setFilter(type);
@@ -1005,56 +1239,103 @@
 
             if (ordered.length === 0) {
                 svg.innerHTML = `<text x="${cx}" y="${cy}" text-anchor="middle" fill="#8b949e" font-size="14">NO DATA</text>`;
+                constellationPoints = [];
+                updateSpotlight(null);
                 return;
             }
 
+            // Add spotlight indicator at 12 o'clock
             let html = `
+                <defs>
+                    <linearGradient id="spotlightGlow" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#c586c0" stop-opacity="0.4"/>
+                        <stop offset="100%" stop-color="#c586c0" stop-opacity="0"/>
+                    </linearGradient>
+                </defs>
+                <path d="M ${cx - 20} ${cy - outerR - 40} L ${cx} ${cy - outerR - 15} L ${cx + 20} ${cy - outerR - 40}" 
+                      fill="url(#spotlightGlow)" opacity="0.6"/>
+                <circle cx="${cx}" cy="${cy - outerR - 10}" r="6" fill="#c586c0" opacity="0.8">
+                    <animate attributeName="opacity" values="0.5;1;0.5" dur="1.5s" repeatCount="indefinite"/>
+                </circle>
                 <circle cx="${cx}" cy="${cy}" r="${outerR}" fill="none" stroke="${config.color}" stroke-width="1" stroke-opacity="0.2" stroke-dasharray="4 4"/>
                 <circle cx="${cx}" cy="${cy}" r="${innerR}" fill="none" stroke="#21262d" stroke-width="1"/>
             `;
 
-            const points = ordered.map((a, i) => {
-                const ang = (2 * Math.PI * i / ordered.length) - Math.PI / 2;
+            // Apply rotation offset to points
+            constellationPoints = ordered.map((a, i) => {
+                const baseAng = (2 * Math.PI * i / ordered.length) - Math.PI / 2;
+                const ang = baseAng + rotationOffset;
                 let scoreToUse = a[config.key];
                 const rangeToUse = config.range;
 
                 const norm = Math.max(0.15, Math.min(0.95, (scoreToUse - rangeToUse[0]) / (rangeToUse[1] - rangeToUse[0])));
                 const r = innerR + (outerR - innerR) * norm;
-                return { x: cx + r * Math.cos(ang), y: cy + r * Math.sin(ang), ang, score: scoreToUse, ...a };
+                return {
+                    x: cx + r * Math.cos(ang),
+                    y: cy + r * Math.sin(ang),
+                    ang,
+                    baseAng,
+                    score: scoreToUse,
+                    r,
+                    ...a
+                };
+            });
+
+            // Find spotlight ticker (closest to 12 o'clock = -PI/2)
+            const targetAngle = -Math.PI / 2;
+            let minDist = Infinity;
+            let spotlightPoint = null;
+            constellationPoints.forEach(p => {
+                // Normalize angle difference to [-PI, PI]
+                let diff = p.ang - targetAngle;
+                while (diff > Math.PI) diff -= 2 * Math.PI;
+                while (diff < -Math.PI) diff += 2 * Math.PI;
+                const dist = Math.abs(diff);
+                if (dist < minDist) {
+                    minDist = dist;
+                    spotlightPoint = p;
+                }
             });
 
             // Grid lines
-            points.forEach(p => {
+            constellationPoints.forEach(p => {
                 const ex = cx + outerR * Math.cos(p.ang), ey = cy + outerR * Math.sin(p.ang);
                 const sx = cx + innerR * Math.cos(p.ang), sy = cy + innerR * Math.sin(p.ang);
                 html += `<line x1="${sx}" y1="${sy}" x2="${ex}" y2="${ey}" stroke="#21262d" stroke-width="1" opacity="0.3"/>`;
             });
 
             // Data Points
-            points.forEach((p, i) => {
+            constellationPoints.forEach((p, i) => {
                 const color = getScoreColor(p.score, config.range);
-                const opacity = 1;
-                const size = 5;
+                const isSpotlight = spotlightPoint && p.ticker === spotlightPoint.ticker;
+                const size = isSpotlight ? 8 : 5;
+                const glowOpacity = isSpotlight ? 0.4 : 0;
 
                 html += `
                     <g style="cursor:pointer" onclick="openAssetDetail('${p.ticker}')"
                        onmouseenter="showTooltip(event, '${p.ticker}', '${p.sector}', ${p.score}, '${p.stTrend}', '${p.itTrend}')"
                        onmouseleave="hideTooltip()">
+                        ${isSpotlight ? `<circle cx="${p.x}" cy="${p.y}" r="16" fill="${color}" fill-opacity="0.2"/>` : ''}
                         <circle cx="${p.x}" cy="${p.y}" r="15" fill="transparent"/>
-                        <circle cx="${p.x}" cy="${p.y}" r="${size}" fill="${color}"/>
+                        <circle cx="${p.x}" cy="${p.y}" r="${size}" fill="${color}" ${isSpotlight ? 'stroke="#fff" stroke-width="1"' : ''}/>
                     </g>
                 `;
 
                 // Labels
-                if (ordered.length < 50 || i % 2 === 0) {
+                if (ordered.length < 50 || i % 2 === 0 || isSpotlight) {
                     const lx = cx + (outerR + 25) * Math.cos(p.ang), ly = cy + (outerR + 25) * Math.sin(p.ang);
                     const deg = p.ang * 180 / Math.PI;
                     const rot = (deg > -90 && deg < 90) ? deg : deg + 180;
                     const anchor = (deg > -90 && deg < 90) ? "start" : "end";
-                    html += `<text x="${lx}" y="${ly}" transform="rotate(${rot},${lx},${ly})" text-anchor="${anchor}" font-size="12" font-weight="bold" class="uppercase" fill="#c9d1d9" font-family="Inter, sans-serif">${p.ticker}</text>`;
+                    const fillColor = isSpotlight ? '#c586c0' : '#c9d1d9';
+                    const fontSize = isSpotlight ? 14 : 12;
+                    html += `<text x="${lx}" y="${ly}" transform="rotate(${rot},${lx},${ly})" text-anchor="${anchor}" font-size="${fontSize}" font-weight="bold" class="uppercase" fill="${fillColor}" font-family="Inter, sans-serif">${p.ticker}</text>`;
                 }
             });
             svg.innerHTML = html;
+
+            // Update spotlight card
+            updateSpotlight(spotlightPoint);
         }
 
         function drawRadarChart() {
