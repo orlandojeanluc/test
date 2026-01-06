@@ -55,15 +55,17 @@
 
         .terminal-card {
             background: #161b22;
-            border: 1px solid #30363d;
-            transition: all 0.15s ease;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
-            border-radius: 8px;
+            border-radius: 16px;
         }
 
         .terminal-card:hover {
-            border-color: #c586c0;
-            box-shadow: 0 0 20px rgba(197, 134, 192, 0.1);
+            border-color: rgba(197, 134, 192, 0.3);
+            background: #1c2128;
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+            transform: translateY(-2px);
         }
 
         .bar-fill {
@@ -136,13 +138,14 @@
             position: fixed;
             pointer-events: none;
             z-index: 10000;
-            background: rgba(22, 27, 34, 0.95);
-            border: 1px solid #30363d;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             padding: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
             opacity: 0;
             transition: opacity 0.2s;
-            border-radius: 6px;
+            border-radius: 12px;
         }
 
         #tooltip.show {
@@ -446,6 +449,38 @@
             </div>
         </header>
 
+        <!-- Global SVG Filters & Gradients -->
+        <svg width="0" height="0" class="absolute block">
+            <defs>
+                <!-- Purple Gradient -->
+                <linearGradient id="gradient-purple" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" style="stop-color:#8B5CF6;stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:#EC4899;stop-opacity:1" />
+                </linearGradient>
+
+                <!-- Positive Gradient (Green) -->
+                <linearGradient id="gradient-positive" x1="0%" y1="100%" x2="0%" y2="0%">
+                    <stop offset="0%" style="stop-color:#059669;stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:#34D399;stop-opacity:1" />
+                </linearGradient>
+
+                <!-- Negative Gradient (Red/Pink) -->
+                <linearGradient id="gradient-negative" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" style="stop-color:#BE185D;stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:#F472B6;stop-opacity:1" />
+                </linearGradient>
+
+                <!-- Glow Filter -->
+                <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+                    <feGaussianBlur stdDeviation="4" result="coloredBlur" />
+                    <feMerge>
+                        <feMergeNode in="coloredBlur" />
+                        <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                </filter>
+            </defs>
+        </svg>
+
         <!-- Controls Bar -->
         <div
             class="bg-[#0d1117] border-b border-[#30363d] px-4 py-2 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 overflow-x-hidden">
@@ -561,9 +596,10 @@
                             </button>
                         </div>
                     </div>
-                    <div id="constellation-container" class="flex justify-center items-center py-4 relative">
-                        <svg id="constellation-chart" width="600" height="600" viewBox="0 0 700 700"
-                            class="w-full max-w-[600px] h-auto"></svg>
+                    <div id="constellation-container"
+                        class="flex justify-center items-center py-4 relative w-full h-[300px] md:h-[600px]">
+                        <svg id="constellation-chart" viewBox="0 0 600 600" preserveAspectRatio="xMidYMid meet"
+                            class="w-full h-full max-w-[600px]"></svg>
                     </div>
                 </div>
 
@@ -726,19 +762,19 @@
                 nodes = nodes.filter(d => d.hasRiskData);
             }
 
-            const isMobile = window.innerWidth < 768; // Mobile Breakpoint
-            const scale = isMobile ? 1.5 : 1; // Scale factor for mobile
+            const isMobile = window.innerWidth < 768;
+            const scale = isMobile ? 1.5 : 1;
 
             // Force Simulation
             const simulation = d3.forceSimulation(nodes)
-                .force("charge", d3.forceManyBody().strength(isMobile ? -250 : -200)) // Stronger repulsion for clustered mobile view
+                .force("charge", d3.forceManyBody().strength(isMobile ? -250 : -180))
                 .force("center", d3.forceCenter(width / 2, height / 2))
-                .force("collide", d3.forceCollide().radius(d => (20 + Math.abs(d.score)) * scale))
+                .force("collide", d3.forceCollide().radius(d => (25 + Math.abs(d.score)) * scale))
                 .force("radial", d3.forceRadial(d => {
                     const maxScore = 10;
                     const normalized = Math.min(Math.abs(d.score), maxScore) / maxScore;
                     return (1 - normalized) * 250;
-                }, width / 2, height / 2).strength(0.8));
+                }, width / 2, height / 2).strength(0.6));
 
             const g = svg.append("g");
 
@@ -753,39 +789,47 @@
                 .on("click", (e, d) => window.openAssetDetail(d.ticker))
                 .on("mouseover", (e, d) => window.showTooltip(e, d.ticker, d.sector, d.score.toFixed(1)))
                 .on("mouseout", window.hideTooltip)
-                .style("cursor", "pointer");
+                .style("cursor", "crosshair");
 
-            // Circles
+            // Glowing Orbs
             node.append("circle")
-                .attr("r", d => (15 + Math.abs(d.score)) * scale) // Scale size
-                .attr("fill", d => getViewColor(d))
-                .attr("stroke", d => {
-                    // Golden Setup Logic: Momentum > 0 AND Mean Reversion > 0
-                    if (d.overallScore > 0 && d.meanReversion > 0 && currentView === 'momentum') return "#FFD700"; // Gold
-                    return "#0d1117";
-                })
+                .attr("r", d => (12 + Math.abs(d.score)) * scale)
+                .attr("fill", d => d.overallScore > 0 ? "url(#gradient-positive)" : "url(#gradient-negative)")
+                .style("filter", "url(#glow)")
+                .attr("stroke", d => d.overallScore > 0 ? "#34D399" : "#F472B6")
                 .attr("stroke-width", d => {
+                    // Golden Setup Highlight
                     if (d.overallScore > 0 && d.meanReversion > 0 && currentView === 'momentum') return 3;
-                    return 2;
-                });
+                    return 1.5;
+                })
+                .style("opacity", 0.9);
 
             // Text
             node.append("text")
                 .text(d => {
                     const val = currentView === 'risk' ? d.riskScore.toFixed(1) : d.score.toFixed(1);
-                    return `${d.ticker} (${val})`;
+                    return `${d.ticker}`;
                 })
-                .attr("dy", 4)
+                .attr("dy", ".35em")
                 .attr("text-anchor", "middle")
                 .attr("fill", "#fff")
-                .attr("font-size", isMobile ? "14px" : "10px") // Bigger text on mobile
+                .attr("font-size", isMobile ? "14px" : "11px")
                 .attr("font-weight", "bold")
-                .style("text-shadow", "0px 1px 4px rgba(0,0,0,0.8)");
+                .style("text-shadow", "0 2px 4px rgba(0,0,0,0.8)")
+                .style("pointer-events", "none");
+
+            // Sub-text (Score)
+            node.append("text")
+                .text(d => d.score.toFixed(1))
+                .attr("dy", "1.6em")
+                .attr("text-anchor", "middle")
+                .attr("fill", "rgba(255,255,255,0.7)")
+                .attr("font-size", "9px")
+                .style("pointer-events", "none");
 
             simulation.on("tick", () => {
-                // Bounding Box Logic
                 nodes.forEach(d => {
-                    const r = (20 + Math.abs(d.score)) * scale;
+                    const r = (25 + Math.abs(d.score)) * scale;
                     d.x = Math.max(r, Math.min(width - r, d.x));
                     d.y = Math.max(r, Math.min(height - r, d.y));
                 });
@@ -822,15 +866,17 @@
             const container = document.getElementById('movers-list');
             let sorted = [...filteredData];
             if (currentMovers === 'bulls') sorted.sort((a, b) => b.overallScore - a.overallScore);
-            else sorted.sort((a, b) => a.overallScore - b.overallScore); // Bearish sort (lowest first)
+            else sorted.sort((a, b) => a.overallScore - b.overallScore);
 
             container.innerHTML = sorted.map(d => `
-                <div class="flex justify-between items-center p-2 rounded bg-[#21262d] hover:bg-[#30363d] cursor-pointer border border-transparent hover:border-[#c586c0]" onclick="openAssetDetail('${d.ticker}')">
-                     <div class="flex items-center gap-2">
-                         <div class="w-8 font-bold text-white">${d.ticker}</div>
-                         <div class="w-1 h-4 ${d.overallScore > 0 ? 'bg-[#b5cea8]' : 'bg-[#f48771]'}"></div>
+                <div class="flex justify-between items-center p-3 rounded-lg bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-transparent hover:border-violet-500/50 transition-all group" onclick="openAssetDetail('${d.ticker}')">
+                     <div class="flex items-center gap-3">
+                         <div class="w-10 font-bold text-white group-hover:text-violet-300 transition-colors">${d.ticker}</div>
+                         <div class="h-1.5 w-12 rounded-full bg-slate-700 overflow-hidden">
+                            <div class="h-full ${d.overallScore > 0 ? 'bg-emerald-400' : 'bg-pink-500'}" style="width: ${Math.min(100, Math.abs(d.overallScore) * 10)}%"></div>
+                         </div>
                      </div>
-                     <div class="font-mono text-white ${d.overallScore > 0 ? 'text-[#b5cea8]' : 'text-[#f48771]'}">${d.overallScore.toFixed(1)}</div>
+                     <div class="font-mono font-bold ${d.overallScore > 0 ? 'text-emerald-400' : 'text-pink-400'} bg-slate-900/50 px-2 py-1 rounded text-xs">${d.overallScore.toFixed(1)}</div>
                 </div>
             `).join('');
         }
@@ -838,23 +884,22 @@
         // Mean Reversion List
         function drawMeanRev() {
             const container = document.getElementById('meanrev-list');
-            // Filter non-zero mean reversion items and sort by abs magnitude
             let data = filteredData.filter(d => d.meanReversion !== 0);
             data.sort((a, b) => Math.abs(b.meanReversion) - Math.abs(a.meanReversion));
 
             if (data.length === 0) {
-                container.innerHTML = '<div class="text-[#8b949e] text-xs text-center p-4">No active signals</div>';
+                container.innerHTML = '<div class="text-slate-500 text-xs text-center p-4">No active signals</div>';
                 return;
             }
 
             container.innerHTML = data.map(d => `
-                 <div class="flex justify-between items-center p-2 rounded bg-[#21262d] hover:bg-[#30363d] cursor-pointer border border-transparent hover:border-[#39c5cf]" onclick="openAssetDetail('${d.ticker}')">
-                    <div class="flex items-center gap-2">
-                        <span class="font-bold text-white">${d.ticker}</span>
+                 <div class="flex justify-between items-center p-3 rounded-lg bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-transparent hover:border-emerald-500/50 transition-all group" onclick="openAssetDetail('${d.ticker}')">
+                    <div class="flex items-center gap-3">
+                        <span class="font-bold text-white group-hover:text-emerald-300 transition-colors">${d.ticker}</span>
                     </div>
                     <div class="flex items-center gap-2">
-                        <span class="text-xs ${d.meanReversion > 0 ? 'text-[#b5cea8]' : 'text-[#f48771]'}">${d.meanReversion > 0 ? 'Positive' : 'Negative'}</span>
-                        <span class="font-mono font-bold text-white">${d.meanReversion.toFixed(2)}</span>
+                        <span class="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full ${d.meanReversion > 0 ? 'bg-emerald-500/20 text-emerald-400' : 'bg-pink-500/20 text-pink-400'}">${d.meanReversion > 0 ? 'Bullish' : 'Bearish'}</span>
+                        <span class="font-mono font-bold text-white bg-slate-900/50 px-2 py-1 rounded text-xs">${d.meanReversion.toFixed(2)}</span>
                     </div>
                  </div>
             `).join('');
@@ -865,12 +910,12 @@
             const container = document.getElementById('momentum-grid');
             document.getElementById('showing-count').textContent = `Showing ${filteredData.length}`;
             container.innerHTML = filteredData.map(d => `
-                 <div class="min-w-[100px] p-2 bg-[#21262d] rounded border border-[#30363d] hover:border-[#c586c0] cursor-pointer" onclick="openAssetDetail('${d.ticker}')">
-                    <div class="flex justify-between items-center mb-1">
-                        <span class="font-bold text-white text-xs">${d.ticker}</span>
-                        <span class="text-[10px] text-[#8b949e]">${d.sector.substring(0, 3).toUpperCase()}</span>
+                 <div class="min-w-[120px] p-3 bg-slate-800/50 rounded-xl border border-white/5 hover:border-violet-500/50 cursor-pointer transition-all hover:-translate-y-1" onclick="openAssetDetail('${d.ticker}')">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="font-bold text-white text-sm">${d.ticker}</span>
+                        <span class="text-[9px] text-slate-400 font-bold uppercase tracking-wider">${d.sector.substring(0, 3)}</span>
                     </div>
-                    <div class="text-lg font-bold ${d.overallScore > 0 ? 'text-[#b5cea8]' : 'text-[#f48771]'}">${d.overallScore.toFixed(1)}</div>
+                    <div class="text-2xl font-bold ${d.overallScore > 0 ? 'text-emerald-400' : 'text-pink-400'}">${d.overallScore.toFixed(1)}</div>
                  </div>
              `).join('');
         }
@@ -1056,6 +1101,15 @@
             document.getElementById('last-updated').textContent = "Syncing...";
             loadData();
         };
+
+        // Resize Listener for Mobile Optimization
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                drawConstellation();
+            }, 250);
+        });
 
         onAuthStateChanged(auth, () => loadData());
 

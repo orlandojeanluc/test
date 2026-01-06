@@ -59,15 +59,17 @@
 
         .terminal-card {
             background: #161b22;
-            border: 1px solid #21262d;
-            transition: all 0.2s ease;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
-            border-radius: 0.5rem;
+            border-radius: 16px;
         }
 
         .terminal-card:hover {
-            border-color: #30363d;
+            border-color: rgba(197, 134, 192, 0.3);
             background: #1c2128;
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+            transform: translateY(-2px);
         }
 
         .sector-meter-bg {
@@ -90,6 +92,14 @@
             50% {
                 opacity: 0.5;
             }
+        }
+
+        .effect-title {
+            background: linear-gradient(135deg, #E2E8F0 0%, #94A3B8 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 10px rgba(148, 163, 184, 0.1);
         }
     </style>
 </head>
@@ -282,6 +292,38 @@
 
         <!-- Main Content -->
         <div class="p-6 max-w-7xl mx-auto space-y-6">
+
+            <!-- Global SVG Filters & Gradients -->
+            <svg width="0" height="0" class="absolute block">
+                <defs>
+                    <!-- Purple Gradient -->
+                    <linearGradient id="gradient-purple" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" style="stop-color:#8B5CF6;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#EC4899;stop-opacity:1" />
+                    </linearGradient>
+
+                    <!-- Positive Gradient (Green) -->
+                    <linearGradient id="gradient-positive" x1="0%" y1="100%" x2="0%" y2="0%">
+                        <stop offset="0%" style="stop-color:#059669;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#34D399;stop-opacity:1" />
+                    </linearGradient>
+
+                    <!-- Negative Gradient (Red/Pink) -->
+                    <linearGradient id="gradient-negative" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" style="stop-color:#BE185D;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#F472B6;stop-opacity:1" />
+                    </linearGradient>
+
+                    <!-- Glow Filter -->
+                    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+                        <feGaussianBlur stdDeviation="4" result="coloredBlur" />
+                        <feMerge>
+                            <feMergeNode in="coloredBlur" />
+                            <feMergeNode in="SourceGraphic" />
+                        </feMerge>
+                    </filter>
+                </defs>
+            </svg>
             <h2 class="text-2xl font-bold text-white mb-6">Market Sectors Analysis</h2>
 
             <div id="sector-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -291,6 +333,11 @@
             </div>
         </div>
     </div>
+
+    <!-- Shared Tooltip -->
+    <div id="chart-tooltip"
+        class="fixed pointer-events-none opacity-0 bg-slate-800/90 backdrop-blur-sm border border-slate-700 text-white text-xs rounded-lg p-3 shadow-xl z-50 transition-opacity duration-200"
+        style="top: 0; left: 0;"></div>
 
     <!-- Scripts -->
     <script type="module">
@@ -385,50 +432,70 @@
             const container = document.querySelector(containerId);
             if (!container) return;
 
-            const width = container.clientWidth;
-            const height = container.clientHeight;
+            // Fixed internal coordinates for stable mobile rendering
+            const width = 400;
+            const height = 150;
 
             // Clear previous
             d3.select(containerId).selectAll("*").remove();
 
             const svg = d3.select(containerId)
                 .append("svg")
-                .attr("width", width)
-                .attr("height", height)
-                .attr("viewBox", [0, 0, width, height]);
+                .attr("width", "100%")
+                .attr("height", "100%")
+                .attr("viewBox", `0 0 ${width} ${height}`)
+                .attr("preserveAspectRatio", "xMidYMid meet")
+                .style("overflow", "visible");
 
-            // Select top 8 most "active" assets (highest abs score)
+            // Select top 12 most "active" assets
             const topNodes = [...sector.tickers]
                 .sort((a, b) => Math.abs(b.momScore) - Math.abs(a.momScore))
-                .slice(0, 8)
-                .map(d => ({ ...d })); // Clone to avoid mutation issues
+                .slice(0, 12)
+                .map(d => ({ ...d }));
 
             const simulation = d3.forceSimulation(topNodes)
-                .force("charge", d3.forceManyBody().strength(-50)) // Stronger repulsion to spread out
+                .force("charge", d3.forceManyBody().strength(-30))
                 .force("center", d3.forceCenter(width / 2, height / 2))
-                .force("x", d3.forceX(width / 2).strength(0.1)) // Gentle pull to center
-                .force("y", d3.forceY(height / 2).strength(0.1))
-                .force("collide", d3.forceCollide().radius(d => 6 + Math.abs(d.momScore) * 0.6)); // Slightly larger collision zone
+                .force("x", d3.forceX(width / 2).strength(0.1))
+                .force("y", d3.forceY(height / 2).strength(0.15))
+                .force("collide", d3.forceCollide().radius(d => 8 + Math.abs(d.momScore)));
 
             const node = svg.append("g")
                 .selectAll("g")
                 .data(topNodes)
-                .join("g");
+                .join("g")
+                .style("cursor", "crosshair");
 
-            // Simple Circles
+            // Glowing Orbs
             node.append("circle")
-                .attr("r", d => 3 + Math.abs(d.momScore) * 0.5) // Smaller scale
-                .attr("fill", d => d.momScore > 0 ? "#b5cea8" : "#f48771")
-                .attr("opacity", 0.8);
+                .attr("r", d => 3 + Math.abs(d.momScore) * 0.6)
+                .attr("fill", d => d.momScore > 0 ? "url(#gradient-positive)" : "url(#gradient-negative)")
+                .style("filter", "url(#glow)")
+                .attr("stroke", d => d.momScore > 0 ? "#34D399" : "#F472B6")
+                .attr("stroke-width", 1)
+                .attr("opacity", 0.9);
 
-            // Tiny Text
-            node.append("text")
-                .text(d => d.ticker)
-                .attr("text-anchor", "middle")
-                .attr("dy", "0.35em")
-                .attr("fill", "white")
-                .attr("font-size", "8px")
-                .style("pointer-events", "none");
+            // Interaction
+            node.on("mouseover", function (event, d) {
+                const tooltip = document.getElementById('chart-tooltip');
+                tooltip.style.opacity = '1';
+                tooltip.innerHTML = `
+                    <div class="font-bold border-b border-slate-600 pb-1 mb-1">${d.ticker}</div>
+                    <div class="flex justify-between gap-4"><span class="text-slate-400">Score:</span> <span class="font-mono ${d.momScore > 0 ? 'text-emerald-400' : 'text-pink-400'}">${d.momScore.toFixed(2)}</span></div>
+                `;
+                d3.select(this).select("circle").attr("stroke", "#fff").attr("stroke-width", 2);
+            })
+                .on("mousemove", function (event) {
+                    const tooltip = document.getElementById('chart-tooltip');
+                    tooltip.style.left = (event.clientX + 10) + 'px';
+                    tooltip.style.top = (event.clientY + 10) + 'px';
+                })
+                .on("mouseout", function (event, d) {
+                    document.getElementById('chart-tooltip').style.opacity = '0';
+                    d3.select(this).select("circle")
+                        .attr("stroke", d.momScore > 0 ? "#34D399" : "#F472B6")
+                        .attr("stroke-width", 1);
+                });
 
             simulation.on("tick", () => {
                 node.attr("transform", d => `translate(${d.x},${d.y})`);
@@ -440,65 +507,62 @@
             container.innerHTML = sectors.map(s => {
                 const avgMom = s.avgMom;
                 const avgRisk = s.avgRisk;
-
-                // Find Top Pick (Highest Momentum?)
                 s.tickers.sort((a, b) => b.momScore - a.momScore);
                 const topPick = s.tickers[0];
 
-                // Styling Logic
-                const momColor = avgMom > 0 ? 'text-[#b5cea8]' : 'text-[#f48771]';
-                const riskColor = avgRisk < 4 ? 'text-[#b5cea8]' : avgRisk < 7 ? 'text-[#dcdcaa]' : 'text-[#f48771]';
+                const momColor = avgMom > 0 ? 'text-emerald-400' : 'text-pink-400';
+                const riskColor = avgRisk < 4 ? 'text-emerald-400' : avgRisk < 7 ? 'text-yellow-400' : 'text-pink-400';
 
-                // Risk Bar Width
+                // Gradient Bar Logic
                 const riskPct = Math.min(100, (avgRisk / 10) * 100);
-                const riskBarColor = avgRisk < 4 ? '#b5cea8' : avgRisk < 7 ? '#dcdcaa' : '#f48771';
+                const barGradient = avgRisk < 5 ? 'bg-gradient-to-r from-emerald-500 to-emerald-300' : 'bg-gradient-to-r from-pink-500 to-pink-300';
 
                 return `
-                    <div class="terminal-card p-5 hover:border-[#c586c0] transition-colors group cursor-pointer" onclick="window.location.href='sector_detail.html?sector=${s.name}'">
-                        <div class="flex justify-between items-center mb-4 border-b border-[#21262d] pb-2">
-                            <h3 class="text-xl font-bold text-white group-hover:text-[#c586c0] transition-colors">${s.name}</h3>
-                            <span class="text-xs text-[#8b949e] font-mono bg-[#21262d] px-2 py-1 rounded">${s.count} Assets</span>
+                    <div class="terminal-card p-5 hover:border-violet-500/50 transition-colors group cursor-pointer" onclick="window.location.href='sector_detail.html?sector=${s.name}'">
+                        <div class="flex justify-between items-center mb-4 border-b border-white/5 pb-2">
+                            <h3 class="text-lg font-bold text-white group-hover:text-violet-400 transition-colors tracking-wide">${s.name}</h3>
+                            <span class="text-[10px] text-slate-400 font-mono bg-slate-800/50 px-2 py-1 rounded-full border border-white/5">${s.count} Assets</span>
                         </div>
 
                         <div class="space-y-4">
                             <!-- Mini Constellation Preview -->
-                            <div id="chart-${s.name.replace(/\s+/g, '-')}" class="h-24 w-full bg-[#0d1117] rounded border border-[#21262d] relative overflow-hidden"></div>
+                            <div id="chart-${s.name.replace(/\s+/g, '-')}" class="h-28 w-full bg-slate-900/50 rounded-xl border border-white/5 relative overflow-hidden backdrop-blur-sm"></div>
 
-                            <!-- Avg Momentum -->
-                            <div class="flex justify-between items-end">
-                                <span class="text-[#8b949e] text-xs font-bold">Avg Momentum</span>
-                                <span class="text-2xl font-bold ${momColor}">${avgMom.toFixed(1)}</span>
+                            <!-- Metrics Grid -->
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <span class="text-slate-500 text-[10px] uppercase tracking-wider font-bold">Momentum</span>
+                                    <div class="text-2xl font-bold ${momColor} mt-1">${avgMom.toFixed(1)}</div>
+                                </div>
+                                <div class="text-right">
+                                    <span class="text-slate-500 text-[10px] uppercase tracking-wider font-bold">Avg Risk</span>
+                                    <div class="text-xl font-bold ${riskColor} mt-1">${avgRisk.toFixed(1)}</div>
+                                </div>
                             </div>
 
-                            <!-- Avg Risk -->
-                            <div>
-                                <div class="flex justify-between items-end mb-1">
-                                    <span class="text-[#8b949e] text-xs font-bold">Avg Risk</span>
-                                    <span class="text-sm font-bold ${riskColor}">${avgRisk.toFixed(1)}</span>
-                                </div>
-                                <div class="sector-meter-bg">
-                                    <div class="sector-meter-fill" style="width: ${riskPct}%; background: ${riskBarColor}"></div>
-                                </div>
+                            <!-- Risk Meter -->
+                            <div class="w-full bg-slate-800/50 rounded-full h-1.5 overflow-hidden">
+                                <div class="h-full rounded-full ${barGradient} shadow-lg shadow-pink-500/20" style="width: ${riskPct}%;"></div>
                             </div>
                             
-                            <!-- Signals -->
-                            <div class="grid grid-cols-2 gap-2 mt-2">
-                                <div class="bg-[#21262d] p-2 rounded text-center">
-                                    <div class="text-[10px] text-[#8b949e]">Pos Trend</div>
-                                    <div class="text-[#b5cea8] font-bold">${s.posSignals}</div>
+                            <!-- Signals Pills -->
+                            <div class="flex gap-2 mt-2">
+                                <div class="flex-1 bg-emerald-500/10 border border-emerald-500/20 rounded-lg p-1.5 text-center">
+                                    <div class="text-[9px] text-emerald-400/80 uppercase">Pos Trend</div>
+                                    <div class="text-emerald-400 font-bold text-sm">${s.posSignals}</div>
                                 </div>
-                                <div class="bg-[#21262d] p-2 rounded text-center">
-                                    <div class="text-[10px] text-[#8b949e]">Neg Trend</div>
-                                    <div class="text-[#f48771] font-bold">${s.negSignals}</div>
+                                <div class="flex-1 bg-pink-500/10 border border-pink-500/20 rounded-lg p-1.5 text-center">
+                                    <div class="text-[9px] text-pink-400/80 uppercase">Neg Trend</div>
+                                    <div class="text-pink-400 font-bold text-sm">${s.negSignals}</div>
                                 </div>
                             </div>
 
                             <!-- Top Pick -->
-                             <div class="flex items-center justify-between pt-2 border-t border-[#21262d]">
-                                <span class="text-[10px] text-[#8b949e]">Top Pick</span>
+                             <div class="flex items-center justify-between pt-3 border-t border-white/5">
+                                <span class="text-[10px] text-slate-500 font-bold uppercase">Top Mover</span>
                                 <div class="flex items-center gap-2">
-                                    <span class="text-white font-bold">${topPick.ticker}</span>
-                                    <span class="text-[#b5cea8] text-xs font-mono">${topPick.momScore.toFixed(1)}</span>
+                                    <span class="text-white font-bold text-sm">${topPick.ticker}</span>
+                                    <span class="text-xs font-mono bg-white/5 px-1.5 rounded text-slate-300">${topPick.momScore.toFixed(1)}</span>
                                 </div>
                             </div>
                         </div>
