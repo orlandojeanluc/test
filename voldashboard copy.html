@@ -462,7 +462,7 @@
                     <div id="modal-sector" class="text-xs text-[#8b949e]">SECTOR</div>
                 </div>
 
-                <div id="chart-container" class="flex-grow w-full relative min-h-[300px] md:min-h-[400px]"></div>
+                <div id="chart-container" class="flex-grow w-full relative min-h-[400px]"></div>
             </div>
         </div>
     </div>
@@ -1114,8 +1114,6 @@
             if (d) openChartModal(d);
         }
 
-        let currentChartParams = null;
-
         async function openChartModal(data) {
             const modal = document.getElementById('chart-modal');
             modal.classList.remove('hidden');
@@ -1134,115 +1132,27 @@
                 statsHtml.id = 'modal-cs-stats';
                 statsHtml.className = 'mt-3 p-3 bg-[#0d1117] border border-[#21262d] rounded-lg';
                 statsHtml.innerHTML = `
-                    <div class="flex flex-col gap-2">
-                         <!-- Header Row: Primary Ticker + Comparison Selector -->
-                        <div class="flex items-center justify-between border-b border-[#30363d] pb-2">
-                            <!-- Primary Ticker Name -->
-                            <div class="text-[#c586c0] font-bold text-lg">${data.ticker}</div>
-                            
-                            <!-- Selector -->
-                            <div class="flex items-center gap-2">
-                                <span class="text-[10px] text-[#8b949e] font-bold">Compare:</span>
-                                <select id="compare-ticker-select" 
-                                    class="bg-[#0d1117] border border-[#30363d] rounded px-2 py-0.5 text-xs text-[#c9d1d9] w-24 focus:outline-none focus:border-[#c586c0] cursor-pointer appearance-none">
-                                    <option value="" disabled selected>Select...</option>
-                                    ${allData.map(d => `<option value="${d.ticker}">${d.ticker}</option>`).join('')}
-                                </select>
-                            </div>
+                    <div class="flex flex-wrap gap-4 items-center">
+                        ${getSignalBadge(cs.signal)}
+                        <div class="text-xs">
+                            <span class="text-[#8b949e]">VRP:</span>
+                            <span class="font-mono ${data.vrp > 0 ? 'text-[#f87171]' : 'text-[#4ade80]'}">${(data.vrp * 100).toFixed(1)}%</span>
                         </div>
-
-                        <!-- Stats Rows Container -->
-                        <div id="stats-rows-container" class="flex flex-col gap-4 pt-1">
-                            <!-- Primary Ticker Stats -->
-                            <div class="flex flex-wrap gap-2 md:gap-4 items-center">
-                                ${getSignalBadge(cs.signal)}
-                                <div class="text-xs">
-                                    <span class="text-[#8b949e]">VRP:</span>
-                                    <span class="font-mono ${data.vrp > 0 ? 'text-[#f87171]' : 'text-[#4ade80]'}">${(data.vrp * 100).toFixed(1)}%</span>
-                                </div>
-                                <div class="text-xs">
-                                    <span class="text-[#8b949e]">VRP Pctl:</span>
-                                    <span class="font-mono text-[#c586c0]">${cs.vrpPctlUniverse}%</span>
-                                </div>
-                                <div class="text-xs">
-                                    <span class="text-[#8b949e]">vs Sector:</span>
-                                    <span class="font-mono">${cs.vrpVsSector > 0 ? '+' : ''}${(cs.vrpVsSector * 100).toFixed(1)}%</span>
-                                </div>
-                                <div class="text-xs">
-                                    <span class="text-[#8b949e]">Z-Score:</span>
-                                    <span class="font-mono">${cs.vrpZScore.toFixed(2)}</span>
-                                </div>
-                            </div>
+                        <div class="text-xs">
+                            <span class="text-[#8b949e]">VRP Pctl:</span>
+                            <span class="font-mono text-[#c586c0]">${cs.vrpPctlUniverse}%</span>
+                        </div>
+                        <div class="text-xs">
+                            <span class="text-[#8b949e]">vs Sector:</span>
+                            <span class="font-mono">${cs.vrpVsSector > 0 ? '+' : ''}${(cs.vrpVsSector * 100).toFixed(1)}%</span>
+                        </div>
+                        <div class="text-xs">
+                            <span class="text-[#8b949e]">Z-Score:</span>
+                            <span class="font-mono">${cs.vrpZScore.toFixed(2)}</span>
                         </div>
                     </div>
                 `;
                 statsContainer.appendChild(statsHtml);
-
-                // Add Listener for Comparison
-                const compareSelect = document.getElementById('compare-ticker-select');
-                compareSelect.addEventListener('change', async (e) => {
-                    const compareTicker = e.target.value;
-                    if (!compareTicker || compareTicker === data.ticker) return;
-
-                    const compareData = allData.find(d => d.ticker === compareTicker);
-
-                    // Remove existing comparison stats if any
-                    const existingCompStats = document.getElementById('comparison-stats');
-                    if (existingCompStats) existingCompStats.remove();
-
-                    e.target.disabled = true;
-                    e.target.classList.add('opacity-50');
-
-                    try {
-                        const getTickerHistory = httpsCallable(functions, 'getTickerHistory');
-                        const result = await getTickerHistory({ ticker: compareTicker });
-
-                        // Re-draw chart with both datasets
-                        drawHistoryChart(data.history, result.data.history, compareTicker);
-
-                        // Render Comparison Stats Row
-                        if (compareData && compareData.crossSectional) {
-                            const cs2 = compareData.crossSectional;
-                            const compHtml = document.createElement('div');
-                            compHtml.id = 'comparison-stats';
-                            // New Layout: Vertical Flex Container for Comparison Ticker Block
-                            compHtml.className = 'flex flex-col gap-1 border-t border-[#30363d] pt-4';
-                            compHtml.innerHTML = `
-                                <div class="text-[#22d3ee] font-bold text-lg">${compareTicker}</div>
-                                <div class="flex flex-wrap gap-2 md:gap-4 items-center">
-                                    ${getSignalBadge(cs2.signal)}
-                                    <div class="text-xs">
-                                        <span class="text-[#8b949e]">VRP:</span>
-                                        <span class="font-mono ${compareData.vrp > 0 ? 'text-[#f87171]' : 'text-[#4ade80]'}">${(compareData.vrp * 100).toFixed(1)}%</span>
-                                    </div>
-                                    <div class="text-xs">
-                                        <span class="text-[#8b949e]">VRP Pctl:</span>
-                                        <span class="font-mono text-[#c586c0]">${cs2.vrpPctlUniverse}%</span>
-                                    </div>
-                                    <div class="text-xs">
-                                        <span class="text-[#8b949e]">vs Sector:</span>
-                                        <span class="font-mono">${cs2.vrpVsSector > 0 ? '+' : ''}${(cs2.vrpVsSector * 100).toFixed(1)}%</span>
-                                    </div>
-                                    <div class="text-xs">
-                                        <span class="text-[#8b949e]">Z-Score:</span>
-                                        <span class="font-mono">${cs2.vrpZScore.toFixed(2)}</span>
-                                    </div>
-                                </div>
-                            `;
-                            // Append to the dedicated stats rows container
-                            const statsWrapper = document.getElementById('stats-rows-container');
-                            if (statsWrapper) statsWrapper.appendChild(compHtml);
-                        }
-
-                    } catch (err) {
-                        console.error('Error fetching comparison:', err);
-                        e.target.value = "";
-                    } finally {
-                        e.target.disabled = false;
-                        e.target.classList.remove('opacity-50');
-                        e.target.focus();
-                    }
-                });
             }
 
             // Show loading state
@@ -1268,8 +1178,7 @@
             document.getElementById('chart-modal').classList.add('hidden');
         });
 
-        function drawHistoryChart(history, compareHistory = null, compareTicker = null) {
-            currentChartParams = { history, compareHistory, compareTicker };
+        function drawHistoryChart(history) {
             const container = document.getElementById('chart-container');
             container.innerHTML = '';
 
@@ -1290,29 +1199,22 @@
                 .attr("transform", `translate(${margin.left},${margin.top})`);
 
             const parseTime = d3.timeParse("%m-%d-%Y");
-            const processData = (raw) => raw.map(d => ({
+            const data = history.map(d => ({
                 date: (typeof d.date === 'string' ? parseTime(d.date) : d.date) || new Date(d.date),
                 value: d.value
-            })).filter(d => d.date && !isNaN(d.value));
-
-            const data = processData(history);
-            const data2 = compareHistory ? processData(compareHistory) : [];
+            })).filter(d => d.date); // Filter out invalid dates
 
             if (data.length === 0) {
                 container.innerHTML = '<div class="absolute inset-0 flex items-center justify-center text-[#8b949e]">No Valid Data Points</div>';
                 return;
             }
 
-            // Combine for scaling
-            const allValues = [...data.map(d => d.value), ...data2.map(d => d.value)];
-            const allDates = [...data.map(d => d.date), ...data2.map(d => d.date)];
-
             const x = d3.scaleTime()
-                .domain(d3.extent(allDates))
+                .domain(d3.extent(data, d => d.date))
                 .range([0, width]);
 
             const y = d3.scaleLinear()
-                .domain([0, d3.max(allValues) * 1.1])
+                .domain([0, d3.max(data, d => d.value) * 1.1])
                 .range([height, 0]);
 
             svg.append("g")
@@ -1331,24 +1233,12 @@
                 .x(d => x(d.date))
                 .y(d => y(d.value));
 
-            // Primary Line (Original Ticker)
             svg.append("path")
                 .datum(data)
                 .attr("fill", "none")
-                .attr("stroke", "#c586c0") // Purple
+                .attr("stroke", "#c586c0")
                 .attr("stroke-width", 2)
                 .attr("d", line);
-
-            // Comparison Line
-            if (data2.length > 0) {
-                svg.append("path")
-                    .datum(data2)
-                    .attr("fill", "none")
-                    .attr("stroke", "#22d3ee") // Cyan
-                    .attr("stroke-width", 2)
-                    .attr("stroke-dasharray", "4,4") // Dashed for distinction
-                    .attr("d", line);
-            }
 
             // Add hover tooltip
             const chartTooltip = d3.select("#chart-container")
@@ -1372,17 +1262,10 @@
                 .attr("stroke-dasharray", "4,4")
                 .style("opacity", 0);
 
-            // Hover dots
+            // Hover dot
             const hoverDot = svg.append("circle")
                 .attr("r", 5)
                 .attr("fill", "#c586c0")
-                .attr("stroke", "#fff")
-                .attr("stroke-width", 2)
-                .style("opacity", 0);
-
-            const hoverDot2 = svg.append("circle")
-                .attr("r", 5)
-                .attr("fill", "#22d3ee")
                 .attr("stroke", "#fff")
                 .attr("stroke-width", 2)
                 .style("opacity", 0);
@@ -1396,76 +1279,56 @@
                     const [mouseX] = d3.pointer(event);
                     const hoveredDate = x.invert(mouseX);
 
-                    // Finder helper
-                    const findClosest = (dataset) => {
-                        const bisect = d3.bisector(d => d.date).left;
-                        const idx = bisect(dataset, hoveredDate);
-                        const d0 = dataset[idx - 1];
-                        const d1 = dataset[idx];
-                        if (!d0 && !d1) return null;
-                        return !d0 ? d1 : !d1 ? d0 :
-                            (hoveredDate - d0.date > d1.date - hoveredDate ? d1 : d0);
-                    };
+                    // Find closest data point
+                    const bisect = d3.bisector(d => d.date).left;
+                    const idx = bisect(data, hoveredDate);
+                    const d0 = data[idx - 1];
+                    const d1 = data[idx];
 
-                    const closest1 = findClosest(data);
-                    const closest2 = data2.length > 0 ? findClosest(data2) : null;
+                    if (!d0 && !d1) return;
 
-                    if (!closest1) return;
+                    const closest = !d0 ? d1 : !d1 ? d0 :
+                        (hoveredDate - d0.date > d1.date - hoveredDate ? d1 : d0);
 
-                    const xPos = x(closest1.date);
-                    const yPos = y(closest1.value);
+                    const xPos = x(closest.date);
+                    const yPos = y(closest.value);
 
                     verticalLine
-                        .attr("x1", xPos).attr("x2", xPos)
-                        .attr("y1", 0).attr("y2", height)
+                        .attr("x1", xPos)
+                        .attr("x2", xPos)
+                        .attr("y1", 0)
+                        .attr("y2", height)
                         .style("opacity", 1);
 
                     hoverDot
-                        .attr("cx", xPos).attr("cy", yPos)
+                        .attr("cx", xPos)
+                        .attr("cy", yPos)
                         .style("opacity", 1);
 
-                    let tooltipHtml = `
-                        <div class="text-[#8b949e] border-b border-[#30363d] mb-1 pb-1">${closest1.date.toLocaleDateString()}</div>
-                        <div class="flex items-center gap-2">
-                             <div class="w-2 h-2 rounded-full bg-[#c586c0]"></div>
-                             <span class="text-[#c586c0] font-bold">${(closest1.value * 100).toFixed(1)}%</span>
-                        </div>
-                    `;
-
-                    if (closest2) {
-                        const yPos2 = y(closest2.value);
-                        hoverDot2
-                            .attr("cx", xPos).attr("cy", yPos2)
-                            .style("opacity", 1);
-
-                        tooltipHtml += `
-                             <div class="flex items-center gap-2 mt-1">
-                                 <div class="w-2 h-2 rounded-full bg-[#22d3ee]"></div>
-                                 <span class="text-[#22d3ee] font-bold">${compareTicker}: ${(closest2.value * 100).toFixed(1)}%</span>
-                             </div>
-                        `;
-                    }
+                    const dateStr = closest.date.toLocaleDateString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                        year: 'numeric'
+                    });
 
                     chartTooltip
-                        .html(tooltipHtml)
-                        .style("left", (xPos + margin.left + 15) + "px")
+                        .html(`
+                            <div class="text-[#8b949e]">${dateStr}</div>
+                            <div class="text-[#c586c0] font-bold">${(closest.value * 100).toFixed(1)}%</div>
+                        `)
+                        .style("left", (xPos + margin.left + 10) + "px")
                         .style("top", (yPos + margin.top - 20) + "px")
                         .style("opacity", 1);
                 })
                 .on("mouseout", function () {
                     verticalLine.style("opacity", 0);
                     hoverDot.style("opacity", 0);
-                    hoverDot2.style("opacity", 0);
                     chartTooltip.style("opacity", 0);
                 });
         }
 
         window.addEventListener('resize', () => {
             renderView();
-            // Redraw chart if modal is open
-            if (!document.getElementById('chart-modal').classList.contains('hidden') && currentChartParams) {
-                drawHistoryChart(currentChartParams.history, currentChartParams.compareHistory, currentChartParams.compareTicker);
-            }
         });
 
         init();
