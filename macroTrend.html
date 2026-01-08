@@ -75,6 +75,12 @@
             padding: 12px;
         }
 
+        @media (max-width: 768px) {
+            .data-grid {
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            }
+        }
+
         .risk-bar {
             height: 4px;
             background: #21262d;
@@ -553,52 +559,54 @@
             }
 
             container.innerHTML = data.map(a => {
-                const overallColor = a.overall > 0 ? '#b5cea8' : a.overall < 0 ? '#f48771' : '#8b949e';
+                const overallColor = a.overall > 0 ? '#bbf7d0' : a.overall < 0 ? '#fecaca' : '#8b949e';
 
                 const factors = [
-                    { name: 'ST Trend', value: a.stTrend, max: 2, color: '#b5cea8' },
-                    { name: 'ST Str', value: a.stStrength, max: 2, color: '#9cdcfe' },
-                    { name: 'IT Trend', value: a.itTrend, max: 2, color: '#dcdcaa' },
-                    { name: 'IT Str', value: a.itStrength, max: 2, color: '#c586c0' },
-                    { name: 'Mean Rev', value: a.meanReversion, max: 1.5, color: '#f48771' },
-                    { name: 'Breakout', value: a.breakout, max: 2, color: '#a855f7' }
+                    { name: 'ST Trend', value: a.stTrend, max: 4, color: '#bbf7d0' },
+                    { name: 'ST Str', value: a.stStrength, max: 4, color: '#bfdbfe' },
+                    { name: 'IT Trend', value: a.itTrend, max: 4, color: '#bbf7d0' },
+                    { name: 'IT Str', value: a.itStrength, max: 4, color: '#bfdbfe' },
+                    { name: 'Mean Rev', value: a.meanReversion, max: 2, color: '#fecaca' },
+                    { name: 'Breakout', value: a.breakout, max: 4, color: '#e9d5ff' }
                 ];
 
                 const factorRows = factors.map(f => {
                     const normPct = Math.min(100, (Math.abs(f.value) / f.max) * 100);
-                    const isPositive = f.value >= 0;
-                    const valColor = f.value > 0 ? 'text-[#b5cea8]' : f.value < 0 ? 'text-[#f48771]' : 'text-[#8b949e]';
-                    const barColor = isPositive ? f.color : '#f48771';
+                    const valColor = f.value > 0 ? 'text-[#bbf7d0]' : f.value < 0 ? 'text-[#fecaca]' : 'text-[#8b949e]';
 
                     return `
-                        <div class="flex items-center justify-between text-[10px] mb-1">
-                            <span class="text-[#8b949e] w-16">${f.name}</span>
-                            <div class="flex-1 mx-2 h-1 bg-[#21262d] rounded overflow-hidden">
-                                <div class="h-full transition-all" 
-                                     style="width:${normPct}%; background:${barColor}; opacity: ${f.value === 0 ? 0 : 1}"></div>
+                        <div>
+                            <div class="flex justify-between text-[8px] md:text-[10px] mb-0.5 md:mb-1">
+                                <span class="text-[#8b949e] font-medium truncate">${f.name} <span class="${valColor} ml-0.5 md:ml-1 text-[8px] md:text-[10px]">${f.value > 0 ? '+' : ''}${f.value.toFixed(1)}</span></span>
                             </div>
-                            <span class="w-8 text-right ${valColor}">${f.value > 0 ? '+' : ''}${f.value.toFixed(1)}</span>
+                            <div class="h-1 md:h-1.5 w-full bg-[#21262d] rounded-full overflow-hidden">
+                                <div class="h-full rounded-full transition-all" style="width:${normPct}%; background:${f.color}; opacity: ${f.value === 0 ? 0 : 1}"></div>
+                            </div>
                         </div>
                     `;
                 }).join('');
 
                 return `
-                    <div class="terminal-card p-4 cursor-pointer" onclick="openDetail('${a.ticker}')">
-                        <div class="flex items-center justify-between mb-3">
-                            <div class="flex items-center gap-2">
-                                <span class="text-[#c586c0] font-bold text-lg">${a.ticker}</span>
-                                <span class="text-[#444] text-xs">${a.sector.toUpperCase()}</span>
+                    <div class="terminal-card p-2 md:p-4 bg-[#161b22] border border-[#30363d] rounded-lg relative overflow-hidden group hover:border-[#c586c0] transition-all cursor-pointer" onclick="openDetail('${a.ticker}')">
+                        <!-- Header -->
+                        <div class="flex items-start justify-between mb-2 md:mb-4">
+                            <div class="flex items-center gap-1 md:gap-2">
+                                <h2 class="text-xl md:text-2xl font-bold text-[#e6edf3]">${a.ticker}</h2>
+                                <span class="px-1 py-0.5 text-[8px] md:text-[9px] font-bold text-[#8b949e] bg-[#21262d] rounded uppercase tracking-wider">${a.sector.toUpperCase()}</span>
                             </div>
-                            <div class="text-3xl font-bold" style="color:${overallColor}">${a.overall > 0 ? '+' : ''}${a.overall.toFixed(1)}</div>
+                            <div class="text-2xl md:text-3xl font-bold" style="color:${overallColor}">${a.overall > 0 ? '+' : ''}${a.overall.toFixed(1)}</div>
                         </div>
-                        <div class="space-y-1 border-t border-[#21262d] pt-2">
+
+                        <!-- Bars Container -->
+                        <div class="space-y-1 md:space-y-2">
                             ${factorRows}
                         </div>
-                        <div class="mt-2 text-center text-[#8b949e] text-[10px] group-hover:text-[#c586c0] transition-colors">
+                        
+                        <div class="mt-2 md:mt-3 text-center text-[#8b949e] text-[8px] md:text-[10px] group-hover:text-[#c586c0] transition-colors border-t border-[#21262d] pt-1 md:pt-2">
                             Click for History
                         </div>
                     </div>
-                    `;
+                `;
             }).join('');
         }
 
@@ -887,7 +895,6 @@
             }
         }
     </script>
-</body>
 </body>
 
 </html>
