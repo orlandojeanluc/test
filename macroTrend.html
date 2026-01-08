@@ -559,20 +559,20 @@
             }
 
             container.innerHTML = data.map(a => {
-                const overallColor = a.overall > 0 ? '#bbf7d0' : a.overall < 0 ? '#fecaca' : '#8b949e';
+                const overallColor = a.overall > 0 ? '#b5cea8' : a.overall < 0 ? '#f48771' : '#8b949e';
 
                 const factors = [
-                    { name: 'ST Trend', value: a.stTrend, max: 4, color: '#bbf7d0' },
-                    { name: 'ST Str', value: a.stStrength, max: 4, color: '#bfdbfe' },
-                    { name: 'IT Trend', value: a.itTrend, max: 4, color: '#bbf7d0' },
-                    { name: 'IT Str', value: a.itStrength, max: 4, color: '#bfdbfe' },
-                    { name: 'Mean Rev', value: a.meanReversion, max: 2, color: '#fecaca' },
-                    { name: 'Breakout', value: a.breakout, max: 4, color: '#e9d5ff' }
+                    { name: 'ST Trend', value: a.stTrend, max: 4, color: '#b5cea8' },
+                    { name: 'ST Str', value: a.stStrength, max: 4, color: '#9cdcfe' },
+                    { name: 'IT Trend', value: a.itTrend, max: 4, color: '#b5cea8' },
+                    { name: 'IT Str', value: a.itStrength, max: 4, color: '#9cdcfe' },
+                    { name: 'Mean Rev', value: a.meanReversion, max: 2, color: '#f48771' },
+                    { name: 'Breakout', value: a.breakout, max: 4, color: '#c586c0' }
                 ];
 
                 const factorRows = factors.map(f => {
                     const normPct = Math.min(100, (Math.abs(f.value) / f.max) * 100);
-                    const valColor = f.value > 0 ? 'text-[#bbf7d0]' : f.value < 0 ? 'text-[#fecaca]' : 'text-[#8b949e]';
+                    const valColor = f.value > 0 ? 'text-[#b5cea8]' : f.value < 0 ? 'text-[#f48771]' : 'text-[#8b949e]';
 
                     return `
                         <div>

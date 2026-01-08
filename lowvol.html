@@ -69,9 +69,15 @@
 
         .data-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 12px;
             padding: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .data-grid {
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            }
         }
 
         .risk-bar {
@@ -512,25 +518,39 @@
             }
 
             container.innerHTML = data.map(a => {
-                const risk = getRiskLevel(a.score);
-                const scoreColor = a.score <= 2 ? '#b5cea8' : a.score <= 4 ? '#dcdcaa' : '#f48771';
-                const barWidth = Math.min(100, a.score * 10);
+                // Color Logic: Low Score = Good (Green), High Score = Bad (Red)
+                let scoreColor = '#b5cea8'; // Default Low Risk (Green)
+                if (a.score >= 6) scoreColor = '#f48771'; // High Risk (Red)
+                else if (a.score > 2) scoreColor = '#dcdcaa'; // Moderate Risk (Amber)
+
+                // Normalize Score (Max approx 10)
+                const normPct = Math.min(100, (a.score / 10) * 100);
 
                 return `
-                    <div class="terminal-card p-4 cursor-pointer hover:bg-[#21262d] transition-colors" onclick="window.location.href='lowvol_detail.html?ticker=${a.ticker}'">
-                        <div class="flex items-center justify-between mb-3">
-                            <div class="flex items-center gap-2">
-                                <span class="text-[#c586c0] font-bold text-lg">${a.ticker}</span>
-                                <span class="text-[#444] text-xs">${a.sector.toUpperCase()}</span>
+                    <div class="terminal-card p-2 md:p-4 bg-[#161b22] border border-[#30363d] rounded-lg relative overflow-hidden group hover:border-[#c586c0] transition-all cursor-pointer" onclick="window.location.href='lowvol_detail.html?ticker=${a.ticker}'">
+                        <!-- Header -->
+                        <div class="flex items-start justify-between mb-2 md:mb-4">
+                            <div class="flex items-center gap-1 md:gap-2">
+                                <h2 class="text-xl md:text-2xl font-bold text-[#e6edf3]">${a.ticker}</h2>
+                                <span class="px-1 py-0.5 text-[8px] md:text-[9px] font-bold text-[#8b949e] bg-[#21262d] rounded uppercase tracking-wider">${a.sector.toUpperCase()}</span>
                             </div>
-                            <span class="badge ${risk.badge}">${risk.text}</span>
+                            <div class="text-2xl md:text-3xl font-bold" style="color:${scoreColor}">${a.score.toFixed(1)}</div>
                         </div>
-                        <div class="flex items-center justify-between">
-                            <span class="text-[#8b949e] text-xs">Risk Score</span>
-                            <span class="text-3xl font-bold ${risk.class}">${a.score.toFixed(1)}</span>
+
+                        <!-- Bar Container (Single Risk Factor) -->
+                        <div class="space-y-1 md:space-y-2">
+                            <div>
+                                <div class="flex justify-between text-[8px] md:text-[10px] mb-0.5 md:mb-1">
+                                    <span class="text-[#8b949e] font-medium truncate">Risk Score</span>
+                                </div>
+                                <div class="h-1 md:h-1.5 w-full bg-[#21262d] rounded-full overflow-hidden">
+                                    <div class="h-full rounded-full transition-all" style="width:${normPct}%; background:${scoreColor};"></div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="risk-bar mt-3">
-                            <div class="risk-fill" style="width:${barWidth}%; background:${scoreColor}"></div>
+
+                        <div class="mt-2 md:mt-3 text-center text-[#8b949e] text-[8px] md:text-[10px] group-hover:text-[#c586c0] transition-colors border-t border-[#21262d] pt-1 md:pt-2">
+                            Click for Analysis
                         </div>
                     </div>
                 `;

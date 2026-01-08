@@ -64,14 +64,19 @@
 
         .terminal-card:hover {
             border-color: #c586c0;
-            box-shadow: 0 0 20px rgba(197, 134, 192, 0.1);
         }
 
         .data-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 12px;
             padding: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .data-grid {
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            }
         }
 
         .risk-bar {
@@ -517,30 +522,35 @@
             }
 
             container.innerHTML = data.map(a => {
-                const level = getFactorLevel(a.score);
-                // Color Logic synced with getFactorLevel:
-                // >= 4: Strong (Green #b5cea8)
-                // >= 2: Moderate (Lime #88ff00)
-                // >= 1: Weak (Amber #dcdcaa)
-                // < 1: Poor (Red #f48771)
-                const scoreColor = a.score >= 4 ? '#b5cea8' : a.score >= 2 ? '#dcdcaa' : a.score >= 1 ? '#dcdcaa' : '#f48771';
-                const barWidth = Math.min(100, a.score * 20);
+                // Color Logic: High Score = Good (Green), Low Score = Bad (Red)
+                let scoreColor = '#b5cea8'; // Default High (Green)
+                if (a.score < 1) scoreColor = '#f48771'; // Low (Red)
+                else if (a.score < 4) scoreColor = '#dcdcaa'; // Moderate (Amber)
+
+                // Normalize Score (Approx Max 5-10 range usually, capping at 100% for bar)
+                const normPct = Math.min(100, Math.abs(a.score) * 25); // Scale: 4 = 100%
 
                 return `
-                    <div class="terminal-card p-4">
-                        <div class="flex items-center justify-between mb-3">
-                            <div class="flex items-center gap-2">
-                                <span class="text-[#c586c0] font-bold text-lg">${a.ticker}</span>
-                                <span class="text-[#444] text-xs">${a.sector.toUpperCase()}</span>
+                    <div class="terminal-card p-2 md:p-4 bg-[#161b22] border border-[#30363d] rounded-lg relative overflow-hidden group hover:border-[#c586c0] transition-all cursor-pointer">
+                        <!-- Header -->
+                        <div class="flex items-start justify-between mb-2 md:mb-4">
+                            <div class="flex items-center gap-1 md:gap-2">
+                                <h2 class="text-xl md:text-2xl font-bold text-[#e6edf3]">${a.ticker}</h2>
+                                <span class="px-1 py-0.5 text-[8px] md:text-[9px] font-bold text-[#8b949e] bg-[#21262d] rounded uppercase tracking-wider">${a.sector.toUpperCase()}</span>
                             </div>
-                            <span class="badge ${level.badge}">${level.text}</span>
+                            <div class="text-2xl md:text-3xl font-bold" style="color:${scoreColor}">${a.score.toFixed(1)}</div>
                         </div>
-                        <div class="flex items-center justify-between">
-                            <span class="text-[#8b949e] text-xs">Momentum Score</span>
-                            <span class="text-3xl font-bold ${level.class}">${a.score.toFixed(1)}</span>
-                        </div>
-                        <div class="risk-bar mt-3">
-                            <div class="risk-fill" style="width:${barWidth}%; background:${scoreColor}"></div>
+
+                        <!-- Bar Container -->
+                        <div class="space-y-1 md:space-y-2">
+                            <div>
+                                <div class="flex justify-between text-[8px] md:text-[10px] mb-0.5 md:mb-1">
+                                    <span class="text-[#8b949e] font-medium truncate">Momentum Score</span>
+                                </div>
+                                <div class="h-1 md:h-1.5 w-full bg-[#21262d] rounded-full overflow-hidden">
+                                    <div class="h-full rounded-full transition-all" style="width:${normPct}%; background:${scoreColor};"></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 `;

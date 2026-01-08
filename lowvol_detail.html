@@ -63,31 +63,17 @@
             border-radius: 16px;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
             overflow: hidden;
         }
 
-        .terminal-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            opacity: 0.5;
-        }
-
         .terminal-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            border-color: rgba(139, 92, 246, 0.3);
+            transform: translateY(-2px);
+            border-color: #c586c0;
         }
 
         .risk-card-active {
-            background: linear-gradient(145deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.95) 100%) !important;
-            border: 1px solid rgba(139, 92, 246, 0.4) !important;
-            box-shadow: 0 0 20px rgba(139, 92, 246, 0.15) !important;
+            background: #1e293b !important;
+            border: 1px solid #8b5cf6 !important;
         }
 
         /* Gauge Styles */
@@ -95,17 +81,13 @@
             stroke: #1E293B;
         }
 
-        .gauge-value-arc {
-            filter: drop-shadow(0 0 8px rgba(139, 92, 246, 0.3));
-        }
+
 
         /* Chart tooltip */
         .chart-tooltip {
-            background: rgba(15, 23, 42, 0.9);
-            backdrop-filter: blur(8px);
+            background: #0f172a;
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 12px;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
             padding: 12px 16px;
             color: #fff;
         }
@@ -121,17 +103,15 @@
         }
 
         .bar-positive {
-            fill: url(#gradient-positive);
-            filter: drop-shadow(0 0 4px rgba(16, 185, 129, 0.3));
+            fill: #10B981;
         }
 
         .bar-negative {
-            fill: url(#gradient-negative);
-            filter: drop-shadow(0 0 4px rgba(236, 72, 153, 0.3));
+            fill: #EC4899;
         }
 
         .bar-vol-fill {
-            fill: url(#gradient-vol);
+            fill: #94A3B8;
         }
 
         /* Scatter points */
@@ -141,39 +121,18 @@
 
         .scatter-point:hover {
             r: 8;
-            filter: drop-shadow(0 0 6px currentColor);
         }
 
         .scatter-active {
             stroke: #fff;
             stroke-width: 2;
-            filter: drop-shadow(0 0 10px rgba(139, 92, 246, 0.5));
         }
 
         /* Modern Gradients for Text */
-        .text-gradient-purple {
-            background: linear-gradient(to right, #A78BFA, #F472B6);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
         .effect-title {
             position: relative;
-            padding-left: 14px;
-        }
-
-        .effect-title::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 4px;
-            height: 14px;
-            background: #A78BFA;
-            border-radius: 4px;
-            box-shadow: 0 0 8px rgba(167, 139, 250, 0.4);
+            padding-left: 0;
+            font-weight: 600;
         }
     </style>
 </head>
@@ -358,7 +317,7 @@
                     Back
                 </a>
                 <span class="text-[#8b949e] hidden md:inline">|</span>
-                <span id="ticker-header" class="text-white text-xs font-bold uppercase"></span>
+                <span id="ticker-header" class="text-white text-xs font-bold capitalize"></span>
                 <span class="text-[#b5cea8] text-[10px] md:text-xs blink">● Live</span>
             </div>
             <div class="flex items-center gap-4 text-xs">
@@ -421,7 +380,8 @@
                 <!-- Left: Gauge & Score -->
                 <div
                     class="terminal-card p-6 flex flex-col items-center justify-center text-center relative overflow-hidden min-h-[300px]">
-                    <h3 class="text-[#8b949e] text-xs uppercase tracking-wider mb-4 font-mono">Current Risk Profile</h3>
+                    <h3 class="text-[#8b949e] text-xs capitalize tracking-wider mb-4 font-mono">Current Risk Profile
+                    </h3>
 
                     <div id="gauge-chart" class="gauge-container mb-4 w-full flex justify-center"></div>
 
@@ -434,7 +394,7 @@
                 <!-- Right: Risk vs Return Scatter -->
                 <div class="terminal-card p-6 flex flex-col min-h-[300px]">
                     <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-[#8b949e] text-xs uppercase tracking-wider font-mono">Risk / Return Landscape
+                        <h3 class="text-[#8b949e] text-xs capitalize tracking-wider font-mono">Risk / Return Landscape
                         </h3>
                         <div class="flex gap-2 text-[10px] text-[#8b949e]">
                             <span class="flex items-center gap-1"><span
@@ -450,7 +410,7 @@
             <!-- Low Vol Bar Chart -->
             <div class="terminal-card p-4 md:p-6">
                 <div class="flex justify-between items-center mb-6">
-                    <h3 class="text-[#8b949e] text-xs uppercase tracking-wider font-mono effect-title">Regime
+                    <h3 class="text-[#8b949e] text-xs capitalize tracking-wider font-mono effect-title">Regime
                         Performance Comparison</h3>
                 </div>
                 <!-- D3 Bar Chart Container -->
@@ -866,7 +826,7 @@
                             <div class="flex justify-between gap-4"><span class="text-slate-400">Vol:</span> <span class="font-mono text-slate-200">${d.vol.toFixed(2)}%</span></div>
                         </div>
                     `;
-                    d3.select(this).attr("r", 8).style("filter", "drop-shadow(0 0 4px rgba(139, 92, 246, 0.5))");
+                    d3.select(this).attr("r", 8);
                 })
                 .on("mousemove", function (event) {
                     const tooltip = document.getElementById('chart-tooltip');
@@ -927,14 +887,14 @@
 
                 const retColor = retVal >= 0 ? 'text-emerald-400' : 'text-pink-400';
                 const isActive = k === activeKey ? 'risk-card-active' : '';
-                // Unify Active Label (Pill)
-                const activeLabel = k === activeKey ? '<span class="absolute top-4 right-4 text-[10px] text-white font-bold bg-gradient-to-r from-violet-500 to-pink-500 px-3 py-1 rounded-full shadow-lg shadow-violet-500/20 tracking-wider">CURRENT</span>' : '';
+                // Unify Active Label (Pill) - Flat
+                const activeLabel = k === activeKey ? '<span class="absolute top-4 right-4 text-[10px] text-white font-bold bg-[#8b5cf6] px-3 py-1 rounded-full tracking-wider">CURRENT</span>' : '';
 
                 return `
                     <div class="terminal-card p-6 flex flex-col min-h-[170px] relative justify-between ${isActive}">
                         ${activeLabel}
                         <div>
-                            <span class="text-slate-500 text-xs font-semibold tracking-wider uppercase">Risk Score</span>
+                            <span class="text-slate-500 text-xs font-semibold tracking-wider capitalize">Risk Score</span>
                             <div class="text-4xl font-bold text-white mt-1">${displayScore}</div>
                         </div>
                         
