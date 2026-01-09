@@ -48,21 +48,20 @@
         }
 
         .terminal-header {
-            background: #161b22;
-            border-bottom: 1px solid #30363d;
+            background: #0d1117;
+            border-bottom: 1px solid #21262d;
         }
 
         .terminal-card {
-            background: #161b22;
-            border: 1px solid #30363d;
+            background: #0d1117;
+            border: 1px solid #21262d;
             transition: all 0.15s ease;
             position: relative;
-            border-radius: 16px;
+            border-radius: 12px;
         }
 
         .terminal-card:hover {
-            border-color: #c586c0;
-            box-shadow: 0 0 20px rgba(197, 134, 192, 0.1);
+            border-color: #30363d;
         }
 
         .bar-fill {
@@ -82,24 +81,24 @@
         }
 
         .sort-btn.active {
-            background-color: #c586c0;
-            color: black;
+            border-color: #c586c0 !important;
+            color: #c586c0;
         }
 
         .filter-chip {
-            border: 1px solid #30363d;
-            color: #8b949e;
+            background: #0d1117;
+            border: 1px solid #21262d;
+            color: #fff;
             transition: all 0.2s;
             border-radius: 12px;
         }
 
         .filter-chip:hover {
-            color: #fff;
-            border-color: #666;
+            border-color: #30363d;
         }
 
         .filter-chip.active {
-            background: #252526;
+            background: #0d1117;
             border-color: #c586c0;
             color: #c586c0;
         }
@@ -156,8 +155,8 @@
             width: 100%;
             max-width: 500px;
             height: 100vh;
-            background: #161b22;
-            border-left: 1px solid #30363d;
+            background: #0d1117;
+            border-left: 1px solid #21262d;
             z-index: 100;
             padding: 32px;
             transition: right 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -463,13 +462,13 @@
                 <span
                     class="text-[#8b949e] text-xs font-bold whitespace-nowrap sticky left-0 bg-[#0d1117] z-10 pr-2">Sort:</span>
                 <button
-                    class="sort-btn active px-2 py-1 text-xs bg-[#1a1a1a] border border-[#333] text-[#8b949e] whitespace-nowrap"
+                    class="sort-btn active px-2 py-1 text-xs bg-[#0d1117] border border-[#c586c0] text-[#c586c0] rounded-lg whitespace-nowrap"
                     data-sort="score" onclick="setSort('score')">Score</button>
                 <button
-                    class="sort-btn px-2 py-1 text-xs bg-[#1a1a1a] border border-[#333] text-[#8b949e] whitespace-nowrap"
+                    class="sort-btn px-2 py-1 text-xs bg-[#0d1117] border border-[#21262d] text-[#8b949e] hover:border-[#30363d] hover:text-white rounded-lg whitespace-nowrap"
                     data-sort="alpha" onclick="setSort('alpha')">Name</button>
                 <button
-                    class="sort-btn px-2 py-1 text-xs bg-[#1a1a1a] border border-[#333] text-[#8b949e] whitespace-nowrap"
+                    class="sort-btn px-2 py-1 text-xs bg-[#0d1117] border border-[#21262d] text-[#8b949e] hover:border-[#30363d] hover:text-white rounded-lg whitespace-nowrap"
                     data-sort="sector" onclick="setSort('sector')">Sector</button>
             </div>
         </div>
@@ -478,11 +477,11 @@
             <!-- Metrics Grid -->
             <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2">
                 <div class="terminal-card p-3 cursor-pointer" onclick="showMetricDetail('total')">
-                    <div class="text-[#8b949e] text-[10px] font-bold mb-1">Total Assets</div>
+                    <div class="text-[10px] font-bold mb-1" style="color:#fff">Total Assets</div>
                     <div id="total-assets" class="text-2xl font-bold text-white count-up">--</div>
                 </div>
                 <div class="terminal-card p-3 cursor-pointer" onclick="showMetricDetail('bullish')">
-                    <div class="text-[#8b949e] text-[10px] font-bold mb-1 hover:text-[#b5cea8]">Bullish Trend
+                    <div class="text-[10px] font-bold mb-1 hover:text-[#b5cea8]" style="color:#fff">Bullish Trend
                     </div>
                     <div class="flex items-baseline gap-2 mb-1">
                         <span id="bullish-count" class="text-2xl font-bold text-[#b5cea8] count-up">--</span>
@@ -493,7 +492,7 @@
                     </div>
                 </div>
                 <div class="terminal-card p-3 cursor-pointer" onclick="showMetricDetail('neutral')">
-                    <div class="text-[#8b949e] text-[10px] font-bold mb-1 hover:text-[#dcdcaa]">Neutral</div>
+                    <div class="text-[10px] font-bold mb-1 hover:text-[#dcdcaa]" style="color:#fff">Neutral</div>
                     <div class="flex items-baseline gap-2 mb-1">
                         <span id="neutral-count" class="text-2xl font-bold text-[#dcdcaa] count-up">--</span>
                         <span id="neutral-pct" class="text-xs font-mono text-[#dcdcaa]">--%</span>
@@ -503,7 +502,7 @@
                     </div>
                 </div>
                 <div class="terminal-card p-3 cursor-pointer" onclick="showMetricDetail('bearish')">
-                    <div class="text-[#8b949e] text-[10px] font-bold mb-1 hover:text-[#f48771]">Bearish Trend
+                    <div class="text-[10px] font-bold mb-1 hover:text-[#f48771]" style="color:#fff">Bearish Trend
                     </div>
                     <div class="flex items-baseline gap-2 mb-1">
                         <span id="bearish-count" class="text-2xl font-bold text-[#f48771] count-up">--</span>
@@ -514,7 +513,7 @@
                     </div>
                 </div>
                 <div class="terminal-card p-3 cursor-pointer hover:border-[#bc8cff]" onclick="setFilter('divergence')">
-                    <div class="text-[#8b949e] text-[10px] font-bold mb-1 flex items-center gap-1">Divergences <svg
+                    <div class="text-[10px] font-bold mb-1 flex items-center gap-1" style="color:#fff">Divergences <svg
                             class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M13 10V3L4 14h7v7l9-11h-7z"></path>
@@ -522,7 +521,7 @@
                     <div id="divergence-count" class="text-2xl font-bold text-white count-up">--</div>
                 </div>
                 <div class="terminal-card p-3 cursor-pointer hover:border-[#39c5cf]" onclick="setFilter('meanrev')">
-                    <div class="text-[#8b949e] text-[10px] font-bold mb-1 flex items-center gap-1">Mean Rev <svg
+                    <div class="text-[10px] font-bold mb-1 flex items-center gap-1" style="color:#fff">Mean Rev <svg
                             class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
@@ -545,16 +544,16 @@
                         <div class="flex items-center gap-2 w-full md:w-auto">
                             <div class="flex gap-1 overflow-x-auto flex-1 md:flex-none">
                                 <button onclick="switchConstellation('overall')" id="const-overall"
-                                    class="const-tab px-3 py-1 text-[10px] font-bold bg-[#c586c0] text-black whitespace-nowrap flex-1 md:flex-none text-center">Overall</button>
+                                    class="const-tab px-3 py-1 text-[10px] font-bold bg-[#0d1117] border border-[#c586c0] text-[#c586c0] rounded-lg whitespace-nowrap flex-1 md:flex-none text-center">Overall</button>
                                 <button onclick="switchConstellation('st')" id="const-st"
-                                    class="const-tab px-3 py-1 text-[10px] font-bold bg-[#1a1a1a] text-[#8b949e] hover:text-white whitespace-nowrap flex-1 md:flex-none text-center">Short
+                                    class="const-tab px-3 py-1 text-[10px] font-bold bg-[#0d1117] border border-[#21262d] text-[#8b949e] hover:border-[#30363d] hover:text-white rounded-lg whitespace-nowrap flex-1 md:flex-none text-center">Short
                                     Term</button>
                                 <button onclick="switchConstellation('it')" id="const-it"
-                                    class="const-tab px-3 py-1 text-[10px] font-bold bg-[#1a1a1a] text-[#8b949e] hover:text-white whitespace-nowrap flex-1 md:flex-none text-center">Interm
+                                    class="const-tab px-3 py-1 text-[10px] font-bold bg-[#0d1117] border border-[#21262d] text-[#8b949e] hover:border-[#30363d] hover:text-white rounded-lg whitespace-nowrap flex-1 md:flex-none text-center">Interm
                                     Term</button>
                             </div>
                             <button onclick="toggleChartFullscreen()"
-                                class="p-1 text-[#8b949e] hover:text-[#c586c0] border border-[#333] bg-[#1a1a1a]"
+                                class="p-1 text-[#8b949e] hover:text-[#c586c0] border border-[#21262d] bg-[#0d1117] rounded-lg"
                                 title="Maximize Chart">
                                 <svg id="expand-icon" class="w-4 h-4" fill="none" stroke="currentColor"
                                     viewBox="0 0 24 24">
@@ -787,7 +786,6 @@
             currentFilter = filter;
             document.querySelectorAll('.filter-chip').forEach(c => {
                 c.classList.toggle('active', c.dataset.filter === filter);
-                c.classList.toggle('bg-[#1a1a1a]', c.dataset.filter !== filter);
             });
             renderAll();
         };
@@ -804,9 +802,9 @@
             currentConstellation = type;
             document.querySelectorAll('.const-tab').forEach(t => {
                 const isActive = t.id === `const-${type}`;
-                t.classList.toggle('bg-[#c586c0]', isActive);
-                t.classList.toggle('text-black', isActive);
-                t.classList.toggle('bg-[#1a1a1a]', !isActive);
+                t.classList.toggle('border-[#c586c0]', isActive);
+                t.classList.toggle('text-[#c586c0]', isActive);
+                t.classList.toggle('border-[#21262d]', !isActive);
                 t.classList.toggle('text-[#8b949e]', !isActive);
             });
             drawConstellation();
@@ -1101,11 +1099,11 @@
                 // Bar representation
                 const numBars = Math.min(5, Math.ceil(Math.abs(valNum) / 2));
                 const bars = Array(5).fill(0).map((_, j) => `
-                    <div class="w-1.5 h-3 bg-[#333]"><div class="w-full h-full" style="background:${j < numBars ? color : 'transparent'}"></div></div>
+                    <div class="w-1.5 h-3 bg-[#21262d]"><div class="w-full h-full" style="background:${j < numBars ? color : 'transparent'}"></div></div>
                 `).join('');
 
                 return `
-                    <div class="min-w-[160px] bg-[#1a1a1a] p-3 border border-[#333] hover:border-[#c586c0] cursor-pointer" onclick="openAssetDetail('${a.ticker}')">
+                    <div class="min-w-[160px] bg-[#0d1117] p-3 border border-[#21262d] rounded-lg hover:border-[#30363d] cursor-pointer" onclick="openAssetDetail('${a.ticker}')">
                         <div class="flex justify-between mb-2">
                             <span class="font-bold text-[#fff] uppercase">${a.ticker}</span>
                             <span class="font-mono text-xs" style="color:${color}">${displayVal}</span>
@@ -1189,7 +1187,7 @@
                 const avg = assets.reduce((sum, a) => sum + a.overallScore, 0) / assets.length;
                 const color = avg > 0 ? 'text-[#b5cea8]' : 'text-[#f48771]';
                 return `
-                    <div class="bg-[#1a1a1a] p-3 border border-[#333] cursor-pointer hover:border-[#c586c0]" onclick="filterBySector('${s}')">
+                    <div class="bg-[#0d1117] p-3 border border-[#21262d] rounded-lg cursor-pointer hover:border-[#30363d]" onclick="filterBySector('${s}')">
                         <div class="flex justify-between items-center">
                             <span class="text-white font-bold">${s}</span>
                             <span class="font-mono ${color} font-bold">${avg > 0 ? '+' : ''}${avg.toFixed(1)}</span>
@@ -1209,7 +1207,7 @@
             ).slice(0, 10);
 
             document.getElementById('divergence-list').innerHTML = divs.map(a => `
-                <div class="flex justify-between p-2 bg-[#1a1a1a] mb-1 cursor-pointer" onclick="openAssetDetail('${a.ticker}')">
+                <div class="flex justify-between p-2 bg-[#0d1117] border border-[#21262d] rounded mb-1 cursor-pointer hover:border-[#30363d]" onclick="openAssetDetail('${a.ticker}')">
                     <span class="text-white font-bold uppercase">${a.ticker}</span>
                     <span class="text-xs text-white">ST: ${a.stTrend} | IT: ${a.itTrend}</span>
                 </div>
@@ -1219,7 +1217,7 @@
             const targetValues = [-1.5, -1, -0.5, 0.5, 1, 1.5];
             const mr = assetsData.filter(a => targetValues.includes(parseFloat(a.meanReversion))).slice(0, 10);
             document.getElementById('meanrev-list').innerHTML = mr.map(a => `
-                 <div class="flex justify-between p-2 bg-[#1a1a1a] mb-1 cursor-pointer" onclick="openAssetDetail('${a.ticker}')">
+                 <div class="flex justify-between p-2 bg-[#0d1117] border border-[#21262d] rounded mb-1 cursor-pointer hover:border-[#30363d]" onclick="openAssetDetail('${a.ticker}')">
                     <span class="text-white font-bold uppercase">${a.ticker}</span>
                     <span class="text-xs text-white">${a.meanReversion}</span>
                 </div>
@@ -1228,7 +1226,7 @@
             // Chop
             const chop = assetsData.filter(a => Math.abs(a.overallScore) <= 2 && Math.abs(a.stTrend) <= 1).slice(0, 10);
             document.getElementById('chop-list').innerHTML = chop.map(a => `
-                 <div class="flex justify-between p-2 bg-[#1a1a1a] mb-1 cursor-pointer" onclick="openAssetDetail('${a.ticker}')">
+                 <div class="flex justify-between p-2 bg-[#0d1117] border border-[#21262d] rounded mb-1 cursor-pointer hover:border-[#30363d]" onclick="openAssetDetail('${a.ticker}')">
                     <span class="text-white font-bold uppercase">${a.ticker}</span>
                     <span class="text-xs text-white">Range Bound</span>
                 </div>
