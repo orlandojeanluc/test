@@ -44,22 +44,26 @@
             font-family: 'JetBrains Mono', monospace;
         }
 
+        html,
+        body {
+            overflow-x: hidden;
+        }
+
         body {
             background-color: #0d1117;
             color: #c9d1d9;
             font-size: 14px;
             line-height: 1.4;
-            overflow-x: hidden;
         }
 
         .terminal-header {
-            background: #161b22;
+            background: #0d1117;
             border-bottom: 1px solid #21262d;
         }
 
         .terminal-card {
-            background: #161b22;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: #0d1117;
+            border: 1px solid #21262d;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             border-radius: 16px;
@@ -106,10 +110,9 @@
 
 <body class="min-h-screen">
     <!-- Sidebar Navigation -->
-    <nav id="sidebar"
-        class="fixed z-50 bg-[#0d1117] flex items-center
-                bottom-0 w-full h-14 border-t border-[#30363d] flex-row justify-around py-0
-                lg:left-0 lg:top-0 lg:h-full lg:w-12 lg:border-r lg:border-t-0 lg:flex-col lg:py-4 transition-all duration-300 lg:rounded-r-3xl">
+    <nav id="sidebar" class="fixed z-50 bg-[#0a0e14] flex items-center
+                bottom-0 w-full h-14 flex-row justify-around py-0
+                lg:left-0 lg:top-0 lg:h-full lg:w-12 lg:flex-col lg:py-4 transition-all duration-300">
 
         <!-- Logo (Hidden on Mobile, Visible on Desktop) -->
         <div class="hidden lg:block text-[#c586c0] font-bold text-xs mb-6 w-full text-center relative">
@@ -273,22 +276,31 @@
     <!-- Main Content Container -->
     <div id="main-content" class="ml-0 lg:ml-12 pb-20 lg:pb-0 transition-all duration-300">
         <!-- Header -->
-        <header
-            class="terminal-header px-4 py-2 flex flex-col md:flex-row md:items-center justify-between gap-2 md:gap-0 sticky top-0 z-40 bg-[#161b22]">
-            <div class="flex items-center gap-2 md:gap-4">
+        <header class="terminal-header px-4 py-3 flex items-center justify-between gap-4 sticky top-0 z-40 relative">
+            <!-- Left: Logo -->
+            <div class="flex items-center gap-2 min-w-[70px]">
                 <span class="text-[#c586c0] font-bold text-sm">Caltropia</span>
-                <span class="text-[#8b949e]">|</span>
-                <span class="text-white text-xs font-bold">Sector Intelligence</span>
-                <span class="text-[#b5cea8] text-[10px] md:text-xs blink">● Live</span>
+                <span class="text-[#8b949e] hidden md:inline">|</span>
+                <span class="text-white text-xs whitespace-nowrap hidden md:inline">Sector Intelligence</span>
             </div>
-            <div class="flex items-center gap-4 text-xs">
-                <span class="text-[#8b949e]">Sectors Scanning:</span>
-                <span id="sector-count" class="text-white font-bold">0</span>
+            <!-- Right: Stats (Desktop only) -->
+            <div class="flex items-center gap-2 text-xs hidden lg:flex">
+                <span class="text-white">Sectors:</span>
+                <span id="sector-count" class="text-[#dcdcaa] font-bold">0</span>
                 <div class="w-px h-3 bg-[#21262d]"></div>
-                <span class="text-[#8b949e]">Updated:</span>
+                <span class="text-white">Updated:</span>
                 <span id="last-updated" class="text-[#dcdcaa]">--:--:--</span>
             </div>
         </header>
+
+        <!-- Mobile Title (hidden on desktop) -->
+        <div class="lg:hidden px-4 py-2 flex items-center justify-between">
+            <h1 class="text-white text-lg font-semibold">Sector Intelligence</h1>
+            <div class="text-xs">
+                <span class="text-white">Sectors:</span>
+                <span id="sector-count-mobile" class="text-[#dcdcaa]">0</span>
+            </div>
+        </div>
 
         <!-- Main Content -->
         <div class="p-6 max-w-7xl mx-auto space-y-6">
@@ -369,7 +381,10 @@
         ];
 
         async function init() {
-            document.getElementById('sector-count').textContent = [...new Set(tickerConfig.map(t => t.sector))].length;
+            const sectorCount = [...new Set(tickerConfig.map(t => t.sector))].length;
+            document.getElementById('sector-count').textContent = sectorCount;
+            const mobileCount = document.getElementById('sector-count-mobile');
+            if (mobileCount) mobileCount.textContent = sectorCount;
 
             try {
                 // Call Cloud Function for aggregated data
@@ -586,11 +601,11 @@
             const logoText = document.querySelector('.logo-text');
             const toggleIcon = document.getElementById('toggle-icon');
 
-            const isExpanded = sidebar.classList.contains('w-48');
+            const isExpanded = sidebar.classList.contains('lg:w-48');
 
             if (isExpanded) {
                 // Collapse
-                sidebar.classList.remove('w-48');
+                sidebar.classList.remove('lg:w-48');
                 sidebar.classList.add('lg:w-12');
                 mainContent.classList.remove('lg:ml-48');
                 mainContent.classList.add('lg:ml-12');
@@ -601,7 +616,7 @@
             } else {
                 // Expand
                 sidebar.classList.remove('lg:w-12');
-                sidebar.classList.add('w-48');
+                sidebar.classList.add('lg:w-48');
                 mainContent.classList.remove('lg:ml-12');
                 mainContent.classList.add('lg:ml-48');
 

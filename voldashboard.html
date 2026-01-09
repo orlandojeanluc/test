@@ -211,11 +211,10 @@
 
 <body class="min-h-screen flex flex-col overflow-y-auto overflow-x-hidden lg:overflow-hidden bg-[#0d1117] w-full">
 
-    <!-- Sidebar Navigation -->
-    <nav id="sidebar"
-        class="fixed z-50 bg-[#0d1117] flex items-center
-                bottom-0 w-full h-14 border-t border-[#30363d] flex-row justify-around py-0
-                lg:left-0 lg:top-0 lg:h-full lg:w-12 lg:border-r lg:border-t-0 lg:flex-col lg:py-4 transition-all duration-300 lg:rounded-r-3xl">
+    <!-- Sidebar Navigation - Terminal Style -->
+    <nav id="sidebar" class="fixed z-50 bg-[#0a0e14] flex items-center
+                bottom-0 w-full h-14 flex-row justify-around py-0
+                lg:left-0 lg:top-0 lg:h-full lg:w-12 lg:flex-col lg:py-4 transition-all duration-300">
 
         <!-- Logo (Hidden on Mobile, Visible on Desktop) -->
         <div class="hidden lg:block text-[#c586c0] font-bold text-xs mb-6 w-full text-center relative">
@@ -379,48 +378,53 @@
         class="ml-0 lg:ml-12 h-auto lg:h-screen flex flex-col transition-all duration-300 overflow-visible">
         <!-- Header -->
         <header
-            class="h-auto min-h-[3rem] py-2 border-b border-[#21262d] bg-[#161b22] px-4 flex flex-wrap gap-y-2 items-center justify-between sticky top-0 z-30">
-            <div class="flex items-center gap-3">
-                <h1 class="text-sm font-bold text-[#c9d1d9] tracking-tight">VOLATILITY DASHBOARD</h1>
+            class="h-auto min-h-[3rem] py-2 border-b border-[#21262d] bg-[#0d1117] px-4 flex flex-wrap gap-y-2 items-center justify-between sticky top-0 z-30">
+            <div class="flex items-center gap-2">
+                <span class="text-[#c586c0] font-bold text-sm">Caltropia</span>
+                <span class="text-[#8b949e] hidden md:inline">|</span>
+                <span class="text-white text-xs whitespace-nowrap font-bold">VOLATILITY DASHBOARD</span>
+
+                <!-- Status Badges -->
                 <span
-                    class="text-[10px] bg-[#21262d] px-1.5 py-0.5 rounded text-[#8b949e] border border-[#30363d]">LIVE</span>
+                    class="ml-2 text-[10px] bg-[#21262d] px-2 py-0.5 rounded-md text-white border border-[#30363d]">LIVE</span>
                 <span id="summary-badge"
-                    class="text-[10px] bg-[#0d1117] px-2 py-0.5 rounded text-[#8b949e] border border-[#30363d] hidden"></span>
+                    class="text-[10px] bg-[#0d1117] px-2 py-0.5 rounded-md text-white border border-[#30363d] hidden"></span>
                 <span id="cache-time"
-                    class="text-[10px] bg-[#0d1117] px-2 py-0.5 rounded text-[#8b949e] border border-[#30363d] hidden"></span>
+                    class="text-[10px] bg-[#0d1117] px-2 py-0.5 rounded-md text-white border border-[#30363d] hidden"></span>
             </div>
 
             <!-- Controls -->
             <div class="flex flex-wrap items-center gap-2 md:gap-4 justify-end">
                 <!-- Color Mode Toggle -->
-                <div class="flex items-center bg-[#21262d] rounded p-0.5 border border-[#30363d] mr-4">
+                <div class="flex items-center bg-[#0d1117] rounded-md p-0.5 border border-[#30363d] mr-4">
                     <button onclick="setColorMode('abs')" id="btn-abs"
-                        class="px-2 py-0.5 text-[10px] rounded font-medium text-[#c9d1d9] bg-[#30363d]">ABS VOL</button>
+                        class="px-2 py-0.5 text-[10px] rounded-md font-medium text-white bg-[#30363d]">ABS VOL</button>
                     <button onclick="setColorMode('pctl')" id="btn-pctl"
-                        class="px-2 py-0.5 text-[10px] rounded font-medium text-[#8b949e] hover:text-[#c9d1d9]">PERCENTILE</button>
+                        class="px-2 py-0.5 text-[10px] rounded-md font-medium text-[#8b949e] hover:text-white">PERCENTILE</button>
                     <button onclick="setColorMode('vrp')" id="btn-vrp"
-                        class="px-2 py-0.5 text-[10px] rounded font-medium text-[#8b949e] hover:text-[#c9d1d9]"
+                        class="px-2 py-0.5 text-[10px] rounded-md font-medium text-[#8b949e] hover:text-white"
                         title="Vol Risk Premium">VRP</button>
                     <button onclick="setColorMode('signal')" id="btn-signal"
-                        class="px-2 py-0.5 text-[10px] rounded font-medium text-[#8b949e] hover:text-[#c9d1d9]"
+                        class="px-2 py-0.5 text-[10px] rounded-md font-medium text-[#8b949e] hover:text-white"
                         title="Cross-Sectional Signal">SIGNAL</button>
                 </div>
 
                 <!-- View Toggle -->
-                <div class="flex items-center bg-[#21262d] rounded p-0.5 border border-[#30363d]">
+                <div class="flex items-center bg-[#0d1117] rounded-md p-0.5 border border-[#30363d]">
                     <button onclick="setView('map')" id="btn-map"
-                        class="px-2 py-0.5 text-[10px] rounded font-medium text-[#c9d1d9] bg-[#30363d]">MAP</button>
+                        class="px-2 py-0.5 text-[10px] rounded-md font-medium text-white bg-[#30363d]">MAP</button>
                     <button onclick="setView('scatter')" id="btn-scatter"
-                        class="px-2 py-0.5 text-[10px] rounded font-medium text-[#8b949e] hover:text-[#c9d1d9]">REAL</button>
+                        class="px-2 py-0.5 text-[10px] rounded-md font-medium text-[#8b949e] hover:text-white">REAL</button>
                     <button onclick="setView('table')" id="btn-table"
-                        class="px-2 py-0.5 text-[10px] rounded font-medium text-[#8b949e] hover:text-[#c9d1d9]">TABLE</button>
+                        class="px-2 py-0.5 text-[10px] rounded-md font-medium text-[#8b949e] hover:text-white">TABLE</button>
                 </div>
             </div>
         </header>
 
         <!-- Main Content -->
+        <!-- Main Content -->
         <div id="content-container"
-            class="w-full min-w-0 flex-grow relative overflow-y-auto overflow-x-hidden bg-[#0d1117] pb-20 lg:pb-0">
+            class="w-full min-w-0 flex-grow relative overflow-y-auto overflow-x-auto bg-[#0d1117] pb-20 lg:pb-0">
             <div id="loading"
                 class="absolute inset-0 flex items-center justify-center text-[#8b949e] animate-pulse pointer-events-none">
                 Fetching Volatility Data...</div>
@@ -582,18 +586,18 @@
 
         window.setView = function (v) {
             currentView = v;
-            document.getElementById('btn-map').className = v === 'map' ? "px-2 py-0.5 text-[10px] rounded font-medium text-[#c9d1d9] bg-[#30363d]" : "px-2 py-0.5 text-[10px] rounded font-medium text-[#8b949e] hover:text-[#c9d1d9]";
-            document.getElementById('btn-scatter').className = v === 'scatter' ? "px-2 py-0.5 text-[10px] rounded font-medium text-[#c9d1d9] bg-[#30363d]" : "px-2 py-0.5 text-[10px] rounded font-medium text-[#8b949e] hover:text-[#c9d1d9]";
-            document.getElementById('btn-table').className = v === 'table' ? "px-2 py-0.5 text-[10px] rounded font-medium text-[#c9d1d9] bg-[#30363d]" : "px-2 py-0.5 text-[10px] rounded font-medium text-[#8b949e] hover:text-[#c9d1d9]";
+            document.getElementById('btn-map').className = v === 'map' ? "px-2 py-0.5 text-[10px] rounded-md font-medium text-white bg-[#30363d]" : "px-2 py-0.5 text-[10px] rounded-md font-medium text-[#8b949e] hover:text-white";
+            document.getElementById('btn-scatter').className = v === 'scatter' ? "px-2 py-0.5 text-[10px] rounded-md font-medium text-white bg-[#30363d]" : "px-2 py-0.5 text-[10px] rounded-md font-medium text-[#8b949e] hover:text-white";
+            document.getElementById('btn-table').className = v === 'table' ? "px-2 py-0.5 text-[10px] rounded-md font-medium text-white bg-[#30363d]" : "px-2 py-0.5 text-[10px] rounded-md font-medium text-[#8b949e] hover:text-white";
             renderView();
         }
 
         window.setColorMode = function (m) {
             colorMode = m;
-            document.getElementById('btn-abs').className = m === 'abs' ? "px-2 py-0.5 text-[10px] rounded font-medium text-[#c9d1d9] bg-[#30363d]" : "px-2 py-0.5 text-[10px] rounded font-medium text-[#8b949e] hover:text-[#c9d1d9]";
-            document.getElementById('btn-pctl').className = m === 'pctl' ? "px-2 py-0.5 text-[10px] rounded font-medium text-[#c9d1d9] bg-[#30363d]" : "px-2 py-0.5 text-[10px] rounded font-medium text-[#8b949e] hover:text-[#c9d1d9]";
-            document.getElementById('btn-vrp').className = m === 'vrp' ? "px-2 py-0.5 text-[10px] rounded font-medium text-[#c9d1d9] bg-[#30363d]" : "px-2 py-0.5 text-[10px] rounded font-medium text-[#8b949e] hover:text-[#c9d1d9]";
-            document.getElementById('btn-signal').className = m === 'signal' ? "px-2 py-0.5 text-[10px] rounded font-medium text-[#c9d1d9] bg-[#30363d]" : "px-2 py-0.5 text-[10px] rounded font-medium text-[#8b949e] hover:text-[#c9d1d9]";
+            document.getElementById('btn-abs').className = m === 'abs' ? "px-2 py-0.5 text-[10px] rounded-md font-medium text-white bg-[#30363d]" : "px-2 py-0.5 text-[10px] rounded-md font-medium text-[#8b949e] hover:text-white";
+            document.getElementById('btn-pctl').className = m === 'pctl' ? "px-2 py-0.5 text-[10px] rounded-md font-medium text-white bg-[#30363d]" : "px-2 py-0.5 text-[10px] rounded-md font-medium text-[#8b949e] hover:text-white";
+            document.getElementById('btn-vrp').className = m === 'vrp' ? "px-2 py-0.5 text-[10px] rounded-md font-medium text-white bg-[#30363d]" : "px-2 py-0.5 text-[10px] rounded-md font-medium text-[#8b949e] hover:text-white";
+            document.getElementById('btn-signal').className = m === 'signal' ? "px-2 py-0.5 text-[10px] rounded-md font-medium text-white bg-[#30363d]" : "px-2 py-0.5 text-[10px] rounded-md font-medium text-[#8b949e] hover:text-white";
 
             // Update legend
             const legendTitle = document.getElementById('legend-title');
@@ -953,7 +957,7 @@
             container.innerHTML = '';
 
             const tableDiv = document.createElement('div');
-            tableDiv.className = "w-full overflow-x-auto";
+            tableDiv.className = "w-full"; // Removed overflow-x-auto to allow sticky header to work with parent scroll
 
             let html = `
                 <table class="w-full text-left text-sm text-[#c9d1d9]">

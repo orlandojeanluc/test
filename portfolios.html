@@ -52,12 +52,12 @@
         }
 
         .terminal-header {
-            background: #161b22;
+            background: #0d1117;
             border-bottom: 1px solid #21262d;
         }
 
         .terminal-card {
-            background: #161b22;
+            background: #0d1117;
             border: 1px solid #21262d;
             transition: all 0.15s ease;
             position: relative;
@@ -104,10 +104,9 @@
 
     <!-- Sidebar Navigation -->
     <!-- Navigation: Bottom on Mobile, Left on Desktop -->
-    <nav id="sidebar"
-        class="fixed z-50 bg-[#0d1117] flex items-center
-                bottom-0 w-full h-14 border-t border-[#30363d] flex-row justify-around py-0
-                lg:left-0 lg:top-0 lg:h-full lg:w-12 lg:border-r lg:border-t-0 lg:flex-col lg:py-4 transition-all duration-300 lg:rounded-r-3xl">
+    <nav id="sidebar" class="fixed z-50 bg-[#0d1117] flex items-center
+                bottom-0 w-full h-14 flex-row justify-around py-0
+                lg:left-0 lg:top-0 lg:h-full lg:w-12 lg:flex-col lg:py-4 transition-all duration-300">
 
         <!-- Logo (Hidden on Mobile, Visible on Desktop) -->
         <div class="hidden lg:block text-[#c586c0] font-bold text-xs mb-6 w-full text-center relative">
@@ -271,19 +270,38 @@
     <!-- Main Content Container: Remove ml-12 on mobile, add pb-16 for bottom nav -->
     <div id="main-content" class="ml-0 lg:ml-12 pb-20 lg:pb-0 transition-all duration-300">
         <!-- Header -->
-        <header
-            class="terminal-header px-4 py-2 flex flex-col lg:flex-row lg:items-center justify-between gap-2 lg:gap-0 sticky top-0 z-40">
-            <div class="flex items-center gap-2 lg:gap-4">
+        <header class="terminal-header px-4 py-3 flex items-center justify-between gap-4 sticky top-0 z-40 relative">
+            <!-- Left: Logo -->
+            <div class="flex items-center gap-2 min-w-[70px]">
                 <span class="text-[#c586c0] font-bold text-sm">Caltropia</span>
-                <span class="text-[#8b949e] hidden lg:inline">|</span>
-                <span class="text-white text-xs whitespace-nowrap">Investment Portfolios</span>
-                <span class="text-[#b5cea8] text-[10px] lg:text-xs blink">● Active</span>
+                <span class="text-[#8b949e] hidden md:inline">|</span>
+                <span class="text-white text-xs whitespace-nowrap hidden md:inline">Investment Portfolios</span>
             </div>
-            <div class="flex items-center gap-4 text-xs justify-end w-full lg:w-auto">
-                <div class="flex items-center gap-2">
-                    <span class="text-[#8b949e]">Updated:</span>
-                    <span id="last-updated" class="text-[#dcdcaa]">--:--:--</span>
+            <!-- Search: Flows on mobile, Centered on desktop -->
+            <div class="flex-1 flex justify-center md:absolute md:left-1/2 md:transform md:-translate-x-1/2">
+                <div class="relative">
+                    <svg class="absolute left-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#8b949e] pointer-events-none"
+                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                    <input type="text" id="search-input"
+                        class="pl-8 pr-2 py-1 text-xs w-40 md:w-[28rem] bg-[#0d1117] border border-[#21262d] text-white focus:border-[#c586c0] outline-none rounded-lg"
+                        placeholder="Search Portfolios" oninput="filterPortfolios(this.value)">
                 </div>
+            </div>
+            <!-- Right: Refresh + Timestamp (Desktop only) -->
+            <div class="flex items-center gap-2 text-xs hidden lg:flex">
+                <button onclick="loadData()"
+                    class="px-2 py-1 bg-[#0d1117] border border-[#21262d] text-white hover:border-[#30363d] hover:text-[#c586c0] transition-all flex items-center justify-center rounded-lg">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
+                        </path>
+                    </svg>
+                </button>
+                <span class="text-white">Updated:</span>
+                <span id="last-updated" class="text-[#dcdcaa]">--:--:--</span>
             </div>
         </header>
 
@@ -356,11 +374,14 @@
         let meanReversionFactorData = null;
         let lowVolFactorData = null;
 
-        function renderPortfolios() {
+        function renderPortfolios(searchTerm = '') {
             const container = document.getElementById('portfolio-grid');
             document.getElementById('last-updated').textContent = new Date().toLocaleTimeString();
 
-            container.innerHTML = portfolios.map((name, i) => {
+            // Filter portfolios
+            const filtered = portfolios.filter(p => !searchTerm || p.toLowerCase().includes(searchTerm.toLowerCase()));
+
+            container.innerHTML = filtered.map((name, i) => {
                 // Check for generic live data availability
                 if (name === "Caltropia Bitcoin Regime Model" && bitcoinData) return renderLiveStrategyCard(name, i, bitcoinData);
                 if (name === "Caltropia Managed Futures EW" && managedFuturesData) return renderLiveStrategyCard(name, i, managedFuturesData);
@@ -397,6 +418,10 @@
             }).join('');
         }
 
+        window.filterPortfolios = function (val) {
+            renderPortfolios(val);
+        };
+
         function renderLiveStrategyCard(name, i, data) {
             const statsToShow = [
                 { key: 'CAGR', label: 'CAGR', format: v => (v * 100).toFixed(1) + '%' },
@@ -421,11 +446,11 @@
             }).join('');
 
             return `
-                <div class="terminal-card p-4 h-full flex flex-col justify-between group cursor-pointer border-[#dcdcaa]" onclick="window.location.href='portfolio_detail.html?strategy=${encodeURIComponent(name)}'">
+                <div class="terminal-card p-4 h-full flex flex-col justify-between group cursor-pointer" onclick="window.location.href='portfolio_detail.html?strategy=${encodeURIComponent(name)}'">
                     <div class="flex justify-between items-start mb-2">
                         <div class="text-[#dcdcaa] font-mono text-[10px]">0${i + 1}</div>
                         <div class="flex items-center gap-1">
-                             <span class="text-[9px] text-[#dcdcaa] animate-pulse">Live Data</span>
+                             <span class="text-[9px] text-[#dcdcaa] animate-pulse">Live</span>
                              <div class="w-2 h-2 rounded-full bg-[#dcdcaa]"></div>
                         </div>
                     </div>
