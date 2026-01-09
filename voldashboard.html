@@ -114,7 +114,7 @@
             border-radius: 6px;
             font-size: 11px;
             font-weight: 700;
-            text-transform: uppercase;
+            letter-spacing: 0.5px;
             letter-spacing: 0.5px;
             border: none;
             white-space: nowrap;
@@ -162,7 +162,7 @@
             border-radius: 6px;
             font-size: 11px;
             font-weight: 700;
-            text-transform: uppercase;
+            white-space: nowrap;
             white-space: nowrap;
             display: inline-block;
         }
@@ -378,45 +378,56 @@
         class="ml-0 lg:ml-12 h-auto lg:h-screen flex flex-col transition-all duration-300 overflow-visible">
         <!-- Header -->
         <header
-            class="h-auto min-h-[3rem] py-2 border-b border-[#21262d] bg-[#0d1117] px-4 flex flex-wrap gap-y-2 items-center justify-between sticky top-0 z-30">
-            <div class="flex items-center gap-2">
-                <span class="text-[#c586c0] font-bold text-sm">Caltropia</span>
-                <span class="text-[#8b949e] hidden md:inline">|</span>
-                <span class="text-white text-xs whitespace-nowrap font-bold">VOLATILITY DASHBOARD</span>
+            class="h-auto py-3 border-b border-[#21262d] bg-[#0d1117] px-4 flex flex-col lg:flex-row gap-y-3 lg:gap-y-0 items-center justify-between sticky top-0 z-30 shadow-sm transition-all duration-300">
 
-                <!-- Status Badges -->
-                <span
-                    class="ml-2 text-[10px] bg-[#21262d] px-2 py-0.5 rounded-md text-white border border-[#30363d]">LIVE</span>
-                <span id="summary-badge"
-                    class="text-[10px] bg-[#0d1117] px-2 py-0.5 rounded-md text-white border border-[#30363d] hidden"></span>
-                <span id="cache-time"
-                    class="text-[10px] bg-[#0d1117] px-2 py-0.5 rounded-md text-white border border-[#30363d] hidden"></span>
+            <!-- Identity & Market Status Block -->
+            <div class="flex flex-col items-center lg:items-start gap-1 w-full lg:w-auto">
+                <!-- Top Line: Logo + Global Status -->
+                <div class="flex items-center gap-2">
+                    <span class="text-[#c586c0] font-bold text-sm">Caltropia</span>
+                    <span class="text-[#8b949e]">|</span>
+                    <span class="text-white text-xs whitespace-nowrap font-bold">Volatility Dashboard</span>
+                    <span
+                        class="ml-1 text-[10px] bg-[#21262d] px-2 py-0.5 rounded-md text-white border border-[#30363d] shadow-sm">Live</span>
+                </div>
+
+                <!-- Second Line: Market Stats (Summary + Cache) -->
+                <!-- Hidden by default until populated by JS -->
+                <div class="flex flex-wrap justify-center lg:justify-start items-center gap-2 w-full">
+                    <span id="summary-badge"
+                        class="text-[10px] bg-[#0d1117] px-2 py-0.5 rounded-md text-white border border-[#30363d] hidden shadow-sm whitespace-nowrap"></span>
+                    <span id="cache-time"
+                        class="text-[10px] bg-[#0d1117] px-2 py-0.5 rounded-md text-white border border-[#30363d] hidden shadow-sm whitespace-nowrap"></span>
+                </div>
             </div>
 
-            <!-- Controls -->
-            <div class="flex flex-wrap items-center gap-2 md:gap-4 justify-end">
+            <!-- Controls Block -->
+            <div class="flex flex-col sm:flex-row items-center gap-2 w-full lg:w-auto justify-center lg:justify-end">
                 <!-- Color Mode Toggle -->
-                <div class="flex items-center bg-[#0d1117] rounded-md p-0.5 border border-[#30363d] mr-4">
+                <div
+                    class="flex items-center bg-[#0d1117] rounded-md p-0.5 border border-[#30363d] shadow-sm w-full sm:w-auto justify-center">
                     <button onclick="setColorMode('abs')" id="btn-abs"
-                        class="px-2 py-0.5 text-[10px] rounded-md font-medium text-white bg-[#30363d]">ABS VOL</button>
+                        class="flex-1 sm:flex-none px-3 sm:px-2 py-1 sm:py-0.5 text-[10px] rounded-md font-medium text-white bg-[#30363d] transition-all">Abs
+                        Vol</button>
                     <button onclick="setColorMode('pctl')" id="btn-pctl"
-                        class="px-2 py-0.5 text-[10px] rounded-md font-medium text-[#8b949e] hover:text-white">PERCENTILE</button>
+                        class="flex-1 sm:flex-none px-3 sm:px-2 py-1 sm:py-0.5 text-[10px] rounded-md font-medium text-[#8b949e] hover:text-white transition-all">Percentile</button>
                     <button onclick="setColorMode('vrp')" id="btn-vrp"
-                        class="px-2 py-0.5 text-[10px] rounded-md font-medium text-[#8b949e] hover:text-white"
-                        title="Vol Risk Premium">VRP</button>
+                        class="flex-1 sm:flex-none px-3 sm:px-2 py-1 sm:py-0.5 text-[10px] rounded-md font-medium text-[#8b949e] hover:text-white transition-all"
+                        title="Vol Risk Premium">Vrp</button>
                     <button onclick="setColorMode('signal')" id="btn-signal"
-                        class="px-2 py-0.5 text-[10px] rounded-md font-medium text-[#8b949e] hover:text-white"
-                        title="Cross-Sectional Signal">SIGNAL</button>
+                        class="flex-1 sm:flex-none px-3 sm:px-2 py-1 sm:py-0.5 text-[10px] rounded-md font-medium text-[#8b949e] hover:text-white transition-all"
+                        title="Cross-Sectional Signal">Signal</button>
                 </div>
 
                 <!-- View Toggle -->
-                <div class="flex items-center bg-[#0d1117] rounded-md p-0.5 border border-[#30363d]">
+                <div
+                    class="flex items-center bg-[#0d1117] rounded-md p-0.5 border border-[#30363d] shadow-sm w-full sm:w-auto justify-center">
                     <button onclick="setView('map')" id="btn-map"
-                        class="px-2 py-0.5 text-[10px] rounded-md font-medium text-white bg-[#30363d]">MAP</button>
+                        class="flex-1 sm:flex-none px-3 sm:px-2 py-1 sm:py-0.5 text-[10px] rounded-md font-medium text-white bg-[#30363d] transition-all">Map</button>
                     <button onclick="setView('scatter')" id="btn-scatter"
-                        class="px-2 py-0.5 text-[10px] rounded-md font-medium text-[#8b949e] hover:text-white">REAL</button>
+                        class="flex-1 sm:flex-none px-3 sm:px-2 py-1 sm:py-0.5 text-[10px] rounded-md font-medium text-[#8b949e] hover:text-white transition-all">Real</button>
                     <button onclick="setView('table')" id="btn-table"
-                        class="px-2 py-0.5 text-[10px] rounded-md font-medium text-[#8b949e] hover:text-white">TABLE</button>
+                        class="flex-1 sm:flex-none px-3 sm:px-2 py-1 sm:py-0.5 text-[10px] rounded-md font-medium text-[#8b949e] hover:text-white transition-all">Table</button>
                 </div>
             </div>
         </header>
@@ -576,7 +587,6 @@
                         volRegime = 'Post Stress';
                     }
                 }
-
                 const fastVol = item.currentRv;
                 const slowVol = item.currentRv;
 
@@ -584,10 +594,47 @@
             });
         }
 
+        window.handleSort = function (column) {
+            // Default to empty state if undefined
+            if (!window.currentSort) {
+                window.currentSort = { column: null, direction: null };
+            }
+
+            if (window.currentSort.column === column) {
+                const isMetric = ['vrp', 'vrp_pctl', 'iv', 'rv', 'rv_pctl', 'trend'].includes(column);
+
+                if (window.currentSort.direction === 'asc') {
+                    // If currently Asc:
+                    // - Metrics: Cycle Desc -> Asc -> Off. So next is Off.
+                    // - Text: Cycle Asc -> Desc -> Off. So next is Desc.
+                    if (isMetric) {
+                        window.currentSort.column = null;
+                        window.currentSort.direction = null;
+                    } else {
+                        window.currentSort.direction = 'desc';
+                    }
+                } else if (window.currentSort.direction === 'desc') {
+                    // If currently Desc:
+                    // - Metrics: Cycle Desc -> Asc ... So next is Asc.
+                    // - Text: Cycle Asc -> Desc -> Off. So next is Off.
+                    if (isMetric) {
+                        window.currentSort.direction = 'asc';
+                    } else {
+                        window.currentSort.column = null;
+                        window.currentSort.direction = null;
+                    }
+                }
+            } else {
+                // New column, default to desc for metrics, asc for text
+                const isMetric = ['vrp', 'vrp_pctl', 'iv', 'rv', 'rv_pctl', 'trend'].includes(column);
+                window.currentSort.column = column;
+                window.currentSort.direction = isMetric ? 'desc' : 'asc';
+            }
+            drawTable();
+        }
+
         window.setView = function (v) {
             currentView = v;
-            document.getElementById('btn-map').className = v === 'map' ? "px-2 py-0.5 text-[10px] rounded-md font-medium text-white bg-[#30363d]" : "px-2 py-0.5 text-[10px] rounded-md font-medium text-[#8b949e] hover:text-white";
-            document.getElementById('btn-scatter').className = v === 'scatter' ? "px-2 py-0.5 text-[10px] rounded-md font-medium text-white bg-[#30363d]" : "px-2 py-0.5 text-[10px] rounded-md font-medium text-[#8b949e] hover:text-white";
             document.getElementById('btn-table').className = v === 'table' ? "px-2 py-0.5 text-[10px] rounded-md font-medium text-white bg-[#30363d]" : "px-2 py-0.5 text-[10px] rounded-md font-medium text-[#8b949e] hover:text-white";
             renderView();
         }
@@ -672,11 +719,11 @@
                 'NEUTRAL': 'signal-neutral'
             };
             const labels = {
-                'SELL_VOL': `${showIcon ? Ic.Diamond + ' ' : ''}SELL VOL`,
-                'BUY_VOL': `${showIcon ? Ic.Flame + ' ' : ''}BUY VOL`,
-                'RICH': 'RICH',
-                'CHEAP': 'CHEAP',
-                'NEUTRAL': 'NEUTRAL'
+                'SELL_VOL': `${showIcon ? Ic.Diamond + ' ' : ''}Sell Vol`,
+                'BUY_VOL': `${showIcon ? Ic.Flame + ' ' : ''}Buy Vol`,
+                'RICH': 'Rich',
+                'CHEAP': 'Cheap',
+                'NEUTRAL': 'Neutral'
             };
             return `<span class="signal-badge ${classes[signal] || 'signal-neutral'}">${labels[signal] || signal || '--'}</span>`;
         }
@@ -689,7 +736,10 @@
                 'Normal': 'regime-normal',
                 'Low Vol': 'regime-low'
             };
-            return `<span class="regime-badge ${classes[regime] || 'regime-normal'}">${regime}</span>`;
+            // Normalize input to Title Case for both lookup and display
+            const titleCaseRegime = (regime || 'Normal').toLowerCase().split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+
+            return `<span class="regime-badge ${classes[titleCaseRegime] || 'regime-normal'}">${titleCaseRegime}</span>`;
         }
 
 
@@ -959,34 +1009,119 @@
             const tableDiv = document.createElement('div');
             tableDiv.className = "w-full"; // Removed overflow-x-auto to allow sticky header to work with parent scroll
 
-            let html = `
-                <table class="w-full text-left text-sm text-[#c9d1d9]">
-                    <thead class="text-xs uppercase bg-[#161b22] text-[#8b949e] sticky top-0 z-10 shadow-sm">
-                        <tr>
-                            <th scope="col" class="px-4 py-3 font-semibold">Ticker</th>
-                            <th scope="col" class="px-4 py-3 font-semibold">Signal</th>
-                            <th scope="col" class="px-4 py-3 font-semibold">Regime</th>
-                            <th scope="col" class="px-4 py-3 font-semibold">VRP</th>
-                            <th scope="col" class="px-4 py-3 font-semibold">VRP Pctl</th>
-                            <th scope="col" class="px-4 py-3 font-semibold">IV</th>
-                            <th scope="col" class="px-4 py-3 font-semibold">RV</th>
-                            <th scope="col" class="px-4 py-3 font-semibold">RV Pctl</th>
-                            <th scope="col" class="px-4 py-3 font-semibold">Trend</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-[#21262d]">
-            `;
-
             // Sort by signal strength (SELL_VOL and BUY_VOL first)
             const signalPriority = { 'SELL_VOL': 0, 'BUY_VOL': 1, 'RICH': 2, 'CHEAP': 3, 'NEUTRAL': 4 };
-            const sortedData = [...allData]
-                .filter(d => d.vrp !== null)
-                .sort((a, b) => {
+
+
+            // Initial Sort State (Default to None/Null to preserve original order)
+            if (!window.currentSort) {
+                window.currentSort = { column: null, direction: null };
+            }
+
+            // Sorting Logic
+            let sortedData = [...allData].filter(d => d.vrp !== null);
+
+            if (window.currentSort.column) {
+                sortedData.sort((a, b) => {
+                    const col = window.currentSort.column;
+                    const dir = window.currentSort.direction === 'asc' ? 1 : -1;
+
+                    let valA, valB;
+
+                    switch (col) {
+                        case 'ticker':
+                            valA = a.ticker;
+                            valB = b.ticker;
+                            break;
+                        case 'signal':
+                            // Sort alphabetically (A-Z) for explicit sort
+                            valA = a.crossSectional?.signal || '';
+                            valB = b.crossSectional?.signal || '';
+                            break;
+                        case 'regime':
+                            // Use correct property 'volRegime'
+                            valA = a.volRegime || '';
+                            valB = b.volRegime || '';
+                            break;
+                        case 'vrp':
+                            valA = a.vrp || 0;
+                            valB = b.vrp || 0;
+                            break;
+                        case 'vrp_pctl':
+                            valA = a.crossSectional?.vrpPctlUniverse || 0;
+                            valB = b.crossSectional?.vrpPctlUniverse || 0;
+                            break;
+                        case 'iv':
+                            valA = a.impliedVol || 0;
+                            valB = b.impliedVol || 0;
+                            break;
+                        case 'rv':
+                            valA = a.currentRv || 0;
+                            valB = b.currentRv || 0;
+                            break;
+                        case 'rv_pctl':
+                            valA = a.crossSectional?.rvPctlUniverse || 0;
+                            valB = b.crossSectional?.rvPctlUniverse || 0;
+                            break;
+                        case 'trend':
+                            // Use numeric trendScore
+                            valA = a.trendScore || 0;
+                            valB = b.trendScore || 0;
+                            break;
+                        default:
+                            return 0;
+                    }
+
+                    if (typeof valA === 'string') {
+                        return dir * valA.localeCompare(valB);
+                    }
+                    return dir * ((valA || 0) - (valB || 0));
+                });
+            } else {
+                // Default Sort: Signal Priority (Sell/Buy Vol first)
+                sortedData.sort((a, b) => {
                     const aSig = signalPriority[a.crossSectional?.signal] ?? 5;
                     const bSig = signalPriority[b.crossSectional?.signal] ?? 5;
                     if (aSig !== bSig) return aSig - bSig;
                     return (b.crossSectional?.signalStrength || 0) - (a.crossSectional?.signalStrength || 0);
                 });
+            }
+
+            // Helper to get header class with sort icon
+            const getHeader = (label, key) => {
+                const isSorted = window.currentSort.column === key;
+                const isAsc = window.currentSort.direction === 'asc';
+                const activeClass = isSorted ? 'text-white' : 'hover:text-white';
+
+                // SVG icons for sort state
+                const unsortedIcon = `<svg class="w-3 h-3 opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/></svg>`;
+                const ascIcon = `<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/></svg>`;
+                const descIcon = `<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>`;
+
+                const icon = isSorted ? (isAsc ? ascIcon : descIcon) : unsortedIcon;
+
+                return `<th scope="col" class="px-4 py-3 font-semibold cursor-pointer select-none ${activeClass}" onclick="handleSort('${key}')">
+                            <div class="flex items-center gap-1.5">${label}${icon}</div>
+                        </th>`;
+            };
+
+            let html = `
+                <table class="w-full text-left text-sm text-[#c9d1d9]">
+                    <thead class="text-sm bg-[#161b22] text-white sticky top-0 z-10 shadow-sm">
+                        <tr>
+                            ${getHeader('Ticker', 'ticker')}
+                            ${getHeader('Signal', 'signal')}
+                            ${getHeader('Regime', 'regime')}
+                            ${getHeader('Vrp', 'vrp')}
+                            ${getHeader('Vrp Pctl', 'vrp_pctl')}
+                            ${getHeader('Iv', 'iv')}
+                            ${getHeader('Rv', 'rv')}
+                            ${getHeader('Rv Pctl', 'rv_pctl')}
+                            ${getHeader('Trend', 'trend')}
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-[#30363d]">
+            `;
 
             sortedData.forEach(d => {
                 const cs = d.crossSectional || {};
@@ -1021,7 +1156,7 @@
                         <td class="px-4 py-3 font-sans tabular-nums ${vrpColor}">${vrpPct}</td>
                         <td class="px-4 py-3">
                             <div class="flex items-center gap-2">
-                                <span class="font-sans tabular-nums text-xs">${cs.vrpPctlUniverse || '--'}%</span>
+                                <span class="font-sans tabular-nums">${cs.vrpPctlUniverse || '--'}%</span>
                                 <div class="w-16 h-1.5 bg-[#21262d] rounded-full overflow-hidden">
                                     <div class="h-full bg-[#c586c0] rounded-full" style="width: ${cs.vrpPctlUniverse || 0}%"></div>
                                 </div>
@@ -1031,7 +1166,7 @@
                         <td class="px-4 py-3 font-sans tabular-nums ${rvColor}">${rvPct}</td>
                         <td class="px-4 py-3">
                             <div class="flex items-center gap-2">
-                                <span class="font-sans tabular-nums text-xs">${cs.rvPctlUniverse || d.rvPctlHistory || '--'}%</span>
+                                <span class="font-sans tabular-nums">${cs.rvPctlUniverse || d.rvPctlHistory || '--'}%</span>
                                 <div class="w-16 h-1.5 bg-[#21262d] rounded-full overflow-hidden">
                                     <div class="h-full bg-[#8b949e] rounded-full" style="width: ${cs.rvPctlUniverse || d.rvPctlHistory || 0}%"></div>
                                 </div>
