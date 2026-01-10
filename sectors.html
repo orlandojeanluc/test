@@ -105,6 +105,53 @@
             -webkit-text-fill-color: transparent;
             text-shadow: 0 2px 10px rgba(148, 163, 184, 0.1);
         }
+
+        /* Sector Grid - Table Layout */
+        .sector-table-container {
+            display: block;
+            padding: 0;
+            overscroll-behavior: none;
+        }
+
+        /* Sector Badges */
+        .sector-badge {
+            padding: 2px 7px;
+            border-radius: 5px;
+            font-size: 10px;
+            font-weight: 700;
+            white-space: nowrap;
+            display: inline-block;
+        }
+
+        .badge-bullish {
+            background-color: #ecfdf5;
+            color: #166534;
+        }
+
+        .badge-bearish {
+            background-color: #fff1f2;
+            color: #be123c;
+        }
+
+        .badge-neutral {
+            background-color: #f3f4f6;
+            color: #374151;
+        }
+
+        .badge-low-risk {
+            background-color: #ecfdf5;
+            color: #166534;
+        }
+
+        .badge-med-risk {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-high-risk {
+            background-color: #fff1f2;
+            color: #be123c;
+        }
     </style>
 </head>
 
@@ -338,10 +385,21 @@
             </svg>
             <h2 class="text-2xl font-bold text-white mb-6">Market Sectors Analysis</h2>
 
-            <div id="sector-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <!-- Summary Stats Row -->
+            <div id="summary-stats" class="mb-6">
+                <!-- Will be populated by JavaScript -->
+            </div>
+
+            <div id="sector-grid" class="sector-table-container">
                 <!-- Sector Cards Injected Here -->
                 <div class="col-span-full text-center py-20 text-[#8b949e] animate-pulse">Aggregating market data...
                 </div>
+            </div>
+
+            <!-- Top Movers Section -->
+            <h3 class="text-xl font-bold text-white mt-8 mb-4">Top Movers Across All Sectors</h3>
+            <div id="top-movers" class="sector-table-container">
+                <!-- Will be populated by JavaScript -->
             </div>
         </div>
     </div>
@@ -439,7 +497,112 @@
             // Sort by Highest Avg Momentum
             sectorList.sort((a, b) => b.avgMom - a.avgMom);
 
+            renderSummary(sectorList);
             renderGrid(sectorList);
+            renderTopMovers(sectorList);
+        }
+
+        function renderTopMovers(sectors) {
+            const container = document.getElementById('top-movers');
+
+            // Collect all tickers from all sectors
+            const allTickers = [];
+            sectors.forEach(s => {
+                s.tickers.forEach(t => {
+                    allTickers.push({
+                        ...t,
+                        sector: s.name
+                    });
+                });
+            });
+
+            // Sort by momentum score (highest first) and take top 10
+            allTickers.sort((a, b) => b.momScore - a.momScore);
+            const topMovers = allTickers.slice(0, 10);
+
+            // Helper: Get score color
+            const getScoreColor = (score) => {
+                if (score > 0) return '#a7f3d0';  // Green
+                if (score < 0) return '#fecdd3';  // Red
+                return '#9ca3af';  // Gray
+            };
+
+            // Helper: Create block indicators
+            const createBlocks = (value, maxValue, color) => {
+                const absValue = Math.abs(value);
+                const filledCount = Math.round((absValue / maxValue) * 4);
+
+                let blocks = '';
+                for (let i = 0; i < 4; i++) {
+                    const isFilled = i < filledCount;
+                    const blockColor = isFilled ? color : '#21262d';
+                    const opacity = isFilled ? '' : 'opacity-30';
+                    blocks += `<div class="w-2 h-4 rounded-sm ${opacity}" style="background: ${blockColor}"></div>`;
+                }
+                return `<div class="flex gap-0.5">${blocks}</div>`;
+            };
+
+            // Helper: Get momentum badge
+            const getMomBadge = (score) => {
+                if (score >= 5) return { badge: 'badge-bullish', text: 'Strong' };
+                if (score >= 2) return { badge: 'badge-bullish', text: 'Bullish' };
+                if (score > 0) return { badge: 'badge-neutral', text: 'Positive' };
+                if (score > -2) return { badge: 'badge-neutral', text: 'Weak' };
+                return { badge: 'badge-bearish', text: 'Bearish' };
+            };
+
+            // Find max score for scaling blocks
+            const maxScore = Math.max(...topMovers.map(t => Math.abs(t.momScore)), 5);
+
+            // Table rows
+            const tableRows = topMovers.map((t, idx) => {
+                const scoreColor = getScoreColor(t.momScore);
+                const momBadge = getMomBadge(t.momScore);
+                const displayScore = t.momScore > 0 ? `+${t.momScore.toFixed(2)}` : t.momScore.toFixed(2);
+
+                return `
+                    <tr class="border-b border-[#30363d] hover:bg-[#1f2937] hover:shadow-[inset_0_0_0_1px_rgba(139,92,246,0.3)] transition-colors even:bg-[#161b22]/50">
+                        <td class="py-2 px-3">
+                            <span class="text-[#8b949e] font-mono">#${idx + 1}</span>
+                        </td>
+                        <td class="py-2 px-3">
+                            <div class="flex items-center gap-2">
+                                <span class="font-bold text-white">${t.ticker}</span>
+                                <span class="text-[8px] text-[#8b949e] bg-[#21262d] px-1 py-0.5 rounded uppercase">${t.sector}</span>
+                            </div>
+                        </td>
+                        <td class="py-2 px-2">
+                            <div class="flex items-center gap-2">
+                                ${createBlocks(t.momScore, maxScore, scoreColor)}
+                                <span class="text-sm font-medium" style="color: ${scoreColor}">${displayScore}</span>
+                            </div>
+                        </td>
+                        <td class="py-2 px-2">
+                            <span class="sector-badge ${momBadge.badge}">${momBadge.text}</span>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            const tableHTML = `
+                <div style="overflow-x: auto; overscroll-behavior: none; -webkit-overflow-scrolling: touch;">
+                    <table class="w-full text-left text-sm text-[#c9d1d9]" style="min-width: 500px;">
+                        <thead class="text-sm bg-[#161b22] text-white sticky top-0 z-10 shadow-sm">
+                            <tr>
+                                <th class="py-2 px-3 text-left font-semibold whitespace-nowrap" style="width: 60px;">Rank</th>
+                                <th class="py-2 px-3 text-left font-semibold whitespace-nowrap" style="width: 180px;">Asset</th>
+                                <th class="py-2 px-2 text-left font-semibold whitespace-nowrap" style="width: 160px;">Momentum Score</th>
+                                <th class="py-2 px-2 text-left font-semibold whitespace-nowrap" style="width: 120px;">Strength</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-[#30363d]">
+                            ${tableRows}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+
+            container.innerHTML = tableHTML;
         }
 
         function drawMiniChart(sector) {
@@ -517,78 +680,219 @@
             });
         }
 
+        function renderSummary(sectors) {
+            const summaryContainer = document.getElementById('summary-stats');
+
+            // Calculate aggregate stats
+            const totalAssets = sectors.reduce((sum, s) => sum + s.count, 0);
+            const totalPosSignals = sectors.reduce((sum, s) => sum + s.posSignals, 0);
+            const totalNegSignals = sectors.reduce((sum, s) => sum + s.negSignals, 0);
+            const bullishSectors = sectors.filter(s => s.avgMom > 1).length;
+            const bearishSectors = sectors.filter(s => s.avgMom < -1).length;
+            const neutralSectors = sectors.length - bullishSectors - bearishSectors;
+
+            // Best and worst sectors
+            const sortedByMom = [...sectors].sort((a, b) => b.avgMom - a.avgMom);
+            const bestSector = sortedByMom[0];
+            const worstSector = sortedByMom[sortedByMom.length - 1];
+
+            // Overall market regime
+            const avgMarketMom = sectors.reduce((sum, s) => sum + s.avgMom, 0) / sectors.length;
+            let marketRegime, regimeBadge;
+            if (avgMarketMom > 1) {
+                marketRegime = 'Bullish';
+                regimeBadge = 'badge-bullish';
+            } else if (avgMarketMom < -1) {
+                marketRegime = 'Bearish';
+                regimeBadge = 'badge-bearish';
+            } else {
+                marketRegime = 'Neutral';
+                regimeBadge = 'badge-neutral';
+            }
+
+            const summaryHTML = `
+                <div style="overflow-x: auto; overscroll-behavior: none; -webkit-overflow-scrolling: touch;">
+                    <table class="w-full text-left text-sm text-[#c9d1d9]" style="min-width: 700px;">
+                        <thead class="text-sm bg-[#161b22] text-white">
+                            <tr>
+                                <th class="py-2 px-3 text-left font-semibold whitespace-nowrap">Market Overview</th>
+                                <th class="py-2 px-2 text-left font-semibold whitespace-nowrap">Total Assets</th>
+                                <th class="py-2 px-2 text-left font-semibold whitespace-nowrap">Bullish / Bearish</th>
+                                <th class="py-2 px-2 text-left font-semibold whitespace-nowrap">Total Signals</th>
+                                <th class="py-2 px-2 text-left font-semibold whitespace-nowrap">Best Sector</th>
+                                <th class="py-2 px-2 text-left font-semibold whitespace-nowrap">Weakest Sector</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b border-[#30363d] bg-[#161b22]/50">
+                                <td class="py-3 px-3">
+                                    <div class="flex items-center gap-2">
+                                        <span class="font-bold text-white">Overall</span>
+                                        <span class="sector-badge ${regimeBadge}">${marketRegime}</span>
+                                    </div>
+                                </td>
+                                <td class="py-3 px-2">
+                                    <span class="text-xl font-bold text-white">${totalAssets}</span>
+                                    <span class="text-[10px] text-[#8b949e] ml-1">tracked</span>
+                                </td>
+                                <td class="py-3 px-2">
+                                    <div class="flex items-center gap-2">
+                                        <span class="text-[#a7f3d0] font-bold">${bullishSectors}</span>
+                                        <span class="text-[#8b949e]">/</span>
+                                        <span class="text-[#fecdd3] font-bold">${bearishSectors}</span>
+                                        <span class="text-[10px] text-[#8b949e]">(${neutralSectors} neutral)</span>
+                                    </div>
+                                </td>
+                                <td class="py-3 px-2">
+                                    <div class="flex items-center gap-3">
+                                        <span class="text-[#a7f3d0] text-sm font-medium">▲ ${totalPosSignals}</span>
+                                        <span class="text-[#fecdd3] text-sm font-medium">▼ ${totalNegSignals}</span>
+                                    </div>
+                                </td>
+                                <td class="py-3 px-2">
+                                    <div class="flex items-center gap-2">
+                                        <span class="font-medium text-white">${bestSector.name}</span>
+                                        <span class="text-[10px] text-[#a7f3d0]">+${bestSector.avgMom.toFixed(1)}</span>
+                                    </div>
+                                </td>
+                                <td class="py-3 px-2">
+                                    <div class="flex items-center gap-2">
+                                        <span class="font-medium text-white">${worstSector.name}</span>
+                                        <span class="text-[10px] ${worstSector.avgMom >= 0 ? 'text-[#a7f3d0]' : 'text-[#fecdd3]'}">${worstSector.avgMom >= 0 ? '+' : ''}${worstSector.avgMom.toFixed(1)}</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            `;
+
+            summaryContainer.innerHTML = summaryHTML;
+        }
+
         function renderGrid(sectors) {
             const container = document.getElementById('sector-grid');
-            container.innerHTML = sectors.map(s => {
+
+            // Helper: Create block indicators
+            const createBlocks = (value, maxValue, isInverted, color) => {
+                const absValue = Math.abs(value);
+                const filledCount = Math.round((absValue / maxValue) * 4);
+
+                let blocks = '';
+                for (let i = 0; i < 4; i++) {
+                    const isFilled = i < filledCount;
+                    const blockColor = isFilled ? color : '#21262d';
+                    const opacity = isFilled ? '' : 'opacity-30';
+                    blocks += `<div class="w-2 h-4 rounded-sm ${opacity}" style="background: ${blockColor}"></div>`;
+                }
+                return `<div class="flex gap-0.5">${blocks}</div>`;
+            };
+
+            // Helper: Get momentum color
+            const getMomColor = (mom) => {
+                if (mom > 0) return '#a7f3d0';  // Green
+                if (mom < 0) return '#fecdd3';  // Red
+                return '#9ca3af';  // Gray
+            };
+
+            // Helper: Get risk color (inverted - low = good)
+            const getRiskColor = (risk) => {
+                if (risk < 4) return '#a7f3d0';  // Green - low
+                if (risk < 7) return '#fde68a';  // Yellow - med
+                return '#fecdd3';  // Red - high
+            };
+
+            // Helper: Get momentum regime badge
+            const getMomBadge = (mom) => {
+                if (mom > 1) return { badge: 'badge-bullish', text: 'Bullish' };
+                if (mom < -1) return { badge: 'badge-bearish', text: 'Bearish' };
+                return { badge: 'badge-neutral', text: 'Neutral' };
+            };
+
+            // Helper: Get risk regime badge
+            const getRiskBadge = (risk) => {
+                if (risk < 4) return { badge: 'badge-low-risk', text: 'Low' };
+                if (risk < 7) return { badge: 'badge-med-risk', text: 'Moderate' };
+                return { badge: 'badge-high-risk', text: 'High' };
+            };
+
+            // Table rows
+            const tableRows = sectors.map(s => {
                 const avgMom = s.avgMom;
                 const avgRisk = s.avgRisk;
                 s.tickers.sort((a, b) => b.momScore - a.momScore);
                 const topPick = s.tickers[0];
 
-                const momColor = avgMom > 0 ? 'text-emerald-400' : 'text-pink-400';
-                const riskColor = avgRisk < 4 ? 'text-emerald-400' : avgRisk < 7 ? 'text-yellow-400' : 'text-pink-400';
-
-                // Gradient Bar Logic
-                const riskPct = Math.min(100, (avgRisk / 10) * 100);
-                const barGradient = avgRisk < 5 ? 'bg-gradient-to-r from-emerald-500 to-emerald-300' : 'bg-gradient-to-r from-pink-500 to-pink-300';
+                const momColor = getMomColor(avgMom);
+                const riskColor = getRiskColor(avgRisk);
+                const momBadge = getMomBadge(avgMom);
+                const riskBadge = getRiskBadge(avgRisk);
+                const displayMom = avgMom > 0 ? `+${avgMom.toFixed(1)}` : avgMom.toFixed(1);
 
                 return `
-                    <div class="terminal-card p-5 hover:border-violet-500/50 transition-colors group cursor-pointer" onclick="window.location.href='sector_detail.html?sector=${s.name}'">
-                        <div class="flex justify-between items-center mb-4 border-b border-white/5 pb-2">
-                            <h3 class="text-lg font-bold text-white group-hover:text-violet-400 transition-colors tracking-wide">${s.name}</h3>
-                            <span class="text-[10px] text-slate-400 font-mono bg-slate-800/50 px-2 py-1 rounded-full border border-white/5">${s.count} Assets</span>
-                        </div>
-
-                        <div class="space-y-4">
-                            <!-- Mini Constellation Preview -->
-                            <div id="chart-${s.name.replace(/\s+/g, '-')}" class="h-28 w-full bg-slate-900/50 rounded-xl border border-white/5 relative overflow-hidden backdrop-blur-sm"></div>
-
-                            <!-- Metrics Grid -->
-                            <div class="grid grid-cols-2 gap-4">
-                                <div>
-                                    <span class="text-slate-500 text-[10px] uppercase tracking-wider font-bold">Momentum</span>
-                                    <div class="text-2xl font-bold ${momColor} mt-1">${avgMom.toFixed(1)}</div>
-                                </div>
-                                <div class="text-right">
-                                    <span class="text-slate-500 text-[10px] uppercase tracking-wider font-bold">Avg Risk</span>
-                                    <div class="text-xl font-bold ${riskColor} mt-1">${avgRisk.toFixed(1)}</div>
-                                </div>
+                    <tr class="border-b border-[#30363d] hover:bg-[#1f2937] hover:shadow-[inset_0_0_0_1px_rgba(139,92,246,0.3)] transition-colors even:bg-[#161b22]/50 cursor-pointer" onclick="window.location.href='sector_detail.html?sector=${s.name}'">
+                        <td class="py-2 px-3">
+                            <div class="flex items-center gap-2">
+                                <span class="font-bold text-white">${s.name}</span>
+                                <span class="text-[8px] text-[#8b949e] bg-[#21262d] px-1 py-0.5 rounded">${s.count} assets</span>
                             </div>
-
-                            <!-- Risk Meter -->
-                            <div class="w-full bg-slate-800/50 rounded-full h-1.5 overflow-hidden">
-                                <div class="h-full rounded-full ${barGradient} shadow-lg shadow-pink-500/20" style="width: ${riskPct}%;"></div>
+                        </td>
+                        <td class="py-2 px-2">
+                            <div class="flex items-center gap-2">
+                                ${createBlocks(avgMom, 5, false, momColor)}
+                                <span class="text-sm font-medium" style="color: ${momColor}">${displayMom}</span>
                             </div>
-                            
-                            <!-- Signals Pills -->
-                            <div class="flex gap-2 mt-2">
-                                <div class="flex-1 bg-emerald-500/10 border border-emerald-500/20 rounded-lg p-1.5 text-center">
-                                    <div class="text-[9px] text-emerald-400/80 uppercase">Pos Trend</div>
-                                    <div class="text-emerald-400 font-bold text-sm">${s.posSignals}</div>
-                                </div>
-                                <div class="flex-1 bg-pink-500/10 border border-pink-500/20 rounded-lg p-1.5 text-center">
-                                    <div class="text-[9px] text-pink-400/80 uppercase">Neg Trend</div>
-                                    <div class="text-pink-400 font-bold text-sm">${s.negSignals}</div>
-                                </div>
+                        </td>
+                        <td class="py-2 px-2">
+                            <span class="sector-badge ${momBadge.badge}">${momBadge.text}</span>
+                        </td>
+                        <td class="py-2 px-2">
+                            <div class="flex items-center gap-2">
+                                ${createBlocks(avgRisk, 10, true, riskColor)}
+                                <span class="text-sm font-medium" style="color: ${riskColor}">${avgRisk.toFixed(1)}</span>
                             </div>
-
-                            <!-- Top Pick -->
-                             <div class="flex items-center justify-between pt-3 border-t border-white/5">
-                                <span class="text-[10px] text-slate-500 font-bold uppercase">Top Mover</span>
-                                <div class="flex items-center gap-2">
-                                    <span class="text-white font-bold text-sm">${topPick.ticker}</span>
-                                    <span class="text-xs font-mono bg-white/5 px-1.5 rounded text-slate-300">${topPick.momScore.toFixed(1)}</span>
-                                </div>
+                        </td>
+                        <td class="py-2 px-2">
+                            <span class="sector-badge ${riskBadge.badge}">${riskBadge.text}</span>
+                        </td>
+                        <td class="py-2 px-2">
+                            <div class="flex items-center gap-3">
+                                <span class="text-[#a7f3d0] text-sm font-medium">▲ ${s.posSignals}</span>
+                                <span class="text-[#fecdd3] text-sm font-medium">▼ ${s.negSignals}</span>
                             </div>
-                        </div>
-                    </div>
+                        </td>
+                        <td class="py-2 px-3">
+                            <div class="flex items-center gap-2">
+                                <span class="font-medium text-white">${topPick.ticker}</span>
+                                <span class="text-[10px] ${topPick.momScore > 0 ? 'text-[#a7f3d0]' : 'text-[#fecdd3]'}">${topPick.momScore > 0 ? '+' : ''}${topPick.momScore.toFixed(1)}</span>
+                            </div>
+                        </td>
+                    </tr>
                 `;
             }).join('');
 
-            // Draw Charts after DOM update
-            setTimeout(() => {
-                sectors.forEach(s => drawMiniChart(s));
-            }, 0);
+            const desktopTable = `
+                <div style="overflow-x: auto; overscroll-behavior: none; -webkit-overflow-scrolling: touch;">
+                    <table class="w-full text-left text-sm text-[#c9d1d9]" style="min-width: 900px;">
+                        <thead class="text-sm bg-[#161b22] text-white sticky top-0 z-10 shadow-sm">
+                            <tr>
+                                <th class="py-2 px-3 text-left font-semibold whitespace-nowrap" style="width: 140px;">Sector</th>
+                                <th class="py-2 px-2 text-left font-semibold whitespace-nowrap" style="width: 120px;">Momentum</th>
+                                <th class="py-2 px-2 text-left font-semibold whitespace-nowrap" style="width: 100px;">Trend Regime</th>
+                                <th class="py-2 px-2 text-left font-semibold whitespace-nowrap" style="width: 120px;">Avg Risk</th>
+                                <th class="py-2 px-2 text-left font-semibold whitespace-nowrap" style="width: 100px;">Risk Regime</th>
+                                <th class="py-2 px-2 text-left font-semibold whitespace-nowrap" style="width: 100px;">Signals</th>
+                                <th class="py-2 px-3 text-left font-semibold whitespace-nowrap" style="width: 100px;">Top Mover</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-[#30363d]">
+                            ${tableRows}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+
+            container.innerHTML = desktopTable;
         }
 
         init();
