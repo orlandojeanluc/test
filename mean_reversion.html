@@ -72,16 +72,34 @@
         }
 
         .data-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 12px;
-            padding: 12px;
+            display: block;
+            padding: 0;
+            overscroll-behavior: none;
         }
 
-        @media (max-width: 768px) {
-            .data-grid {
-                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-            }
+        /* Signal Badges */
+        .signal-badge {
+            padding: 2px 7px;
+            border-radius: 5px;
+            font-size: 10px;
+            font-weight: 700;
+            white-space: nowrap;
+            display: inline-block;
+        }
+
+        .badge-positive {
+            background-color: #ecfdf5;
+            color: #166534;
+        }
+
+        .badge-negative {
+            background-color: #fff1f2;
+            color: #be123c;
+        }
+
+        .badge-neutral {
+            background-color: #f3f4f6;
+            color: #374151;
         }
 
         .risk-bar {
@@ -529,9 +547,9 @@
 
         function getSignalStrength(score) {
             // Logic: Positive = Green, Negative = Red
-            if (score > 0) return { class: 'risk-lowest', badge: 'badge-lowest', text: 'Positive' };
-            if (score < 0) return { class: 'risk-highest', badge: 'badge-highest', text: 'Negative' };
-            return { class: 'text-[#8b949e]', badge: 'bg-[#21262d] text-[#aaa]', text: 'Neutral' };
+            if (score > 0) return { class: 'signal-positive', badge: 'badge-positive', text: 'Positive' };
+            if (score < 0) return { class: 'signal-negative', badge: 'badge-negative', text: 'Negative' };
+            return { class: 'signal-neutral', badge: 'badge-neutral', text: 'Neutral' };
         }
 
         function renderGrid(data) {
@@ -545,40 +563,73 @@
                 return;
             }
 
-            container.innerHTML = data.map(a => {
-                // Color Logic: Positive = Green (#b5cea8), Negative = Red (#f48771)
-                const isPositive = a.score >= 0;
-                const scoreColor = isPositive ? '#b5cea8' : '#f48771';
+            // Helper: Create block indicators
+            const createBlocks = (score, maxScore, color) => {
+                const absScore = Math.abs(score);
+                const filledCount = Math.round((absScore / maxScore) * 4);
 
-                // Bar Width based on magnitude (Abs Value)
-                // Scale: 4 = 100% (Multiplier: 25)
-                const barWidth = Math.min(100, Math.abs(a.score) * 25);
+                let blocks = '';
+                for (let i = 0; i < 4; i++) {
+                    const isFilled = i < filledCount;
+                    const blockColor = isFilled ? color : '#21262d';
+                    const opacity = isFilled ? '' : 'opacity-30';
+                    blocks += `<div class="w-2 h-4 rounded-sm ${opacity}" style="background: ${blockColor}"></div>`;
+                }
+                return `<div class="flex gap-0.5">${blocks}</div>`;
+            };
+
+            // Helper: Get score color (positive = green, negative = red)
+            const getScoreColor = (score) => {
+                if (score > 0) return '#a7f3d0';  // Green - positive
+                if (score < 0) return '#fecdd3';  // Red - negative
+                return '#9ca3af';  // Gray - neutral
+            };
+
+            // Table rows
+            const tableRows = data.map(a => {
+                const signalStrength = getSignalStrength(a.score);
+                const scoreColor = getScoreColor(a.score);
+                const displayScore = a.score > 0 ? `+${a.score.toFixed(2)}` : a.score.toFixed(2);
 
                 return `
-                    <div class="terminal-card p-2 md:p-4 bg-[#0d1117] border border-[#21262d] rounded-lg relative group hover:border-[#c586c0] transition-all cursor-pointer">
-                        <!-- Header -->
-                        <div class="flex items-start justify-between mb-2 md:mb-4 gap-2">
-                            <div class="flex items-center gap-1 md:gap-2 min-w-0">
-                                <h2 class="text-lg md:text-2xl font-bold text-[#e6edf3] truncate">${a.ticker}</h2>
-                                <span class="px-1 py-0.5 text-[7px] md:text-[9px] font-bold text-[#8b949e] bg-[#21262d] rounded uppercase tracking-wider shrink-0">${a.sector.toUpperCase()}</span>
+                    <tr class="border-b border-[#30363d] hover:bg-[#1f2937] hover:shadow-[inset_0_0_0_1px_rgba(139,92,246,0.3)] transition-colors even:bg-[#161b22]/50">
+                        <td class="py-2 px-3">
+                            <div class="flex items-center gap-2">
+                                <span class="font-bold text-white">${a.ticker}</span>
+                                <span class="text-[8px] text-[#8b949e] bg-[#21262d] px-1 py-0.5 rounded uppercase">${a.sector}</span>
                             </div>
-                            <div class="text-lg md:text-3xl font-bold shrink-0" style="color:${scoreColor}">${a.score.toFixed(2)}</div>
-                        </div>
-
-                        <!-- Bar Container -->
-                        <div class="space-y-1 md:space-y-2">
-                            <div>
-                                <div class="flex justify-between text-[8px] md:text-[10px] mb-0.5 md:mb-1">
-                                    <span class="text-[#8b949e] font-medium truncate">Signal Score</span>
-                                </div>
-                                <div class="h-1 md:h-1.5 w-full bg-[#21262d] rounded-full overflow-hidden">
-                                    <div class="h-full rounded-full transition-all" style="width:${barWidth}%; background:${scoreColor};"></div>
-                                </div>
+                        </td>
+                        <td class="py-2 px-2">
+                            <div class="flex items-center gap-2">
+                                ${createBlocks(a.score, 4, scoreColor)}
+                                <span class="text-sm font-medium" style="color: ${scoreColor}">${displayScore}</span>
                             </div>
-                        </div>
-                    </div>
+                        </td>
+                        <td class="py-2 px-2">
+                            <span class="signal-badge ${signalStrength.badge}">${signalStrength.text}</span>
+                        </td>
+                    </tr>
                 `;
             }).join('');
+
+            const desktopTable = `
+                <div style="overflow-x: auto; overscroll-behavior: none; -webkit-overflow-scrolling: touch;">
+                    <table class="w-full text-left text-sm text-[#c9d1d9]" style="min-width: 400px;">
+                        <thead class="text-sm bg-[#161b22] text-white sticky top-0 z-10 shadow-sm">
+                            <tr>
+                                <th class="py-2 px-3 text-left font-semibold whitespace-nowrap" style="width: 150px;">Asset</th>
+                                <th class="py-2 px-2 text-left font-semibold whitespace-nowrap" style="width: 180px;">Signal Score</th>
+                                <th class="py-2 px-2 text-left font-semibold whitespace-nowrap" style="width: 140px;">Mean Rev Regime</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-[#30363d]">
+                            ${tableRows}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+
+            container.innerHTML = desktopTable;
         }
     </script>
     <script>
