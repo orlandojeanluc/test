@@ -84,18 +84,18 @@
         }
 
         .strength-strong-up {
-            background-color: #dcfce7;
-            color: #14532d;
+            background-color: #ecfdf5;
+            color: #166534;
         }
 
         .strength-mod-up {
-            background-color: #dbeafe;
-            color: #1e3a8a;
+            background-color: #eff6ff;
+            color: #1e40af;
         }
 
         .strength-weak-up {
             background-color: #f0fdf4;
-            color: #166534;
+            color: #15803d;
         }
 
         .strength-neutral {
@@ -109,24 +109,24 @@
         }
 
         .strength-mod-down {
-            background-color: #ffedd5;
-            color: #9a3412;
+            background-color: #fef2f2;
+            color: #b91c1c;
         }
 
         .strength-strong-down {
-            background-color: #ffe4e6;
-            color: #991b1b;
+            background-color: #fff1f2;
+            color: #be123c;
         }
 
         /* Trend Badges */
         .trend-positive {
-            background-color: #dcfce7;
-            color: #14532d;
+            background-color: #ecfdf5;
+            color: #166534;
         }
 
         .trend-negative {
-            background-color: #ffe4e6;
-            color: #991b1b;
+            background-color: #fff1f2;
+            color: #be123c;
         }
 
         .trend-neutral {
@@ -639,7 +639,7 @@
                 const filledCount = Math.round((absVal / max) * 4);
                 const isNegative = value < 0;
                 const isZero = value === 0;
-                const fillColor = isZero ? '#f3f4f6' : (isNegative ? '#f48771' : color);
+                const fillColor = isZero ? '#f3f4f6' : (isNegative ? '#fecdd3' : color);
 
                 let blocks = '';
                 for (let i = 0; i < 4; i++) {
@@ -673,7 +673,7 @@
 
             // Desktop Table Layout
             const tableRows = data.map(a => {
-                const overallColor = a.overall > 0 ? '#86efac' : a.overall < 0 ? '#fda4af' : '#8b949e';
+                const overallColor = a.overall > 0 ? '#a7f3d0' : a.overall < 0 ? '#fecdd3' : '#8b949e';
                 const mrLabel = a.meanReversion !== 0 ? (a.meanReversion > 0 ? `+${a.meanReversion.toFixed(1)}` : a.meanReversion.toFixed(1)) : '-';
                 const boLabel = a.breakout !== 0 ? a.breakout.toFixed(1) : '-';
 
@@ -686,36 +686,36 @@
                         </td>
                         <td class="py-2 px-2">
                             <div class="flex items-center gap-2">
-                                ${createBlocks(a.stTrend, 4, '#86efac')}
+                                ${createBlocks(a.stTrend, 4, '#a7f3d0')}
                                 ${getTrendBadge(a.stTrend)}
                             </div>
                         </td>
                         <td class="py-2 px-2">
                             <div class="flex items-center gap-2">
-                                ${createBlocks(a.stStrength, 4, '#fdba74')}
+                                ${createBlocks(a.stStrength, 4, a.stStrength >= 3 ? '#a7f3d0' : a.stStrength >= 1 ? '#bfdbfe' : '#fde68a')}
                                 ${getStrengthBadge(a.stStrength)}
                             </div>
                         </td>
                         <td class="py-2 px-2">
                             <div class="flex items-center gap-2">
-                                ${createBlocks(a.itTrend, 4, '#86efac')}
+                                ${createBlocks(a.itTrend, 4, '#a7f3d0')}
                                 ${getTrendBadge(a.itTrend)}
                             </div>
                         </td>
                         <td class="py-2 px-2">
                             <div class="flex items-center gap-2">
-                                ${createBlocks(a.itStrength, 4, '#fdba74')}
+                                ${createBlocks(a.itStrength, 4, a.itStrength >= 3 ? '#a7f3d0' : a.itStrength >= 1 ? '#bfdbfe' : '#fde68a')}
                                 ${getStrengthBadge(a.itStrength)}
                             </div>
                         </td>
                         <td class="py-2 px-2">
                             <div class="flex items-center gap-2">
-                                ${createBlocks(a.breakout, 4, '#d8b4fe')}
-                                <span class="text-[10px] ${a.breakout !== 0 ? 'text-[#d8b4fe]' : 'text-[#8b949e]'}">${boLabel}</span>
+                                ${createBlocks(a.breakout, 4, '#e9d5ff')}
+                                <span class="text-[10px] ${a.breakout !== 0 ? 'text-[#e9d5ff]' : 'text-[#8b949e]'}">${boLabel}</span>
                             </div>
                         </td>
                         <td class="py-2 px-2">
-                            <span class="text-sm font-medium ${a.meanReversion > 0 ? 'text-[#86efac]' : a.meanReversion < 0 ? 'text-[#fda4af]' : 'text-[#8b949e]'}">${mrLabel}</span>
+                            <span class="text-sm font-medium ${a.meanReversion > 0 ? 'text-[#a7f3d0]' : a.meanReversion < 0 ? 'text-[#fecdd3]' : 'text-[#8b949e]'}">${mrLabel}</span>
                         </td>
                         <td class="py-2 px-3 text-right">
                             <span class="text-xl font-bold" style="color: ${overallColor}">${a.overall > 0 ? '+' : ''}${a.overall.toFixed(0)}</span>
@@ -725,15 +725,15 @@
             }).join('');
 
             const desktopTable = `
-                <div class="overflow-x-auto">
+                <div class="overflow-x-auto overflow-y-auto max-h-[calc(100vh-140px)]" style="overscroll-behavior-x: contain;">
                     <table class="w-full text-left text-sm text-[#c9d1d9]" style="min-width: 900px;">
                         <thead class="text-sm bg-[#161b22] text-white sticky top-0 z-10 shadow-sm">
                             <tr>
                                 <th class="py-2 px-3 text-left font-semibold whitespace-nowrap" style="width: 70px;">Asset</th>
                                 <th class="py-2 px-2 text-left font-semibold whitespace-nowrap" style="width: 110px;">ST Trend</th>
-                                <th class="py-2 px-2 text-left font-semibold whitespace-nowrap" style="width: 110px;">Strength</th>
+                                <th class="py-2 px-2 text-left font-semibold whitespace-nowrap" style="width: 110px;">ST Strength</th>
                                 <th class="py-2 px-2 text-left font-semibold whitespace-nowrap" style="width: 110px;">IT Trend</th>
-                                <th class="py-2 px-2 text-left font-semibold whitespace-nowrap" style="width: 110px;">Strength</th>
+                                <th class="py-2 px-2 text-left font-semibold whitespace-nowrap" style="width: 110px;">IT Strength</th>
                                 <th class="py-2 px-2 text-left font-semibold whitespace-nowrap" style="width: 100px;">Breakout</th>
                                 <th class="py-2 px-2 text-left font-semibold whitespace-nowrap" style="width: 80px;">Mean Rev</th>
                                 <th class="py-2 px-3 text-right font-semibold whitespace-nowrap" style="width: 60px;">Score</th>
