@@ -72,8 +72,8 @@
         }
 
         .view-btn.active {
-            background-color: #c586c0;
-            color: #0d1117;
+            background-color: #30363d;
+            color: #ffffff;
         }
 
         .node {
@@ -106,10 +106,9 @@
 
 <body class="min-h-screen flex flex-col overflow-y-auto lg:overflow-hidden bg-[#0d1117]">
     <!-- Sidebar Navigation -->
-    <nav id="sidebar"
-        class="fixed z-50 bg-[#0d1117] flex items-center
-                bottom-0 w-full h-14 border-t border-[#30363d] flex-row justify-around py-0
-                lg:left-0 lg:top-0 lg:h-full lg:w-12 lg:border-r lg:border-t-0 lg:flex-col lg:py-4 transition-all duration-300 lg:rounded-r-3xl">
+    <nav id="sidebar" class="fixed z-50 bg-[#0a0e14] flex items-center
+                bottom-0 w-full h-14 flex-row justify-around py-0
+                lg:left-0 lg:top-0 lg:h-full lg:w-12 lg:flex-col lg:py-4 transition-all duration-300">
 
         <!-- Logo (Hidden on Mobile, Visible on Desktop) -->
         <div class="hidden lg:block text-[#c586c0] font-bold text-xs mb-6 w-full text-center relative">
@@ -223,6 +222,18 @@
                     Strategies</span>
             </a>
 
+            <a href="voldashboard.html"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
+                title="Vol Dashboard">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                </svg>
+                <span
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Volatility
+                    Dashboard</span>
+            </a>
+
             <a href="market_map.html"
                 class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#c586c0] lg:bg-[#161b22] border-t-2 lg:border-t-0 lg:border-l-2 lg:border-r-0 border-[#c586c0] group overflow-hidden"
                 title="Market Map">
@@ -245,17 +256,6 @@
                 </svg>
                 <span
                     class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Arena</span>
-            </a>
-            <a href="voldashboard.html"
-                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
-                title="Vol Dashboard">
-                <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
-                </svg>
-                <span
-                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Volatility
-                    Dashboard</span>
             </a>
         </div>
 
@@ -283,9 +283,9 @@
 
             <div class="flex items-center gap-2 md:gap-4">
                 <button onclick="setView('momentum')" id="btn-mom"
-                    class="view-btn active text-[10px] px-2 py-1 rounded bg-[#21262d] text-[#8b949e] font-bold border border-[#21262d]">Momentum</button>
+                    class="view-btn active text-xs px-4 py-1.5 rounded-full bg-[#30363d] text-white font-medium border border-[#30363d]">Momentum</button>
                 <button onclick="setView('risk')" id="btn-risk"
-                    class="view-btn text-[10px] px-2 py-1 rounded bg-[#21262d] text-[#8b949e] font-bold border border-[#21262d]">Risk</button>
+                    class="view-btn text-xs px-3 py-1.5 text-[#8b949e] font-medium hover:text-white transition-colors">Risk</button>
 
                 <!-- Legend inline with buttons (Desktop) -->
                 <div class="hidden md:flex items-center gap-1 text-[10px] ml-4 border-l border-[#21262d] pl-4">
@@ -520,8 +520,27 @@
 
         window.setView = function (v) {
             currentView = v;
-            document.getElementById('btn-mom').classList.toggle('active', v === 'momentum');
-            document.getElementById('btn-risk').classList.toggle('active', v === 'risk');
+
+            const btnMom = document.getElementById('btn-mom');
+            const btnRisk = document.getElementById('btn-risk');
+
+            // Toggle classes for Momentum button
+            btnMom.classList.toggle('active', v === 'momentum');
+            btnMom.classList.toggle('rounded-full', v === 'momentum');
+            btnMom.classList.toggle('bg-[#30363d]', v === 'momentum');
+            btnMom.classList.toggle('text-white', v === 'momentum');
+            btnMom.classList.toggle('border', v === 'momentum');
+            btnMom.classList.toggle('border-[#30363d]', v === 'momentum');
+            btnMom.classList.toggle('text-[#8b949e]', v !== 'momentum');
+
+            // Toggle classes for Risk button
+            btnRisk.classList.toggle('active', v === 'risk');
+            btnRisk.classList.toggle('rounded-full', v === 'risk');
+            btnRisk.classList.toggle('bg-[#30363d]', v === 'risk');
+            btnRisk.classList.toggle('text-white', v === 'risk');
+            btnRisk.classList.toggle('border', v === 'risk');
+            btnRisk.classList.toggle('border-[#30363d]', v === 'risk');
+            btnRisk.classList.toggle('text-[#8b949e]', v !== 'risk');
 
             // Legend (Desktop)
             const legTitle = document.getElementById('legend-title');
