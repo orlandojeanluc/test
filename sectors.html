@@ -152,6 +152,66 @@
             background-color: #fff1f2;
             color: #be123c;
         }
+
+        /* Tab Navigation */
+        .tab-btn {
+            padding: 8px 20px;
+            font-size: 12px;
+            font-weight: 600;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .tab-btn-active {
+            background: #c586c0;
+            color: white;
+        }
+
+        .tab-btn-inactive {
+            background: #21262d;
+            color: #8b949e;
+        }
+
+        .tab-btn-inactive:hover {
+            background: #30363d;
+            color: white;
+        }
+
+        /* Heatmap Styles */
+        .heatmap-grid {
+            display: grid;
+            gap: 2px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .heatmap-cell {
+            padding: 12px 8px;
+            text-align: center;
+            font-size: 11px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .heatmap-cell:hover {
+            transform: scale(1.05);
+            z-index: 10;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .heatmap-header {
+            background: #161b22;
+            color: #8b949e;
+            font-weight: 700;
+        }
+
+        .heatmap-sector-label {
+            background: #161b22;
+            color: white;
+            text-align: left;
+            padding-left: 12px;
+        }
     </style>
 </head>
 
@@ -383,23 +443,73 @@
                     </filter>
                 </defs>
             </svg>
-            <h2 class="text-2xl font-bold text-white mb-6">Market Sectors Analysis</h2>
 
-            <!-- Summary Stats Row -->
-            <div id="summary-stats" class="mb-6">
-                <!-- Will be populated by JavaScript -->
-            </div>
-
-            <div id="sector-grid" class="sector-table-container">
-                <!-- Sector Cards Injected Here -->
-                <div class="col-span-full text-center py-20 text-[#8b949e] animate-pulse">Aggregating market data...
+            <!-- Tab Navigation -->
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold text-white">Market Sectors Analysis</h2>
+                <div class="flex gap-2">
+                    <button id="tab-overview" onclick="switchTab('overview')" class="tab-btn tab-btn-active">
+                        Sectors Overview
+                    </button>
+                    <button id="tab-heatmap" onclick="switchTab('heatmap')" class="tab-btn tab-btn-inactive">
+                        Rotation Heatmap
+                    </button>
                 </div>
             </div>
 
-            <!-- Top Movers Section -->
-            <h3 class="text-xl font-bold text-white mt-8 mb-4">Top Movers Across All Sectors</h3>
-            <div id="top-movers" class="sector-table-container">
-                <!-- Will be populated by JavaScript -->
+            <!-- Overview Tab Content -->
+            <div id="view-overview">
+                <!-- Summary Stats Row -->
+                <div id="summary-stats" class="mb-6">
+                    <!-- Will be populated by JavaScript -->
+                </div>
+
+                <div id="sector-grid" class="sector-table-container">
+                    <!-- Sector Cards Injected Here -->
+                    <div class="col-span-full text-center py-20 text-[#8b949e] animate-pulse">Aggregating market data...
+                    </div>
+                </div>
+
+                <!-- Top Movers Section -->
+                <h3 class="text-xl font-bold text-white mt-8 mb-4">Top Movers Across All Sectors</h3>
+                <div id="top-movers" class="sector-table-container">
+                    <!-- Will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Heatmap Tab Content (Hidden by default) -->
+            <div id="view-heatmap" class="hidden">
+                <div class="terminal-card p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-bold text-white">Sector Rotation Heatmap</h3>
+                        <div class="text-xs text-[#8b949e]">Short-Term vs Intermediate Trend Comparison</div>
+                    </div>
+                    <div id="heatmap-container">
+                        <div class="text-center py-20 text-[#8b949e] animate-pulse">Loading heatmap data...</div>
+                    </div>
+                    <div class="mt-4 flex items-center justify-center gap-6 text-xs">
+                        <div class="flex items-center gap-2">
+                            <div class="w-4 h-4 rounded" style="background: #22c55e;"></div>
+                            <span class="text-[#8b949e]">Strong Bullish</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-4 h-4 rounded" style="background: #86efac;"></div>
+                            <span class="text-[#8b949e]">Bullish</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-4 h-4 rounded" style="background: #6b7280;"></div>
+                            <span class="text-[#8b949e]">Neutral</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-4 h-4 rounded" style="background: #fca5a5;"></div>
+                            <span class="text-[#8b949e]">Bearish</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-4 h-4 rounded" style="background: #ef4444;"></div>
+                            <span class="text-[#8b949e]">Strong Bearish</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -896,6 +1006,132 @@
         }
 
         init();
+
+        // Tab Switching
+        function switchTab(tab) {
+            const tabOverview = document.getElementById('tab-overview');
+            const tabHeatmap = document.getElementById('tab-heatmap');
+            const viewOverview = document.getElementById('view-overview');
+            const viewHeatmap = document.getElementById('view-heatmap');
+
+            if (tab === 'overview') {
+                tabOverview.classList.remove('tab-btn-inactive');
+                tabOverview.classList.add('tab-btn-active');
+                tabHeatmap.classList.remove('tab-btn-active');
+                tabHeatmap.classList.add('tab-btn-inactive');
+                viewOverview.classList.remove('hidden');
+                viewHeatmap.classList.add('hidden');
+            } else {
+                tabHeatmap.classList.remove('tab-btn-inactive');
+                tabHeatmap.classList.add('tab-btn-active');
+                tabOverview.classList.remove('tab-btn-active');
+                tabOverview.classList.add('tab-btn-inactive');
+                viewHeatmap.classList.remove('hidden');
+                viewOverview.classList.add('hidden');
+
+                // Load heatmap data on first view
+                if (!window.heatmapLoaded) {
+                    window.heatmapLoaded = true;
+                    loadAndRenderHeatmap();
+                }
+            }
+        }
+
+        // Make switchTab global
+        window.switchTab = switchTab;
+
+        // Heatmap Rendering - Fetches from Cloud Function
+        async function loadAndRenderHeatmap() {
+            const container = document.getElementById('heatmap-container');
+            container.innerHTML = '<div class="text-center py-20 text-[#8b949e] animate-pulse">Loading historical data...</div>';
+
+            try {
+                // Call cloud function for pre-aggregated data
+                const getHistoricalSectorTrends = httpsCallable(functions, 'getHistoricalSectorTrends');
+                const result = await getHistoricalSectorTrends();
+                const { weeks, sectors } = result.data;
+
+                renderHistoricalHeatmap(weeks, sectors);
+
+            } catch (error) {
+                console.error('Error loading historical data:', error);
+                container.innerHTML = '<div class="text-center py-20 text-[#f48771]">Error loading historical data. Make sure the cloud function is deployed.</div>';
+            }
+        }
+
+        function renderHistoricalHeatmap(weeks, sectorData) {
+            const container = document.getElementById('heatmap-container');
+
+            if (!weeks || weeks.length === 0) {
+                container.innerHTML = '<div class="text-center py-20 text-[#8b949e]">No historical data available</div>';
+                return;
+            }
+
+            const sectors = Object.keys(sectorData);
+
+            // Get heatmap color based on score
+            const getHeatmapColor = (score) => {
+                if (score === null || score === undefined) return '#374151';
+                if (score >= 3) return '#22c55e';
+                if (score >= 1) return '#86efac';
+                if (score >= -1) return '#6b7280';
+                if (score >= -3) return '#fca5a5';
+                return '#ef4444';
+            };
+
+            // Format week date for display (Week Of) - dates are MM-DD-YYYY
+            const formatWeek = (dateStr) => {
+                const [month, day, year] = dateStr.split('-');
+                const date = new Date(year, month - 1, day);
+                return 'W/O ' + date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+            };
+
+            // Build HTML
+            let html = `
+                <div class="mb-4 text-xs text-[#8b949e]">Showing last ${weeks.length} weeks</div>
+                
+                <!-- Short-Term Trend Section -->
+                <div class="mb-6">
+                    <h4 class="text-sm font-bold text-[#b5cea8] mb-2">Short-Term Trend (Daily → Weekly)</h4>
+                    <div class="heatmap-grid" style="grid-template-columns: 120px repeat(${weeks.length}, 1fr);">
+                        <div class="heatmap-cell heatmap-header">Sector</div>
+                        ${weeks.map(w => `<div class="heatmap-cell heatmap-header">${formatWeek(w)}</div>`).join('')}
+                        ${sectors.map(sector => `
+                            <div class="heatmap-cell heatmap-sector-label">${sector}</div>
+                            ${weeks.map(week => {
+                const val = sectorData[sector]?.[week]?.stAvg;
+                const color = getHeatmapColor(val);
+                const display = val != null ? (val > 0 ? `+${val.toFixed(1)}` : val.toFixed(1)) : '-';
+                return `<div class="heatmap-cell" style="background: ${color}; color: ${val != null && Math.abs(val) > 2 ? 'white' : '#1f2937'};">${display}</div>`;
+            }).join('')}
+                        `).join('')}
+                    </div>
+                </div>
+                
+                <!-- Intermediate Trend Section -->
+                <div>
+                    <h4 class="text-sm font-bold text-[#c586c0] mb-2">Intermediate Trend (Weekly)</h4>
+                    <div class="heatmap-grid" style="grid-template-columns: 120px repeat(${weeks.length}, 1fr);">
+                        <div class="heatmap-cell heatmap-header">Sector</div>
+                        ${weeks.map(w => `<div class="heatmap-cell heatmap-header">${formatWeek(w)}</div>`).join('')}
+                        ${sectors.map(sector => `
+                            <div class="heatmap-cell heatmap-sector-label">${sector}</div>
+                            ${weeks.map(week => {
+                const val = sectorData[sector]?.[week]?.itAvg;
+                const color = getHeatmapColor(val);
+                const display = val != null ? (val > 0 ? `+${val.toFixed(1)}` : val.toFixed(1)) : '-';
+                return `<div class="heatmap-cell" style="background: ${color}; color: ${val != null && Math.abs(val) > 2 ? 'white' : '#1f2937'};">${display}</div>`;
+            }).join('')}
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        // Make functions global
+        window.loadAndRenderHeatmap = loadAndRenderHeatmap;
     </script>
     <script>
         function toggleSidebar() {

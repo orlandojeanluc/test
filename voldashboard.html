@@ -569,9 +569,24 @@
         let colorMode = 'abs';
 
         function calculateAdvancedMetrics(data) {
+            // Map old sector names to new GICS sector names
+            const sectorMap = {
+                'Tech': 'Technology',
+                'Finance': 'Financials',
+                'Health': 'Health Care',
+                'Consumer': 'Consumer Disc',
+                'Industrial': 'Industrials',
+                'Utilities': 'Utilities',
+                'Energy': 'Energy',
+                'Other': 'Other'
+            };
+
             return data.map(item => {
                 // Use rvPctlHistory from cache as percentile
                 const percentile = item.rvPctlHistory || 50;
+
+                // Map sector to new name
+                const sector = sectorMap[item.sector] || item.sector;
 
                 // Calculate Regime based on RV thresholds
                 let volRegime = 'Normal';
@@ -590,7 +605,7 @@
                 const fastVol = item.currentRv;
                 const slowVol = item.currentRv;
 
-                return { ...item, percentile, volRegime, fastVol, slowVol };
+                return { ...item, sector, percentile, volRegime, fastVol, slowVol };
             });
         }
 

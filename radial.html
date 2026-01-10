@@ -727,10 +727,20 @@
         const auth = getAuth(app);
 
         // Configuration
-        const sectors = ["Tech", "Finance", "Health", "Energy", "Consumer", "Industrial", "Utilities", "Other"];
+        const sectors = ["Technology", "Financials", "Health Care", "Energy", "Consumer Disc", "Consumer Staples", "Industrials", "Utilities", "Real Estate", "Comm Services", "Materials"];
+
         const sectorColors = {
-            Tech: "#818cf8", Finance: "#9cdcfe", Health: "#34d399", Energy: "#dcdcaa",
-            Consumer: "#f472b6", Industrial: "#a78bfa", Utilities: "#c586c0", Other: "#94a3b8"
+            "Technology": "#c586c0",      // Terminal orange (magenta/purple)
+            "Financials": "#9cdcfe",      // Terminal blue
+            "Health Care": "#b5cea8",     // Terminal green
+            "Energy": "#dcdcaa",          // Terminal amber
+            "Consumer Disc": "#f48771",   // Terminal red
+            "Consumer Staples": "#ce9178", // Warm orange
+            "Industrials": "#4fc1ff",     // Bright cyan
+            "Utilities": "#569cd6",       // Steel blue
+            "Real Estate": "#d7ba7d",     // Gold
+            "Comm Services": "#c586c0",   // Terminal orange
+            "Materials": "#8b949e"        // Terminal muted
         };
         const chartConfigs = {
             overall: { title: "Overall Score", color: "#c586c0", key: "overallScore", range: [-8, 8] },
@@ -1063,7 +1073,7 @@
                 html += `<circle cx="${cx}" cy="${cy}" r="${maxR * r}" fill="none" stroke="#333" stroke-width="1" stroke-dasharray="3 3"/>`;
             });
             const points = sectors.map((s, i) => {
-                const ang = (2 * Math.PI * i / 8) - Math.PI / 2;
+                const ang = (2 * Math.PI * i / sectors.length) - Math.PI / 2;
                 const norm = Math.max(0.1, (sectorAvgs[i] + 8) / 16);
                 const r = maxR * norm;
                 return { x: cx + r * Math.cos(ang), y: cy + r * Math.sin(ang), sector: s, avg: sectorAvgs[i], ang };
@@ -1075,7 +1085,8 @@
 
             points.forEach((p, i) => {
                 const lx = cx + (maxR + 15) * Math.cos(p.ang), ly = cy + (maxR + 15) * Math.sin(p.ang);
-                html += `<text x="${lx}" y="${ly}" text-anchor="middle" font-size="9" fill="#888" dy="3">${p.sector.slice(0, 4)}</text>`;
+                const label = p.sector.length > 6 ? p.sector.split(' ')[0].slice(0, 5) : p.sector;
+                html += `<text x="${lx}" y="${ly}" text-anchor="middle" font-size="9" fill="#888" dy="3">${label}</text>`;
 
                 // Interactive zone for tooltip
                 html += `<circle cx="${p.x}" cy="${p.y}" r="6" fill="transparent" stroke="transparent" style="cursor:help"
