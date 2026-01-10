@@ -69,16 +69,69 @@
         }
 
         .data-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 12px;
-            padding: 12px;
+            display: block;
+            padding: 0;
         }
 
-        @media (max-width: 768px) {
-            .data-grid {
-                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-            }
+        /* Strength Badges - Voldashboard Style */
+        .strength-badge {
+            padding: 2px 7px;
+            border-radius: 5px;
+            font-size: 10px;
+            font-weight: 700;
+            white-space: nowrap;
+            display: inline-block;
+        }
+
+        .strength-strong-up {
+            background-color: #dcfce7;
+            color: #14532d;
+        }
+
+        .strength-mod-up {
+            background-color: #dbeafe;
+            color: #1e3a8a;
+        }
+
+        .strength-weak-up {
+            background-color: #f0fdf4;
+            color: #166534;
+        }
+
+        .strength-neutral {
+            background-color: #f3f4f6;
+            color: #374151;
+        }
+
+        .strength-weak-down {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+
+        .strength-mod-down {
+            background-color: #ffedd5;
+            color: #9a3412;
+        }
+
+        .strength-strong-down {
+            background-color: #ffe4e6;
+            color: #991b1b;
+        }
+
+        /* Trend Badges */
+        .trend-positive {
+            background-color: #dcfce7;
+            color: #14532d;
+        }
+
+        .trend-negative {
+            background-color: #ffe4e6;
+            color: #991b1b;
+        }
+
+        .trend-neutral {
+            background-color: #f3f4f6;
+            color: #374151;
         }
 
         .risk-bar {
@@ -580,56 +633,120 @@
                 return;
             }
 
-            container.innerHTML = data.map(a => {
-                const overallColor = a.overall > 0 ? '#b5cea8' : a.overall < 0 ? '#f48771' : '#8b949e';
+            // Helper: Create block indicators (4 blocks for value visualization)
+            const createBlocks = (value, max, color) => {
+                const absVal = Math.abs(value);
+                const filledCount = Math.round((absVal / max) * 4);
+                const isNegative = value < 0;
+                const isZero = value === 0;
+                const fillColor = isZero ? '#f3f4f6' : (isNegative ? '#f48771' : color);
 
-                const factors = [
-                    { name: 'ST Trend', value: a.stTrend, max: 4, color: '#b5cea8' },
-                    { name: 'ST Str', value: a.stStrength, max: 4, color: '#9cdcfe' },
-                    { name: 'IT Trend', value: a.itTrend, max: 4, color: '#b5cea8' },
-                    { name: 'IT Str', value: a.itStrength, max: 4, color: '#9cdcfe' },
-                    { name: 'Mean Rev', value: a.meanReversion, max: 2, color: '#f48771' },
-                    { name: 'Breakout', value: a.breakout, max: 4, color: '#c586c0' }
-                ];
+                let blocks = '';
+                for (let i = 0; i < 4; i++) {
+                    const isFilled = i < filledCount || isZero;
+                    const blockColor = isZero ? '#f3f4f6' : (isFilled ? fillColor : '#21262d');
+                    const opacity = isZero ? 'opacity-40' : (isFilled ? '' : 'opacity-30');
+                    blocks += `<div class="w-2 h-4 rounded-sm ${opacity}" style="background: ${blockColor}"></div>`;
+                }
+                return `<div class="flex gap-0.5">${blocks}</div>`;
+            };
 
-                const factorRows = factors.map(f => {
-                    const normPct = Math.min(100, (Math.abs(f.value) / f.max) * 100);
-                    const valColor = f.value > 0 ? 'text-[#b5cea8]' : f.value < 0 ? 'text-[#f48771]' : 'text-[#8b949e]';
+            // Helper: Get strength label and class
+            const getStrengthBadge = (value) => {
+                let label, cssClass;
+                if (value >= 3) { label = 'Strong Up'; cssClass = 'strength-strong-up'; }
+                else if (value >= 1) { label = 'Mod Up'; cssClass = 'strength-mod-up'; }
+                else if (value > 0) { label = 'Weak Up'; cssClass = 'strength-weak-up'; }
+                else if (value === 0) { label = 'Neutral'; cssClass = 'strength-neutral'; }
+                else if (value > -1) { label = 'Weak Down'; cssClass = 'strength-weak-down'; }
+                else if (value > -3) { label = 'Mod Down'; cssClass = 'strength-mod-down'; }
+                else { label = 'Strong Down'; cssClass = 'strength-strong-down'; }
+                return `<span class="strength-badge ${cssClass}">${label}</span>`;
+            };
 
-                    return `
-                        <div>
-                            <div class="flex justify-between text-[8px] md:text-[10px] mb-0.5 md:mb-1">
-                                <span class="text-[#8b949e] font-medium truncate">${f.name} <span class="${valColor} ml-0.5 md:ml-1 text-[8px] md:text-[10px]">${f.value > 0 ? '+' : ''}${f.value.toFixed(1)}</span></span>
-                            </div>
-                            <div class="h-1 md:h-1.5 w-full bg-[#21262d] rounded-full overflow-hidden">
-                                <div class="h-full rounded-full transition-all" style="width:${normPct}%; background:${f.color}; opacity: ${f.value === 0 ? 0 : 1}"></div>
-                            </div>
-                        </div>
-                    `;
-                }).join('');
+            // Helper: Get trend badge
+            const getTrendBadge = (value) => {
+                const label = value > 0 ? `+${value.toFixed(0)}` : value.toFixed(0);
+                const cssClass = value > 0 ? 'trend-positive' : value < 0 ? 'trend-negative' : 'trend-neutral';
+                return `<span class="strength-badge ${cssClass}">${label}</span>`;
+            };
+
+            // Desktop Table Layout
+            const tableRows = data.map(a => {
+                const overallColor = a.overall > 0 ? '#86efac' : a.overall < 0 ? '#fda4af' : '#8b949e';
+                const mrLabel = a.meanReversion !== 0 ? (a.meanReversion > 0 ? `+${a.meanReversion.toFixed(1)}` : a.meanReversion.toFixed(1)) : '-';
+                const boLabel = a.breakout !== 0 ? a.breakout.toFixed(1) : '-';
 
                 return `
-                    <div class="terminal-card p-2 md:p-4 bg-[#0d1117] border border-[#21262d] rounded-lg relative overflow-hidden group hover:border-[#c586c0] transition-all cursor-pointer" onclick="openDetail('${a.ticker}')">
-                        <!-- Header -->
-                        <div class="flex items-start justify-between mb-2 md:mb-4">
-                            <div class="flex items-center gap-1 md:gap-2">
-                                <h2 class="text-xl md:text-2xl font-bold text-[#e6edf3]">${a.ticker}</h2>
-                                <span class="px-1 py-0.5 text-[8px] md:text-[9px] font-bold text-[#8b949e] bg-[#21262d] rounded uppercase tracking-wider">${a.sector.toUpperCase()}</span>
+                    <tr class="even:bg-[#161b22]/50 hover:bg-[#1f2937] hover:shadow-[inset_0_0_0_1px_rgba(139,92,246,0.3)] cursor-pointer transition-all duration-150" onclick="openDetail('${a.ticker}')">
+                        <td class="py-2 px-3">
+                            <div class="flex items-center gap-2">
+                                <span class="text-white font-bold">${a.ticker}</span>
                             </div>
-                            <div class="text-2xl md:text-3xl font-bold" style="color:${overallColor}">${a.overall > 0 ? '+' : ''}${a.overall.toFixed(1)}</div>
-                        </div>
-
-                        <!-- Bars Container -->
-                        <div class="space-y-1 md:space-y-2">
-                            ${factorRows}
-                        </div>
-                        
-                        <div class="mt-2 md:mt-3 text-center text-[#8b949e] text-[8px] md:text-[10px] group-hover:text-[#c586c0] transition-colors border-t border-[#21262d] pt-1 md:pt-2">
-                            Click for History
-                        </div>
-                    </div>
+                        </td>
+                        <td class="py-2 px-2">
+                            <div class="flex items-center gap-2">
+                                ${createBlocks(a.stTrend, 4, '#86efac')}
+                                ${getTrendBadge(a.stTrend)}
+                            </div>
+                        </td>
+                        <td class="py-2 px-2">
+                            <div class="flex items-center gap-2">
+                                ${createBlocks(a.stStrength, 4, '#fdba74')}
+                                ${getStrengthBadge(a.stStrength)}
+                            </div>
+                        </td>
+                        <td class="py-2 px-2">
+                            <div class="flex items-center gap-2">
+                                ${createBlocks(a.itTrend, 4, '#86efac')}
+                                ${getTrendBadge(a.itTrend)}
+                            </div>
+                        </td>
+                        <td class="py-2 px-2">
+                            <div class="flex items-center gap-2">
+                                ${createBlocks(a.itStrength, 4, '#fdba74')}
+                                ${getStrengthBadge(a.itStrength)}
+                            </div>
+                        </td>
+                        <td class="py-2 px-2">
+                            <div class="flex items-center gap-2">
+                                ${createBlocks(a.breakout, 4, '#d8b4fe')}
+                                <span class="text-[10px] ${a.breakout !== 0 ? 'text-[#d8b4fe]' : 'text-[#8b949e]'}">${boLabel}</span>
+                            </div>
+                        </td>
+                        <td class="py-2 px-2">
+                            <span class="text-sm font-medium ${a.meanReversion > 0 ? 'text-[#86efac]' : a.meanReversion < 0 ? 'text-[#fda4af]' : 'text-[#8b949e]'}">${mrLabel}</span>
+                        </td>
+                        <td class="py-2 px-3 text-right">
+                            <span class="text-xl font-bold" style="color: ${overallColor}">${a.overall > 0 ? '+' : ''}${a.overall.toFixed(0)}</span>
+                        </td>
+                    </tr>
                 `;
             }).join('');
+
+            const desktopTable = `
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm text-[#c9d1d9]" style="min-width: 900px;">
+                        <thead class="text-sm bg-[#161b22] text-white sticky top-0 z-10 shadow-sm">
+                            <tr>
+                                <th class="py-2 px-3 text-left font-semibold whitespace-nowrap" style="width: 70px;">Asset</th>
+                                <th class="py-2 px-2 text-left font-semibold whitespace-nowrap" style="width: 110px;">ST Trend</th>
+                                <th class="py-2 px-2 text-left font-semibold whitespace-nowrap" style="width: 110px;">Strength</th>
+                                <th class="py-2 px-2 text-left font-semibold whitespace-nowrap" style="width: 110px;">IT Trend</th>
+                                <th class="py-2 px-2 text-left font-semibold whitespace-nowrap" style="width: 110px;">Strength</th>
+                                <th class="py-2 px-2 text-left font-semibold whitespace-nowrap" style="width: 100px;">Breakout</th>
+                                <th class="py-2 px-2 text-left font-semibold whitespace-nowrap" style="width: 80px;">Mean Rev</th>
+                                <th class="py-2 px-3 text-right font-semibold whitespace-nowrap" style="width: 60px;">Score</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-[#30363d]">
+                            ${tableRows}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+
+            container.innerHTML = desktopTable;
         }
 
         window.toggleMobileMenu = function () {
