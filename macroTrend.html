@@ -207,11 +207,12 @@
             z-index: 100;
             padding: 2rem;
 
-            /* Animation - Start state */
+            /* Animation - Start/Close state */
             opacity: 0;
             pointer-events: none;
-            transform: scale(0.98);
-            transition: opacity 0.3s ease, transform 0.3s ease;
+            transform: scale(0.95) translateY(20px);
+            transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 
             display: flex;
             flex-direction: column;
@@ -220,7 +221,7 @@
         #detail-panel.open {
             opacity: 1;
             pointer-events: auto;
-            transform: scale(1);
+            transform: scale(1) translateY(0);
         }
 
         #detail-overlay {
@@ -413,8 +414,8 @@
     <div id="detail-panel">
         <div class="flex items-center justify-between mb-6 border-b border-[#21262d] pb-4">
             <div>
-                <h2 id="detail-ticker" class="text-2xl font-bold text-[#c586c0]">--</h2>
-                <div class="text-[#8b949e] text-xs uppercase" id="detail-subtitle">Historical Trend Analysis</div>
+                <h2 id="detail-ticker" class="text-2xl font-bold text-white">--</h2>
+                <div class="text-[#8b949e] text-xs" id="detail-subtitle">Historical Trend Analysis</div>
             </div>
             <button onclick="closeDetailPanel()" class="text-[#8b949e] hover:text-white transition-colors">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -429,10 +430,10 @@
             <div class="bg-[#0d1117] border border-[#21262d] rounded-lg p-4">
                 <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
                     <div class="flex flex-wrap items-center gap-4">
-                        <span id="chart-title-label" class="text-[#b5cea8] text-xs font-bold">Short Term Trend</span>
+                        <span id="chart-title-label" class="text-white text-xs font-bold">Short Term Trend</span>
                         <div class="flex gap-2">
                             <button onclick="switchTab('ST')" id="tab-ST"
-                                class="px-2 py-1 text-[10px] bg-[#c586c0] text-black rounded font-bold whitespace-nowrap">Short
+                                class="px-2 py-1 text-[10px] bg-[#21262d] text-white rounded border border-[#8b949e] font-bold whitespace-nowrap">Short
                                 Term</button>
                             <button onclick="switchTab('IT')" id="tab-IT"
                                 class="px-2 py-1 text-[10px] bg-[#21262d] text-[#8b949e] hover:text-white rounded border border-[#21262d] whitespace-nowrap">Intermediate</button>
@@ -450,7 +451,7 @@
                             id="btn-3Y">3Y</button>
                         <button onclick="setTimeframe('MAX')"
                             class="time-btn px-2 py-1 text-[10px] bg-[#21262d] text-[#8b949e] hover:text-white rounded border border-[#21262d]"
-                            id="btn-MAX">MAX</button>
+                            id="btn-MAX">Max</button>
                     </div>
                 </div>
                 <!-- Canvas height fixed for stability -->
@@ -791,7 +792,7 @@
             const itBtn = document.getElementById('tab-IT');
             const mrBtn = document.getElementById('tab-MR');
 
-            const activeClass = "px-2 py-1 text-[10px] bg-[#c586c0] text-black rounded font-bold whitespace-nowrap";
+            const activeClass = "px-2 py-1 text-[10px] bg-[#21262d] text-white rounded border border-[#8b949e] font-bold whitespace-nowrap";
             const inactiveClass = "px-2 py-1 text-[10px] bg-[#21262d] text-[#8b949e] hover:text-white rounded border border-[#21262d] whitespace-nowrap";
 
             stBtn.className = (tab === 'ST') ? activeClass : inactiveClass;
@@ -865,13 +866,13 @@
 
         function setActiveButton(id) {
             document.querySelectorAll('.time-btn').forEach(b => {
-                b.classList.remove('bg-[#c586c0]', 'text-black');
-                b.classList.add('bg-[#21262d]', 'text-[#8b949e]');
+                b.classList.remove('text-white', 'border-[#8b949e]', 'font-bold');
+                b.classList.add('text-[#8b949e]', 'border-[#21262d]');
             });
             const activeById = document.getElementById(`btn-${id}`);
             if (activeById) {
-                activeById.classList.remove('bg-[#21262d]', 'text-[#8b949e]');
-                activeById.classList.add('bg-[#c586c0]', 'text-black');
+                activeById.classList.remove('text-[#8b949e]', 'border-[#21262d]');
+                activeById.classList.add('text-white', 'border-[#8b949e]', 'font-bold');
             }
         }
 
@@ -910,8 +911,8 @@
             try {
                 // Create Gradient
                 const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-                gradient.addColorStop(0, 'rgba(197, 134, 192, 0.5)'); // Top: stronger purple
-                gradient.addColorStop(1, 'rgba(197, 134, 192, 0.0)'); // Bottom: transparent
+                gradient.addColorStop(0, 'rgba(191, 219, 254, 0.4)'); // Top: pale blue
+                gradient.addColorStop(1, 'rgba(191, 219, 254, 0.0)'); // Bottom: transparent
 
                 trendChartInstance = new Chart(ctx, {
                     type: 'line',
@@ -920,7 +921,7 @@
                         datasets: [{
                             label: labelText,
                             data: dataSeries,
-                            borderColor: '#c586c0',
+                            borderColor: '#bfdbfe',
                             backgroundColor: gradient,
                             borderWidth: 1.5, // Thinner line
                             stepped: true,    // Stepped line for clearer transitions
