@@ -575,7 +575,7 @@
             // Helper: Create block indicators (higher score = more blocks filled)
             const createBlocks = (score, maxScore, color) => {
                 const isZero = score === 0;
-                const filledCount = isZero ? 4 : Math.round((score / maxScore) * 4);
+                const filledCount = isZero ? 4 : Math.round((Math.abs(score) / maxScore) * 4);
 
                 let blocks = '';
                 for (let i = 0; i < 4; i++) {
