@@ -68,16 +68,49 @@
         }
 
         .data-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 12px;
-            padding: 12px;
+            display: block;
+            padding: 0;
+            overscroll-behavior: none;
         }
 
-        @media (max-width: 768px) {
-            .data-grid {
-                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-            }
+        /* Risk Level Badges */
+        .risk-badge {
+            padding: 2px 7px;
+            border-radius: 5px;
+            font-size: 10px;
+            font-weight: 700;
+            white-space: nowrap;
+            display: inline-block;
+        }
+
+        .badge-neutral {
+            background-color: #f3f4f6;
+            color: #374151;
+        }
+
+        .badge-lowest {
+            background-color: #ecfdf5;
+            color: #166534;
+        }
+
+        .badge-low {
+            background-color: #f0fdf4;
+            color: #15803d;
+        }
+
+        .badge-medium {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-high {
+            background-color: #fef2f2;
+            color: #b91c1c;
+        }
+
+        .badge-highest {
+            background-color: #fff1f2;
+            color: #be123c;
         }
 
         .risk-bar {
@@ -521,8 +554,8 @@
         };
 
         function getRiskLevel(score) {
-            if (score <= 0) return { class: 'risk-lowest', badge: 'badge-lowest', text: 'Lowest' };
-            if (score <= 2) return { class: 'risk-low', badge: 'badge-low', text: 'Low' };
+            if (score === 0) return { class: 'risk-neutral', badge: 'badge-neutral', text: 'Lowest' };
+            if (score <= 2) return { class: 'risk-lowest', badge: 'badge-lowest', text: 'Lowest' };
             if (score <= 4) return { class: 'risk-medium', badge: 'badge-medium', text: 'Moderate' };
             if (score <= 6) return { class: 'risk-high', badge: 'badge-high', text: 'High' };
             return { class: 'risk-highest', badge: 'badge-highest', text: 'Highest' };
@@ -539,44 +572,78 @@
                 return;
             }
 
-            container.innerHTML = data.map(a => {
-                // Color Logic: Low Score = Good (Green), High Score = Bad (Red)
-                let scoreColor = '#b5cea8'; // Default Low Risk (Green)
-                if (a.score >= 6) scoreColor = '#f48771'; // High Risk (Red)
-                else if (a.score > 2) scoreColor = '#dcdcaa'; // Moderate Risk (Amber)
+            // Helper: Create block indicators (inverted - higher score = more blocks filled)
+            const createBlocks = (score, maxScore, color) => {
+                const isZero = score === 0;
+                const filledCount = isZero ? 4 : Math.round((score / maxScore) * 4);
 
-                // Normalize Score (Max approx 10)
-                const normPct = Math.min(100, (a.score / 10) * 100);
+                let blocks = '';
+                for (let i = 0; i < 4; i++) {
+                    const isFilled = i < filledCount;
+                    const blockColor = isZero ? '#374151' : (isFilled ? color : '#21262d');
+                    const opacity = isZero ? 'opacity-60' : (isFilled ? '' : 'opacity-30');
+                    blocks += `<div class="w-2 h-4 rounded-sm ${opacity}" style="background: ${blockColor}"></div>`;
+                }
+                return `<div class="flex gap-0.5">${blocks}</div>`;
+            };
+
+            // Helper: Get score color (green = low/good, red = high/bad)
+            const getScoreColor = (score) => {
+                if (score === 0) return '#9ca3af';  // Gray - neutral
+                if (score <= 2) return '#a7f3d0';  // Green - low risk
+                if (score <= 4) return '#fde68a';  // Yellow - moderate
+                if (score <= 6) return '#fdba74';  // Orange - high
+                return '#fecdd3';  // Red - highest risk
+            };
+
+            // Table rows
+            const tableRows = data.map(a => {
+                const riskLevel = getRiskLevel(a.score);
+                const scoreColor = getScoreColor(a.score);
 
                 return `
-                    <div class="terminal-card p-2 md:p-4 bg-[#0d1117] border border-[#21262d] rounded-lg relative overflow-hidden group hover:border-[#c586c0] transition-all cursor-pointer" onclick="window.location.href='lowvol_detail.html?ticker=${a.ticker}'">
-                        <!-- Header -->
-                        <div class="flex items-start justify-between mb-2 md:mb-4">
-                            <div class="flex items-center gap-1 md:gap-2">
-                                <h2 class="text-xl md:text-2xl font-bold text-[#e6edf3]">${a.ticker}</h2>
-                                <span class="px-1 py-0.5 text-[8px] md:text-[9px] font-bold text-[#8b949e] bg-[#21262d] rounded uppercase tracking-wider">${a.sector.toUpperCase()}</span>
+                    <tr class="border-b border-[#30363d] hover:bg-[#1f2937] hover:shadow-[inset_0_0_0_1px_rgba(139,92,246,0.3)] transition-colors even:bg-[#161b22]/50 cursor-pointer" onclick="window.location.href='lowvol_detail.html?ticker=${a.ticker}'">
+                        <td class="py-2 px-3">
+                            <div class="flex items-center gap-2">
+                                <span class="font-bold text-white">${a.ticker}</span>
+                                <span class="text-[8px] text-[#8b949e] bg-[#21262d] px-1 py-0.5 rounded uppercase">${a.sector}</span>
                             </div>
-                            <div class="text-2xl md:text-3xl font-bold" style="color:${scoreColor}">${a.score.toFixed(1)}</div>
-                        </div>
-
-                        <!-- Bar Container (Single Risk Factor) -->
-                        <div class="space-y-1 md:space-y-2">
-                            <div>
-                                <div class="flex justify-between text-[8px] md:text-[10px] mb-0.5 md:mb-1">
-                                    <span class="text-[#8b949e] font-medium truncate">Risk Score</span>
-                                </div>
-                                <div class="h-1 md:h-1.5 w-full bg-[#21262d] rounded-full overflow-hidden">
-                                    <div class="h-full rounded-full transition-all" style="width:${normPct}%; background:${scoreColor};"></div>
-                                </div>
+                        </td>
+                        <td class="py-2 px-2">
+                            <div class="flex items-center gap-2">
+                                ${createBlocks(a.score, 10, scoreColor)}
+                                <span class="text-sm font-medium" style="color: ${scoreColor}">${a.score.toFixed(1)}</span>
                             </div>
-                        </div>
-
-                        <div class="mt-2 md:mt-3 text-center text-[#8b949e] text-[8px] md:text-[10px] group-hover:text-[#c586c0] transition-colors border-t border-[#21262d] pt-1 md:pt-2">
-                            Click for Analysis
-                        </div>
-                    </div>
+                        </td>
+                        <td class="py-2 px-2">
+                            <span class="risk-badge ${riskLevel.badge}">${riskLevel.text}</span>
+                        </td>
+                        <td class="py-2 px-3 text-right">
+                            <span class="text-[10px] text-[#8b949e] group-hover:text-[#c586c0]">View Analysis →</span>
+                        </td>
+                    </tr>
                 `;
             }).join('');
+
+            const desktopTable = `
+                <div style="overflow-x: auto; overscroll-behavior: none; -webkit-overflow-scrolling: touch;">
+                    <table class="w-full text-left text-sm text-[#c9d1d9]" style="min-width: 500px;">
+                        <thead class="text-sm bg-[#161b22] text-white sticky top-0 z-10 shadow-sm">
+                            <tr>
+                                <th class="py-2 px-3 text-left font-semibold whitespace-nowrap" style="width: 150px;">Asset</th>
+                                <th class="py-2 px-2 text-left font-semibold whitespace-nowrap" style="width: 180px;">Risk Score</th>
+                                <th class="py-2 px-2 text-left font-semibold whitespace-nowrap" style="width: 120px;">Risk Regime</th>
+                                <th class="py-2 px-3 text-right font-semibold whitespace-nowrap" style="width: 100px;"></th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-[#30363d]">
+                            ${tableRows}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+
+            container.innerHTML = desktopTable;
         }
 
         window.toggleMobileMenu = function () {
