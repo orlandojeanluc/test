@@ -410,7 +410,7 @@
         </div>
 
         <!-- Main Content -->
-        <div class="p-6 max-w-7xl mx-auto space-y-6">
+        <div class="p-2 space-y-4">
 
             <!-- Global SVG Filters & Gradients -->
             <svg width="0" height="0" class="absolute block">
@@ -1093,36 +1093,40 @@
                 <!-- Short-Term Trend Section -->
                 <div class="mb-6">
                     <h4 class="text-sm font-bold text-[#b5cea8] mb-2">Short-Term Trend (Daily → Weekly)</h4>
-                    <div class="heatmap-grid" style="grid-template-columns: 120px repeat(${weeks.length}, 1fr);">
-                        <div class="heatmap-cell heatmap-header">Sector</div>
-                        ${weeks.map(w => `<div class="heatmap-cell heatmap-header">${formatWeek(w)}</div>`).join('')}
-                        ${sectors.map(sector => `
-                            <div class="heatmap-cell heatmap-sector-label">${sector}</div>
-                            ${weeks.map(week => {
+                    <div style="overflow-x: auto; overscroll-behavior: none; -webkit-overflow-scrolling: touch;">
+                        <div class="heatmap-grid" style="grid-template-columns: 120px repeat(${weeks.length}, 1fr); min-width: 800px;">
+                            <div class="heatmap-cell heatmap-header">Sector</div>
+                            ${weeks.map(w => `<div class="heatmap-cell heatmap-header">${formatWeek(w)}</div>`).join('')}
+                            ${sectors.map(sector => `
+                                <div class="heatmap-cell heatmap-sector-label">${sector}</div>
+                                ${weeks.map(week => {
                 const val = sectorData[sector]?.[week]?.stAvg;
                 const color = getHeatmapColor(val);
                 const display = val != null ? (val > 0 ? `+${val.toFixed(1)}` : val.toFixed(1)) : '-';
                 return `<div class="heatmap-cell" style="background: ${color}; color: ${val != null && Math.abs(val) > 2 ? 'white' : '#1f2937'};">${display}</div>`;
             }).join('')}
-                        `).join('')}
+                            `).join('')}
+                        </div>
                     </div>
                 </div>
                 
                 <!-- Intermediate Trend Section -->
                 <div>
                     <h4 class="text-sm font-bold text-[#c586c0] mb-2">Intermediate Trend (Weekly)</h4>
-                    <div class="heatmap-grid" style="grid-template-columns: 120px repeat(${weeks.length}, 1fr);">
-                        <div class="heatmap-cell heatmap-header">Sector</div>
-                        ${weeks.map(w => `<div class="heatmap-cell heatmap-header">${formatWeek(w)}</div>`).join('')}
-                        ${sectors.map(sector => `
-                            <div class="heatmap-cell heatmap-sector-label">${sector}</div>
-                            ${weeks.map(week => {
+                    <div style="overflow-x: auto; overscroll-behavior: none; -webkit-overflow-scrolling: touch;">
+                        <div class="heatmap-grid" style="grid-template-columns: 120px repeat(${weeks.length}, 1fr); min-width: 800px;">
+                            <div class="heatmap-cell heatmap-header">Sector</div>
+                            ${weeks.map(w => `<div class="heatmap-cell heatmap-header">${formatWeek(w)}</div>`).join('')}
+                            ${sectors.map(sector => `
+                                <div class="heatmap-cell heatmap-sector-label">${sector}</div>
+                                ${weeks.map(week => {
                 const val = sectorData[sector]?.[week]?.itAvg;
                 const color = getHeatmapColor(val);
                 const display = val != null ? (val > 0 ? `+${val.toFixed(1)}` : val.toFixed(1)) : '-';
                 return `<div class="heatmap-cell" style="background: ${color}; color: ${val != null && Math.abs(val) > 2 ? 'white' : '#1f2937'};">${display}</div>`;
             }).join('')}
-                        `).join('')}
+                            `).join('')}
+                        </div>
                     </div>
                 </div>
             `;
