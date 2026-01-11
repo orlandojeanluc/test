@@ -521,12 +521,28 @@
                                     <th class="text-center py-2 px-2">Mom Factor</th>
                                     <th class="text-center py-2 px-2">Mean Rev</th>
                                     <th class="text-center py-2 px-2">LowVol</th>
+                                    <th class="text-center py-2 px-2">Vol Pctl</th>
                                 </tr>
                             </thead>
                             <tbody id="holdings-table">
                                 <!-- Holdings will be rendered here -->
                             </tbody>
                         </table>
+                    </div>
+                </div>
+
+                <!-- Options Intelligence Module -->
+                <div class="terminal-card p-4 md:p-6 mt-4">
+                    <h3 class="text-white font-bold text-sm mb-4 flex items-center gap-2">
+                        <span class="w-1.5 h-4 bg-[#c586c0]"></span>
+                        Options Intelligence
+                        <span
+                            class="text-[10px] text-[#8b949e] font-normal ml-2 bg-[#21262d] px-2 py-0.5 rounded-full border border-[#30363d]">Derivatives
+                            Overlay</span>
+                    </h3>
+
+                    <div id="options-suggestions" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <!-- Suggestions injected here -->
                     </div>
                 </div>
             </div>
@@ -567,6 +583,7 @@
         let momentumFactorData = [];
         let meanReversionData = [];
         let lowVolData = [];
+        let volatilityData = [];
 
         const sectorColors = {
             'Tech': '#c586c0',
@@ -660,17 +677,24 @@
 
             try {
                 // Fetch all data sources in parallel
-                const [momResult, momFactorResult, mrResult, lvResult] = await Promise.all([
+                const [momResult, momFactorResult, mrResult, lvResult, volResult] = await Promise.all([
                     httpsCallable(functions, 'getMomentumData')(),
                     httpsCallable(functions, 'getMomentumFactorData')(),
                     httpsCallable(functions, 'getMeanReversionData')(),
-                    httpsCallable(functions, 'getLowVolData')()
+                    httpsCallable(functions, 'getLowVolData')(),
+                    httpsCallable(functions, 'getVolatilityData', { timeout: 540000 })()
                 ]);
 
                 momentumData = momResult.data || [];
                 momentumFactorData = momFactorResult.data || [];
                 meanReversionData = mrResult.data || [];
                 lowVolData = lvResult.data || [];
+                // Handle volatility data structure
+                if (volResult.data && volResult.data.data) {
+                    volatilityData = volResult.data.data;
+                } else {
+                    volatilityData = volResult.data || [];
+                }
 
                 // Process and display results
                 processPortfolio();
@@ -701,9 +725,12 @@
                 const mr = meanReversionData.find(d => d.ticker === ticker) || {};
                 const lv = lowVolData.find(d => d.ticker === ticker) || {};
 
+                const vol = volatilityData.find(d => d.ticker === ticker) || {};
+                const volCs = vol.crossSectional || {};
+
                 // Check if we have any data for this ticker
                 const hasData = Object.keys(mom).length > 0 || Object.keys(momFactor).length > 0 ||
-                    Object.keys(mr).length > 0 || Object.keys(lv).length > 0;
+                    Object.keys(mr).length > 0 || Object.keys(lv).length > 0 || Object.keys(vol).length > 0;
 
                 // Calculate overall - handle null values properly
                 let overall = null;
@@ -717,13 +744,14 @@
                     ticker,
                     weight,
                     hasData,
-                    sector: mom.sector || momFactor.sector || mr.sector || lv.sector || 'Unknown',
+                    sector: mom.sector || momFactor.sector || mr.sector || lv.sector || vol.sector || 'Unknown',
                     stTrend: mom.stTrend ?? null,
                     itTrend: mom.itTrend ?? null,
                     overall: overall,
                     momFactor: momFactor.score ?? momFactor.momentumScore ?? null,
                     mrFactor: mr.score ?? mr.mrScore ?? null,
-                    lvFactor: lv.score ?? lv.riskScore ?? null
+                    lvFactor: lv.score ?? lv.riskScore ?? null,
+                    volPctl: volCs.rvPctlUniverse ?? vol.rvPctlHistory ?? null
                 });
             });
 
@@ -805,6 +833,7 @@
             updateSectorBars(sectorWeights);
             updateFactorTilts(finalMom, finalMR, finalLV);
             updateHoldingsTable(holdings);
+            updateOptionSuggestions(holdings);
         }
 
         function updateAggregateMetrics(overall, bullish, bearish, neutral, bullishW, bearishW, neutralW, total) {
@@ -872,6 +901,15 @@
                     return `<span class="${color}">${val.toFixed(1)}</span>`;
                 };
 
+                const formatPctl = (val) => {
+                    if (val === null) return '<span class="text-[#8b949e]">--</span>';
+                    // Color Logic: High Pctl = High Vol (Bad/Red), Low Pctl = Low Vol (Good/Green)
+                    let color = 'text-[#a7f3d0]'; // < 25
+                    if (val > 75) color = 'text-[#fecdd3]';
+                    else if (val > 50) color = 'text-[#dcdcaa]'; // Amber/Yellow
+                    return `<span class="${color}">${val.toFixed(0)}</span>`;
+                };
+
                 return `
                     <tr class="border-b border-[#21262d] hover:bg-[#161b22]">
                         <td class="py-2 px-2 text-white font-bold">${h.ticker}</td>
@@ -883,9 +921,106 @@
                         <td class="py-2 px-2 text-center">${formatScore(h.momFactor)}</td>
                         <td class="py-2 px-2 text-center">${formatScore(h.mrFactor)}</td>
                         <td class="py-2 px-2 text-center">${formatScore(h.lvFactor)}</td>
+                        <td class="py-2 px-2 text-center font-mono">${formatPctl(h.volPctl)}</td>
                     </tr>
                 `;
             }).join('');
+        }
+
+        function updateOptionSuggestions(holdings) {
+            const container = document.getElementById('options-suggestions');
+            const suggestions = [];
+
+            holdings.forEach(h => {
+                if (!h.hasData) return;
+
+                // Find vol data again
+                const volData = volatilityData.find(v => v.ticker === h.ticker) || {};
+                const vrp = volData.vrp; // Decimal, e.g. 0.05
+                const signal = volData.crossSectional?.signal;
+                const trend = h.overall; // Score
+
+                // Logic 1: High Yield (Covered Call)
+                // Conditions: VRP > 5% (Options expensive) OR 'RICH' signal + Trend stable (>-4)
+                if ((vrp > 0.05 || signal === 'RICH') && trend > -4) {
+                    suggestions.push({
+                        type: 'INCOME',
+                        ticker: h.ticker,
+                        title: 'Sell Covered Calls',
+                        reason: `Implied Volatility is expensive relative to Realized Vol (VRP: ${vrp ? (vrp * 100).toFixed(1) : '--'}%). Stock is stable/rising.`,
+                        badge: 'High Yield',
+                        badgeColor: 'text-emerald-400 border-emerald-400',
+                        icon: '💰'
+                    });
+                }
+
+                // Logic 2: Cheap Protection (Protective Puts)
+                // Conditions: VRP < -5% (Options cheap) OR 'CHEAP' signal + Trend Weak (< 2)
+                if ((vrp < -0.05 || signal === 'CHEAP') && trend < 2) {
+                    suggestions.push({
+                        type: 'PROTECTION',
+                        ticker: h.ticker,
+                        title: 'Buy Protective Puts',
+                        reason: `Downside protection is cheap (VRP: ${vrp ? (vrp * 100).toFixed(1) : '--'}%). Consider hedging partial position.`,
+                        badge: 'Cheap Hedge',
+                        badgeColor: 'text-blue-400 border-blue-400',
+                        icon: '🛡️'
+                    });
+                }
+
+                // Logic 3: Upside Leverage (Call Spread)
+                // Conditions: VRP < 0 (Fair/Cheap) + Strong Trend (> 5)
+                if (vrp < 0 && trend >= 6) {
+                    suggestions.push({
+                        type: 'LEVERAGE',
+                        ticker: h.ticker,
+                        title: 'Bull Call Spread',
+                        reason: `Strong bullish trend with underpriced volatility. Efficient way to add leverage.`,
+                        badge: 'Sniper Upside',
+                        badgeColor: 'text-purple-400 border-purple-400',
+                        icon: '🚀'
+                    });
+                }
+
+                // Logic 4: Extreme Vol Risk
+                // Conditions: Vol Pctl > 90
+                if (h.volPctl > 90) {
+                    suggestions.push({
+                        type: 'RISK',
+                        ticker: h.ticker,
+                        title: 'Limit Exposure / Collar',
+                        reason: `Volatility is in the 90th+ percentile. Risk of mean reversion or crash is high.`,
+                        badge: 'Extreme Vol',
+                        badgeColor: 'text-red-400 border-red-400',
+                        icon: '⚠️'
+                    });
+                }
+            });
+
+            if (suggestions.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full text-center text-[#8b949e] py-8 border border-dashed border-[#30363d] rounded-lg">
+                        <div class="text-2xl mb-2">✨</div>
+                        <p>No high-conviction option opportunities detected.</p>
+                        <p class="text-xs mt-1">Portfolio volatility is inline with expectations.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = suggestions.map(s => `
+                <div class="bg-[#161b22] border border-[#30363d] rounded-lg p-4 hover:border-[#c586c0] transition-colors group cursor-default">
+                    <div class="flex justify-between items-start mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="font-bold text-white text-lg">${s.ticker}</span>
+                            <span class="text-[10px] px-1.5 py-0.5 rounded border ${s.badgeColor} bg-opacity-10 bg-transparent">${s.badge}</span>
+                        </div>
+                        <span class="text-xl">${s.icon}</span>
+                    </div>
+                    <div class="font-bold text-[#c9d1d9] text-sm mb-1 group-hover:text-[#c586c0] transition-colors">${s.title}</div>
+                    <p class="text-xs text-[#8b949e] leading-relaxed">${s.reason}</p>
+                </div>
+            `).join('');
         }
 
         window.savePortfolio = function () {
