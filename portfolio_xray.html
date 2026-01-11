@@ -566,6 +566,65 @@
                         <!-- Upgrade cards injected here -->
                     </div>
                 </div>
+
+                <!-- Risk Parity Analysis Module -->
+                <div class="terminal-card p-4 md:p-6 mt-4">
+                    <h3 class="text-white font-bold text-sm mb-4 flex items-center gap-2">
+                        <span class="w-1.5 h-4 bg-[#9cdcfe]"></span>
+                        Risk Parity Analysis
+                        <span
+                            class="text-[10px] text-[#8b949e] font-normal ml-2 bg-[#21262d] px-2 py-0.5 rounded-full border border-[#30363d]">Volatility
+                            Weighting</span>
+                    </h3>
+
+                    <!-- Concentration Score -->
+                    <div class="flex items-center gap-4 mb-4 p-3 bg-[#161b22] rounded-lg border border-[#21262d]">
+                        <div>
+                            <div class="text-[10px] text-[#8b949e] uppercase tracking-wide mb-1">Risk Concentration
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span id="concentration-score" class="text-xl font-bold text-white">--</span>
+                                <span id="concentration-label" class="text-xs text-[#8b949e]">Loading...</span>
+                            </div>
+                        </div>
+                        <div id="concentration-alert"
+                            class="hidden ml-auto text-xs text-[#fecdd3] bg-[#fecdd3]/10 px-3 py-1.5 rounded border border-[#fecdd3]/30">
+                            ⚠️ High concentration detected
+                        </div>
+                    </div>
+
+                    <!-- Risk Contribution Bars -->
+                    <div class="mb-4">
+                        <div class="text-[10px] text-[#8b949e] uppercase tracking-wide mb-2">Risk Contribution by
+                            Holding</div>
+                        <div id="risk-contribution-bars" class="space-y-2">
+                            <!-- Bars injected here -->
+                        </div>
+                    </div>
+
+                    <!-- Rebalancing Suggestions Table -->
+                    <div>
+                        <div class="text-[10px] text-[#8b949e] uppercase tracking-wide mb-2">Suggested Risk-Parity
+                            Weights</div>
+                        <div class="overflow-x-auto"
+                            style="overscroll-behavior: none; -webkit-overflow-scrolling: touch;">
+                            <table class="w-full text-xs" style="min-width: 400px;">
+                                <thead>
+                                    <tr class="text-[#8b949e] border-b border-[#21262d]">
+                                        <th class="text-left py-2 px-2">Ticker</th>
+                                        <th class="text-center py-2 px-2">Current</th>
+                                        <th class="text-center py-2 px-2">Risk-Parity</th>
+                                        <th class="text-center py-2 px-2">Delta</th>
+                                        <th class="text-left py-2 px-2">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="risk-parity-table">
+                                    <!-- Rows injected here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Empty State -->
@@ -856,6 +915,7 @@
             updateHoldingsTable(holdings);
             updateOptionSuggestions(holdings);
             updateUpgradeSuggestions(holdings);
+            updateRiskParityAnalysis(holdings);
         }
 
         function updateAggregateMetrics(overall, bullish, bearish, neutral, bullishW, bearishW, neutralW, total) {
@@ -1164,6 +1224,130 @@
                     </table>
                 </div>
             `;
+        }
+
+        function updateRiskParityAnalysis(holdings) {
+            const barsContainer = document.getElementById('risk-contribution-bars');
+            const tableBody = document.getElementById('risk-parity-table');
+
+            // Filter holdings with valid volatility data
+            const validHoldings = holdings.filter(h => h.volPctl !== null && h.weight > 0);
+
+            if (validHoldings.length === 0) {
+                barsContainer.innerHTML = '<div class="text-center text-[#8b949e] py-4">No volatility data available</div>';
+                tableBody.innerHTML = '';
+                document.getElementById('concentration-score').textContent = '--';
+                document.getElementById('concentration-label').textContent = 'No data';
+                return;
+            }
+
+            // Calculate risk contribution for each holding
+            // Risk contribution = weight * volatility (using volPctl as proxy, scaled)
+            // Higher volPctl = higher volatility
+            const riskData = validHoldings.map(h => {
+                // Convert volPctl (0-100) to a volatility multiplier (0.5 to 2.0)
+                // 50th percentile = 1.0x, 100th = 2.0x, 0th = 0.5x
+                const volMultiplier = 0.5 + (h.volPctl / 100) * 1.5;
+                const riskContrib = h.weight * volMultiplier;
+                return { ...h, volMultiplier, riskContrib };
+            });
+
+            // Calculate total risk and normalize contributions
+            const totalRisk = riskData.reduce((sum, h) => sum + h.riskContrib, 0);
+            riskData.forEach(h => {
+                h.riskPct = (h.riskContrib / totalRisk) * 100;
+            });
+
+            // Calculate Risk Parity weights (inverse volatility weighting)
+            const invVolSum = riskData.reduce((sum, h) => sum + (1 / h.volMultiplier), 0);
+            riskData.forEach(h => {
+                h.riskParityWeight = ((1 / h.volMultiplier) / invVolSum) * 100;
+                h.weightDelta = h.riskParityWeight - h.weight;
+            });
+
+            // Sort by risk contribution (highest first)
+            riskData.sort((a, b) => b.riskPct - a.riskPct);
+
+            // Calculate concentration score (Herfindahl-Hirschman Index normalized)
+            // HHI = sum of squared risk shares, normalized to 0-1 scale
+            const hhi = riskData.reduce((sum, h) => sum + Math.pow(h.riskPct / 100, 2), 0);
+            // Normalize: 1/n = perfect diversification, 1 = single holding
+            const minHHI = 1 / riskData.length;
+            const concentrationScore = ((hhi - minHHI) / (1 - minHHI)).toFixed(2);
+
+            // Update Concentration Score UI
+            const concEl = document.getElementById('concentration-score');
+            const concLabel = document.getElementById('concentration-label');
+            const concAlert = document.getElementById('concentration-alert');
+
+            concEl.textContent = concentrationScore;
+
+            let concLevel, concColor;
+            if (concentrationScore < 0.3) {
+                concLevel = 'Well Diversified';
+                concColor = 'text-[#a7f3d0]';
+            } else if (concentrationScore < 0.6) {
+                concLevel = 'Moderate';
+                concColor = 'text-[#dcdcaa]';
+            } else {
+                concLevel = 'Concentrated';
+                concColor = 'text-[#fecdd3]';
+            }
+
+            concEl.className = `text-xl font-bold ${concColor}`;
+            concLabel.textContent = concLevel;
+
+            // Show alert if any holding has >30% risk contribution
+            const hasConcentration = riskData.some(h => h.riskPct > 30);
+            concAlert.classList.toggle('hidden', !hasConcentration);
+
+            // Render Risk Contribution Bars
+            barsContainer.innerHTML = riskData.slice(0, 8).map(h => {
+                const barColor = h.riskPct > 30 ? '#fecdd3' : h.riskPct > 20 ? '#dcdcaa' : '#a7f3d0';
+                const alertBadge = h.riskPct > 30 ? '<span class="text-[10px] text-[#fecdd3] ml-2">Concentrated</span>' : '';
+                return `
+                    <div class="flex items-center gap-2">
+                        <span class="w-12 text-white font-bold text-xs">${h.ticker}</span>
+                        <div class="flex-1 h-4 bg-[#21262d] rounded overflow-hidden">
+                            <div class="h-full rounded transition-all duration-500" style="width: ${h.riskPct}%; background: ${barColor};"></div>
+                        </div>
+                        <span class="w-12 text-right text-xs" style="color: ${barColor}">${h.riskPct.toFixed(1)}%</span>
+                        ${alertBadge}
+                    </div>
+                `;
+            }).join('');
+
+            // Render Rebalancing Table
+            tableBody.innerHTML = riskData.map(h => {
+                const deltaColor = h.weightDelta > 2 ? 'text-[#a7f3d0]' : h.weightDelta < -2 ? 'text-[#fecdd3]' : 'text-[#8b949e]';
+                const deltaSign = h.weightDelta > 0 ? '+' : '';
+                let action = 'Hold';
+                let actionColor = 'text-[#8b949e]';
+
+                if (h.weightDelta > 5) {
+                    action = 'Add';
+                    actionColor = 'text-[#a7f3d0]';
+                } else if (h.weightDelta > 2) {
+                    action = 'Slight Add';
+                    actionColor = 'text-[#a7f3d0]';
+                } else if (h.weightDelta < -5) {
+                    action = 'Trim';
+                    actionColor = 'text-[#fecdd3]';
+                } else if (h.weightDelta < -2) {
+                    action = 'Slight Trim';
+                    actionColor = 'text-[#fecdd3]';
+                }
+
+                return `
+                    <tr class="border-b border-[#21262d] hover:bg-[#161b22]">
+                        <td class="py-2 px-2 text-white font-bold">${h.ticker}</td>
+                        <td class="py-2 px-2 text-center text-[#8b949e]">${h.weight.toFixed(1)}%</td>
+                        <td class="py-2 px-2 text-center text-[#9cdcfe]">${h.riskParityWeight.toFixed(1)}%</td>
+                        <td class="py-2 px-2 text-center ${deltaColor}">${deltaSign}${h.weightDelta.toFixed(1)}%</td>
+                        <td class="py-2 px-2 ${actionColor}">${action}</td>
+                    </tr>
+                `;
+            }).join('');
         }
 
         window.savePortfolio = function () {
