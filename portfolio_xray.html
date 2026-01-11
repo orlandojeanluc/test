@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caltropia | Portfolio X-Ray</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        mono: ['"JetBrains Mono"', '"IBM Plex Mono"', 'monospace'],
+                        sans: ['"Inter"', 'sans-serif']
+                    },
+                    colors: {
+                        terminal: {
+                            bg: '#0d1117',
+                            panel: '#161b22',
+                            border: '#21262d',
+                            orange: '#c586c0',
+                            amber: '#dcdcaa',
+                            green: '#b5cea8',
+                            red: '#f48771',
+                            blue: '#9cdcfe',
+                            muted: '#8b949e'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: #0d1117;
+            color: #c9d1d9;
+            font-size: 12px;
+            line-height: 1.4;
+            overflow-x: hidden;
+        }
+
+        .terminal-header {
+            background: #0d1117;
+            border-bottom: 1px solid #21262d;
+        }
+
+        .terminal-card {
+            background: #0d1117;
+            border: 1px solid #21262d;
+            transition: all 0.15s ease;
+            border-radius: 12px;
+        }
+
+        .terminal-card:hover {
+            border-color: #30363d;
+        }
+
+        .ticker-chip {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 9999px;
+            padding: 4px 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .ticker-chip .remove {
+            cursor: pointer;
+            opacity: 0.6;
+            transition: opacity 0.2s;
+        }
+
+        .ticker-chip .remove:hover {
+            opacity: 1;
+            color: #f48771;
+        }
+
+        .bar-fill {
+            transition: width 0.5s ease;
+        }
+
+        .sector-bar {
+            height: 24px;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .factor-gauge {
+            height: 8px;
+            background: #21262d;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .factor-gauge-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0d1117;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #21262d;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #c586c0;
+        }
+
+        .blink {
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .weight-input {
+            width: 60px;
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 4px;
+            padding: 4px 8px;
+            color: white;
+            font-size: 11px;
+            text-align: center;
+        }
+
+        .weight-input:focus {
+            outline: none;
+            border-color: #c586c0;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen w-screen overflow-x-hidden">
+
+    <!-- Sidebar Navigation -->
+    <nav id="sidebar" class="fixed z-50 bg-[#0a0e14] flex items-center
+                bottom-0 w-full h-14 flex-row justify-around py-0
+                lg:left-0 lg:top-0 lg:h-full lg:w-12 lg:flex-col lg:py-4 transition-all duration-300">
+
+        <!-- Logo (Hidden on Mobile, Visible on Desktop) -->
+        <div class="hidden lg:block text-[#c586c0] font-bold text-xs mb-6 w-full text-center relative">
+            <span class="logo-icon">C</span>
+            <span class="logo-text hidden ml-2">CALTROPIA</span>
+        </div>
+
+        <!-- Links Container -->
+        <div
+            class="flex-1 flex flex-row w-full justify-around items-center lg:flex-col lg:w-full lg:justify-start lg:gap-2">
+
+            <a href="radial.html"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
+                title="Dashboard">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z">
+                    </path>
+                </svg>
+                <span
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Home</span>
+            </a>
+
+            <a href="momentum.html"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
+                title="Momentum">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path>
+                </svg>
+                <span
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Trend
+                    Signals</span>
+            </a>
+
+            <a href="macroTrend.html"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
+                title="Macro Terminal">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                    </path>
+                </svg>
+                <span
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Macro
+                    Signals</span>
+            </a>
+
+            <a href="lowvol.html"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
+                title="Risk Terminal">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10">
+                    </path>
+                </svg>
+                <span
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Low
+                    Vol Factor</span>
+            </a>
+
+            <a href="momentum_factor.html"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
+                title="Momentum Factor">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                </svg>
+                <span
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Momentum
+                    Factor</span>
+            </a>
+
+            <a href="mean_reversion.html"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
+                title="Mean Reversion">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
+                    </path>
+                </svg>
+                <span
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Mean
+                    Rev Factor</span>
+            </a>
+
+            <a href="sectors.html"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
+                title="Sectors">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path>
+                </svg>
+                <span
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Sector
+                    Inspection</span>
+            </a>
+
+            <a href="portfolios.html"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
+                title="Portfolios">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
+                    </path>
+                </svg>
+                <span
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Caltropia
+                    Strategies</span>
+            </a>
+
+            <a href="portfolio_xray.html"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#c586c0] lg:bg-[#161b22] border-t-2 lg:border-t-0 lg:border-l-2 lg:border-r-0 border-[#c586c0] group overflow-hidden"
+                title="Portfolio X-Ray">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01">
+                    </path>
+                </svg>
+                <span
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Portfolio
+                    X-Ray</span>
+            </a>
+
+            <a href="voldashboard.html"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
+                title="Vol Dashboard">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                </svg>
+                <span
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Volatility
+                    Dashboard</span>
+            </a>
+
+            <a href="market_map.html"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
+                title="Market Map">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7">
+                    </path>
+                </svg>
+                <span
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Market
+                    Map</span>
+            </a>
+
+            <a href="factor_arena.html"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
+                title="Factor Arena">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3v18h18"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12l4-4 4 4 4-4"></path>
+                </svg>
+                <span
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Arena</span>
+            </a>
+        </div>
+
+        <!-- Toggle Button -->
+        <button onclick="toggleSidebar()"
+            class="hidden lg:flex items-center justify-center w-full h-10 text-[#8b949e] hover:text-white mt-auto">
+            <svg id="toggle-icon" class="w-4 h-4 transform transition-transform duration-300" fill="none"
+                stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+        </button>
+    </nav>
+
+    <!-- Main Content Container -->
+    <div id="main-content" class="ml-0 lg:ml-12 pb-20 lg:pb-0 transition-all duration-300">
+        <!-- Header -->
+        <header class="terminal-header px-4 py-3 flex items-center justify-between gap-4 sticky top-0 z-40 relative">
+            <!-- Left: Logo -->
+            <div class="flex items-center gap-2 min-w-[70px]">
+                <span class="text-[#c586c0] font-bold text-sm">Caltropia</span>
+                <span class="text-[#8b949e] hidden md:inline">|</span>
+                <span class="text-white text-xs whitespace-nowrap hidden md:inline">Portfolio X-Ray</span>
+            </div>
+            <!-- Right: Status -->
+            <div class="flex items-center gap-2 text-xs">
+                <span id="status-indicator" class="text-[#8b949e]">Ready</span>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="p-4 md:p-6">
+            <!-- Portfolio Input Section -->
+            <div class="terminal-card p-4 md:p-6 mb-6">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+                    <div>
+                        <h2 class="text-white font-bold text-lg flex items-center gap-2">
+                            <span class="w-2 h-6 bg-[#c586c0]"></span>
+                            Portfolio X-Ray
+                        </h2>
+                        <p class="text-[#8b949e] text-xs mt-1">Analyze your portfolio's factor exposure and sector
+                            allocation</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <select id="weight-mode" onchange="updateWeightMode()"
+                            class="bg-[#161b22] border border-[#30363d] text-white text-xs rounded-full px-3 py-1.5 focus:outline-none focus:border-[#c586c0]">
+                            <option value="equal">Equal Weight</option>
+                            <option value="custom">Custom Weight</option>
+                        </select>
+                        <button onclick="savePortfolio()"
+                            class="bg-[#161b22] border border-[#30363d] text-white text-xs rounded-full px-3 py-1.5 hover:border-[#c586c0] transition-colors">
+                            💾 Save
+                        </button>
+                        <button onclick="loadPortfolio()"
+                            class="bg-[#161b22] border border-[#30363d] text-white text-xs rounded-full px-3 py-1.5 hover:border-[#c586c0] transition-colors">
+                            📂 Load
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Ticker Input -->
+                <div class="flex flex-col md:flex-row gap-3 mb-4">
+                    <input type="text" id="ticker-input"
+                        class="flex-1 bg-[#161b22] border border-[#30363d] text-white text-base md:text-xs rounded-lg px-4 py-2 focus:outline-none focus:border-[#c586c0]"
+                        placeholder="Enter tickers (e.g., AAPL, MSFT, NVDA)" onkeypress="handleInputKeypress(event)">
+                    <button onclick="addTickers()"
+                        class="bg-[#c586c0] text-[#0d1117] font-bold text-xs rounded-lg px-6 py-2 hover:opacity-90 transition-opacity">
+                        + Add Tickers
+                    </button>
+                    <button onclick="analyzePortfolio()"
+                        class="bg-[#30363d] text-white font-bold text-xs rounded-lg px-6 py-2 hover:bg-[#3d444d] transition-colors">
+                        🔍 Analyze
+                    </button>
+                </div>
+
+                <!-- Ticker Chips -->
+                <div id="ticker-chips" class="flex flex-wrap gap-2">
+                    <!-- Chips will be rendered here -->
+                </div>
+            </div>
+
+            <!-- Analysis Results (hidden until analysis) -->
+            <div id="results-container" class="hidden">
+                <!-- Aggregate Metrics Row -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                    <!-- Overall Score -->
+                    <div class="terminal-card p-4">
+                        <div class="text-[#8b949e] text-xs mb-2">Portfolio Trend Score</div>
+                        <div id="overall-score" class="text-3xl font-bold text-white">--</div>
+                        <div id="overall-label" class="text-xs text-[#8b949e] mt-1">--</div>
+                    </div>
+                    <!-- Bullish Count -->
+                    <div class="terminal-card p-4">
+                        <div class="text-[#8b949e] text-xs mb-2">Bullish Holdings</div>
+                        <div id="bullish-count" class="text-3xl font-bold text-[#a7f3d0]">--</div>
+                        <div id="bullish-pct" class="text-xs text-[#8b949e] mt-1">-- of portfolio</div>
+                    </div>
+                    <!-- Bearish Count -->
+                    <div class="terminal-card p-4">
+                        <div class="text-[#8b949e] text-xs mb-2">Bearish Holdings</div>
+                        <div id="bearish-count" class="text-3xl font-bold text-[#fecdd3]">--</div>
+                        <div id="bearish-pct" class="text-xs text-[#8b949e] mt-1">-- of portfolio</div>
+                    </div>
+                    <!-- Neutral Count -->
+                    <div class="terminal-card p-4">
+                        <div class="text-[#8b949e] text-xs mb-2">Neutral Holdings</div>
+                        <div id="neutral-count" class="text-3xl font-bold text-[#8b949e]">--</div>
+                        <div id="neutral-pct" class="text-xs text-[#8b949e] mt-1">-- of portfolio</div>
+                    </div>
+                </div>
+
+                <!-- Sector Exposure & Factor Tilts -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                    <!-- Sector Exposure -->
+                    <div class="terminal-card p-4 md:p-6">
+                        <h3 class="text-white font-bold text-sm mb-4 flex items-center gap-2">
+                            <span class="w-1.5 h-4 bg-[#9cdcfe]"></span>
+                            Sector Exposure
+                        </h3>
+                        <div id="sector-bars" class="space-y-3">
+                            <!-- Sector bars will be rendered here -->
+                        </div>
+                    </div>
+
+                    <!-- Factor Tilts -->
+                    <div class="terminal-card p-4 md:p-6">
+                        <h3 class="text-white font-bold text-sm mb-4 flex items-center gap-2">
+                            <span class="w-1.5 h-4 bg-[#dcdcaa]"></span>
+                            Factor Tilts
+                        </h3>
+                        <div class="space-y-6">
+                            <!-- Momentum Tilt -->
+                            <div>
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="text-[#8b949e] text-xs">Momentum Factor</span>
+                                    <span id="momentum-tilt-value" class="text-white font-bold text-sm">--</span>
+                                </div>
+                                <div class="factor-gauge">
+                                    <div id="momentum-tilt-bar" class="factor-gauge-fill bg-[#c586c0]"
+                                        style="width: 50%"></div>
+                                </div>
+                                <div class="flex justify-between text-[10px] text-[#8b949e] mt-1">
+                                    <span>Weak</span>
+                                    <span>Strong</span>
+                                </div>
+                            </div>
+
+                            <!-- Mean Reversion Tilt -->
+                            <div>
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="text-[#8b949e] text-xs">Mean Reversion</span>
+                                    <span id="mr-tilt-value" class="text-white font-bold text-sm">--</span>
+                                </div>
+                                <div class="factor-gauge">
+                                    <div id="mr-tilt-bar" class="factor-gauge-fill bg-[#9cdcfe]" style="width: 50%">
+                                    </div>
+                                </div>
+                                <div class="flex justify-between text-[10px] text-[#8b949e] mt-1">
+                                    <span>Oversold</span>
+                                    <span>Overbought</span>
+                                </div>
+                            </div>
+
+                            <!-- Low Vol Tilt -->
+                            <div>
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="text-[#8b949e] text-xs">Low Volatility</span>
+                                    <span id="lowvol-tilt-value" class="text-white font-bold text-sm">--</span>
+                                </div>
+                                <div class="factor-gauge">
+                                    <div id="lowvol-tilt-bar" class="factor-gauge-fill bg-[#b5cea8]" style="width: 50%">
+                                    </div>
+                                </div>
+                                <div class="flex justify-between text-[10px] text-[#8b949e] mt-1">
+                                    <span>High Risk</span>
+                                    <span>Low Risk</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Holdings Table -->
+                <div class="terminal-card p-4 md:p-6">
+                    <h3 class="text-white font-bold text-sm mb-4 flex items-center gap-2">
+                        <span class="w-1.5 h-4 bg-[#f48771]"></span>
+                        Holdings Detail
+                    </h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-xs">
+                            <thead>
+                                <tr class="text-[#8b949e] border-b border-[#21262d]">
+                                    <th class="text-left py-2 px-2">Ticker</th>
+                                    <th class="text-left py-2 px-2">Sector</th>
+                                    <th class="text-center py-2 px-2">Weight</th>
+                                    <th class="text-center py-2 px-2">ST Trend</th>
+                                    <th class="text-center py-2 px-2">IT Trend</th>
+                                    <th class="text-center py-2 px-2">Overall</th>
+                                    <th class="text-center py-2 px-2">Mom Factor</th>
+                                    <th class="text-center py-2 px-2">Mean Rev</th>
+                                    <th class="text-center py-2 px-2">LowVol</th>
+                                </tr>
+                            </thead>
+                            <tbody id="holdings-table">
+                                <!-- Holdings will be rendered here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Empty State -->
+            <div id="empty-state" class="terminal-card p-12 text-center">
+                <div class="text-6xl mb-4">📊</div>
+                <h3 class="text-white font-bold text-lg mb-2">Add Tickers to Begin</h3>
+                <p class="text-[#8b949e] text-sm max-w-md mx-auto">
+                    Enter stock tickers above to analyze your portfolio's aggregate trend score, sector exposure, and
+                    factor tilts.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+        import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-functions.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBxG5qf6mb8E_-b2TeXlRNseMZ26L9DRYg",
+            authDomain: "trendscores-df341.firebaseapp.com",
+            projectId: "trendscores-df341",
+            databaseURL: "https://trendscores-df341-default-rtdb.firebaseio.com"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const functions = getFunctions(app);
+
+        // Portfolio state
+        let portfolioTickers = [];
+        let portfolioWeights = {};
+        let weightMode = 'equal';
+
+        // Data caches
+        let momentumData = [];
+        let momentumFactorData = [];
+        let meanReversionData = [];
+        let lowVolData = [];
+
+        const sectorColors = {
+            'Tech': '#c586c0',
+            'Technology': '#c586c0',
+            'Finance': '#9cdcfe',
+            'Financials': '#9cdcfe',
+            'Health': '#b5cea8',
+            'Healthcare': '#b5cea8',
+            'Energy': '#f48771',
+            'Consumer': '#dcdcaa',
+            'Industrial': '#6a9955',
+            'Industrials': '#6a9955',
+            'Utilities': '#569cd6',
+            'Materials': '#ce9178',
+            'Real Estate': '#d7ba7d',
+            'Communication': '#4ec9b0',
+            'Other': '#8b949e'
+        };
+
+        // Initialize
+        window.addTickers = function () {
+            const input = document.getElementById('ticker-input');
+            const tickers = input.value.toUpperCase().split(/[\s,]+/).filter(t => t.length > 0);
+
+            tickers.forEach(ticker => {
+                if (!portfolioTickers.includes(ticker)) {
+                    portfolioTickers.push(ticker);
+                    if (weightMode === 'custom' && !portfolioWeights[ticker]) {
+                        portfolioWeights[ticker] = 100 / portfolioTickers.length;
+                    }
+                }
+            });
+
+            input.value = '';
+            renderTickerChips();
+        };
+
+        window.handleInputKeypress = function (e) {
+            if (e.key === 'Enter') addTickers();
+        };
+
+        window.removeTicker = function (ticker) {
+            portfolioTickers = portfolioTickers.filter(t => t !== ticker);
+            delete portfolioWeights[ticker];
+            renderTickerChips();
+        };
+
+        window.updateWeight = function (ticker, value) {
+            portfolioWeights[ticker] = parseFloat(value) || 0;
+        };
+
+        window.updateWeightMode = function () {
+            weightMode = document.getElementById('weight-mode').value;
+            renderTickerChips();
+        };
+
+        function renderTickerChips() {
+            const container = document.getElementById('ticker-chips');
+            if (portfolioTickers.length === 0) {
+                container.innerHTML = '<span class="text-[#8b949e] text-xs">No tickers added yet</span>';
+                document.getElementById('empty-state').classList.remove('hidden');
+                document.getElementById('results-container').classList.add('hidden');
+                return;
+            }
+
+            const equalWeight = (100 / portfolioTickers.length).toFixed(1);
+
+            container.innerHTML = portfolioTickers.map(ticker => {
+                const weight = weightMode === 'equal' ? equalWeight : (portfolioWeights[ticker] || equalWeight);
+                return `
+                    <div class="ticker-chip">
+                        <span class="text-white font-bold">${ticker}</span>
+                        ${weightMode === 'custom' ?
+                        `<input type="number" class="weight-input" value="${weight}" onchange="updateWeight('${ticker}', this.value)" min="0" max="100" step="0.1">%` :
+                        `<span class="text-[#8b949e]">${weight}%</span>`
+                    }
+                        <span class="remove" onclick="removeTicker('${ticker}')">✕</span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        window.analyzePortfolio = async function () {
+            if (portfolioTickers.length === 0) {
+                alert('Please add at least one ticker');
+                return;
+            }
+
+            document.getElementById('status-indicator').textContent = 'Analyzing...';
+            document.getElementById('status-indicator').classList.add('blink');
+
+            try {
+                // Fetch all data sources in parallel
+                const [momResult, momFactorResult, mrResult, lvResult] = await Promise.all([
+                    httpsCallable(functions, 'getMomentumData')(),
+                    httpsCallable(functions, 'getMomentumFactorData')(),
+                    httpsCallable(functions, 'getMeanReversionData')(),
+                    httpsCallable(functions, 'getLowVolData')()
+                ]);
+
+                momentumData = momResult.data || [];
+                momentumFactorData = momFactorResult.data || [];
+                meanReversionData = mrResult.data || [];
+                lowVolData = lvResult.data || [];
+
+                // Process and display results
+                processPortfolio();
+
+                document.getElementById('empty-state').classList.add('hidden');
+                document.getElementById('results-container').classList.remove('hidden');
+
+            } catch (error) {
+                console.error('Error analyzing portfolio:', error);
+                alert('Error fetching data. Please try again.');
+            }
+
+            document.getElementById('status-indicator').textContent = 'Analysis Complete';
+            document.getElementById('status-indicator').classList.remove('blink');
+        };
+
+        function processPortfolio() {
+            const holdings = [];
+            let totalWeight = 0;
+            const equalWeight = 100 / portfolioTickers.length;
+
+            portfolioTickers.forEach(ticker => {
+                const weight = weightMode === 'equal' ? equalWeight : (portfolioWeights[ticker] || equalWeight);
+                totalWeight += weight;
+
+                const mom = momentumData.find(d => d.ticker === ticker) || {};
+                const momFactor = momentumFactorData.find(d => d.ticker === ticker) || {};
+                const mr = meanReversionData.find(d => d.ticker === ticker) || {};
+                const lv = lowVolData.find(d => d.ticker === ticker) || {};
+
+                // Check if we have any data for this ticker
+                const hasData = Object.keys(mom).length > 0 || Object.keys(momFactor).length > 0 ||
+                    Object.keys(mr).length > 0 || Object.keys(lv).length > 0;
+
+                // Calculate overall - handle null values properly
+                let overall = null;
+                if (mom.overall !== undefined && mom.overall !== null) {
+                    overall = mom.overall;
+                } else if (mom.stTrend !== undefined && mom.itTrend !== undefined) {
+                    overall = (mom.stTrend || 0) + (mom.itTrend || 0);
+                }
+
+                holdings.push({
+                    ticker,
+                    weight,
+                    hasData,
+                    sector: mom.sector || momFactor.sector || mr.sector || lv.sector || 'Unknown',
+                    stTrend: mom.stTrend ?? null,
+                    itTrend: mom.itTrend ?? null,
+                    overall: overall,
+                    momFactor: momFactor.score ?? momFactor.momentumScore ?? null,
+                    mrFactor: mr.score ?? mr.mrScore ?? null,
+                    lvFactor: lv.score ?? lv.riskScore ?? null
+                });
+            });
+
+            // Normalize weights if needed
+            if (totalWeight !== 100 && totalWeight > 0) {
+                holdings.forEach(h => h.weight = (h.weight / totalWeight) * 100);
+            }
+
+            // Calculate aggregates - only include holdings with valid data
+            let weightedOverall = 0;
+            let overallValidWeight = 0;
+            let weightedMom = 0;
+            let momValidWeight = 0;
+            let weightedMR = 0;
+            let mrValidWeight = 0;
+            let weightedLV = 0;
+            let lvValidWeight = 0;
+
+            let bullishCount = 0;
+            let bearishCount = 0;
+            let neutralCount = 0;
+            let bullishWeight = 0;
+            let bearishWeight = 0;
+            let neutralWeight = 0;
+            let unknownCount = 0;
+            let unknownWeight = 0;
+
+            const sectorWeights = {};
+
+            holdings.forEach(h => {
+                const w = h.weight / 100;
+
+                // Only add to weighted calculations if value exists
+                if (h.overall !== null && !isNaN(h.overall)) {
+                    weightedOverall += h.overall * w;
+                    overallValidWeight += w;
+                }
+                if (h.momFactor !== null && !isNaN(h.momFactor)) {
+                    weightedMom += h.momFactor * w;
+                    momValidWeight += w;
+                }
+                if (h.mrFactor !== null && !isNaN(h.mrFactor)) {
+                    weightedMR += h.mrFactor * w;
+                    mrValidWeight += w;
+                }
+                if (h.lvFactor !== null && !isNaN(h.lvFactor)) {
+                    weightedLV += h.lvFactor * w;
+                    lvValidWeight += w;
+                }
+
+                // Categorize holdings
+                if (h.overall !== null && !isNaN(h.overall)) {
+                    if (h.overall > 0) {
+                        bullishCount++;
+                        bullishWeight += h.weight;
+                    } else if (h.overall < 0) {
+                        bearishCount++;
+                        bearishWeight += h.weight;
+                    } else {
+                        neutralCount++;
+                        neutralWeight += h.weight;
+                    }
+                } else {
+                    unknownCount++;
+                    unknownWeight += h.weight;
+                }
+
+                sectorWeights[h.sector] = (sectorWeights[h.sector] || 0) + h.weight;
+            });
+
+            // Normalize weighted values by valid weight (to get proper average)
+            const finalOverall = overallValidWeight > 0 ? weightedOverall / overallValidWeight : 0;
+            const finalMom = momValidWeight > 0 ? weightedMom / momValidWeight : 0;
+            const finalMR = mrValidWeight > 0 ? weightedMR / mrValidWeight : 0;
+            const finalLV = lvValidWeight > 0 ? weightedLV / lvValidWeight : 0;
+
+            // Update UI
+            updateAggregateMetrics(finalOverall, bullishCount, bearishCount, neutralCount + unknownCount, bullishWeight, bearishWeight, neutralWeight + unknownWeight, holdings.length);
+            updateSectorBars(sectorWeights);
+            updateFactorTilts(finalMom, finalMR, finalLV);
+            updateHoldingsTable(holdings);
+        }
+
+        function updateAggregateMetrics(overall, bullish, bearish, neutral, bullishW, bearishW, neutralW, total) {
+            document.getElementById('overall-score').textContent = overall.toFixed(2);
+            document.getElementById('overall-score').className = `text-3xl font-bold ${overall > 0 ? 'text-[#a7f3d0]' : overall < 0 ? 'text-[#fecdd3]' : 'text-white'}`;
+
+            let label = 'Neutral';
+            if (overall > 4) label = 'Strong Bullish';
+            else if (overall > 0) label = 'Bullish';
+            else if (overall < -4) label = 'Strong Bearish';
+            else if (overall < 0) label = 'Bearish';
+            document.getElementById('overall-label').textContent = label;
+
+            document.getElementById('bullish-count').textContent = bullish;
+            document.getElementById('bullish-pct').textContent = `${bullishW.toFixed(1)}% of portfolio`;
+
+            document.getElementById('bearish-count').textContent = bearish;
+            document.getElementById('bearish-pct').textContent = `${bearishW.toFixed(1)}% of portfolio`;
+
+            document.getElementById('neutral-count').textContent = neutral;
+            document.getElementById('neutral-pct').textContent = `${neutralW.toFixed(1)}% of portfolio`;
+        }
+
+        function updateSectorBars(sectorWeights) {
+            const container = document.getElementById('sector-bars');
+            const sorted = Object.entries(sectorWeights).sort((a, b) => b[1] - a[1]);
+
+            container.innerHTML = sorted.map(([sector, weight]) => {
+                const color = sectorColors[sector] || '#8b949e';
+                return `
+                    <div class="flex items-center gap-3">
+                        <div class="w-20 text-xs text-[#8b949e] truncate">${sector}</div>
+                        <div class="flex-1 bg-[#21262d] rounded h-6 overflow-hidden">
+                            <div class="sector-bar" style="width: ${weight}%; background: ${color}"></div>
+                        </div>
+                        <div class="w-12 text-xs text-white text-right font-bold">${weight.toFixed(1)}%</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function updateFactorTilts(mom, mr, lv) {
+            // Momentum (assumed -10 to 10 scale, normalize to 0-100)
+            const momNorm = Math.max(0, Math.min(100, ((mom + 10) / 20) * 100));
+            document.getElementById('momentum-tilt-value').textContent = mom.toFixed(2);
+            document.getElementById('momentum-tilt-bar').style.width = momNorm + '%';
+
+            // Mean Reversion (assumed -10 to 10 scale)
+            const mrNorm = Math.max(0, Math.min(100, ((mr + 10) / 20) * 100));
+            document.getElementById('mr-tilt-value').textContent = mr.toFixed(2);
+            document.getElementById('mr-tilt-bar').style.width = mrNorm + '%';
+
+            // Low Vol (assumed 0 to 10 scale, higher = higher risk, so invert for "low vol" display)
+            const lvNorm = Math.max(0, Math.min(100, ((10 - lv) / 10) * 100));
+            document.getElementById('lowvol-tilt-value').textContent = lv.toFixed(2);
+            document.getElementById('lowvol-tilt-bar').style.width = lvNorm + '%';
+        }
+
+        function updateHoldingsTable(holdings) {
+            const tbody = document.getElementById('holdings-table');
+            tbody.innerHTML = holdings.map(h => {
+                const formatScore = (val) => {
+                    if (val === null) return '<span class="text-[#8b949e]">--</span>';
+                    const color = val > 0 ? 'text-[#a7f3d0]' : val < 0 ? 'text-[#fecdd3]' : 'text-white';
+                    return `<span class="${color}">${val.toFixed(1)}</span>`;
+                };
+
+                return `
+                    <tr class="border-b border-[#21262d] hover:bg-[#161b22]">
+                        <td class="py-2 px-2 text-white font-bold">${h.ticker}</td>
+                        <td class="py-2 px-2 text-[#8b949e]">${h.sector}</td>
+                        <td class="py-2 px-2 text-center text-[#dcdcaa]">${h.weight.toFixed(1)}%</td>
+                        <td class="py-2 px-2 text-center">${formatScore(h.stTrend)}</td>
+                        <td class="py-2 px-2 text-center">${formatScore(h.itTrend)}</td>
+                        <td class="py-2 px-2 text-center font-bold">${formatScore(h.overall)}</td>
+                        <td class="py-2 px-2 text-center">${formatScore(h.momFactor)}</td>
+                        <td class="py-2 px-2 text-center">${formatScore(h.mrFactor)}</td>
+                        <td class="py-2 px-2 text-center">${formatScore(h.lvFactor)}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        window.savePortfolio = function () {
+            const name = prompt('Enter a name for this portfolio:', 'My Portfolio');
+            if (!name) return;
+
+            const saved = JSON.parse(localStorage.getItem('caltropia_portfolios') || '{}');
+            saved[name] = {
+                tickers: portfolioTickers,
+                weights: portfolioWeights,
+                weightMode
+            };
+            localStorage.setItem('caltropia_portfolios', JSON.stringify(saved));
+            alert(`Portfolio "${name}" saved!`);
+        };
+
+        window.loadPortfolio = function () {
+            const saved = JSON.parse(localStorage.getItem('caltropia_portfolios') || '{}');
+            const names = Object.keys(saved);
+
+            if (names.length === 0) {
+                alert('No saved portfolios found.');
+                return;
+            }
+
+            const name = prompt('Enter portfolio name to load:\n\nSaved portfolios: ' + names.join(', '));
+            if (!name || !saved[name]) {
+                alert('Portfolio not found.');
+                return;
+            }
+
+            portfolioTickers = saved[name].tickers || [];
+            portfolioWeights = saved[name].weights || {};
+            weightMode = saved[name].weightMode || 'equal';
+
+            document.getElementById('weight-mode').value = weightMode;
+            renderTickerChips();
+            alert(`Portfolio "${name}" loaded!`);
+        };
+
+        // Initial render
+        renderTickerChips();
+    </script>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('main-content');
+            const navTexts = document.querySelectorAll('.nav-text');
+            const logoText = document.querySelector('.logo-text');
+            const toggleIcon = document.getElementById('toggle-icon');
+
+            const isExpanded = sidebar.classList.contains('w-48');
+
+            if (isExpanded) {
+                sidebar.classList.remove('w-48');
+                sidebar.classList.add('lg:w-12');
+                mainContent.classList.remove('lg:ml-48');
+                mainContent.classList.add('lg:ml-12');
+
+                navTexts.forEach(t => t.classList.add('opacity-0'));
+                logoText.classList.add('hidden');
+                toggleIcon.classList.remove('rotate-180');
+            } else {
+                sidebar.classList.remove('lg:w-12');
+                sidebar.classList.add('w-48');
+                mainContent.classList.remove('lg:ml-12');
+                mainContent.classList.add('lg:ml-48');
+
+                setTimeout(() => {
+                    navTexts.forEach(t => t.classList.remove('opacity-0'));
+                    logoText.classList.remove('hidden');
+                }, 100);
+                toggleIcon.classList.add('rotate-180');
+            }
+        }
+    </script>
+</body>
+
+</html>
