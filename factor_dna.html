@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caltropia | Factor DNA Fingerprint</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        mono: ['"JetBrains Mono"', '"IBM Plex Mono"', 'monospace'],
+                        sans: ['"Inter"', 'sans-serif']
+                    },
+                    colors: {
+                        terminal: {
+                            bg: '#0d1117',
+                            panel: '#161b22',
+                            border: '#21262d',
+                            orange: '#c586c0',
+                            amber: '#dcdcaa',
+                            green: '#b5cea8',
+                            red: '#f48771',
+                            blue: '#9cdcfe',
+                            muted: '#8b949e'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: #0d1117;
+            color: #c9d1d9;
+            font-size: 12px;
+            line-height: 1.4;
+            overflow-x: hidden;
+        }
+
+        .terminal-header {
+            background: #0d1117;
+            border-bottom: 1px solid #21262d;
+        }
+
+        .terminal-card {
+            background: #0d1117;
+            border: 1px solid #21262d;
+            transition: all 0.15s ease;
+            border-radius: 12px;
+        }
+
+        .terminal-card:hover {
+            border-color: #30363d;
+        }
+
+        .radar-axis {
+            stroke: #30363d;
+            stroke-width: 1;
+        }
+
+        .radar-grid {
+            stroke: #21262d;
+            stroke-width: 1;
+            fill: none;
+        }
+
+        .radar-area {
+            fill-opacity: 0.3;
+            transition: all 0.5s ease;
+        }
+
+        .radar-line {
+            stroke-width: 2;
+            fill: none;
+            transition: all 0.5s ease;
+        }
+
+        .radar-point {
+            fill: white;
+            stroke-width: 2;
+            transition: all 0.3s ease;
+        }
+
+        .radar-point:hover {
+            r: 8;
+        }
+
+        .factor-bar-bg {
+            background: #21262d;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .factor-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .dna-badge {
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .blink {
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            50% {
+                opacity: 0.5;
+            }
+        }
+    </style>
+</head>
+
+<body class="min-h-screen w-screen overflow-x-hidden">
+
+    <!-- Sidebar Navigation -->
+    <nav id="sidebar" class="fixed z-50 bg-[#0a0e14] flex items-center
+                bottom-0 w-full h-14 flex-row justify-around py-0
+                lg:left-0 lg:top-0 lg:h-full lg:w-12 lg:flex-col lg:py-4 transition-all duration-300">
+
+        <!-- Logo (Hidden on Mobile, Visible on Desktop) -->
+        <div class="hidden lg:block text-[#c586c0] font-bold text-xs mb-6 w-full text-center relative">
+            <span class="logo-icon">C</span>
+            <span class="logo-text hidden ml-2">CALTROPIA</span>
+        </div>
+
+        <!-- Links Container -->
+        <div
+            class="flex-1 flex flex-row w-full justify-around items-center lg:flex-col lg:w-full lg:justify-start lg:gap-2">
+
+            <a href="radial.html"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
+                title="Dashboard">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z">
+                    </path>
+                </svg>
+                <span
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Home</span>
+            </a>
+
+            <a href="momentum.html"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
+                title="Momentum">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path>
+                </svg>
+                <span
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Trend
+                    Signals</span>
+            </a>
+
+            <a href="portfolio_xray.html"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
+                title="Portfolio X-Ray">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
+                    </path>
+                </svg>
+                <span
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">X-Ray</span>
+            </a>
+
+            <a href="factor_dna.html"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
+                title="Factor DNA">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z">
+                    </path>
+                </svg>
+                <span
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Factor
+                    DNA</span>
+            </a>
+
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="lg:ml-12 pb-20 lg:pb-4 min-h-screen">
+        <!-- Header -->
+        <header class="terminal-header px-4 py-3 flex items-center justify-between gap-4 sticky top-0 z-40 relative">
+            <div class="flex items-center gap-3">
+                <span class="text-[#c586c0] font-bold text-sm">FACTOR DNA</span>
+                <span class="text-[#8b949e] text-xs hidden md:inline">Fingerprint Analysis</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span id="status-indicator" class="text-xs text-[#8b949e]">Ready</span>
+            </div>
+        </header>
+
+        <!-- Content -->
+        <div class="p-4 space-y-4 max-w-6xl mx-auto">
+            <!-- Ticker Input -->
+            <div class="terminal-card p-4">
+                <div class="flex flex-col md:flex-row gap-4 items-start md:items-center">
+                    <div class="flex-1">
+                        <label class="text-[10px] text-[#8b949e] uppercase tracking-wide mb-2 block">Enter
+                            Ticker</label>
+                        <div class="flex gap-2">
+                            <input type="text" id="ticker-input" placeholder="e.g. NVDA, AAPL, TSLA"
+                                class="flex-1 bg-[#161b22] border border-[#30363d] rounded-lg px-4 py-2 text-white text-sm focus:outline-none focus:border-[#c586c0]"
+                                onkeypress="if(event.key === 'Enter') analyzeTicker()">
+                            <button onclick="analyzeTicker()"
+                                class="bg-[#c586c0] hover:bg-[#c586c0]/80 text-white px-6 py-2 rounded-lg text-sm font-medium transition-colors">
+                                Analyze
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Container (Hidden initially) -->
+            <div id="results-container" class="hidden space-y-4">
+                <!-- Main Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    <!-- DNA Helix 3D Visualization -->
+                    <div class="terminal-card p-4 md:p-6">
+                        <h3 class="text-white font-bold text-sm mb-4 flex items-center gap-2">
+                            <span class="w-1.5 h-4 bg-[#c586c0]"></span>
+                            Factor DNA Helix
+                            <span id="ticker-display" class="text-[#c586c0] ml-2">--</span>
+                        </h3>
+                        <div id="dna-helix-container" class="flex justify-center items-center"
+                            style="height: 350px; position: relative;">
+                            <!-- Three.js DNA Helix will be rendered here -->
+                            <div id="helix-tooltip"
+                                class="hidden absolute pointer-events-none z-50 bg-[#161b22] border border-[#30363d] rounded-lg px-3 py-2 text-white text-xs shadow-xl"
+                                style="min-width: 120px;">
+                                <div class="font-bold mb-1" id="tooltip-factor">Factor</div>
+                                <div class="text-[#8b949e]">Score: <span id="tooltip-score"
+                                        class="text-white font-bold">0.0</span></div>
+                                <div class="text-[10px] text-[#8b949e] mt-1" id="tooltip-desc">--</div>
+                            </div>
+                        </div>
+                        <div class="flex justify-center gap-4 mt-4 flex-wrap">
+                            <div class="flex items-center gap-1"><span class="w-3 h-3 rounded-full"
+                                    style="background: #c586c0"></span><span
+                                    class="text-[10px] text-[#8b949e]">Momentum</span></div>
+                            <div class="flex items-center gap-1"><span class="w-3 h-3 rounded-full"
+                                    style="background: #9cdcfe"></span><span class="text-[10px] text-[#8b949e]">Mean
+                                    Rev</span></div>
+                            <div class="flex items-center gap-1"><span class="w-3 h-3 rounded-full"
+                                    style="background: #b5cea8"></span><span class="text-[10px] text-[#8b949e]">Low
+                                    Vol</span></div>
+                            <div class="flex items-center gap-1"><span class="w-3 h-3 rounded-full"
+                                    style="background: #dcdcaa"></span><span
+                                    class="text-[10px] text-[#8b949e]">VRP</span></div>
+                            <div class="flex items-center gap-1"><span class="w-3 h-3 rounded-full"
+                                    style="background: #f48771"></span><span
+                                    class="text-[10px] text-[#8b949e]">Volatility</span></div>
+                        </div>
+                    </div>
+
+                    <!-- DNA Classification & Details -->
+                    <div class="terminal-card p-4 md:p-6">
+                        <h3 class="text-white font-bold text-sm mb-4 flex items-center gap-2">
+                            <span class="w-1.5 h-4 bg-[#9cdcfe]"></span>
+                            DNA Classification
+                        </h3>
+
+                        <!-- DNA Type Badge -->
+                        <div class="mb-6">
+                            <div id="dna-badge" class="dna-badge bg-[#c586c0]/20 text-[#c586c0] inline-block">
+                                Analyzing...
+                            </div>
+                            <p id="dna-description" class="text-[#8b949e] text-xs mt-2">
+                                Loading classification...
+                            </p>
+                        </div>
+
+                        <!-- Factor Drift Alert -->
+                        <div id="drift-alert"
+                            class="hidden mb-4 p-3 bg-[#fecdd3]/10 border border-[#fecdd3]/30 rounded-lg">
+                            <div class="text-[#fecdd3] text-xs font-medium mb-1">Factor Drift Detected</div>
+                            <p id="drift-message" class="text-[#8b949e] text-[10px]">--</p>
+                        </div>
+
+                        <!-- Sector Info -->
+                        <div class="mb-4 p-3 bg-[#161b22] rounded-lg border border-[#21262d]">
+                            <div class="text-[10px] text-[#8b949e] uppercase tracking-wide mb-1">Sector</div>
+                            <div id="sector-display" class="text-white font-medium">--</div>
+                        </div>
+
+                        <!-- Factor Breakdown -->
+                        <div class="space-y-3">
+                            <div class="text-[10px] text-[#8b949e] uppercase tracking-wide">Factor Breakdown</div>
+
+                            <div class="space-y-2" id="factor-breakdown">
+                                <!-- Factors will be injected here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Factor Details Table -->
+                <div class="terminal-card p-4 md:p-6">
+                    <h3 class="text-white font-bold text-sm mb-4 flex items-center gap-2">
+                        <span class="w-1.5 h-4 bg-[#dcdcaa]"></span>
+                        Factor Details
+                    </h3>
+                    <div class="overflow-x-auto" style="overscroll-behavior: none; -webkit-overflow-scrolling: touch;">
+                        <table class="w-full text-xs" style="min-width: 500px;">
+                            <thead>
+                                <tr class="text-[#8b949e] border-b border-[#21262d]">
+                                    <th class="text-left py-2 px-2">Factor</th>
+                                    <th class="text-center py-2 px-2">Raw Score</th>
+                                    <th class="text-center py-2 px-2">Normalized</th>
+                                    <th class="text-left py-2 px-2">Interpretation</th>
+                                </tr>
+                            </thead>
+                            <tbody id="factor-table">
+                                <!-- Rows will be injected here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Empty State -->
+            <div id="empty-state" class="terminal-card p-12 text-center">
+                <div class="text-6xl mb-4">🧬</div>
+                <h3 class="text-white font-bold text-lg mb-2">Enter a Ticker to Begin</h3>
+                <p class="text-[#8b949e] text-sm max-w-md mx-auto">
+                    Analyze any stock's Factor DNA to understand its unique profile across momentum, mean reversion,
+                    volatility, and more.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+        import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-functions.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBxG5qf6mb8E_-b2TeXlRNseMZ26L9DRYg",
+            authDomain: "trendscores-df341.firebaseapp.com",
+            projectId: "trendscores-df341",
+            databaseURL: "https://trendscores-df341-default-rtdb.firebaseio.com"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const functions = getFunctions(app);
+
+        // Factor colors
+        const factorColors = {
+            momentum: '#c586c0',
+            meanRev: '#9cdcfe',
+            lowVol: '#b5cea8',
+            vrp: '#dcdcaa',
+            volatility: '#f48771'
+        };
+
+        // DNA Classifications
+        const dnaTypes = {
+            MOMENTUM_LEADER: {
+                name: 'Momentum Leader',
+                color: '#c586c0',
+                description: 'Strong trend follower. Best for momentum-based strategies. Tends to continue moving in current direction.'
+            },
+            VALUE_REVERTER: {
+                name: 'Value Reverter',
+                color: '#9cdcfe',
+                description: 'Shows mean reversion tendency. May be oversold/overbought. Consider contrarian positioning.'
+            },
+            DEFENSIVE: {
+                name: 'Defensive',
+                color: '#b5cea8',
+                description: 'Low volatility profile. Suitable for risk-averse portfolios. Stable but limited upside.'
+            },
+            VOLATILE_ALPHA: {
+                name: 'Volatile Alpha',
+                color: '#f48771',
+                description: 'High volatility with options opportunities. Consider selling premium when VRP is high.'
+            },
+            BALANCED: {
+                name: 'Balanced',
+                color: '#8b949e',
+                description: 'No dominant factor. Moderate exposure across all dimensions. Standard risk/reward profile.'
+            }
+        };
+
+        window.analyzeTicker = async function () {
+            const input = document.getElementById('ticker-input');
+            const ticker = input.value.toUpperCase().trim();
+
+            if (!ticker) {
+                alert('Please enter a ticker symbol');
+                return;
+            }
+
+            document.getElementById('status-indicator').textContent = 'Loading...';
+            document.getElementById('status-indicator').classList.add('blink');
+
+            try {
+                // Fetch all data sources in parallel
+                const [momResult, mrResult, lvResult, volResult] = await Promise.all([
+                    httpsCallable(functions, 'getMomentumData')(),
+                    httpsCallable(functions, 'getMeanReversionData')(),
+                    httpsCallable(functions, 'getLowVolData')(),
+                    httpsCallable(functions, 'getVolatilityData', { timeout: 540000 })()
+                ]);
+
+                const momentumData = momResult.data || [];
+                const meanReversionData = mrResult.data || [];
+                const lowVolData = lvResult.data || [];
+                let volatilityData = [];
+
+                if (volResult.data && volResult.data.data) {
+                    volatilityData = volResult.data.data;
+                } else {
+                    volatilityData = volResult.data || [];
+                }
+
+                // Find ticker data
+                const mom = momentumData.find(m => m.ticker === ticker) || {};
+                const mr = meanReversionData.find(m => m.ticker === ticker) || {};
+                const lv = lowVolData.find(m => m.ticker === ticker) || {};
+                const vol = volatilityData.find(m => m.ticker === ticker) || {};
+                const volCs = vol.crossSectional || {};
+
+                // Check if we have data
+                if (!mom.ticker && !mr.ticker && !lv.ticker && !vol.ticker) {
+                    alert(`No data found for ${ticker}. Please try another ticker.`);
+                    document.getElementById('status-indicator').textContent = 'Ready';
+                    document.getElementById('status-indicator').classList.remove('blink');
+                    return;
+                }
+
+                // Extract raw values
+                const rawData = {
+                    momentum: mom.stTrend !== undefined && mom.itTrend !== undefined
+                        ? (mom.stTrend + mom.itTrend)
+                        : (mom.overall || 0),
+                    meanRev: mr.score ?? mr.mrScore ?? 0,
+                    lowVol: lv.score ?? lv.riskScore ?? 5, // Default to middle
+                    vrp: volCs.vrp ?? vol.vrp ?? 0,
+                    volatility: volCs.rvPctlUniverse ?? vol.rvPctlHistory ?? 50,
+                    sector: mom.sector || mr.sector || lv.sector || vol.sector || 'Unknown'
+                };
+
+                // Normalize to 0-10 scale
+                const normalized = {
+                    momentum: Math.max(0, Math.min(10, (rawData.momentum + 10) / 2)), // -10 to 10 -> 0 to 10
+                    meanRev: Math.max(0, Math.min(10, 5 - rawData.meanRev)), // Inverted: negative MR = opportunity
+                    lowVol: Math.max(0, Math.min(10, 10 - rawData.lowVol)), // Inverted: lower risk = higher low-vol score
+                    vrp: Math.max(0, Math.min(10, (rawData.vrp * 100 + 50) / 10)), // -0.5 to 0.5 -> 0 to 10
+                    volatility: Math.max(0, Math.min(10, rawData.volatility / 10)) // 0-100 -> 0-10
+                };
+
+                // Render everything
+                renderDNAHelix(normalized, ticker);
+                renderDNAClassification(normalized, rawData);
+                renderFactorBreakdown(normalized);
+                renderFactorTable(rawData, normalized);
+
+                document.getElementById('ticker-display').textContent = ticker;
+                document.getElementById('sector-display').textContent = rawData.sector;
+                document.getElementById('empty-state').classList.add('hidden');
+                document.getElementById('results-container').classList.remove('hidden');
+
+            } catch (error) {
+                console.error('Error analyzing ticker:', error);
+                alert(`Error fetching data: ${error.message || 'Unknown error'}`);
+            }
+
+            document.getElementById('status-indicator').textContent = 'Analysis Complete';
+            document.getElementById('status-indicator').classList.remove('blink');
+        };
+
+        // Three.js DNA Helix variables
+        let helixScene, helixCamera, helixRenderer, helixGroup, animationId, particles, time = 0;
+
+        function renderDNAHelix(data, ticker) {
+            const container = document.getElementById('dna-helix-container');
+
+            // Clean up previous scene
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+            }
+
+            // Remove only the canvas, preserve the tooltip
+            const existingCanvas = container.querySelector('canvas');
+            if (existingCanvas) {
+                existingCanvas.remove();
+            }
+
+            const width = container.clientWidth || 400;
+            const height = 350;
+
+            // Setup scene with fog for depth
+            helixScene = new THREE.Scene();
+            helixScene.fog = new THREE.FogExp2(0x0d1117, 0.03);
+
+            helixCamera = new THREE.PerspectiveCamera(50, width / height, 0.1, 1000);
+            helixRenderer = new THREE.WebGLRenderer({
+                antialias: true,
+                alpha: true,
+                powerPreference: "high-performance"
+            });
+            helixRenderer.setSize(width, height);
+            helixRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            helixRenderer.setClearColor(0x0d1117, 1);
+
+            // Insert canvas before tooltip so tooltip stays on top
+            const tooltipEl = document.getElementById('helix-tooltip');
+            if (tooltipEl) {
+                container.insertBefore(helixRenderer.domElement, tooltipEl);
+            } else {
+                container.appendChild(helixRenderer.domElement);
+            }
+
+            // Group to hold the helix
+            helixGroup = new THREE.Group();
+            helixScene.add(helixGroup);
+
+            // Factor data and colors
+            const factors = [
+                { key: 'momentum', color: new THREE.Color(0xc586c0), value: data.momentum },
+                { key: 'meanRev', color: new THREE.Color(0x9cdcfe), value: data.meanRev },
+                { key: 'lowVol', color: new THREE.Color(0xb5cea8), value: data.lowVol },
+                { key: 'vrp', color: new THREE.Color(0xdcdcaa), value: data.vrp },
+                { key: 'volatility', color: new THREE.Color(0xf48771), value: data.volatility }
+            ];
+
+            // Helix parameters - more elegant proportions
+            const helixHeight = 6;
+            const helixRadius = 1.5;
+            const turnsPerHelix = 1.5;
+            const pointsPerTurn = 60;
+            const totalPoints = Math.floor(turnsPerHelix * pointsPerTurn);
+
+            // Create smooth strand curves with more points
+            const strand1Points = [];
+            const strand2Points = [];
+
+            for (let i = 0; i <= totalPoints; i++) {
+                const t = i / totalPoints;
+                const angle = t * turnsPerHelix * Math.PI * 2;
+                const y = (t - 0.5) * helixHeight;
+
+                strand1Points.push(new THREE.Vector3(
+                    Math.cos(angle) * helixRadius,
+                    y,
+                    Math.sin(angle) * helixRadius
+                ));
+
+                strand2Points.push(new THREE.Vector3(
+                    Math.cos(angle + Math.PI) * helixRadius,
+                    y,
+                    Math.sin(angle + Math.PI) * helixRadius
+                ));
+            }
+
+            const curve1 = new THREE.CatmullRomCurve3(strand1Points);
+            const curve2 = new THREE.CatmullRomCurve3(strand2Points);
+
+            // Premium strand material with gradient-like effect
+            const strandMaterial1 = new THREE.MeshPhongMaterial({
+                color: 0xc586c0,
+                emissive: 0xc586c0,
+                emissiveIntensity: 0.3,
+                transparent: true,
+                opacity: 0.9,
+                shininess: 100
+            });
+
+            const strandMaterial2 = new THREE.MeshPhongMaterial({
+                color: 0x9cdcfe,
+                emissive: 0x9cdcfe,
+                emissiveIntensity: 0.3,
+                transparent: true,
+                opacity: 0.9,
+                shininess: 100
+            });
+
+            // Create smooth tube geometry
+            const tubeGeometry1 = new THREE.TubeGeometry(curve1, 200, 0.06, 12, false);
+            const tubeGeometry2 = new THREE.TubeGeometry(curve2, 200, 0.06, 12, false);
+
+            const strand1Mesh = new THREE.Mesh(tubeGeometry1, strandMaterial1);
+            const strand2Mesh = new THREE.Mesh(tubeGeometry2, strandMaterial2);
+
+            helixGroup.add(strand1Mesh);
+            helixGroup.add(strand2Mesh);
+
+            // Add elegant base pairs (rungs) with factor colors
+            const rungsCount = 10;
+            const rungData = [];
+
+            for (let i = 0; i < rungsCount; i++) {
+                const t = (i + 0.5) / rungsCount;
+                const angle = t * turnsPerHelix * Math.PI * 2;
+                const y = (t - 0.5) * helixHeight;
+
+                const factorIndex = i % factors.length;
+                const factor = factors[factorIndex];
+
+                // Create glowing spheres at connection points
+                const sphereSize = 0.08 + (factor.value / 10) * 0.12;
+                const sphereGeometry = new THREE.SphereGeometry(sphereSize, 24, 24);
+
+                const sphereMaterial = new THREE.MeshPhongMaterial({
+                    color: factor.color,
+                    emissive: factor.color,
+                    emissiveIntensity: 0.5,
+                    transparent: true,
+                    opacity: 0.95,
+                    shininess: 150
+                });
+
+                // Sphere positions
+                const x1 = Math.cos(angle) * helixRadius;
+                const z1 = Math.sin(angle) * helixRadius;
+                const x2 = Math.cos(angle + Math.PI) * helixRadius;
+                const z2 = Math.sin(angle + Math.PI) * helixRadius;
+
+                const sphere1 = new THREE.Mesh(sphereGeometry, sphereMaterial);
+                sphere1.position.set(x1, y, z1);
+                helixGroup.add(sphere1);
+
+                const sphere2 = new THREE.Mesh(sphereGeometry, sphereMaterial.clone());
+                sphere2.position.set(x2, y, z2);
+                helixGroup.add(sphere2);
+
+                // Store for animation
+                rungData.push({ sphere1, sphere2, factor, baseY: y });
+
+                // Elegant connecting line
+                const lineGeometry = new THREE.BufferGeometry().setFromPoints([
+                    new THREE.Vector3(x1, y, z1),
+                    new THREE.Vector3(x2, y, z2)
+                ]);
+                const lineMaterial = new THREE.LineBasicMaterial({
+                    color: factor.color,
+                    transparent: true,
+                    opacity: 0.4
+                });
+                const line = new THREE.Line(lineGeometry, lineMaterial);
+                helixGroup.add(line);
+            }
+
+            // Add floating particles for ambient effect
+            const particleCount = 100;
+            const particleGeometry = new THREE.BufferGeometry();
+            const particlePositions = new Float32Array(particleCount * 3);
+            const particleColors = new Float32Array(particleCount * 3);
+            const particleSizes = new Float32Array(particleCount);
+
+            for (let i = 0; i < particleCount; i++) {
+                const i3 = i * 3;
+                particlePositions[i3] = (Math.random() - 0.5) * 8;
+                particlePositions[i3 + 1] = (Math.random() - 0.5) * 8;
+                particlePositions[i3 + 2] = (Math.random() - 0.5) * 8;
+
+                const color = factors[i % factors.length].color;
+                particleColors[i3] = color.r;
+                particleColors[i3 + 1] = color.g;
+                particleColors[i3 + 2] = color.b;
+
+                particleSizes[i] = Math.random() * 3 + 1;
+            }
+
+            particleGeometry.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
+            particleGeometry.setAttribute('color', new THREE.BufferAttribute(particleColors, 3));
+
+            const particleMaterial = new THREE.PointsMaterial({
+                size: 0.05,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.6,
+                sizeAttenuation: true
+            });
+
+            particles = new THREE.Points(particleGeometry, particleMaterial);
+            helixScene.add(particles);
+
+            // Premium lighting setup
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+            helixScene.add(ambientLight);
+
+            // Key light
+            const keyLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            keyLight.position.set(5, 5, 5);
+            helixScene.add(keyLight);
+
+            // Colored rim lights for glow effect
+            const rimLight1 = new THREE.PointLight(0xc586c0, 0.8, 20);
+            rimLight1.position.set(-4, 0, 4);
+            helixScene.add(rimLight1);
+
+            const rimLight2 = new THREE.PointLight(0x9cdcfe, 0.6, 20);
+            rimLight2.position.set(4, 0, -4);
+            helixScene.add(rimLight2);
+
+            // Position camera for elegant view
+            helixCamera.position.set(5, 1, 5);
+            helixCamera.lookAt(0, 0, 0);
+
+            // Smooth animation loop
+            function animate() {
+                animationId = requestAnimationFrame(animate);
+                time += 0.016;
+
+                // Smooth rotation
+                helixGroup.rotation.y += 0.003;
+
+                // Subtle float animation
+                helixGroup.position.y = Math.sin(time * 0.5) * 0.1;
+
+                // Animate particles
+                if (particles) {
+                    const positions = particles.geometry.attributes.position.array;
+                    for (let i = 0; i < particleCount; i++) {
+                        const i3 = i * 3;
+                        positions[i3 + 1] += Math.sin(time + i) * 0.002;
+
+                        // Reset particles that drift too far
+                        if (Math.abs(positions[i3 + 1]) > 4) {
+                            positions[i3 + 1] = (Math.random() - 0.5) * 8;
+                        }
+                    }
+                    particles.geometry.attributes.position.needsUpdate = true;
+                    particles.rotation.y += 0.001;
+                }
+
+                // Pulse sphere glow
+                rungData.forEach((rung, idx) => {
+                    const pulse = 0.3 + Math.sin(time * 2 + idx * 0.5) * 0.2;
+                    rung.sphere1.material.emissiveIntensity = pulse;
+                    rung.sphere2.material.emissiveIntensity = pulse;
+                });
+
+                helixRenderer.render(helixScene, helixCamera);
+            }
+
+            animate();
+
+            // Handle resize
+            const resizeObserver = new ResizeObserver(() => {
+                const newWidth = container.clientWidth;
+                helixCamera.aspect = newWidth / height;
+                helixCamera.updateProjectionMatrix();
+                helixRenderer.setSize(newWidth, height);
+            });
+            resizeObserver.observe(container);
+
+            // Raycasting for hover interaction
+            const raycaster = new THREE.Raycaster();
+            const mouse = new THREE.Vector2();
+            const tooltip = document.getElementById('helix-tooltip');
+            const tooltipFactor = document.getElementById('tooltip-factor');
+            const tooltipScore = document.getElementById('tooltip-score');
+            const tooltipDesc = document.getElementById('tooltip-desc');
+
+            // Store spheres with their factor data for raycasting
+            const interactableSpheres = [];
+            rungData.forEach(rung => {
+                rung.sphere1.userData = {
+                    factor: rung.factor.key,
+                    value: rung.factor.value,
+                    colorHex: '#' + rung.factor.color.getHexString()
+                };
+                rung.sphere2.userData = {
+                    factor: rung.factor.key,
+                    value: rung.factor.value,
+                    colorHex: '#' + rung.factor.color.getHexString()
+                };
+                interactableSpheres.push(rung.sphere1, rung.sphere2);
+            });
+
+            // Factor labels and descriptions
+            const factorLabels = {
+                momentum: { name: 'Momentum', desc: 'Trend strength & direction' },
+                meanRev: { name: 'Mean Reversion', desc: 'Reversion opportunity' },
+                lowVol: { name: 'Low Volatility', desc: 'Defensive quality score' },
+                vrp: { name: 'Vol Risk Premium', desc: 'Options premium opportunity' },
+                volatility: { name: 'Volatility Level', desc: 'Current volatility regime' }
+            };
+
+            // Mouse move handler
+            function onMouseMove(event) {
+                const rect = helixRenderer.domElement.getBoundingClientRect();
+                mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+                mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+                raycaster.setFromCamera(mouse, helixCamera);
+                const intersects = raycaster.intersectObjects(interactableSpheres);
+
+                if (intersects.length > 0) {
+                    const obj = intersects[0].object;
+                    const data = obj.userData;
+                    const label = factorLabels[data.factor] || { name: data.factor, desc: '' };
+
+                    tooltipFactor.textContent = label.name;
+                    tooltipFactor.style.color = data.colorHex;
+                    tooltipScore.textContent = data.value.toFixed(1);
+                    tooltipDesc.textContent = label.desc;
+
+                    // Position tooltip near mouse
+                    const tooltipX = event.clientX - rect.left + 15;
+                    const tooltipY = event.clientY - rect.top - 20;
+                    tooltip.style.left = tooltipX + 'px';
+                    tooltip.style.top = tooltipY + 'px';
+                    tooltip.classList.remove('hidden');
+
+                    // Highlight hovered sphere
+                    obj.material.emissiveIntensity = 1.0;
+                    obj.scale.set(1.3, 1.3, 1.3);
+                    helixRenderer.domElement.style.cursor = 'pointer';
+                } else {
+                    tooltip.classList.add('hidden');
+                    helixRenderer.domElement.style.cursor = 'default';
+
+                    // Reset all spheres
+                    interactableSpheres.forEach(s => {
+                        s.scale.set(1, 1, 1);
+                    });
+                }
+            }
+
+            // Mouse leave handler
+            function onMouseLeave() {
+                tooltip.classList.add('hidden');
+                helixRenderer.domElement.style.cursor = 'default';
+                interactableSpheres.forEach(s => {
+                    s.scale.set(1, 1, 1);
+                });
+            }
+
+            helixRenderer.domElement.addEventListener('mousemove', onMouseMove);
+            helixRenderer.domElement.addEventListener('mouseleave', onMouseLeave);
+        }
+
+        function renderDNAClassification(normalized, raw) {
+            // Determine dominant factor
+            const scores = {
+                momentum: normalized.momentum,
+                meanRev: normalized.meanRev,
+                lowVol: normalized.lowVol,
+                vrp: normalized.vrp,
+                volatility: normalized.volatility
+            };
+
+            const max = Math.max(...Object.values(scores));
+            const min = Math.min(...Object.values(scores));
+            const range = max - min;
+
+            let dnaType;
+
+            // Check if balanced (low variance)
+            if (range < 2.5) {
+                dnaType = dnaTypes.BALANCED;
+            } else if (normalized.momentum >= 7) {
+                dnaType = dnaTypes.MOMENTUM_LEADER;
+            } else if (normalized.meanRev >= 7) {
+                dnaType = dnaTypes.VALUE_REVERTER;
+            } else if (normalized.lowVol >= 7) {
+                dnaType = dnaTypes.DEFENSIVE;
+            } else if (normalized.volatility >= 7 || normalized.vrp >= 7) {
+                dnaType = dnaTypes.VOLATILE_ALPHA;
+            } else {
+                dnaType = dnaTypes.BALANCED;
+            }
+
+            const badge = document.getElementById('dna-badge');
+            badge.textContent = dnaType.name;
+            badge.style.backgroundColor = `${dnaType.color}20`;
+            badge.style.color = dnaType.color;
+
+            document.getElementById('dna-description').textContent = dnaType.description;
+
+            // Check for factor drift (simplified - comparing to "average" profile)
+            const avgScore = 5;
+            const drifts = [];
+
+            if (Math.abs(normalized.momentum - avgScore) > 3) {
+                drifts.push(`Momentum ${normalized.momentum > avgScore ? 'elevated' : 'depressed'}`);
+            }
+            if (Math.abs(normalized.volatility - avgScore) > 3) {
+                drifts.push(`Volatility ${normalized.volatility > avgScore ? 'elevated' : 'suppressed'}`);
+            }
+
+            const driftAlert = document.getElementById('drift-alert');
+            if (drifts.length > 0) {
+                driftAlert.classList.remove('hidden');
+                document.getElementById('drift-message').textContent =
+                    `Unusual readings detected: ${drifts.join(', ')}. This stock may be transitioning to a different regime.`;
+            } else {
+                driftAlert.classList.add('hidden');
+            }
+        }
+
+        function renderFactorBreakdown(normalized) {
+            const container = document.getElementById('factor-breakdown');
+
+            const factors = [
+                { key: 'momentum', label: 'Momentum', color: factorColors.momentum },
+                { key: 'meanRev', label: 'Mean Reversion', color: factorColors.meanRev },
+                { key: 'lowVol', label: 'Low Volatility', color: factorColors.lowVol },
+                { key: 'vrp', label: 'Vol Risk Premium', color: factorColors.vrp },
+                { key: 'volatility', label: 'Volatility Level', color: factorColors.volatility }
+            ];
+
+            container.innerHTML = factors.map(f => {
+                const value = normalized[f.key] || 0;
+                const pct = (value / 10) * 100;
+                return `
+                    <div class="flex items-center gap-2">
+                        <span class="w-24 text-xs text-[#8b949e]">${f.label}</span>
+                        <div class="flex-1 factor-bar-bg">
+                            <div class="factor-bar-fill" style="width: ${pct}%; background: ${f.color};"></div>
+                        </div>
+                        <span class="w-8 text-right text-xs font-bold" style="color: ${f.color}">${value.toFixed(1)}</span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderFactorTable(raw, normalized) {
+            const tableBody = document.getElementById('factor-table');
+
+            const factors = [
+                {
+                    name: 'Momentum',
+                    raw: raw.momentum,
+                    norm: normalized.momentum,
+                    interpretation: raw.momentum > 2 ? 'Strong uptrend' : raw.momentum < -2 ? 'Strong downtrend' : 'Neutral/Consolidating'
+                },
+                {
+                    name: 'Mean Reversion',
+                    raw: raw.meanRev,
+                    norm: normalized.meanRev,
+                    interpretation: raw.meanRev < -3 ? 'Oversold (buy opportunity)' : raw.meanRev > 3 ? 'Overbought (caution)' : 'Fair value'
+                },
+                {
+                    name: 'Low Volatility',
+                    raw: raw.lowVol,
+                    norm: normalized.lowVol,
+                    interpretation: raw.lowVol > 6 ? 'High risk regime' : raw.lowVol < 4 ? 'Low risk regime' : 'Normal risk'
+                },
+                {
+                    name: 'VRP',
+                    raw: (raw.vrp * 100).toFixed(1) + '%',
+                    norm: normalized.vrp,
+                    interpretation: raw.vrp > 0.2 ? 'IV expensive (sell premium)' : raw.vrp < -0.1 ? 'IV cheap (buy protection)' : 'Fair pricing'
+                },
+                {
+                    name: 'Volatility Pctl',
+                    raw: raw.volatility.toFixed(0) + '%',
+                    norm: normalized.volatility,
+                    interpretation: raw.volatility > 80 ? 'Extreme volatility' : raw.volatility < 30 ? 'Low volatility' : 'Normal volatility'
+                }
+            ];
+
+            tableBody.innerHTML = factors.map(f => {
+                const normColor = f.norm >= 7 ? 'text-[#a7f3d0]' : f.norm <= 3 ? 'text-[#fecdd3]' : 'text-[#8b949e]';
+                return `
+                    <tr class="border-b border-[#21262d] hover:bg-[#161b22]">
+                        <td class="py-2 px-2 text-white font-medium">${f.name}</td>
+                        <td class="py-2 px-2 text-center text-[#8b949e]">${typeof f.raw === 'number' ? f.raw.toFixed(2) : f.raw}</td>
+                        <td class="py-2 px-2 text-center ${normColor} font-bold">${f.norm.toFixed(1)}</td>
+                        <td class="py-2 px-2 text-[#8b949e]">${f.interpretation}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+    </script>
+
+</body>
+
+</html>
