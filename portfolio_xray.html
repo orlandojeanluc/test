@@ -514,9 +514,9 @@
                         <span class="w-1.5 h-4 bg-[#f48771]"></span>
                         Holdings Detail
                     </h3>
-                    <div class="overflow-x-auto overflow-y-auto max-h-[400px]">
-                        <table class="w-full text-xs">
-                            <thead class="sticky top-0 bg-[#0d1117] z-10">
+                    <div class="overflow-x-auto" style="overscroll-behavior: none; -webkit-overflow-scrolling: touch;">
+                        <table class="w-full text-xs" style="min-width: 600px;">
+                            <thead>
                                 <tr class="text-[#8b949e] border-b border-[#21262d]">
                                     <th class="text-left py-2 px-2">Ticker</th>
                                     <th class="text-left py-2 px-2">Sector</th>
@@ -1135,9 +1135,9 @@
             };
 
             container.innerHTML = `
-                <div class="overflow-x-auto overflow-y-auto max-h-[400px]">
-                    <table class="w-full text-xs">
-                        <thead class="sticky top-0 bg-[#0d1117] z-10">
+                <div class="overflow-x-auto" style="overscroll-behavior: none; -webkit-overflow-scrolling: touch;">
+                    <table class="w-full text-xs" style="min-width: 500px;">
+                        <thead>
                             <tr class="text-[#8b949e] border-b border-[#21262d]">
                                 <th class="text-left py-2 px-2">Holding</th>
                                 <th class="text-left py-2 px-2">Sector</th>
