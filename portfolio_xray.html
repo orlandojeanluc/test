@@ -377,6 +377,12 @@
                             class="bg-[#161b22] border border-[#30363d] text-white text-xs rounded-full px-3 py-1.5 hover:border-[#c586c0] transition-colors">
                             📂 Load
                         </button>
+                        <label
+                            class="bg-[#161b22] border border-[#30363d] text-white text-xs rounded-full px-3 py-1.5 hover:border-[#c586c0] transition-colors cursor-pointer flex items-center gap-1">
+                            <span>📥 Import</span>
+                            <input type="file" id="csv-upload" class="hidden" accept=".csv"
+                                onchange="handleCsvUpload(event)">
+                        </label>
                     </div>
                 </div>
 
@@ -543,6 +549,21 @@
 
                     <div id="options-suggestions" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         <!-- Suggestions injected here -->
+                    </div>
+                </div>
+
+                <!-- Upgrade Opportunities Module -->
+                <div class="terminal-card p-4 md:p-6 mt-4">
+                    <h3 class="text-white font-bold text-sm mb-4 flex items-center gap-2">
+                        <span class="w-1.5 h-4 bg-[#f48771]"></span>
+                        Upgrade Opportunities
+                        <span
+                            class="text-[10px] text-[#8b949e] font-normal ml-2 bg-[#21262d] px-2 py-0.5 rounded-full border border-[#30363d]">Cross-Sectional
+                            Engine</span>
+                    </h3>
+
+                    <div id="upgrade-suggestions" class="space-y-4">
+                        <!-- Upgrade cards injected here -->
                     </div>
                 </div>
             </div>
@@ -834,6 +855,7 @@
             updateFactorTilts(finalMom, finalMR, finalLV);
             updateHoldingsTable(holdings);
             updateOptionSuggestions(holdings);
+            updateUpgradeSuggestions(holdings);
         }
 
         function updateAggregateMetrics(overall, bullish, bearish, neutral, bullishW, bearishW, neutralW, total) {
@@ -1009,18 +1031,139 @@
             }
 
             container.innerHTML = suggestions.map(s => `
-                <div class="bg-[#161b22] border border-[#30363d] rounded-lg p-4 hover:border-[#c586c0] transition-colors group cursor-default">
+                <div class="bg-[#0d1117] border border-[#30363d] rounded-lg p-4 hover:border-[#c586c0] transition-colors group cursor-default">
                     <div class="flex justify-between items-start mb-2">
                         <div class="flex items-center gap-2">
                             <span class="font-bold text-white text-lg">${s.ticker}</span>
                             <span class="text-[10px] px-1.5 py-0.5 rounded border ${s.badgeColor} bg-opacity-10 bg-transparent">${s.badge}</span>
                         </div>
-                        <span class="text-xl">${s.icon}</span>
                     </div>
                     <div class="font-bold text-[#c9d1d9] text-sm mb-1 group-hover:text-[#c586c0] transition-colors">${s.title}</div>
                     <p class="text-xs text-[#8b949e] leading-relaxed">${s.reason}</p>
                 </div>
             `).join('');
+        }
+
+        function updateUpgradeSuggestions(holdings) {
+            const container = document.getElementById('upgrade-suggestions');
+            const upgrades = [];
+
+            // Get set of current portfolio tickers
+            const portfolioSet = new Set(holdings.map(h => h.ticker));
+
+            holdings.forEach(h => {
+                if (!h.hasData) return;
+
+                // Identify WEAK holdings using actual signal regimes:
+                // 1. Bearish Trend (momentum overall < 0)
+                // 2. High Vol Equity Regime (lowvol score > 6 = "High" or "Highest")
+                // 3. Negative Mean Reversion Signal (MR score < 0 = overbought/pullback expected)
+                const isBearishTrend = h.overall !== null && h.overall < 0;
+                const isHighVolRegime = h.lvFactor !== null && h.lvFactor > 6;
+                const isNegativeMR = h.mrFactor !== null && h.mrFactor < 0;
+
+                const isWeak = isBearishTrend || isHighVolRegime || isNegativeMR;
+
+                if (!isWeak) return;
+
+                // Determine weakness reason(s) - can have multiple
+                const reasons = [];
+                if (isBearishTrend) reasons.push(`Bearish Trend (${h.overall?.toFixed(1)})`);
+                if (isHighVolRegime) reasons.push(`High Risk Regime (LV: ${h.lvFactor?.toFixed(1)})`);
+                if (isNegativeMR) reasons.push(`Overbought (MR: ${h.mrFactor?.toFixed(1)})`);
+                const weaknessReason = reasons.join(' • ');
+
+                // Find replacement candidates from momentum universe
+                // Prefer same sector, better trend score, not overbought
+                const candidates = momentumData
+                    .filter(m => !portfolioSet.has(m.ticker)) // Not in portfolio
+                    .filter(m => m.overall > 0) // Must be bullish
+                    .map(m => {
+                        // Get additional factor data
+                        const mr = meanReversionData.find(d => d.ticker === m.ticker) || {};
+                        const lv = lowVolData.find(d => d.ticker === m.ticker) || {};
+                        const vol = volatilityData.find(d => d.ticker === m.ticker) || {};
+                        const volCs = vol.crossSectional || {};
+
+                        return {
+                            ticker: m.ticker,
+                            sector: m.sector,
+                            overall: m.overall,
+                            stTrend: m.stTrend,
+                            itTrend: m.itTrend,
+                            mrFactor: mr.score ?? mr.mrScore ?? null,
+                            lvFactor: lv.score ?? lv.riskScore ?? null,
+                            volPctl: volCs.rvPctlUniverse ?? vol.rvPctlHistory ?? null,
+                            sectorMatch: m.sector === h.sector
+                        };
+                    })
+                    .filter(c => c.mrFactor === null || c.mrFactor >= 0) // Not overbought (positive MR = good)
+                    .filter(c => c.lvFactor === null || c.lvFactor <= 6) // Not high risk regime
+                    .filter(c => c.sectorMatch) // Only same sector alternatives
+                    .sort((a, b) => (b.overall || 0) - (a.overall || 0)) // Sort by trend score
+                    .slice(0, 3); // Top 3
+
+                // Only suggest if we have same-sector alternatives
+                if (candidates.length > 0) {
+                    upgrades.push({
+                        current: h,
+                        weaknessReason,
+                        candidates
+                    });
+                }
+            });
+
+            if (upgrades.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center text-[#8b949e] py-8 border border-dashed border-[#30363d] rounded-lg">
+                        <div class="text-2xl mb-2">✅</div>
+                        <p>No weak holdings detected.</p>
+                        <p class="text-xs mt-1">Your portfolio looks healthy based on current factor analysis.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Table view for upgrades - matching Holdings Detail table styling
+            const formatCandidate = (c) => {
+                if (!c) return '<span class="text-[#8b949e]">--</span>';
+                const sectorBadge = c.sectorMatch ? '<span class="ml-1 text-[8px] px-1 py-0.5 rounded bg-[#a7f3d0]/20 text-[#a7f3d0]">Same</span>' : '';
+                const trendColor = c.overall > 0 ? 'text-[#a7f3d0]' : 'text-[#fecdd3]';
+                return `<span class="font-bold text-white">${c.ticker}</span>${sectorBadge}
+                    <div class="text-[10px] text-[#8b949e]">${c.sector}</div>
+                    <div class="text-[10px]"><span class="text-[#8b949e]">Trend:</span> <span class="${trendColor}">${c.overall?.toFixed(1) ?? '--'}</span></div>`;
+            };
+
+            container.innerHTML = `
+                <div class="overflow-x-auto">
+                    <table class="w-full text-xs">
+                        <thead>
+                            <tr class="text-[#8b949e] border-b border-[#21262d]">
+                                <th class="text-left py-2 px-2">Holding</th>
+                                <th class="text-left py-2 px-2">Sector</th>
+                                <th class="text-left py-2 px-2">Issue(s)</th>
+                                <th class="text-center py-2 px-2">Replace With</th>
+                                <th class="text-center py-2 px-2">Alt 1</th>
+                                <th class="text-center py-2 px-2">Alt 2</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${upgrades.map(u => `
+                                <tr class="border-b border-[#21262d] hover:bg-[#161b22]">
+                                    <td class="py-2 px-2 text-white font-bold">${u.current.ticker}</td>
+                                    <td class="py-2 px-2 text-[#8b949e]">${u.current.sector}</td>
+                                    <td class="py-2 px-2">
+                                        <span class="text-[10px] text-[#fecdd3]">${u.weaknessReason}</span>
+                                    </td>
+                                    <td class="py-2 px-2 text-center">${formatCandidate(u.candidates[0])}</td>
+                                    <td class="py-2 px-2 text-center">${formatCandidate(u.candidates[1])}</td>
+                                    <td class="py-2 px-2 text-center">${formatCandidate(u.candidates[2])}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
         }
 
         window.savePortfolio = function () {
@@ -1059,6 +1202,69 @@
             document.getElementById('weight-mode').value = weightMode;
             renderTickerChips();
             alert(`Portfolio "${name}" loaded!`);
+        };
+
+        window.handleCsvUpload = function (event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const text = e.target.result;
+                const lines = text.split(/\r\n|\n/);
+
+                const newTickers = [];
+                const newWeights = {};
+                let hasWeights = false;
+
+                lines.forEach(line => {
+                    const cleanLine = line.trim();
+                    if (!cleanLine) return;
+
+                    const parts = cleanLine.split(',');
+                    const ticker = parts[0].trim().toUpperCase().replace(/["']/g, '');
+
+                    if (ticker === 'TICKER' || ticker === 'SYMBOL') return;
+
+                    if (ticker && ticker.length > 0) {
+                        newTickers.push(ticker);
+
+                        if (parts.length > 1) {
+                            const weightStr = parts[1].trim().replace('%', '');
+                            const w = parseFloat(weightStr);
+                            if (!isNaN(w)) {
+                                newWeights[ticker] = w;
+                                hasWeights = true;
+                            }
+                        }
+                    }
+                });
+
+                if (newTickers.length > 0) {
+                    portfolioTickers = newTickers;
+                    portfolioWeights = newWeights;
+
+                    if (hasWeights) {
+                        weightMode = 'custom';
+                        document.getElementById('weight-mode').value = 'custom';
+                    } else {
+                        weightMode = 'equal';
+                        document.getElementById('weight-mode').value = 'equal';
+                    }
+
+                    renderTickerChips();
+                    document.getElementById('results-container').classList.add('hidden');
+                    document.getElementById('empty-state').classList.remove('hidden');
+
+                    alert(`Imported ${newTickers.length} tickers successfully!`);
+                } else {
+                    alert('No valid tickers found in CSV.');
+                }
+
+                event.target.value = '';
+            };
+
+            reader.readAsText(file);
         };
 
         // Initial render
