@@ -76,6 +76,14 @@
             transform: translateY(-2px);
         }
 
+        /* Disable hover effects for cards with no-hover class */
+        .terminal-card.no-hover:hover {
+            border-color: #21262d;
+            background: #0d1117;
+            box-shadow: none;
+            transform: none;
+        }
+
         .sector-meter-bg {
             background: #21262d;
             height: 6px;
@@ -192,13 +200,6 @@
             text-align: center;
             font-size: 11px;
             font-weight: 600;
-            transition: all 0.2s ease;
-        }
-
-        .heatmap-cell:hover {
-            transform: scale(1.05);
-            z-index: 10;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         }
 
         .heatmap-header {
@@ -212,6 +213,18 @@
             color: white;
             text-align: left;
             padding-left: 12px;
+        }
+
+        /* Style row hover for heatmap tables - subtle but visible */
+        .heatmap-table tbody tr:hover {
+            background: #1c2128 !important;
+        }
+
+        /* Disable hover effects on cells */
+        .heatmap-table td:hover,
+        .heatmap-table th:hover {
+            box-shadow: none !important;
+            transform: none !important;
         }
     </style>
 </head>
@@ -480,7 +493,7 @@
 
             <!-- Heatmap Tab Content (Hidden by default) -->
             <div id="view-heatmap" class="hidden">
-                <div class="terminal-card p-6">
+                <div class="terminal-card no-hover p-6">
                     <div class="flex items-center justify-between mb-4">
                         <h3 class="text-lg font-bold text-white">Sector Rotation Heatmap</h3>
                         <div class="text-xs text-[#8b949e]">Short-Term vs Intermediate Trend Comparison</div>
@@ -583,6 +596,7 @@
                         name: item.sector,
                         count: 0,
                         totalMom: 0,
+                        totalTrend: 0,
                         totalRisk: 0,
                         posSignals: 0,
                         negSignals: 0,
@@ -592,6 +606,7 @@
                 const s = sectors[item.sector];
                 s.count++;
                 s.totalMom += item.momScore;
+                s.totalTrend += (item.trendScore || 0);
                 s.totalRisk += item.riskScore;
                 if (item.trendScore > 0) s.posSignals++;
                 if (item.trendScore < 0) s.negSignals++;
@@ -601,6 +616,7 @@
 
             const sectorList = Object.values(sectors).map(s => {
                 s.avgMom = s.totalMom / s.count;
+                s.avgTrend = s.totalTrend / s.count;
                 s.avgRisk = s.totalRisk / s.count;
                 return s;
             });
@@ -930,22 +946,31 @@
             // Table rows
             const tableRows = sectors.map(s => {
                 const avgMom = s.avgMom;
+                const avgTrend = s.avgTrend || 0;
                 const avgRisk = s.avgRisk;
                 s.tickers.sort((a, b) => b.momScore - a.momScore);
                 const topPick = s.tickers[0];
 
                 const momColor = getMomColor(avgMom);
+                const trendColor = getMomColor(avgTrend); // Same color logic as momentum
                 const riskColor = getRiskColor(avgRisk);
                 const momBadge = getMomBadge(avgMom);
                 const riskBadge = getRiskBadge(avgRisk);
                 const displayMom = avgMom > 0 ? `+${avgMom.toFixed(1)}` : avgMom.toFixed(1);
+                const displayTrend = avgTrend > 0 ? `+${avgTrend.toFixed(1)}` : avgTrend.toFixed(1);
 
                 return `
                     <tr class="border-b border-[#30363d] hover:bg-[#1f2937] hover:shadow-[inset_0_0_0_1px_rgba(139,92,246,0.3)] transition-colors even:bg-[#161b22]/50 cursor-pointer" onclick="window.location.href='sector_detail.html?sector=${s.name}'">
                         <td class="py-2 px-3">
                             <div class="flex items-center gap-2">
-                                <span class="font-bold text-white min-w-[140px] truncate" title="${s.name}">${s.name}</span>
-                                <span class="text-[10px] text-[#8b949e] bg-[#21262d] px-1.5 py-0.5 rounded border border-[#30363d] min-w-[60px] text-center">${s.count} assets</span>
+                                <span class="font-bold text-white min-w-[120px] truncate" title="${s.name}">${s.name}</span>
+                                <span class="text-[10px] text-[#8b949e] bg-[#21262d] px-1.5 py-0.5 rounded border border-[#30363d]">${s.count}</span>
+                            </div>
+                        </td>
+                        <td class="py-2 px-2">
+                            <div class="flex items-center gap-2">
+                                ${createBlocks(avgTrend, 5, false, trendColor)}
+                                <span class="text-sm font-medium" style="color: ${trendColor}">${displayTrend}</span>
                             </div>
                         </td>
                         <td class="py-2 px-2">
@@ -984,14 +1009,15 @@
 
             const desktopTable = `
                 <div style="overflow-x: auto; overscroll-behavior: none; -webkit-overflow-scrolling: touch;">
-                    <table class="w-full text-left text-sm text-[#c9d1d9]" style="min-width: 900px;">
+                    <table class="w-full text-left text-sm text-[#c9d1d9]" style="min-width: 1000px;">
                         <thead class="text-sm bg-[#161b22] text-white sticky top-0 z-10 shadow-sm">
                             <tr>
-                                <th class="py-2 px-3 text-left font-semibold whitespace-nowrap" style="width: 200px;">Sector</th>
-                                <th class="py-2 px-2 text-left font-semibold whitespace-nowrap" style="width: 120px;">Momentum</th>
-                                <th class="py-2 px-2 text-left font-semibold whitespace-nowrap" style="width: 100px;">Trend Regime</th>
-                                <th class="py-2 px-2 text-left font-semibold whitespace-nowrap" style="width: 120px;">Avg Risk</th>
-                                <th class="py-2 px-2 text-left font-semibold whitespace-nowrap" style="width: 100px;">Risk Regime</th>
+                                <th class="py-2 px-3 text-left font-semibold whitespace-nowrap" style="width: 180px;">Sector</th>
+                                <th class="py-2 px-2 text-left font-semibold whitespace-nowrap" style="width: 100px;">Trend</th>
+                                <th class="py-2 px-2 text-left font-semibold whitespace-nowrap" style="width: 100px;">Momentum</th>
+                                <th class="py-2 px-2 text-left font-semibold whitespace-nowrap" style="width: 90px;">Regime</th>
+                                <th class="py-2 px-2 text-left font-semibold whitespace-nowrap" style="width: 100px;">Avg Risk</th>
+                                <th class="py-2 px-2 text-left font-semibold whitespace-nowrap" style="width: 80px;">Risk</th>
                                 <th class="py-2 px-2 text-left font-semibold whitespace-nowrap" style="width: 100px;">Signals</th>
                                 <th class="py-2 px-3 text-left font-semibold whitespace-nowrap" style="width: 100px;">Top Mover</th>
                             </tr>
@@ -1070,14 +1096,29 @@
 
             const sectors = Object.keys(sectorData);
 
-            // Get heatmap color based on score
-            const getHeatmapColor = (score) => {
-                if (score === null || score === undefined) return '#374151';
-                if (score >= 3) return '#22c55e';
-                if (score >= 1) return '#86efac';
-                if (score >= -1) return '#6b7280';
-                if (score >= -3) return '#fca5a5';
-                return '#ef4444';
+            // Create block indicators (like overview page) - slightly larger for heatmap
+            const createBlocks = (value, maxValue = 5) => {
+                if (value === null || value === undefined) return '<div class="flex gap-0.5"><div class="w-2 h-4 rounded-sm bg-[#21262d] opacity-30"></div></div>';
+                const absValue = Math.abs(value);
+                const filledCount = Math.min(4, Math.round((absValue / maxValue) * 4));
+                const color = value > 0 ? '#a7f3d0' : value < 0 ? '#fecdd3' : '#374151';
+
+                let blocks = '';
+                for (let i = 0; i < 4; i++) {
+                    const isFilled = i < filledCount;
+                    const blockColor = isFilled ? color : '#21262d';
+                    const opacity = isFilled ? '' : 'opacity-30';
+                    blocks += `<div class="w-2 h-4 rounded-sm ${opacity}" style="background: ${blockColor}"></div>`;
+                }
+                return `<div class="flex gap-0.5">${blocks}</div>`;
+            };
+
+            // Get text color based on value
+            const getTextColor = (val) => {
+                if (val === null || val === undefined) return '#8b949e';
+                if (val > 0) return '#a7f3d0';
+                if (val < 0) return '#fecdd3';
+                return '#8b949e';
             };
 
             // Format week date for display (Week Of) - dates are MM-DD-YYYY
@@ -1087,47 +1128,75 @@
                 return 'W/O ' + date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
             };
 
-            // Build HTML
+            // Build table-style HTML
             let html = `
                 <div class="mb-4 text-xs text-[#8b949e]">Showing last ${weeks.length} weeks</div>
                 
                 <!-- Short-Term Trend Section -->
-                <div class="mb-6">
-                    <h4 class="text-sm font-bold text-[#b5cea8] mb-2">Short-Term Trend (Daily → Weekly)</h4>
+                <div class="mb-8">
+                    <h4 class="text-sm font-bold text-[#b5cea8] mb-3">Short-Term Trend (Daily → Weekly)</h4>
                     <div style="overflow-x: auto; overscroll-behavior: none; -webkit-overflow-scrolling: touch;">
-                        <div class="heatmap-grid" style="grid-template-columns: 120px repeat(${weeks.length}, 1fr); min-width: 800px;">
-                            <div class="heatmap-cell heatmap-header">Sector</div>
-                            ${weeks.map(w => `<div class="heatmap-cell heatmap-header">${formatWeek(w)}</div>`).join('')}
-                            ${sectors.map(sector => `
-                                <div class="heatmap-cell heatmap-sector-label">${sector}</div>
-                                ${weeks.map(week => {
+                        <table class="w-full text-sm heatmap-table" style="min-width: 900px;">
+                            <thead class="bg-[#161b22]">
+                                <tr class="border-b border-[#30363d]">
+                                    <th class="py-2 px-3 text-left text-[#8b949e] font-semibold" style="width: 140px;">Sector</th>
+                                    ${weeks.map(w => `<th class="py-2 px-2 text-center text-[#8b949e] font-normal text-xs">${formatWeek(w)}</th>`).join('')}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${sectors.map(sector => `
+                                    <tr class="border-b border-[#30363d] hover:bg-[#161b22] transition-colors">
+                                        <td class="py-2 px-3 font-medium text-white">${sector}</td>
+                                        ${weeks.map(week => {
                 const val = sectorData[sector]?.[week]?.stAvg;
-                const color = getHeatmapColor(val);
+                const textColor = getTextColor(val);
                 const display = val != null ? (val > 0 ? `+${val.toFixed(1)}` : val.toFixed(1)) : '-';
-                return `<div class="heatmap-cell" style="background: ${color}; color: ${val != null && Math.abs(val) > 2 ? 'white' : '#1f2937'};">${display}</div>`;
+                return `
+                                                <td class="py-2 px-2">
+                                                    <div class="flex items-center justify-center gap-2">
+                                                        ${createBlocks(val)}
+                                                        <span class="text-sm font-medium" style="color: ${textColor}; min-width: 40px;">${display}</span>
+                                                    </div>
+                                                </td>`;
             }).join('')}
-                            `).join('')}
-                        </div>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
                 
                 <!-- Intermediate Trend Section -->
                 <div>
-                    <h4 class="text-sm font-bold text-[#c586c0] mb-2">Intermediate Trend (Weekly)</h4>
+                    <h4 class="text-sm font-bold text-[#c586c0] mb-3">Intermediate Trend (Weekly)</h4>
                     <div style="overflow-x: auto; overscroll-behavior: none; -webkit-overflow-scrolling: touch;">
-                        <div class="heatmap-grid" style="grid-template-columns: 120px repeat(${weeks.length}, 1fr); min-width: 800px;">
-                            <div class="heatmap-cell heatmap-header">Sector</div>
-                            ${weeks.map(w => `<div class="heatmap-cell heatmap-header">${formatWeek(w)}</div>`).join('')}
-                            ${sectors.map(sector => `
-                                <div class="heatmap-cell heatmap-sector-label">${sector}</div>
-                                ${weeks.map(week => {
+                        <table class="w-full text-sm heatmap-table" style="min-width: 900px;">
+                            <thead class="bg-[#161b22]">
+                                <tr class="border-b border-[#30363d]">
+                                    <th class="py-2 px-3 text-left text-[#8b949e] font-semibold" style="width: 140px;">Sector</th>
+                                    ${weeks.map(w => `<th class="py-2 px-2 text-center text-[#8b949e] font-normal text-xs">${formatWeek(w)}</th>`).join('')}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${sectors.map(sector => `
+                                    <tr class="border-b border-[#30363d] hover:bg-[#161b22] transition-colors">
+                                        <td class="py-2 px-3 font-medium text-white">${sector}</td>
+                                        ${weeks.map(week => {
                 const val = sectorData[sector]?.[week]?.itAvg;
-                const color = getHeatmapColor(val);
+                const textColor = getTextColor(val);
                 const display = val != null ? (val > 0 ? `+${val.toFixed(1)}` : val.toFixed(1)) : '-';
-                return `<div class="heatmap-cell" style="background: ${color}; color: ${val != null && Math.abs(val) > 2 ? 'white' : '#1f2937'};">${display}</div>`;
+                return `
+                                                <td class="py-2 px-2">
+                                                    <div class="flex items-center justify-center gap-2">
+                                                        ${createBlocks(val)}
+                                                        <span class="text-sm font-medium" style="color: ${textColor}; min-width: 40px;">${display}</span>
+                                                    </div>
+                                                </td>`;
             }).join('')}
-                            `).join('')}
-                        </div>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             `;

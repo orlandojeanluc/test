@@ -757,8 +757,11 @@
         let highlightedCategory = null;
 
         // Define loadData first
+        let sectorMomentumData = {}; // Store sector momentum averages
+
         async function loadData() {
             try {
+                // Fetch radial data for trend scores
                 const getRadialData = httpsCallable(functions, 'getRadialData');
                 const result = await getRadialData();
                 assetsData = result.data;
@@ -768,6 +771,33 @@
                     ...a,
                     overallScore: (a.stTrend || 0) + (a.itTrend || 0)
                 }));
+
+                // Also fetch sectors data for momentum scores
+                try {
+                    const getSectorsData = httpsCallable(functions, 'getSectorsData');
+                    const sectorsResult = await getSectorsData();
+                    const sectorsData = sectorsResult.data;
+
+                    // Calculate average momentum per sector
+                    const sectorGroups = {};
+                    sectorsData.forEach(item => {
+                        if (!sectorGroups[item.sector]) {
+                            sectorGroups[item.sector] = { totalMom: 0, count: 0 };
+                        }
+                        sectorGroups[item.sector].totalMom += item.momScore || 0;
+                        sectorGroups[item.sector].count++;
+                    });
+
+                    // Store sector momentum averages
+                    Object.keys(sectorGroups).forEach(sector => {
+                        sectorMomentumData[sector] = sectorGroups[sector].totalMom / sectorGroups[sector].count;
+                    });
+
+                    // Debug: log available sector momentum data
+                    console.log('Sector Momentum Data:', sectorMomentumData);
+                } catch (momError) {
+                    console.warn("Could not fetch sector momentum data:", momError);
+                }
             } catch (error) {
                 console.error("Error loading radial data:", error);
                 assetsData = [];
@@ -1202,18 +1232,67 @@
 
         function drawSectorGrid() {
             const container = document.getElementById('sector-grid');
-            container.innerHTML = sectors.map(s => {
+
+            // Map radial sector names to sectors data sector names
+            // Based on actual cloud function response: Comm Services, Consumer Staples, Energy, Financials, Health Care, Industrials, Materials, Real Estate, Technology, Utilities
+            const sectorNameMap = {
+                'Technology': 'Technology',
+                'Financials': 'Financials',
+                'Health Care': 'Health Care',
+                'Consumer Disc': 'Consumer Disc',
+                'Consumer Staples': 'Consumer Staples',
+                'Industrials': 'Industrials',
+                'Utilities': 'Utilities',
+                'Real Estate': 'Real Estate',
+                'Comm Services': 'Comm Services',
+                'Materials': 'Materials',
+                'Energy': 'Energy'
+            };
+
+            // Calculate sector data first, then sort by trend score
+            const sectorData = sectors.map(s => {
                 const assets = assetsData.filter(a => a.sector === s);
-                if (!assets.length) return '';
-                const avg = assets.reduce((sum, a) => sum + a.overallScore, 0) / assets.length;
-                const color = avg > 0 ? 'text-[#a7f3d0]' : avg < 0 ? 'text-[#fecdd3]' : 'text-[#8b949e]';
+                if (!assets.length) return null;
+
+                // Calculate Overall Trend (ST + IT combined)
+                const avgTrend = assets.reduce((sum, a) => sum + a.overallScore, 0) / assets.length;
+
+                // Get Sector Momentum from fetched sectorsData
+                const mappedSector = sectorNameMap[s] || s;
+                let avgMom = sectorMomentumData[mappedSector];
+                if (avgMom === undefined) avgMom = sectorMomentumData[s];
+                if (avgMom === undefined) {
+                    const keys = Object.keys(sectorMomentumData);
+                    const match = keys.find(k => s.toLowerCase().includes(k.toLowerCase()) || k.toLowerCase().includes(s.toLowerCase()));
+                    if (match) avgMom = sectorMomentumData[match];
+                }
+                avgMom = avgMom || 0;
+
+                return { name: s, assets, avgTrend, avgMom };
+            }).filter(Boolean);
+
+            // Sort by trend score high to low
+            sectorData.sort((a, b) => b.avgTrend - a.avgTrend);
+
+            container.innerHTML = sectorData.map(sector => {
+                const s = sector.name;
+                const assets = sector.assets;
+                const avgTrend = sector.avgTrend;
+                const avgMom = sector.avgMom;
+
+                const trendColor = avgTrend > 0 ? 'text-[#a7f3d0]' : avgTrend < 0 ? 'text-[#fecdd3]' : 'text-[#8b949e]';
+                const momColor = avgMom > 0 ? 'text-[#a7f3d0]' : avgMom < 0 ? 'text-[#fecdd3]' : 'text-[#8b949e]';
+
                 return `
                     <div class="bg-[#0d1117] p-3 border border-[#21262d] rounded-lg cursor-pointer hover:border-[#30363d]" onclick="filterBySector('${s}')">
                         <div class="flex justify-between items-center">
                             <span class="text-white font-bold">${s}</span>
-                            <span class="font-mono ${color} font-bold">${avg > 0 ? '+' : ''}${avg.toFixed(1)}</span>
+                            <span class="font-mono ${trendColor} font-bold">${avgTrend > 0 ? '+' : ''}${avgTrend.toFixed(1)}</span>
                         </div>
-                        <div class="text-xs text-[#8b949e] mt-1">${assets.length} Assets</div>
+                        <div class="flex justify-between items-center mt-2 text-[10px]">
+                            <span class="text-[#8b949e]">${assets.length} Assets</span>
+                            <span class="${momColor}">Mom: ${avgMom > 0 ? '+' : ''}${avgMom.toFixed(1)}</span>
+                        </div>
                     </div>
                  `;
             }).join('');

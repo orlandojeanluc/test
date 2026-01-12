@@ -452,25 +452,32 @@
                     return;
                 }
 
-                // Extract raw values
+                // Extract raw values - use null for missing data instead of defaults
+                const hasMomentum = mom.ticker !== undefined;
+                // For MR, treat score of 0 as "no data" since it means no signal was calculated
+                const mrRawScore = mr.score ?? mr.mrScore;
+                const hasMeanRev = mr.ticker !== undefined && mrRawScore !== undefined && mrRawScore !== 0;
+                const hasLowVol = lv.ticker !== undefined && (lv.score !== undefined || lv.riskScore !== undefined);
+                const hasVol = vol.ticker !== undefined;
+
                 const rawData = {
-                    momentum: mom.stTrend !== undefined && mom.itTrend !== undefined
-                        ? (mom.stTrend + mom.itTrend)
-                        : (mom.overall || 0),
-                    meanRev: mr.score ?? mr.mrScore ?? 0,
-                    lowVol: lv.score ?? lv.riskScore ?? 5, // Default to middle
-                    vrp: volCs.vrp ?? vol.vrp ?? 0,
-                    volatility: volCs.rvPctlUniverse ?? vol.rvPctlHistory ?? 50,
+                    momentum: hasMomentum
+                        ? (mom.stTrend !== undefined && mom.itTrend !== undefined ? (mom.stTrend + mom.itTrend) : (mom.overall || 0))
+                        : null,
+                    meanRev: hasMeanRev ? mrRawScore : null,
+                    lowVol: hasLowVol ? (lv.score ?? lv.riskScore) : null,
+                    vrp: hasVol ? (volCs.vrp ?? vol.vrp ?? null) : null,
+                    volatility: hasVol ? (volCs.rvPctlUniverse ?? vol.rvPctlHistory ?? null) : null,
                     sector: mom.sector || mr.sector || lv.sector || vol.sector || 'Unknown'
                 };
 
-                // Normalize to 0-10 scale
+                // Normalize to 0-10 scale (null if no data)
                 const normalized = {
-                    momentum: Math.max(0, Math.min(10, (rawData.momentum + 10) / 2)), // -10 to 10 -> 0 to 10
-                    meanRev: Math.max(0, Math.min(10, 5 - rawData.meanRev)), // Inverted: negative MR = opportunity
-                    lowVol: Math.max(0, Math.min(10, 10 - rawData.lowVol)), // Inverted: lower risk = higher low-vol score
-                    vrp: Math.max(0, Math.min(10, (rawData.vrp * 100 + 50) / 10)), // -0.5 to 0.5 -> 0 to 10
-                    volatility: Math.max(0, Math.min(10, rawData.volatility / 10)) // 0-100 -> 0-10
+                    momentum: rawData.momentum !== null ? Math.max(0, Math.min(10, (rawData.momentum + 10) / 2)) : null,
+                    meanRev: rawData.meanRev !== null ? Math.max(0, Math.min(10, 5 - rawData.meanRev)) : null,
+                    lowVol: rawData.lowVol !== null ? Math.max(0, Math.min(10, 10 - rawData.lowVol)) : null,
+                    vrp: rawData.vrp !== null ? Math.max(0, Math.min(10, (rawData.vrp * 100 + 50) / 10)) : null,
+                    volatility: rawData.volatility !== null ? Math.max(0, Math.min(10, rawData.volatility / 10)) : null
                 };
 
                 // Render everything
@@ -539,14 +546,15 @@
             helixGroup = new THREE.Group();
             helixScene.add(helixGroup);
 
-            // Factor data and colors
-            const factors = [
+            // Factor data and colors - filter out null values
+            const allFactors = [
                 { key: 'momentum', color: new THREE.Color(0xc586c0), value: data.momentum },
                 { key: 'meanRev', color: new THREE.Color(0x9cdcfe), value: data.meanRev },
                 { key: 'lowVol', color: new THREE.Color(0xb5cea8), value: data.lowVol },
                 { key: 'vrp', color: new THREE.Color(0xdcdcaa), value: data.vrp },
                 { key: 'volatility', color: new THREE.Color(0xf48771), value: data.volatility }
             ];
+            const factors = allFactors.filter(f => f.value !== null && f.value !== undefined);
 
             // Helix parameters - more elegant proportions
             const helixHeight = 6;
@@ -794,14 +802,37 @@
                 interactableSpheres.push(rung.sphere1, rung.sphere2);
             });
 
-            // Factor labels and descriptions
-            const factorLabels = {
-                momentum: { name: 'Momentum', desc: 'Trend strength & direction' },
-                meanRev: { name: 'Mean Reversion', desc: 'Reversion opportunity' },
-                lowVol: { name: 'Low Volatility', desc: 'Defensive quality score' },
-                vrp: { name: 'Vol Risk Premium', desc: 'Options premium opportunity' },
-                volatility: { name: 'Volatility Level', desc: 'Current volatility regime' }
+            // Factor names
+            const factorNames = {
+                momentum: 'Momentum',
+                meanRev: 'Mean Reversion',
+                lowVol: 'Low Volatility',
+                vrp: 'Vol Risk Premium',
+                volatility: 'Volatility Level'
             };
+
+            // Get dynamic description based on value
+            function getFactorDescription(factorKey, value) {
+                if (value === null || value === undefined) {
+                    return 'No data available';
+                }
+
+                switch (factorKey) {
+                    case 'momentum':
+                        return value >= 7 ? 'Strong uptrend' : value <= 3 ? 'Downtrend / Weakness' : 'Neutral trend';
+                    case 'meanRev':
+                        // Remember: normalized MR is inverted (high = oversold opportunity, low = overbought)
+                        return value >= 7 ? 'Oversold - reversal opportunity' : value <= 3 ? 'Overbought - caution' : 'Fair value - no signal';
+                    case 'lowVol':
+                        return value >= 7 ? 'Low risk regime' : value <= 3 ? 'High risk regime' : 'Normal risk';
+                    case 'vrp':
+                        return value >= 7 ? 'IV rich - sell premium' : value <= 3 ? 'IV cheap - buy protection' : 'Fair IV pricing';
+                    case 'volatility':
+                        return value >= 7 ? 'High volatility environment' : value <= 3 ? 'Low volatility environment' : 'Normal volatility';
+                    default:
+                        return '';
+                }
+            }
 
             // Mouse move handler
             function onMouseMove(event) {
@@ -815,12 +846,13 @@
                 if (intersects.length > 0) {
                     const obj = intersects[0].object;
                     const data = obj.userData;
-                    const label = factorLabels[data.factor] || { name: data.factor, desc: '' };
+                    const name = factorNames[data.factor] || data.factor;
+                    const desc = getFactorDescription(data.factor, data.value);
 
-                    tooltipFactor.textContent = label.name;
+                    tooltipFactor.textContent = name;
                     tooltipFactor.style.color = data.colorHex;
-                    tooltipScore.textContent = data.value.toFixed(1);
-                    tooltipDesc.textContent = label.desc;
+                    tooltipScore.textContent = data.value !== null ? data.value.toFixed(1) : 'N/A';
+                    tooltipDesc.textContent = desc;
 
                     // Position tooltip near mouse
                     const tooltipX = event.clientX - rect.left + 15;
@@ -858,7 +890,7 @@
         }
 
         function renderDNAClassification(normalized, raw) {
-            // Determine dominant factor
+            // Determine dominant factor - filter out nulls
             const scores = {
                 momentum: normalized.momentum,
                 meanRev: normalized.meanRev,
@@ -867,25 +899,32 @@
                 volatility: normalized.volatility
             };
 
-            const max = Math.max(...Object.values(scores));
-            const min = Math.min(...Object.values(scores));
-            const range = max - min;
+            // Filter out null values for calculations
+            const validScores = Object.values(scores).filter(v => v !== null && v !== undefined);
 
             let dnaType;
 
-            // Check if balanced (low variance)
-            if (range < 2.5) {
-                dnaType = dnaTypes.BALANCED;
-            } else if (normalized.momentum >= 7) {
-                dnaType = dnaTypes.MOMENTUM_LEADER;
-            } else if (normalized.meanRev >= 7) {
-                dnaType = dnaTypes.VALUE_REVERTER;
-            } else if (normalized.lowVol >= 7) {
-                dnaType = dnaTypes.DEFENSIVE;
-            } else if (normalized.volatility >= 7 || normalized.vrp >= 7) {
-                dnaType = dnaTypes.VOLATILE_ALPHA;
+            if (validScores.length === 0) {
+                dnaType = dnaTypes.BALANCED; // No data fallback
             } else {
-                dnaType = dnaTypes.BALANCED;
+                const max = Math.max(...validScores);
+                const min = Math.min(...validScores);
+                const range = max - min;
+
+                // Check if balanced (low variance)
+                if (range < 2.5) {
+                    dnaType = dnaTypes.BALANCED;
+                } else if (normalized.momentum !== null && normalized.momentum >= 7) {
+                    dnaType = dnaTypes.MOMENTUM_LEADER;
+                } else if (normalized.meanRev !== null && normalized.meanRev >= 7) {
+                    dnaType = dnaTypes.VALUE_REVERTER;
+                } else if (normalized.lowVol !== null && normalized.lowVol >= 7) {
+                    dnaType = dnaTypes.DEFENSIVE;
+                } else if ((normalized.volatility !== null && normalized.volatility >= 7) || (normalized.vrp !== null && normalized.vrp >= 7)) {
+                    dnaType = dnaTypes.VOLATILE_ALPHA;
+                } else {
+                    dnaType = dnaTypes.BALANCED;
+                }
             }
 
             const badge = document.getElementById('dna-badge');
@@ -928,15 +967,19 @@
             ];
 
             container.innerHTML = factors.map(f => {
-                const value = normalized[f.key] || 0;
-                const pct = (value / 10) * 100;
+                const value = normalized[f.key];
+                const hasData = value !== null && value !== undefined;
+                const pct = hasData ? (value / 10) * 100 : 0;
                 return `
                     <div class="flex items-center gap-2">
                         <span class="w-24 text-xs text-[#8b949e]">${f.label}</span>
                         <div class="flex-1 factor-bar-bg">
-                            <div class="factor-bar-fill" style="width: ${pct}%; background: ${f.color};"></div>
+                            ${hasData
+                        ? `<div class="factor-bar-fill" style="width: ${pct}%; background: ${f.color};"></div>`
+                        : `<div class="factor-bar-fill" style="width: 100%; background: #30363d; opacity: 0.3;"></div>`
+                    }
                         </div>
-                        <span class="w-8 text-right text-xs font-bold" style="color: ${f.color}">${value.toFixed(1)}</span>
+                        <span class="w-8 text-right text-xs font-bold" style="color: ${hasData ? f.color : '#6e7681'}">${hasData ? value.toFixed(1) : 'N/A'}</span>
                     </div>
                 `;
             }).join('');
@@ -950,41 +993,54 @@
                     name: 'Momentum',
                     raw: raw.momentum,
                     norm: normalized.momentum,
-                    interpretation: raw.momentum > 2 ? 'Strong uptrend' : raw.momentum < -2 ? 'Strong downtrend' : 'Neutral/Consolidating'
+                    interpretation: raw.momentum === null ? 'No data available' : (raw.momentum > 2 ? 'Strong uptrend' : raw.momentum < -2 ? 'Strong downtrend' : 'Neutral/Consolidating')
                 },
                 {
                     name: 'Mean Reversion',
                     raw: raw.meanRev,
                     norm: normalized.meanRev,
-                    interpretation: raw.meanRev < -3 ? 'Oversold (buy opportunity)' : raw.meanRev > 3 ? 'Overbought (caution)' : 'Fair value'
+                    interpretation: raw.meanRev === null ? 'No data available' : (raw.meanRev < -3 ? 'Oversold (buy opportunity)' : raw.meanRev > 3 ? 'Overbought (caution)' : 'Fair value')
                 },
                 {
                     name: 'Low Volatility',
                     raw: raw.lowVol,
                     norm: normalized.lowVol,
-                    interpretation: raw.lowVol > 6 ? 'High risk regime' : raw.lowVol < 4 ? 'Low risk regime' : 'Normal risk'
+                    interpretation: raw.lowVol === null ? 'No data available' : (raw.lowVol > 6 ? 'High risk regime' : raw.lowVol < 4 ? 'Low risk regime' : 'Normal risk')
                 },
                 {
                     name: 'VRP',
-                    raw: (raw.vrp * 100).toFixed(1) + '%',
+                    raw: raw.vrp,
                     norm: normalized.vrp,
-                    interpretation: raw.vrp > 0.2 ? 'IV expensive (sell premium)' : raw.vrp < -0.1 ? 'IV cheap (buy protection)' : 'Fair pricing'
+                    interpretation: raw.vrp === null ? 'No data available' : (raw.vrp > 0.2 ? 'IV expensive (sell premium)' : raw.vrp < -0.1 ? 'IV cheap (buy protection)' : 'Fair pricing')
                 },
                 {
                     name: 'Volatility Pctl',
-                    raw: raw.volatility.toFixed(0) + '%',
+                    raw: raw.volatility,
                     norm: normalized.volatility,
-                    interpretation: raw.volatility > 80 ? 'Extreme volatility' : raw.volatility < 30 ? 'Low volatility' : 'Normal volatility'
+                    interpretation: raw.volatility === null ? 'No data available' : (raw.volatility > 80 ? 'Extreme volatility' : raw.volatility < 30 ? 'Low volatility' : 'Normal volatility')
                 }
             ];
 
             tableBody.innerHTML = factors.map(f => {
-                const normColor = f.norm >= 7 ? 'text-[#a7f3d0]' : f.norm <= 3 ? 'text-[#fecdd3]' : 'text-[#8b949e]';
+                const hasData = f.norm !== null && f.norm !== undefined;
+                const normColor = !hasData ? 'text-[#6e7681]' : (f.norm >= 7 ? 'text-[#a7f3d0]' : f.norm <= 3 ? 'text-[#fecdd3]' : 'text-[#8b949e]');
+
+                let rawDisplay;
+                if (f.raw === null || f.raw === undefined) {
+                    rawDisplay = 'N/A';
+                } else if (f.name === 'VRP') {
+                    rawDisplay = (f.raw * 100).toFixed(1) + '%';
+                } else if (f.name === 'Volatility Pctl') {
+                    rawDisplay = f.raw.toFixed(0) + '%';
+                } else {
+                    rawDisplay = f.raw.toFixed(2);
+                }
+
                 return `
                     <tr class="border-b border-[#21262d] hover:bg-[#161b22]">
                         <td class="py-2 px-2 text-white font-medium">${f.name}</td>
-                        <td class="py-2 px-2 text-center text-[#8b949e]">${typeof f.raw === 'number' ? f.raw.toFixed(2) : f.raw}</td>
-                        <td class="py-2 px-2 text-center ${normColor} font-bold">${f.norm.toFixed(1)}</td>
+                        <td class="py-2 px-2 text-center text-[#8b949e]">${rawDisplay}</td>
+                        <td class="py-2 px-2 text-center ${normColor} font-bold">${hasData ? f.norm.toFixed(1) : 'N/A'}</td>
                         <td class="py-2 px-2 text-[#8b949e]">${f.interpretation}</td>
                     </tr>
                 `;
