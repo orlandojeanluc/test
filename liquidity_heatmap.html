@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caltropia | Liquidity Heatmap</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        mono: ['"JetBrains Mono"', '"IBM Plex Mono"', 'monospace'],
+                        sans: ['"Inter"', 'sans-serif']
+                    },
+                    colors: {
+                        terminal: {
+                            bg: '#0d1117',
+                            panel: '#161b22',
+                            border: '#21262d',
+                            orange: '#c586c0',
+                            amber: '#dcdcaa',
+                            green: '#b5cea8',
+                            red: '#f48771',
+                            blue: '#9cdcfe',
+                            muted: '#8b949e'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        body {
+            background-color: #0d1117;
+            color: #c9d1d9;
+            font-size: 14px;
+            overflow: hidden;
+        }
+
+        .terminal-header {
+            background: #161b22;
+            border-bottom: 1px solid #21262d;
+        }
+
+        .glass-panel {
+            background: #161b22;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0d1117;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #30363d;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #8b949e;
+        }
+
+        .heatmap-tooltip {
+            position: absolute;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 8px 12px;
+            border-radius: 4px;
+            pointer-events: none;
+            font-size: 11px;
+            z-index: 100;
+            display: none;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Mobile Nav */
+        @media (max-width: 1023px) {
+            .mobile-nav-item {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                padding: 0.5rem;
+                border-radius: 9999px;
+                transition: all 0.3s ease;
+            }
+
+            .mobile-nav-item .nav-icon {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                background: #1c2128;
+                transition: all 0.3s ease;
+            }
+
+            .mobile-nav-item.active .nav-icon {
+                background: #22c55e;
+            }
+
+            .mobile-nav-item.active svg {
+                color: #0d1117;
+            }
+
+            .mobile-nav-item .mobile-label {
+                display: none;
+                font-size: 12px;
+                font-weight: 500;
+                color: white;
+            }
+
+            .mobile-nav-item.active .mobile-label {
+                display: block;
+            }
+
+            .mobile-nav-item.active {
+                background: rgba(34, 197, 94, 0.15);
+                padding-right: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body class="h-screen flex flex-col lg:flex-row overflow-hidden">
+    <!-- Sidebar -->
+    <nav id="sidebar"
+        class="fixed z-50 bg-[#0d1117] flex items-center bottom-0 w-full h-16 border-t border-[#30363d] lg:h-full lg:w-16 lg:border-t-0 lg:border-r lg:bottom-auto lg:top-0 lg:flex-col lg:py-6 transition-all duration-300">
+
+        <!-- Logo -->
+        <div class="hidden lg:block text-[#c586c0] font-bold text-xs mb-8">
+            C
+        </div>
+
+        <!-- Links -->
+        <div class="flex-1 flex flex-row w-full justify-around items-center lg:flex-col lg:justify-start lg:gap-6">
+            <!-- Reuse existing links structure but simplified for this standalone file -->
+            <a href="radial.html" class="group flex flex-col items-center gap-1 text-[#8b949e] hover:text-[#c586c0]"
+                title="Home">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z">
+                    </path>
+                </svg>
+            </a>
+
+            <a href="sectors.html" class="group flex flex-col items-center gap-1 text-[#8b949e] hover:text-[#c586c0]"
+                title="Sectors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path>
+                </svg>
+            </a>
+
+            <!-- Active Link: Liquidity Heatmap -->
+            <a href="#"
+                class="mobile-nav-item active lg:w-10 lg:h-10 lg:bg-[#161b22] lg:text-[#c586c0] lg:rounded-xl lg:flex lg:items-center lg:justify-center border lg:border-[#c586c0]"
+                title="Liquidity Heatmap">
+                <div class="nav-icon bg-transparent">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg>
+                </div>
+                <span class="mobile-label">Liquid</span>
+            </a>
+
+            <a href="voldashboard.html"
+                class="group flex flex-col items-center gap-1 text-[#8b949e] hover:text-[#c586c0]"
+                title="Vol Dashboard">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                </svg>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col h-full lg:ml-16 overflow-auto pb-20 lg:pb-0">
+        <!-- Header -->
+        <header
+            class="terminal-header px-4 lg:px-6 py-3 lg:py-4 flex flex-col lg:flex-row items-start lg:items-center justify-between z-20 gap-3 lg:gap-0">
+            <div class="flex flex-col lg:flex-row items-start lg:items-center gap-3 lg:gap-4 w-full lg:w-auto">
+                <div class="flex items-center gap-2">
+                    <span class="text-[#c586c0] font-bold text-base lg:text-lg">Caltropia</span>
+                    <span class="text-[#8b949e]">|</span>
+                    <h1 class="text-white font-bold tracking-wide text-sm lg:text-base">LIQUIDITY HEATMAP <span
+                            class="text-[10px] bg-blue-900 text-blue-300 px-2 py-0.5 rounded ml-2">BETA</span></h1>
+                </div>
+                <!-- Search Bar - Now visible on mobile -->
+                <div
+                    class="flex items-center gap-2 bg-[#0d1117] border border-[#30363d] rounded-lg px-3 py-2 w-full lg:w-auto">
+                    <input type="text" id="ticker-input" value="SPY"
+                        class="bg-transparent border-none outline-none text-white flex-1 lg:w-20 font-mono text-sm uppercase font-bold"
+                        placeholder="TICKER">
+                    <button id="search-btn" class="text-[#8b949e] hover:text-white p-1"><svg
+                            class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg></button>
+                </div>
+            </div>
+
+            <!-- Legend - Hidden on mobile, shown on lg -->
+            <div class="hidden lg:flex items-center gap-4 text-xs font-mono">
+                <div class="flex items-center gap-2">
+                    <div class="w-3 h-3 bg-cyan-400/50 rounded-sm"></div>
+                    <span class="text-[#8b949e]">Vol Shelf</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <div class="w-3 h-3 bg-purple-500/50 rounded-sm"></div>
+                    <span class="text-[#8b949e]">Gamma Wall</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Visualization Area -->
+        <div class="flex-1 relative bg-[#0d1117] p-2 lg:p-6 overflow-visible lg:overflow-hidden flex flex-col">
+
+            <!-- Dashboard Grid - Stack on mobile -->
+            <div class="flex flex-col lg:grid lg:grid-cols-4 gap-4 min-h-0">
+
+                <!-- Main Liquidity Chart - Full width on mobile, 3/4 on desktop -->
+                <div
+                    class="lg:col-span-3 glass-panel relative flex flex-col overflow-hidden min-h-[350px] lg:min-h-0 lg:flex-1">
+                    <div class="absolute top-3 left-3 lg:top-4 lg:left-4 z-10">
+                        <h2 id="chart-ticker" class="text-xl lg:text-2xl font-bold text-white mb-0">SPY</h2>
+                        <div class="text-[#8b949e] text-xs font-mono" id="current-price">Loading...</div>
+                    </div>
+
+                    <div id="chart-container" class="flex-1 w-full h-full relative min-h-[300px]">
+                        <!-- D3 Chart will go here -->
+                    </div>
+                    <div id="loading-indicator"
+                        class="absolute inset-0 flex flex-col items-center justify-center text-[#c586c0] font-mono animate-pulse bg-[#0d1117]/90 z-20 text-center gap-2"
+                        style="display: none;">
+                        Initializing Scanner...
+                    </div>
+                </div>
+
+                <!-- Side Panel: Statistics & Walls - Visible on mobile too -->
+                <div class="flex flex-col gap-4 lg:h-full overflow-visible lg:overflow-hidden">
+                    <!-- Key Levels -->
+                    <div class="glass-panel p-4 flex-1 flex flex-col gap-2">
+                        <h3 class="text-[#8b949e] text-[10px] uppercase font-bold tracking-wider mb-2">Liquidity Walls
+                            (Gamma/OI)</h3>
+                        <div id="walls-list" class="flex-1 overflow-y-auto space-y-2 pr-1 custom-scrollbar">
+                            <!-- Items injected via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Proprietary Signals (New) -->
+                    <div class="glass-panel p-4 pb-2 flex flex-col gap-2 relative">
+                        <h3
+                            class="text-[#c586c0] text-[10px] uppercase font-bold tracking-wider mb-0 flex justify-between items-center">
+                            Caltropia Matrix
+                            <div id="prop-data-loading" class="w-2 h-2 rounded-full bg-cyan-500 animate-pulse hidden">
+                            </div>
+                        </h3>
+                        <div id="prop-data-container" class="flex-1 flex flex-col justify-center">
+                            <span class="text-xs text-[#8b949e] italic">Initializing...</span>
+                        </div>
+                    </div>
+
+                    <!-- Volume Profile Stats -->
+                    <div class="glass-panel p-4 h-auto flex flex-col">
+                        <h3 class="text-[#8b949e] text-[10px] uppercase font-bold tracking-wider mb-2">Volume Profile
+                        </h3>
+                        <div class="flex justify-between items-center mb-1 text-xs">
+                            <span class="text-[#8b949e]">POC (Point of Control)</span>
+                            <span id="poc-price" class="font-mono text-cyan-400">---</span>
+                        </div>
+                        <div class="flex justify-between items-center mb-1 text-xs">
+                            <span class="text-[#8b949e]">VA High</span>
+                            <span id="vah-price" class="font-mono text-white">---</span>
+                        </div>
+                        <div class="flex justify-between items-center mb-1 text-xs">
+                            <span class="text-[#8b949e]">VA Low</span>
+                            <span id="val-price" class="font-mono text-white">---</span>
+                        </div>
+                        <div class="mt-auto pt-2 border-t border-[#30363d]">
+                            <div class="text-[10px] text-[#8b949e] mb-1">Put/Call Ratio</div>
+                            <div class="w-full bg-[#30363d] h-1.5 rounded-full overflow-hidden">
+                                <div id="pcr-bar" class="bg-purple-500 h-full w-1/2"></div>
+                            </div>
+                            <div class="flex justify-between text-[10px] mt-1">
+                                <span class="text-purple-400">Puts</span>
+                                <span class="text-cyan-400">Calls</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tooltip -->
+    <div id="tooltip" class="heatmap-tooltip"></div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+        import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-functions.js";
+
+        // --- FIREBASE CONFIG ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyBxG5qf6mb8E_-b2TeXlRNseMZ26L9DRYg",
+            authDomain: "trendscores-df341.firebaseapp.com",
+            projectId: "trendscores-df341",
+            databaseURL: "https://trendscores-df341-default-rtdb.firebaseio.com"
+        };
+
+        let app, functions, getVolatilityData;
+        try {
+            app = initializeApp(firebaseConfig);
+            functions = getFunctions(app);
+            getVolatilityData = httpsCallable(functions, 'getVolatilityData', { timeout: 540000 });
+        } catch (err) {
+            console.error("Firebase Init Error:", err);
+        }
+
+        // --- API CONFIG ---
+        const API_TOKEN = "63895d27bf1fc6.82205629";
+
+        let currentTicker = "SPY";
+        let historyData = [];
+        let optionsData = [];
+        let proprietaryDataMap = null;
+
+        // --- INIT ---
+        document.addEventListener('DOMContentLoaded', () => {
+            initDashboard();
+            fetchProprietaryData();
+
+            document.getElementById('search-btn').addEventListener('click', () => {
+                const newTicker = document.getElementById('ticker-input').value.toUpperCase();
+                if (newTicker) {
+                    currentTicker = newTicker;
+                    initDashboard();
+                }
+            });
+
+            document.getElementById('ticker-input').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    const newTicker = document.getElementById('ticker-input').value.toUpperCase();
+                    if (newTicker) {
+                        currentTicker = newTicker;
+                        initDashboard();
+                    }
+                }
+            });
+        });
+
+        async function fetchProprietaryData() {
+            const loading = document.getElementById('prop-data-loading');
+            if (loading) loading.classList.remove('hidden');
+
+            try {
+                if (!getVolatilityData) throw new Error("Firebase not initialized");
+
+                const result = await getVolatilityData();
+                const rawData = result.data.data || result.data;
+
+                proprietaryDataMap = {};
+                if (Array.isArray(rawData)) {
+                    rawData.forEach(item => {
+                        proprietaryDataMap[item.ticker] = item;
+                    });
+                }
+
+                // Refresh Stats if we are idling
+                if (document.getElementById('walls-list').childElementCount > 0) {
+                    updateStats();
+                }
+
+                const container = document.getElementById('prop-data-container');
+                if (!proprietaryDataMap && container) container.innerHTML = '<span class="text-xs text-[#8b949e]">No Data.</span>';
+
+            } catch (err) {
+                console.error("Prop Data Fetch Failed:", err);
+                const container = document.getElementById('prop-data-container');
+                if (container) container.innerHTML = '<span class="text-xs text-red-500">Signal Sync Error</span>';
+            } finally {
+                if (loading) loading.classList.add('hidden');
+            }
+        }
+
+        async function initDashboard() {
+            const loader = document.getElementById('loading-indicator');
+            loader.style.display = 'flex';
+            loader.innerHTML = `Scanning Liquidity for ${currentTicker}...<br><span class="text-xs text-[#8b949e]">Fetching Price & Volume...</span>`;
+
+            document.getElementById('chart-ticker').textContent = currentTicker;
+
+            try {
+                // 1. Fetch EOD History (Prices + Volume)
+                const today = new Date();
+                const past = new Date();
+                past.setDate(today.getDate() - 200);
+
+                const fromStr = past.toISOString().split('T')[0];
+                const eodUrl = `https://eodhd.com/api/eod/${currentTicker}.US?api_token=${API_TOKEN}&from=${fromStr}&fmt=json`;
+
+                const priceRes = await fetch(eodUrl);
+                if (!priceRes.ok) throw new Error("Price Data Fetch Failed - Ticker might be invalid or restricted.");
+
+                historyData = await priceRes.json();
+                if (!Array.isArray(historyData)) throw new Error("Invalid Price Data Format");
+
+                // Update Current Price UI
+                const lastClose = historyData[historyData.length - 1].close;
+                document.getElementById('current-price').textContent = `$${lastClose.toFixed(2)}`;
+
+                // RENDER PRICE IMMEDIATELY (Progressive Loading)
+                renderChart(false);
+                loader.innerHTML = `Scanning Liquidity for ${currentTicker}...<br><span class="text-xs text-[#8b949e]">Fetching Options & Gamma Walls...</span>`;
+
+                // 2. Fetch Options for "Gamma Walls"
+                try {
+                    const dateStr = today.toISOString().split('T')[0];
+                    const nextMonth = new Date();
+                    nextMonth.setDate(today.getDate() + 45);
+                    const nextMonthStr = nextMonth.toISOString().split('T')[0];
+
+                    const chainUrl = `https://eodhd.com/api/mp/unicornbay/options/eod?filter[underlying_symbol]=${currentTicker}&filter[exp_date_from]=${dateStr}&filter[exp_date_to]=${nextMonthStr}&api_token=${API_TOKEN}&page[limit]=1000&sort=exp_date`;
+
+                    const chainRes = await fetch(chainUrl);
+                    const chainJson = await chainRes.json();
+
+                    optionsData = chainJson.data ? chainJson.data.map(d => d.attributes) : [];
+
+                    // RENDER FULL CHART with Options
+                    renderChart(true);
+                    updateStats();
+
+                    loader.style.display = 'none'; // Success
+
+                } catch (optErr) {
+                    console.warn("Options Data Failed", optErr);
+                    loader.innerHTML = `<span class="text-amber-400">Warning: Options Data Unavailable</span><br><span class="text-xs text-[#8b949e]">Showing Price & Volume Only</span>`;
+                    setTimeout(() => { loader.style.display = 'none'; }, 2000);
+                }
+
+            } catch (err) {
+                console.error(err);
+                loader.innerHTML = `<span class="text-red-400">Error: ${err.message}</span>`;
+                // Keep error visible
+            }
+        }
+
+        let chart = null;
+        let candleSeries = null;
+
+        function renderChart() {
+            const container = document.getElementById('chart-container');
+            container.innerHTML = '';
+
+            // Create Lightweight Chart
+            chart = LightweightCharts.createChart(container, {
+                width: container.clientWidth,
+                height: container.clientHeight,
+                layout: {
+                    background: { type: 'solid', color: '#0d1117' },
+                    textColor: '#8b949e',
+                },
+                grid: {
+                    vertLines: { color: '#21262d' },
+                    horzLines: { color: '#21262d' },
+                },
+                crosshair: {
+                    mode: LightweightCharts.CrosshairMode.Normal,
+                    vertLine: { color: '#c586c0', width: 1, style: 2 },
+                    horzLine: { color: '#c586c0', width: 1, style: 2 },
+                },
+                rightPriceScale: {
+                    borderColor: '#30363d',
+                },
+                timeScale: {
+                    borderColor: '#30363d',
+                    timeVisible: true,
+                    secondsVisible: false,
+                },
+                handleScroll: { mouseWheel: true, pressedMouseMove: true, horzTouchDrag: true, vertTouchDrag: true },
+                handleScale: { axisPressedMouseMove: true, mouseWheel: true, pinch: true },
+            });
+
+            // Add Candlestick Series (v4 API)
+            candleSeries = chart.addSeries(LightweightCharts.CandlestickSeries, {
+                upColor: '#34d399',
+                downColor: '#f472b6',
+                borderUpColor: '#34d399',
+                borderDownColor: '#f472b6',
+                wickUpColor: '#34d399',
+                wickDownColor: '#f472b6',
+            });
+
+            // Convert data to Lightweight Charts format
+            const candleData = historyData.map(d => ({
+                time: d.date, // YYYY-MM-DD format works
+                open: d.open,
+                high: d.high,
+                low: d.low,
+                close: d.close,
+            }));
+
+            candleSeries.setData(candleData);
+
+            // --- ADD OI WALLS (Purple Lines) ---
+            if (optionsData.length > 0) {
+                const lastClose = historyData[historyData.length - 1].close;
+                const oiByStrike = {};
+
+                optionsData.forEach(opt => {
+                    const strike = parseFloat(opt.strike);
+                    // Filter to reasonable range
+                    if (strike >= lastClose * 0.8 && strike <= lastClose * 1.2) {
+                        oiByStrike[strike] = (oiByStrike[strike] || 0) + (opt.open_interest || 0);
+                    }
+                });
+
+                const sortedStrikes = Object.entries(oiByStrike)
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 5);
+
+                sortedStrikes.forEach(([strike, oi]) => {
+                    candleSeries.createPriceLine({
+                        price: parseFloat(strike),
+                        color: '#c586c0',
+                        lineWidth: 1,
+                        lineStyle: LightweightCharts.LineStyle.Dashed,
+                        axisLabelVisible: true,
+                        title: `OI: ${strike}`,
+                    });
+                });
+            }
+
+            // --- ADD CALTROPIA VOL LEVELS (Gold Lines) ---
+            if (proprietaryDataMap && proprietaryDataMap[currentTicker]) {
+                const prop = proprietaryDataMap[currentTicker];
+                if (prop.impliedVol) {
+                    const lastClose = historyData[historyData.length - 1].close;
+                    const oneSigmaMove = lastClose * prop.impliedVol * Math.sqrt(30 / 365);
+
+                    const multipliers = [
+                        { m: 0.25, label: 'V.TIGHT', style: LightweightCharts.LineStyle.Dotted, width: 1 },
+                        { m: 0.5, label: 'TIGHT', style: LightweightCharts.LineStyle.Dotted, width: 1 },
+                        { m: 1.0, label: '', style: LightweightCharts.LineStyle.Dashed, width: 2 },
+                        { m: 2.0, label: 'EXTREME', style: LightweightCharts.LineStyle.Solid, width: 2 },
+                    ];
+
+                    multipliers.forEach(({ m, label, style, width }) => {
+                        const dist = oneSigmaMove * m;
+                        const prefix = label ? `${label} ` : '';
+
+                        // Upper Level
+                        candleSeries.createPriceLine({
+                            price: lastClose + dist,
+                            color: '#fbbf24',
+                            lineWidth: width,
+                            lineStyle: style,
+                            axisLabelVisible: true,
+                            title: `${prefix}RES ${m}σ`,
+                        });
+
+                        // Lower Level
+                        candleSeries.createPriceLine({
+                            price: lastClose - dist,
+                            color: '#fbbf24',
+                            lineWidth: width,
+                            lineStyle: style,
+                            axisLabelVisible: true,
+                            title: `${prefix}SUP ${m}σ`,
+                        });
+                    });
+                }
+            }
+
+            // Fit content to view
+            chart.timeScale().fitContent();
+
+            // Handle resize
+            const resizeObserver = new ResizeObserver(entries => {
+                if (chart) {
+                    const { width, height } = entries[0].contentRect;
+                    chart.resize(width, height);
+                }
+            });
+            resizeObserver.observe(container);
+        }
+
+        function updateStats() {
+            // Populate Side Panel
+            const list = document.getElementById('walls-list');
+            list.innerHTML = '';
+
+            // Calculate local OI max
+            const lastClose = historyData[historyData.length - 1].close;
+            const nearbyOpts = optionsData.filter(o => Math.abs(parseFloat(o.strike) - lastClose) < (lastClose * 0.2));
+
+            // Group nearby OI
+            const oiMap = {};
+            let totalCalls = 0;
+            let totalPuts = 0;
+
+            nearbyOpts.forEach(o => {
+                const s = o.strike;
+                oiMap[s] = (oiMap[s] || 0) + (o.open_interest || 0);
+                if (o.type === 'CALL') totalCalls += (o.open_interest || 0);
+                if (o.type === 'PUT') totalPuts += (o.open_interest || 0);
+            });
+
+            const topStrikes = Object.entries(oiMap)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 8); // Top 8
+
+            topStrikes.forEach(([strike, oi]) => {
+                const el = document.createElement('div');
+                const isAbove = parseFloat(strike) > lastClose;
+                el.className = `flex justify-between items-center bg-[#0d1117] p-2 rounded border border-[#30363d] text-xs`;
+                el.innerHTML = `
+                    <span class="font-mono font-bold ${isAbove ? 'text-purple-400' : 'text-purple-300'}">${strike}</span>
+                    <span class="text-[#8b949e]">${oi.toLocaleString()} OI</span>
+                `;
+                list.appendChild(el);
+            });
+
+            // Update POC (Point of Control - Max Vol Shelf)
+            // (Re-logic from renderChart for simplicity or global state)
+            // For now, placeholder or simple calc
+            // Update POC
+            document.getElementById('poc-price').textContent = `$${topStrikes[0] ? topStrikes[0][0] : '---'}`;
+
+            // Put Call Ratio
+            const pcr = totalCalls > 0 ? totalPuts / totalCalls : 0;
+            const pcrWidth = Math.min(100, (totalPuts / (totalPuts + totalCalls)) * 100);
+            document.getElementById('pcr-bar').style.width = `${pcrWidth}%`;
+
+            // --- PROPRIETARY DATA UPDATE ---
+            const propContainer = document.getElementById('prop-data-container');
+            const propLoader = document.getElementById('prop-data-loading');
+
+            if (propContainer) {
+                if (!proprietaryDataMap) {
+                    // Loading state handled in fetch
+                    if (propLoader) propLoader.classList.remove('hidden');
+                } else {
+                    if (propLoader) propLoader.classList.add('hidden');
+                    const tickerData = proprietaryDataMap[currentTicker];
+
+                    if (tickerData) {
+                        // Extract Signals
+                        const vrp = tickerData.vrp !== undefined ? (tickerData.vrp * 100).toFixed(1) + '%' : '--';
+                        const regime = tickerData.volRegime || 'Normal';
+                        const trend = tickerData.trendScore ? tickerData.trendScore.toFixed(2) : '--';
+
+                        // Colors
+                        const vrpColor = (tickerData.vrp > 0) ? 'text-rose-400' : 'text-emerald-400';
+                        const trendColor = (tickerData.trendScore > 0) ? 'text-emerald-400' : 'text-rose-400';
+                        // Regime Color
+                        let regimeColor = 'text-blue-300';
+                        if (regime === 'Stress') regimeColor = 'text-red-500';
+                        if (regime === 'High Vol') regimeColor = 'text-amber-400';
+                        if (regime === 'Low Vol') regimeColor = 'text-emerald-400';
+
+                        propContainer.innerHTML = `
+                            <div class="grid grid-cols-2 gap-2 text-xs">
+                                 <div class="bg-[#161b22] p-2 rounded border border-[#30363d] flex flex-col justify-center items-center">
+                                    <div class="text-[#8b949e] text-[9px] uppercase tracking-wide">Trend Score</div>
+                                    <div class="font-mono font-bold ${trendColor} text-lg">${trend}</div>
+                                 </div>
+                                 <div class="bg-[#161b22] p-2 rounded border border-[#30363d] flex flex-col justify-center items-center">
+                                    <div class="text-[#8b949e] text-[9px] uppercase tracking-wide">VRP Prem</div>
+                                    <div class="font-mono font-bold ${vrpColor} text-lg">${vrp}</div>
+                                 </div>
+                                 <div class="col-span-2 bg-[#161b22] p-2 rounded border border-[#30363d] flex justify-between items-center">
+                                    <div class="text-[#8b949e] text-[9px] uppercase tracking-wide">Vol Regime</div>
+                                    <div class="font-mono font-bold ${regimeColor}">${regime}</div>
+                                 </div>
+                            </div>
+                        `;
+                    } else {
+                        propContainer.innerHTML = `<div class="text-xs text-[#8b949e] p-2 text-center italic">No Caltropia signal for ${currentTicker}</div>`;
+                    }
+                }
+            }
+        }
+
+    </script>
+</body>
+
+</html>
