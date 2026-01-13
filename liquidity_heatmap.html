@@ -237,6 +237,11 @@
                     <div class="w-3 h-3 bg-purple-500/50 rounded-sm"></div>
                     <span class="text-[#8b949e]">Gamma Wall</span>
                 </div>
+                <!-- OI Toggle Button -->
+                <button id="toggle-oi-btn"
+                    class="px-3 py-1 rounded-md text-xs font-semibold transition-all bg-pink-500/20 text-pink-300 border border-pink-500/30 hover:bg-pink-500/30">
+                    OI: ON
+                </button>
             </div>
         </header>
 
@@ -351,6 +356,7 @@
         let historyData = [];
         let optionsData = [];
         let proprietaryDataMap = null;
+        let showOI = true;  // Toggle for OI levels visibility
 
         // --- INIT ---
         document.addEventListener('DOMContentLoaded', () => {
@@ -374,6 +380,19 @@
                     }
                 }
             });
+
+            // OI Toggle Button
+            const toggleBtn = document.getElementById('toggle-oi-btn');
+            if (toggleBtn) {
+                toggleBtn.addEventListener('click', () => {
+                    showOI = !showOI;
+                    toggleBtn.textContent = showOI ? 'OI: ON' : 'OI: OFF';
+                    toggleBtn.className = showOI
+                        ? 'px-3 py-1 rounded-md text-xs font-semibold transition-all bg-pink-500/20 text-pink-300 border border-pink-500/30 hover:bg-pink-500/30'
+                        : 'px-3 py-1 rounded-md text-xs font-semibold transition-all bg-gray-500/20 text-gray-400 border border-gray-500/30 hover:bg-gray-500/30';
+                    renderChart();  // Re-render chart with new setting
+                });
+            }
         });
 
         async function fetchProprietaryData() {
@@ -485,7 +504,7 @@
                 width: container.clientWidth,
                 height: container.clientHeight,
                 layout: {
-                    background: { type: 'solid', color: '#0d1117' },
+                    background: { type: 'solid', color: '#0d1117' },  // Same as sectors.html body
                     textColor: '#8b949e',
                 },
                 grid: {
@@ -494,8 +513,8 @@
                 },
                 crosshair: {
                     mode: LightweightCharts.CrosshairMode.Normal,
-                    vertLine: { color: '#c586c0', width: 1, style: 2 },
-                    horzLine: { color: '#c586c0', width: 1, style: 2 },
+                    vertLine: { color: '#22d3ee', width: 1, style: 2 },  // Cyan crosshair
+                    horzLine: { color: '#22d3ee', width: 1, style: 2 },
                 },
                 rightPriceScale: {
                     borderColor: '#30363d',
@@ -509,13 +528,13 @@
                 handleScale: { axisPressedMouseMove: true, mouseWheel: true, pinch: true },
             });
 
-            // Add Candlestick Series (v4 API)
+            // Add Candlestick Series (v4 API) - Vol Dashboard Color Palette (Medium)
             candleSeries = chart.addSeries(LightweightCharts.CandlestickSeries, {
-                upColor: '#34d399',
-                downColor: '#f472b6',
-                borderUpColor: '#34d399',
+                upColor: '#67e8f9',         // Medium Cyan
+                downColor: '#f472b6',       // Medium Pink
+                borderUpColor: '#67e8f9',
                 borderDownColor: '#f472b6',
-                wickUpColor: '#34d399',
+                wickUpColor: '#67e8f9',
                 wickDownColor: '#f472b6',
             });
 
@@ -530,8 +549,8 @@
 
             candleSeries.setData(candleData);
 
-            // --- ADD OI WALLS (Purple Lines) ---
-            if (optionsData.length > 0) {
+            // --- ADD OI WALLS (Pink Lines) - Conditional based on toggle ---
+            if (showOI && optionsData.length > 0) {
                 const lastClose = historyData[historyData.length - 1].close;
                 const oiByStrike = {};
 
@@ -550,7 +569,7 @@
                 sortedStrikes.forEach(([strike, oi]) => {
                     candleSeries.createPriceLine({
                         price: parseFloat(strike),
-                        color: '#c586c0',
+                        color: '#f472b6',  // Pink (matches 104.0% text)
                         lineWidth: 1,
                         lineStyle: LightweightCharts.LineStyle.Dashed,
                         axisLabelVisible: true,
@@ -580,7 +599,7 @@
                         // Upper Level
                         candleSeries.createPriceLine({
                             price: lastClose + dist,
-                            color: '#fbbf24',
+                            color: '#93c5fd',  // Light blue (matches badges)
                             lineWidth: width,
                             lineStyle: style,
                             axisLabelVisible: true,
@@ -590,7 +609,7 @@
                         // Lower Level
                         candleSeries.createPriceLine({
                             price: lastClose - dist,
-                            color: '#fbbf24',
+                            color: '#93c5fd',  // Light blue (matches badges)
                             lineWidth: width,
                             lineStyle: style,
                             axisLabelVisible: true,
@@ -699,7 +718,7 @@
                                  </div>
                                  <div class="col-span-2 bg-[#161b22] p-2 rounded border border-[#30363d] flex justify-between items-center">
                                     <div class="text-[#8b949e] text-[9px] uppercase tracking-wide">Vol Regime</div>
-                                    <div class="font-mono font-bold ${regimeColor}">${regime}</div>
+                                    <div class="px-3 py-1 rounded-md font-mono font-semibold text-sm" style="background: #dbeafe; color: #1e40af;">${regime}</div>
                                  </div>
                             </div>
                         `;
