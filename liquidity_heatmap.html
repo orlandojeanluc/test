@@ -331,6 +331,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
         import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-functions.js";
+        import { initializeAppCheck, ReCaptchaV3Provider } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app-check.js";
 
         // --- FIREBASE CONFIG ---
         const firebaseConfig = {
@@ -340,17 +341,22 @@
             databaseURL: "https://trendscores-df341-default-rtdb.firebaseio.com"
         };
 
-        let app, functions, getVolatilityData;
+        let app, functions, getVolatilityData, getEodhdData, appCheck;
         try {
             app = initializeApp(firebaseConfig);
+
+            // Initialize App Check with reCAPTCHA v3
+            appCheck = initializeAppCheck(app, {
+                provider: new ReCaptchaV3Provider('6Ldi9EssAAAAKdrjmULW5Xg0nIsuDultrDuPS_a'),
+                isTokenAutoRefreshEnabled: true
+            });
+
             functions = getFunctions(app);
             getVolatilityData = httpsCallable(functions, 'getVolatilityData', { timeout: 540000 });
+            getEodhdData = httpsCallable(functions, 'getEodhdData', { timeout: 120000 });
         } catch (err) {
-            console.error("Firebase Init Error:", err);
+            // Firebase initialization error handled silently
         }
-
-        // --- API CONFIG ---
-        const API_TOKEN = "63895d27bf1fc6.82205629";
 
         let currentTicker = "SPY";
         let historyData = [];
@@ -393,7 +399,42 @@
                     renderChart();  // Re-render chart with new setting
                 });
             }
+
+            // Auto-refresh intraday candle every 60 seconds during market hours
+            setInterval(async () => {
+                if (isMarketHours() && historyData.length > 0) {
+                    await updateIntradayCandle();
+                }
+            }, 60 * 1000);
         });
+
+        // Lightweight function to update just the intraday candle without full reload
+        async function updateIntradayCandle() {
+            try {
+                const realtimeData = await fetchRealtimeData(currentTicker);
+                if (!realtimeData || !realtimeData.close) return;
+
+                const todayStr = new Date().toISOString().split('T')[0];
+                const lastCandle = historyData[historyData.length - 1];
+
+                if (lastCandle && lastCandle.date === todayStr) {
+                    // Update existing intraday candle
+                    lastCandle.high = Math.max(lastCandle.high, realtimeData.high || realtimeData.close);
+                    lastCandle.low = Math.min(lastCandle.low, realtimeData.low || realtimeData.close);
+                    lastCandle.close = realtimeData.close;
+                    lastCandle.volume = realtimeData.volume || lastCandle.volume;
+
+                    // Re-render chart with updated candle
+                    renderChart();
+
+                    // Update price display
+                    document.getElementById('current-price').innerHTML = `$${realtimeData.close.toFixed(2)} <span class="text-[10px] text-green-400 animate-pulse">● LIVE</span>`;
+
+                }
+            } catch (err) {
+                // Intraday update handled silently
+            }
+        }
 
         async function fetchProprietaryData() {
             const loading = document.getElementById('prop-data-loading');
@@ -421,7 +462,6 @@
                 if (!proprietaryDataMap && container) container.innerHTML = '<span class="text-xs text-[#8b949e]">No Data.</span>';
 
             } catch (err) {
-                console.error("Prop Data Fetch Failed:", err);
                 const container = document.getElementById('prop-data-container');
                 if (container) container.innerHTML = '<span class="text-xs text-red-500">Signal Sync Error</span>';
             } finally {
@@ -439,10 +479,9 @@
                 const permission = await Notification.requestPermission();
                 if (permission === 'granted') {
                     alertsEnabled = true;
-                    console.log('🔔 Caltropia Alerts: Enabled');
                     startAlertScanner();
                 } else {
-                    console.log('🔕 Caltropia Alerts: Permission denied');
+                    // Permission denied
                 }
             }
         }
@@ -495,20 +534,22 @@
                 initDashboard();
             };
 
-            console.log(`🚨 Alert: ${ticker} @ $${price} near ${levelType} $${level}`);
         }
 
-        // Fetch real-time price for a ticker
-        async function fetchRealtimePrice(ticker) {
+        // Fetch real-time data for a ticker (returns full object with OHLC)
+        async function fetchRealtimeData(ticker) {
             try {
-                const url = `https://eodhd.com/api/real-time/${ticker}.US?api_token=${API_TOKEN}&fmt=json`;
-                const response = await fetch(url);
-                const data = await response.json();
-                return data.close || data.previousClose || null;
+                const result = await getEodhdData({ type: 'realtime', ticker: ticker });
+                return result.data;
             } catch (err) {
-                console.warn(`Price fetch failed for ${ticker}:`, err);
                 return null;
             }
+        }
+
+        // Wrapper for backward compatibility with alert scanner
+        async function fetchRealtimePrice(ticker) {
+            const data = await fetchRealtimeData(ticker);
+            return data ? (data.close || data.previousClose || null) : null;
         }
 
         // Check a ticker against its Vol Levels
@@ -537,16 +578,14 @@
         // Main scanner function
         async function scanAllTickers() {
             if (!isMarketHours()) {
-                console.log('📅 Market closed - skipping scan');
                 return;
             }
 
             if (!proprietaryDataMap || Object.keys(proprietaryDataMap).length === 0) {
-                console.log('⏳ No proprietary data loaded yet');
                 return;
             }
 
-            console.log(`🔍 Scanning ${Object.keys(proprietaryDataMap).length} tickers for level alerts...`);
+            // Limit to first 50 tickers
 
             // Limit to first 50 tickers to avoid API rate limits
             const tickers = Object.keys(proprietaryDataMap).slice(0, 50);
@@ -563,7 +602,6 @@
                 await new Promise(r => setTimeout(r, 200));
             }
 
-            console.log('✅ Scan complete');
         }
 
         // Start the scanner (runs every 5 minutes)
@@ -573,8 +611,6 @@
 
             // Then scan every 5 minutes
             setInterval(scanAllTickers, 5 * 60 * 1000);
-
-            console.log('🚀 Alert scanner started (every 5 min during market hours)');
         }
 
         // Initialize alerts on page load
@@ -596,17 +632,51 @@
                 past.setDate(today.getDate() - 200);
 
                 const fromStr = past.toISOString().split('T')[0];
-                const eodUrl = `https://eodhd.com/api/eod/${currentTicker}.US?api_token=${API_TOKEN}&from=${fromStr}&fmt=json`;
 
-                const priceRes = await fetch(eodUrl);
-                if (!priceRes.ok) throw new Error("Price Data Fetch Failed - Ticker might be invalid or restricted.");
+                const eodResult = await getEodhdData({ type: 'eod', ticker: currentTicker, from: fromStr });
 
-                historyData = await priceRes.json();
+                if (!eodResult.data) throw new Error("Price Data Fetch Failed - Ticker might be invalid or restricted.");
+
+                historyData = eodResult.data;
                 if (!Array.isArray(historyData)) throw new Error("Invalid Price Data Format");
 
-                // Update Current Price UI
-                const lastClose = historyData[historyData.length - 1].close;
-                document.getElementById('current-price').textContent = `$${lastClose.toFixed(2)}`;
+                // 1b. Fetch Real-Time Intraday Data for Today's Developing Candle
+                loader.innerHTML = `Scanning Liquidity for ${currentTicker}...<br><span class="text-xs text-[#8b949e]">Fetching Real-Time Data...</span>`;
+
+                try {
+                    const realtimeData = await fetchRealtimeData(currentTicker);
+
+                    if (realtimeData && realtimeData.close) {
+                        const todayStr = today.toISOString().split('T')[0];
+                        const lastHistoryDate = historyData.length > 0 ? historyData[historyData.length - 1].date : null;
+
+                        // Only add today's candle if it's not already in EOD data
+                        if (lastHistoryDate !== todayStr) {
+                            // Build today's candle from real-time data
+                            const todayCandle = {
+                                date: todayStr,
+                                open: realtimeData.open || realtimeData.previousClose || realtimeData.close,
+                                high: realtimeData.high || realtimeData.close,
+                                low: realtimeData.low || realtimeData.close,
+                                close: realtimeData.close,
+                                volume: realtimeData.volume || 0,
+                                isIntraday: true  // Flag for styling if needed
+                            };
+
+                            historyData.push(todayCandle);
+                        }
+
+                        // Update Current Price UI with live price
+                        document.getElementById('current-price').innerHTML = `$${realtimeData.close.toFixed(2)} <span class="text-[10px] text-green-400 animate-pulse">● LIVE</span>`;
+                    } else {
+                        // No real-time data, use last close
+                        const lastClose = historyData[historyData.length - 1].close;
+                        document.getElementById('current-price').textContent = `$${lastClose.toFixed(2)}`;
+                    }
+                } catch (rtErr) {
+                    const lastClose = historyData[historyData.length - 1].close;
+                    document.getElementById('current-price').textContent = `$${lastClose.toFixed(2)}`;
+                }
 
                 // RENDER PRICE IMMEDIATELY (Progressive Loading)
                 renderChart(false);
@@ -619,10 +689,14 @@
                     nextMonth.setDate(today.getDate() + 45);
                     const nextMonthStr = nextMonth.toISOString().split('T')[0];
 
-                    const chainUrl = `https://eodhd.com/api/mp/unicornbay/options/eod?filter[underlying_symbol]=${currentTicker}&filter[exp_date_from]=${dateStr}&filter[exp_date_to]=${nextMonthStr}&api_token=${API_TOKEN}&page[limit]=1000&sort=exp_date`;
+                    const optionsResult = await getEodhdData({
+                        type: 'options',
+                        ticker: currentTicker,
+                        expDateFrom: dateStr,
+                        expDateTo: nextMonthStr
+                    });
 
-                    const chainRes = await fetch(chainUrl);
-                    const chainJson = await chainRes.json();
+                    const chainJson = optionsResult.data;
 
                     optionsData = chainJson.data ? chainJson.data.map(d => d.attributes) : [];
 
@@ -633,13 +707,11 @@
                     loader.style.display = 'none'; // Success
 
                 } catch (optErr) {
-                    console.warn("Options Data Failed", optErr);
                     loader.innerHTML = `<span class="text-amber-400">Warning: Options Data Unavailable</span><br><span class="text-xs text-[#8b949e]">Showing Price & Volume Only</span>`;
                     setTimeout(() => { loader.style.display = 'none'; }, 2000);
                 }
 
             } catch (err) {
-                console.error(err);
                 loader.innerHTML = `<span class="text-red-400">Error: ${err.message}</span>`;
                 // Keep error visible
             }
@@ -731,12 +803,18 @@
                 });
             }
 
-            // --- ADD CALTROPIA VOL LEVELS (Gold Lines) ---
+            // --- ADD CALTROPIA VOL LEVELS (Gold Lines) - Based on YESTERDAY'S close ---
             if (proprietaryDataMap && proprietaryDataMap[currentTicker]) {
                 const prop = proprietaryDataMap[currentTicker];
                 if (prop.impliedVol) {
-                    const lastClose = historyData[historyData.length - 1].close;
-                    const oneSigmaMove = lastClose * prop.impliedVol * Math.sqrt(30 / 365);
+                    // Use yesterday's close for stable levels (not today's intraday price)
+                    const lastCandle = historyData[historyData.length - 1];
+                    const isIntradayCandle = lastCandle && lastCandle.isIntraday;
+                    const yesterdayClose = isIntradayCandle && historyData.length >= 2
+                        ? historyData[historyData.length - 2].close
+                        : lastCandle.close;
+
+                    const oneSigmaMove = yesterdayClose * prop.impliedVol * Math.sqrt(30 / 365);
 
                     const multipliers = [
                         { m: 0.25, label: 'V.TIGHT', style: LightweightCharts.LineStyle.Dotted, width: 1 },
@@ -751,7 +829,7 @@
 
                         // Upper Level
                         candleSeries.createPriceLine({
-                            price: lastClose + dist,
+                            price: yesterdayClose + dist,
                             color: '#93c5fd',  // Light blue (matches badges)
                             lineWidth: width,
                             lineStyle: style,
@@ -761,7 +839,7 @@
 
                         // Lower Level
                         candleSeries.createPriceLine({
-                            price: lastClose - dist,
+                            price: yesterdayClose - dist,
                             color: '#93c5fd',  // Light blue (matches badges)
                             lineWidth: width,
                             lineStyle: style,

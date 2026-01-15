@@ -1000,6 +1000,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
         import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-functions.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+        import { initializeAppCheck, ReCaptchaV3Provider } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app-check.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBxG5qf6mb8E_-b2TeXlRNseMZ26L9DRYg",
@@ -1009,6 +1010,13 @@
         };
 
         const app = initializeApp(firebaseConfig);
+
+        // Initialize App Check with reCAPTCHA v3
+        const appCheck = initializeAppCheck(app, {
+            provider: new ReCaptchaV3Provider('6Ldi9EssAAAAKdrjmULW5Xg0nIsuDultrDuPS_a'),
+            isTokenAutoRefreshEnabled: true
+        });
+
         const functions = getFunctions(app);
         const auth = getAuth(app);
 
@@ -1047,45 +1055,15 @@
 
         async function loadData() {
             try {
-                // Fetch radial data for trend scores
-                const getRadialData = httpsCallable(functions, 'getRadialData');
-                const result = await getRadialData();
-                assetsData = result.data;
+                // Single call to secure cloud function - all calculations done server-side
+                const getRadialDashboardData = httpsCallable(functions, 'getRadialDashboardData');
+                const result = await getRadialDashboardData();
 
-                // Recalculate overallScore to only include trend scores (not mean reversion)
-                assetsData = assetsData.map(a => ({
-                    ...a,
-                    overallScore: (a.stTrend || 0) + (a.itTrend || 0)
-                }));
+                // Data comes pre-calculated from server
+                assetsData = result.data.assets;
+                sectorMomentumData = result.data.sectorMomentum;
 
-                // Also fetch sectors data for momentum scores
-                try {
-                    const getSectorsData = httpsCallable(functions, 'getSectorsData');
-                    const sectorsResult = await getSectorsData();
-                    const sectorsData = sectorsResult.data;
-
-                    // Calculate average momentum per sector
-                    const sectorGroups = {};
-                    sectorsData.forEach(item => {
-                        if (!sectorGroups[item.sector]) {
-                            sectorGroups[item.sector] = { totalMom: 0, count: 0 };
-                        }
-                        sectorGroups[item.sector].totalMom += item.momScore || 0;
-                        sectorGroups[item.sector].count++;
-                    });
-
-                    // Store sector momentum averages
-                    Object.keys(sectorGroups).forEach(sector => {
-                        sectorMomentumData[sector] = sectorGroups[sector].totalMom / sectorGroups[sector].count;
-                    });
-
-                    // Debug: log available sector momentum data
-                    console.log('Sector Momentum Data:', sectorMomentumData);
-                } catch (momError) {
-                    console.warn("Could not fetch sector momentum data:", momError);
-                }
             } catch (error) {
-                console.error("Error loading radial data:", error);
                 assetsData = [];
             }
 
@@ -1093,13 +1071,11 @@
             document.getElementById('last-updated').textContent = new Date().toLocaleTimeString();
 
             // Simulate user interaction to ensure consistent state
-            // Use setTimeout to ensure DOM and event listeners are fully ready
             setTimeout(() => {
                 const allBtn = document.querySelector('button[data-filter="all"]');
                 if (allBtn) {
                     allBtn.click();
                 } else {
-                    // Fallback
                     if (typeof window.setFilter === 'function') window.setFilter('all');
                     else renderAll();
                 }

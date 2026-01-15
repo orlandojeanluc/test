@@ -555,6 +555,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
         import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-functions.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+        import { initializeAppCheck, ReCaptchaV3Provider } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app-check.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBxG5qf6mb8E_-b2TeXlRNseMZ26L9DRYg",
@@ -564,6 +565,13 @@
         };
 
         const app = initializeApp(firebaseConfig);
+
+        // Initialize App Check with reCAPTCHA v3
+        const appCheck = initializeAppCheck(app, {
+            provider: new ReCaptchaV3Provider('6Ldi9EssAAAAKdrjmULW5Xg0nIsuDultrDuPS_a'),
+            isTokenAutoRefreshEnabled: true
+        });
+
         const functions = getFunctions(app);
         const auth = getAuth(app);
 
@@ -580,7 +588,7 @@
                 const result = await getMacroData();
                 assetsData = result.data;
             } catch (error) {
-                console.error("Error loading macro data:", error);
+                assetsData = [];
             }
 
             document.getElementById('last-updated').textContent = new Date().toLocaleTimeString();
@@ -824,7 +832,7 @@
                 setTimeframe(currentFilter);
 
             } catch (error) {
-                console.error("Error fetching detail:", error);
+                // Silent fail
             }
         };
 
@@ -882,7 +890,6 @@
         function renderChart(history) {
             // Basic Safety Check
             if (typeof Chart === 'undefined' || !document.getElementById('trendChart')) {
-                console.error('Chart lib or canvas missing');
                 return;
             }
 
@@ -965,7 +972,7 @@
                     }
                 });
             } catch (err) {
-                console.error(err);
+                // Silent fail
             }
         }
 

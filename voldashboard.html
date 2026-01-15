@@ -211,8 +211,9 @@
 
 <body class="min-h-screen flex flex-col overflow-y-auto overflow-x-hidden lg:overflow-hidden bg-[#0d1117] w-full">
 
-    <!-- Sidebar Navigation - Terminal Style -->
-    <nav id="sidebar" class="fixed z-50 bg-[#0a0e14] flex items-center
+    <!-- Sidebar Navigation -->
+    <!-- Navigation: Bottom on Mobile, Left on Desktop -->
+    <nav id="sidebar" class="fixed z-50 bg-[#0d1117] flex items-center
                 bottom-0 w-full h-14 flex-row justify-around py-0
                 lg:left-0 lg:top-0 lg:h-full lg:w-12 lg:flex-col lg:py-4 transition-all duration-300">
 
@@ -231,7 +232,7 @@
                 title="Dashboard">
                 <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z">
+                        d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z">
                     </path>
                 </svg>
                 <span
@@ -328,6 +329,18 @@
                     Strategies</span>
             </a>
 
+            <a href="voldashboard.html"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#c586c0] lg:bg-[#161b22] border-t-2 lg:border-t-0 lg:border-l-2 lg:border-r-0 border-[#c586c0] group overflow-hidden"
+                title="Vol Dashboard">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                </svg>
+                <span
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Volatility
+                    Dashboard</span>
+            </a>
+
             <a href="market_map.html"
                 class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
                 title="Market Map">
@@ -350,17 +363,6 @@
                 </svg>
                 <span
                     class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Arena</span>
-            </a>
-            <a href="voldashboard.html"
-                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#c586c0] lg:bg-[#161b22] border-t-2 lg:border-t-0 lg:border-l-2 lg:border-r-0 border-[#c586c0] group overflow-hidden"
-                title="Vol Dashboard">
-                <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
-                </svg>
-                <span
-                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Volatility
-                    Dashboard</span>
             </a>
         </div>
 
@@ -486,6 +488,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
         import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-functions.js";
+        import { initializeAppCheck, ReCaptchaV3Provider } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app-check.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBxG5qf6mb8E_-b2TeXlRNseMZ26L9DRYg",
@@ -494,6 +497,13 @@
             databaseURL: "https://trendscores-df341-default-rtdb.firebaseio.com"
         };
         const app = initializeApp(firebaseConfig);
+
+        // Initialize App Check with reCAPTCHA v3
+        const appCheck = initializeAppCheck(app, {
+            provider: new ReCaptchaV3Provider('6Ldi9EssAAAAKdrjmULW5Xg0nIsuDultrDuPS_a'),
+            isTokenAutoRefreshEnabled: true
+        });
+
         const functions = getFunctions(app);
 
         let allData = [];
@@ -559,9 +569,8 @@
 
                 renderView();
             } catch (error) {
-                console.error("Error fetching volatility data:", error);
                 const loadingEl = document.getElementById('loading');
-                if (loadingEl) loadingEl.textContent = "Error loading data. Check console.";
+                if (loadingEl) loadingEl.textContent = "Error loading data.";
             }
         }
 
@@ -1390,7 +1399,6 @@
                         }
 
                     } catch (err) {
-                        console.error('Error fetching comparison:', err);
                         e.target.value = "";
                     } finally {
                         e.target.disabled = false;
@@ -1411,7 +1419,6 @@
                     const result = await getTickerHistory({ ticker: data.ticker });
                     data.history = result.data.history;
                 } catch (err) {
-                    console.error('Error fetching history:', err);
                     data.history = [];
                 }
             }

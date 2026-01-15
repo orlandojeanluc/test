@@ -356,6 +356,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
         import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-functions.js";
+        import { initializeAppCheck, ReCaptchaV3Provider } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app-check.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBxG5qf6mb8E_-b2TeXlRNseMZ26L9DRYg",
@@ -365,6 +366,13 @@
         };
 
         const app = initializeApp(firebaseConfig);
+
+        // Initialize App Check with reCAPTCHA v3
+        const appCheck = initializeAppCheck(app, {
+            provider: new ReCaptchaV3Provider('6Ldi9EssAAAAKdrjmULW5Xg0nIsuDultrDuPS_a'),
+            isTokenAutoRefreshEnabled: true
+        });
+
         const functions = getFunctions(app);
 
         // Factor colors
@@ -492,7 +500,6 @@
                 document.getElementById('results-container').classList.remove('hidden');
 
             } catch (error) {
-                console.error('Error analyzing ticker:', error);
                 alert(`Error fetching data: ${error.message || 'Unknown error'}`);
             }
 

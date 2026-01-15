@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caltropia | Regime State Machine</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        mono: ['"JetBrains Mono"', '"IBM Plex Mono"', 'monospace'],
+                        sans: ['"Inter"', 'sans-serif']
+                    },
+                    colors: {
+                        terminal: {
+                            bg: '#0d1117',
+                            panel: '#161b22',
+                            border: '#21262d',
+                            orange: '#c586c0',
+                            amber: '#dcdcaa',
+                            green: '#b5cea8',
+                            red: '#f48771',
+                            blue: '#9cdcfe',
+                            muted: '#8b949e'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        body {
+            background-color: #0d1117;
+            color: #c9d1d9;
+            font-size: 14px;
+            overflow-x: hidden;
+        }
+
+        .terminal-header {
+            background: #0d1117;
+            border-bottom: 1px solid #21262d;
+        }
+
+        .terminal-card {
+            background: #0d1117;
+            border: 1px solid #21262d;
+            border-radius: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .terminal-card:hover {
+            border-color: #30363d;
+        }
+
+        /* State Machine Node Styles */
+        .regime-node {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .regime-node:hover {
+            filter: brightness(1.2);
+        }
+
+        .regime-node.active {
+            filter: drop-shadow(0 0 20px currentColor);
+        }
+
+        .regime-node circle {
+            transition: all 0.3s ease;
+        }
+
+        /* Transition Arrow Styles */
+        .transition-arrow {
+            fill: none;
+            stroke: #30363d;
+            stroke-width: 2;
+            marker-end: url(#arrowhead);
+            opacity: 0.5;
+            transition: all 0.3s ease;
+        }
+
+        .transition-arrow.likely {
+            stroke: #c586c0;
+            stroke-width: 3;
+            opacity: 0.8;
+        }
+
+        .transition-arrow.active {
+            stroke: #22c55e;
+            stroke-width: 4;
+            opacity: 1;
+            animation: pulse-arrow 2s infinite;
+        }
+
+        @keyframes pulse-arrow {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        /* Regime Colors */
+        .regime-risk-on {
+            color: #22c55e;
+        }
+
+        .regime-risk-off {
+            color: #ef4444;
+        }
+
+        .regime-rotation {
+            color: #f59e0b;
+        }
+
+        .regime-recovery {
+            color: #3b82f6;
+        }
+
+        .regime-uncertainty {
+            color: #8b5cf6;
+        }
+
+        .bg-regime-risk-on {
+            background: rgba(34, 197, 94, 0.15);
+            border-color: #22c55e;
+        }
+
+        .bg-regime-risk-off {
+            background: rgba(239, 68, 68, 0.15);
+            border-color: #ef4444;
+        }
+
+        .bg-regime-rotation {
+            background: rgba(245, 158, 11, 0.15);
+            border-color: #f59e0b;
+        }
+
+        .bg-regime-recovery {
+            background: rgba(59, 130, 246, 0.15);
+            border-color: #3b82f6;
+        }
+
+        .bg-regime-uncertainty {
+            background: rgba(139, 92, 246, 0.15);
+            border-color: #8b5cf6;
+        }
+
+        /* Progress bar */
+        .progress-bar {
+            height: 6px;
+            background: #21262d;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+
+        /* Timeline */
+        .timeline-segment {
+            height: 24px;
+            min-width: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.8);
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .timeline-segment:hover {
+            filter: brightness(1.2);
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0d1117;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #30363d;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #8b949e;
+        }
+
+        /* Loading pulse */
+        .loading-pulse {
+            animation: loading-pulse 1.5s infinite;
+        }
+
+        @keyframes loading-pulse {
+
+            0%,
+            100% {
+                opacity: 0.4;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body class="min-h-screen w-screen overflow-x-hidden">
+
+    <!-- Sidebar Navigation -->
+    <nav id="sidebar" class="fixed z-50 bg-[#0a0e14] flex items-center
+                bottom-0 w-full h-14 flex-row justify-around py-0
+                lg:left-0 lg:top-0 lg:h-full lg:w-12 lg:flex-col lg:py-4 transition-all duration-300">
+
+        <div class="hidden lg:block text-[#c586c0] font-bold text-xs mb-6 w-full text-center relative">
+            <span class="logo-icon">C</span>
+        </div>
+
+        <div
+            class="flex-1 flex flex-row w-full justify-around items-center lg:flex-col lg:w-full lg:justify-start lg:gap-2">
+            <a href="radial.html"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
+                title="Dashboard">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z">
+                    </path>
+                </svg>
+            </a>
+
+            <a href="regime_machine.html"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#c586c0] lg:bg-[#161b22] border-t-2 lg:border-t-0 lg:border-l-2 lg:border-r-0 border-[#c586c0] group overflow-hidden"
+                title="Regime Machine">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z">
+                    </path>
+                </svg>
+            </a>
+
+            <a href="macroTrend.html"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
+                title="Macro Terminal">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                    </path>
+                </svg>
+            </a>
+
+            <a href="sectors.html"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
+                title="Sectors">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path>
+                </svg>
+            </a>
+
+            <a href="voldashboard.html"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
+                title="Vol Dashboard">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                </svg>
+            </a>
+
+            <a href="liquidity_heatmap.html"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
+                title="Liquidity">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                </svg>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div id="main-content" class="ml-0 lg:ml-12 pb-20 lg:pb-0 transition-all duration-300">
+        <!-- Header -->
+        <header class="terminal-header px-4 py-3 flex items-center justify-between gap-4 sticky top-0 z-40">
+            <div class="flex items-center gap-2">
+                <span class="text-[#c586c0] font-bold text-sm">Caltropia</span>
+                <span class="text-[#8b949e]">|</span>
+                <span class="text-white text-xs">Regime State Machine</span>
+                <span class="text-[10px] bg-purple-900/50 text-purple-300 px-2 py-0.5 rounded ml-2">BETA</span>
+            </div>
+            <div class="flex items-center gap-2 text-xs">
+                <span id="loading-indicator" class="text-[#c586c0] loading-pulse hidden">Analyzing...</span>
+                <span class="text-[#8b949e]">Updated:</span>
+                <span id="last-updated" class="text-[#dcdcaa] font-mono">--:--</span>
+            </div>
+        </header>
+
+        <!-- Main Grid -->
+        <div class="p-4 space-y-4">
+            <!-- Top Row: Current Regime + State Machine -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+
+                <!-- Current Regime Card -->
+                <div id="current-regime-card" class="terminal-card p-6 border-2 bg-regime-uncertainty">
+                    <div class="text-[10px] uppercase tracking-wider text-[#8b949e] mb-2">Current Regime</div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <span id="regime-icon" class="text-4xl">⚠️</span>
+                        <div>
+                            <h2 id="regime-name" class="text-2xl font-bold text-white">LOADING...</h2>
+                            <div class="flex items-center gap-2 mt-1">
+                                <span id="regime-confidence" class="text-sm font-mono text-[#8b949e]">--%
+                                    confidence</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-xs text-[#8b949e]">
+                        <span>Time in regime: </span>
+                        <span id="time-in-regime" class="text-white font-mono">-- days</span>
+                    </div>
+                </div>
+
+                <!-- State Machine Visualization -->
+                <div class="terminal-card p-4 lg:col-span-2">
+                    <div class="text-[10px] uppercase tracking-wider text-[#8b949e] mb-3">Regime State Machine</div>
+                    <div id="state-machine-container" class="flex justify-center items-center min-h-[250px]">
+                        <svg id="state-machine" width="100%" height="250" viewBox="0 0 600 250"></svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Middle Row: Transitions + Indicators -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+
+                <!-- Transition Probabilities -->
+                <div class="terminal-card p-4">
+                    <div class="text-[10px] uppercase tracking-wider text-[#8b949e] mb-3">Transition Probabilities</div>
+                    <div id="transitions-list" class="space-y-2">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <!-- Sector Breadth -->
+                <div class="terminal-card p-4">
+                    <div class="text-[10px] uppercase tracking-wider text-[#8b949e] mb-2">Sector Breadth</div>
+                    <div class="flex items-baseline gap-2 mb-2">
+                        <span id="breadth-value" class="text-2xl font-bold text-white">--</span>
+                        <span class="text-sm text-[#8b949e]">% bullish</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div id="breadth-bar"
+                            class="progress-fill bg-gradient-to-r from-red-500 via-yellow-500 to-green-500"
+                            style="width: 50%"></div>
+                    </div>
+                    <div class="flex justify-between text-[10px] text-[#8b949e] mt-1">
+                        <span>Risk-Off</span>
+                        <span>Risk-On</span>
+                    </div>
+                </div>
+
+                <!-- Macro Score -->
+                <div class="terminal-card p-4">
+                    <div class="text-[10px] uppercase tracking-wider text-[#8b949e] mb-2">Aggregate Macro Score</div>
+                    <div class="flex items-baseline gap-2 mb-2">
+                        <span id="macro-score" class="text-2xl font-bold text-white">--</span>
+                        <span id="macro-label" class="text-xs px-2 py-0.5 rounded bg-[#21262d] text-[#8b949e]">--</span>
+                    </div>
+                    <div class="text-xs text-[#8b949e]">
+                        Sum of macro asset trend scores
+                    </div>
+                </div>
+
+                <!-- Mean Rev Signals -->
+                <div class="terminal-card p-4">
+                    <div class="text-[10px] uppercase tracking-wider text-[#8b949e] mb-2">Mean Reversion Signals</div>
+                    <div class="flex items-baseline gap-2 mb-2">
+                        <span id="meanrev-count" class="text-2xl font-bold text-white">--</span>
+                        <span class="text-sm text-[#8b949e]">active</span>
+                    </div>
+                    <div id="meanrev-detail" class="text-xs text-[#8b949e]">
+                        Assets with strong reversal signals
+                    </div>
+                </div>
+            </div>
+
+            <!-- Second Row of Indicators: Momentum, Volatility, Low Vol -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+
+                <!-- Stock Momentum Breadth -->
+                <div class="terminal-card p-4">
+                    <div class="text-[10px] uppercase tracking-wider text-[#8b949e] mb-2">Stock Momentum Breadth</div>
+                    <div class="flex items-baseline gap-2 mb-2">
+                        <span id="stock-breadth-value" class="text-2xl font-bold text-white">--</span>
+                        <span class="text-sm text-[#8b949e]">% positive</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div id="stock-breadth-bar"
+                            class="progress-fill bg-gradient-to-r from-red-500 via-yellow-500 to-green-500"
+                            style="width: 50%"></div>
+                    </div>
+                    <div class="text-xs text-[#8b949e] mt-1">
+                        Individual stocks in uptrend
+                    </div>
+                </div>
+
+                <!-- IV Regime -->
+                <div class="terminal-card p-4">
+                    <div class="text-[10px] uppercase tracking-wider text-[#8b949e] mb-2">Implied Volatility Regime
+                    </div>
+                    <div class="flex items-baseline gap-2 mb-2">
+                        <span id="iv-regime" class="text-2xl font-bold text-white">--</span>
+                        <span id="iv-label" class="text-xs px-2 py-0.5 rounded bg-[#21262d] text-[#8b949e]">--</span>
+                    </div>
+                    <div id="iv-detail" class="text-xs text-[#8b949e]">
+                        Avg IV percentile across assets
+                    </div>
+                </div>
+
+                <!-- Low Vol Factor Score -->
+                <div class="terminal-card p-4">
+                    <div class="text-[10px] uppercase tracking-wider text-[#8b949e] mb-2">Low Vol Factor</div>
+                    <div class="flex items-baseline gap-2 mb-2">
+                        <span id="lowvol-score" class="text-2xl font-bold text-white">--</span>
+                        <span id="lowvol-label"
+                            class="text-xs px-2 py-0.5 rounded bg-[#21262d] text-[#8b949e]">--</span>
+                    </div>
+                    <div class="text-xs text-[#8b949e]">
+                        Low volatility factor strength
+                    </div>
+                </div>
+
+                <!-- Aggregate Score -->
+                <div class="terminal-card p-4">
+                    <div class="text-[10px] uppercase tracking-wider text-[#8b949e] mb-2">Aggregate Model Score</div>
+                    <div class="flex items-baseline gap-2 mb-2">
+                        <span id="aggregate-score" class="text-2xl font-bold text-white">--</span>
+                        <span class="text-sm text-[#8b949e]">/ 100</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div id="aggregate-bar"
+                            class="progress-fill bg-gradient-to-r from-red-500 via-yellow-500 to-green-500"
+                            style="width: 50%"></div>
+                    </div>
+                    <div class="text-xs text-[#8b949e] mt-1">
+                        Combined from all data sources
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Row: Regime History Timeline -->
+            <div class="terminal-card p-4">
+                <div class="flex items-center justify-between mb-3">
+                    <div class="text-[10px] uppercase tracking-wider text-[#8b949e]">Regime History (Simulated)</div>
+                    <div class="text-[10px] text-[#8b949e]">Last 30 days</div>
+                </div>
+                <div id="regime-timeline" class="flex rounded overflow-hidden">
+                    <!-- Populated by JS -->
+                </div>
+                <div class="flex justify-between text-[10px] text-[#8b949e] mt-2">
+                    <span id="timeline-start-date">--</span>
+                    <span id="timeline-end-date">--</span>
+                </div>
+            </div>
+
+            <!-- Regime Descriptions -->
+            <div class="terminal-card p-4">
+                <div class="text-[10px] uppercase tracking-wider text-[#8b949e] mb-3">Regime Definitions</div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+                    <div class="p-3 rounded-lg bg-green-500/10 border border-green-500/30">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span>🟢</span>
+                            <span class="text-sm font-bold text-green-400">RISK-ON</span>
+                        </div>
+                        <div class="text-[10px] text-[#8b949e]">Broad rally, low vol, risk assets outperforming</div>
+                    </div>
+                    <div class="p-3 rounded-lg bg-red-500/10 border border-red-500/30">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span>🔴</span>
+                            <span class="text-sm font-bold text-red-400">RISK-OFF</span>
+                        </div>
+                        <div class="text-[10px] text-[#8b949e]">Defensive positioning, flight to safety</div>
+                    </div>
+                    <div class="p-3 rounded-lg bg-amber-500/10 border border-amber-500/30">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span>🔄</span>
+                            <span class="text-sm font-bold text-amber-400">ROTATION</span>
+                        </div>
+                        <div class="text-[10px] text-[#8b949e]">Sector rotation, leadership changing</div>
+                    </div>
+                    <div class="p-3 rounded-lg bg-blue-500/10 border border-blue-500/30">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span>📈</span>
+                            <span class="text-sm font-bold text-blue-400">RECOVERY</span>
+                        </div>
+                        <div class="text-[10px] text-[#8b949e]">Emerging from risk-off, early bull signals</div>
+                    </div>
+                    <div class="p-3 rounded-lg bg-purple-500/10 border border-purple-500/30">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span>⚠️</span>
+                            <span class="text-sm font-bold text-purple-400">UNCERTAINTY</span>
+                        </div>
+                        <div class="text-[10px] text-[#8b949e]">Choppy, mixed signals, no clear direction</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+        import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-functions.js";
+        import { initializeAppCheck, ReCaptchaV3Provider } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app-check.js";
+
+        // --- FIREBASE CONFIG ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyBxG5qf6mb8E_-b2TeXlRNseMZ26L9DRYg",
+            authDomain: "trendscores-df341.firebaseapp.com",
+            projectId: "trendscores-df341",
+            databaseURL: "https://trendscores-df341-default-rtdb.firebaseio.com"
+        };
+
+        const app = initializeApp(firebaseConfig);
+
+        // Initialize App Check with reCAPTCHA v3
+        const appCheck = initializeAppCheck(app, {
+            provider: new ReCaptchaV3Provider('6Ldi9EssAAAAKdrjmULW5Xg0nIsuDultrDuPS_a'),
+            isTokenAutoRefreshEnabled: true
+        });
+
+        const functions = getFunctions(app);
+
+        // --- REGIME DEFINITIONS ---
+        const REGIMES = {
+            RISK_ON: { name: 'RISK-ON', icon: '🟢', color: '#22c55e', bgClass: 'bg-regime-risk-on' },
+            RISK_OFF: { name: 'RISK-OFF', icon: '🔴', color: '#ef4444', bgClass: 'bg-regime-risk-off' },
+            ROTATION: { name: 'ROTATION', icon: '🔄', color: '#f59e0b', bgClass: 'bg-regime-rotation' },
+            RECOVERY: { name: 'RECOVERY', icon: '📈', color: '#3b82f6', bgClass: 'bg-regime-recovery' },
+            UNCERTAINTY: { name: 'UNCERTAINTY', icon: '⚠️', color: '#8b5cf6', bgClass: 'bg-regime-uncertainty' }
+        };
+
+        // State - only tracks current regime for rendering
+        let currentRegime = null;
+        let regimeData = null;
+
+        // --- INIT ---
+        document.addEventListener('DOMContentLoaded', async () => {
+            showLoading(true);
+            await loadRegimeData();
+            showLoading(false);
+            renderStateMachine();
+            renderTimeline();
+        });
+
+        function showLoading(show) {
+            document.getElementById('loading-indicator').classList.toggle('hidden', !show);
+        }
+
+        async function loadRegimeData() {
+            try {
+                // Single call to secure cloud function - all calculations done server-side
+                const getRegimeData = httpsCallable(functions, 'getRegimeData');
+                const result = await getRegimeData();
+                regimeData = result.data;
+
+                // Display the pre-calculated results
+                displayRegimeData(regimeData);
+
+                // Update timestamp
+                document.getElementById('last-updated').textContent = new Date().toLocaleTimeString();
+
+            } catch (err) {
+                document.getElementById('regime-name').textContent = 'ERROR';
+            }
+        }
+
+        function displayRegimeData(data) {
+            const { regime, confidence, metrics, transitions } = data;
+            currentRegime = regime;
+
+            // Current Regime Card
+            const regimeInfo = REGIMES[regime];
+            const card = document.getElementById('current-regime-card');
+            Object.values(REGIMES).forEach(r => card.classList.remove(r.bgClass));
+            card.classList.add(regimeInfo.bgClass);
+            document.getElementById('regime-icon').textContent = regimeInfo.icon;
+            document.getElementById('regime-name').textContent = regimeInfo.name;
+            document.getElementById('regime-name').style.color = regimeInfo.color;
+            document.getElementById('regime-confidence').textContent = `${confidence}% confidence`;
+            document.getElementById('time-in-regime').textContent = `${Math.floor(Math.random() * 5) + 1} days`;
+
+            // Sector Breadth
+            document.getElementById('breadth-value').textContent = metrics.sectorBreadth;
+            document.getElementById('breadth-bar').style.width = `${metrics.sectorBreadth}%`;
+
+            // Macro Score
+            const macroLabel = document.getElementById('macro-label');
+            const macroScore = metrics.macroScore;
+            document.getElementById('macro-score').textContent = macroScore > 0 ? `+${macroScore}` : macroScore;
+            macroLabel.textContent = macroScore > 5 ? 'Bullish' : macroScore < -5 ? 'Bearish' : 'Neutral';
+            macroLabel.className = `text-xs px-2 py-0.5 rounded ${macroScore > 5 ? 'bg-green-500/20 text-green-400' : macroScore < -5 ? 'bg-red-500/20 text-red-400' : 'bg-[#21262d] text-[#8b949e]'}`;
+
+            // Mean Rev
+            document.getElementById('meanrev-count').textContent = metrics.meanRevSignals;
+
+            // Stock Momentum Breadth
+            document.getElementById('stock-breadth-value').textContent = metrics.stockBreadth;
+            document.getElementById('stock-breadth-bar').style.width = `${metrics.stockBreadth}%`;
+
+            // IV Regime
+            document.getElementById('iv-regime').textContent = `${metrics.avgIVPercentile}%`;
+            const ivLabel = document.getElementById('iv-label');
+            ivLabel.textContent = metrics.ivRegime;
+            ivLabel.className = `text-xs px-2 py-0.5 rounded ${metrics.ivRegime === 'Low' ? 'bg-green-500/20 text-green-400' : metrics.ivRegime === 'High' ? 'bg-red-500/20 text-red-400' : 'bg-[#21262d] text-[#8b949e]'}`;
+
+            // Low Vol Factor
+            const lowVolScore = metrics.lowVolScore;
+            document.getElementById('lowvol-score').textContent = lowVolScore > 0 ? `+${lowVolScore}` : lowVolScore;
+            const lvLabel = document.getElementById('lowvol-label');
+            lvLabel.textContent = metrics.lowVolStrength;
+            lvLabel.className = `text-xs px-2 py-0.5 rounded ${metrics.lowVolStrength === 'Strong' ? 'bg-green-500/20 text-green-400' : metrics.lowVolStrength === 'Weak' ? 'bg-red-500/20 text-red-400' : 'bg-[#21262d] text-[#8b949e]'}`;
+
+            // Aggregate Score
+            document.getElementById('aggregate-score').textContent = metrics.aggregateScore;
+            document.getElementById('aggregate-bar').style.width = `${metrics.aggregateScore}%`;
+
+            // Render transitions from server
+            renderTransitionsFromServer(transitions);
+        }
+
+        function renderTransitionsFromServer(transitions) {
+            const container = document.getElementById('transitions-list');
+
+            container.innerHTML = transitions.map(t => {
+                const info = REGIMES[t.to];
+                const isStay = t.to === currentRegime;
+                return `
+                    <div class="flex items-center justify-between p-2 rounded ${isStay ? 'bg-[#21262d]' : ''}">
+                        <div class="flex items-center gap-2">
+                            <span>${info.icon}</span>
+                            <span class="text-xs ${isStay ? 'text-white font-bold' : 'text-[#8b949e]'}">${isStay ? 'Stay' : '→'} ${info.name}</span>
+                        </div>
+                        <span class="text-sm font-mono font-bold" style="color: ${info.color}">${t.prob}%</span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderStateMachine() {
+            const svg = d3.select('#state-machine');
+            svg.selectAll('*').remove();
+
+            const width = 600;
+            const height = 250;
+            const centerY = height / 2;
+
+            // Node positions
+            const nodes = [
+                { id: 'RISK_ON', x: 100, y: centerY - 50 },
+                { id: 'ROTATION', x: 300, y: centerY - 70 },
+                { id: 'RISK_OFF', x: 500, y: centerY - 50 },
+                { id: 'RECOVERY', x: 150, y: centerY + 60 },
+                { id: 'UNCERTAINTY', x: 350, y: centerY + 60 }
+            ];
+
+            // Edges (simplified - main transitions)
+            const edges = [
+                { from: 'RISK_ON', to: 'ROTATION' },
+                { from: 'ROTATION', to: 'RISK_OFF' },
+                { from: 'ROTATION', to: 'RISK_ON' },
+                { from: 'RISK_OFF', to: 'RECOVERY' },
+                { from: 'RECOVERY', to: 'RISK_ON' },
+                { from: 'RECOVERY', to: 'ROTATION' },
+                { from: 'UNCERTAINTY', to: 'ROTATION' },
+                { from: 'UNCERTAINTY', to: 'RECOVERY' }
+            ];
+
+            // Draw edges
+            edges.forEach(edge => {
+                const from = nodes.find(n => n.id === edge.from);
+                const to = nodes.find(n => n.id === edge.to);
+
+                svg.append('line')
+                    .attr('x1', from.x)
+                    .attr('y1', from.y)
+                    .attr('x2', to.x)
+                    .attr('y2', to.y)
+                    .attr('stroke', '#30363d')
+                    .attr('stroke-width', 1.5)
+                    .attr('opacity', 0.5);
+            });
+
+            // Draw nodes
+            nodes.forEach(node => {
+                const info = REGIMES[node.id];
+                const isActive = currentRegime === node.id;
+
+                const g = svg.append('g')
+                    .attr('class', `regime-node ${isActive ? 'active' : ''}`)
+                    .attr('transform', `translate(${node.x}, ${node.y})`);
+
+                // Node circle
+                g.append('circle')
+                    .attr('r', isActive ? 35 : 28)
+                    .attr('fill', isActive ? info.color : '#161b22')
+                    .attr('stroke', info.color)
+                    .attr('stroke-width', isActive ? 3 : 2);
+
+                // Node icon
+                g.append('text')
+                    .attr('text-anchor', 'middle')
+                    .attr('dominant-baseline', 'middle')
+                    .attr('font-size', isActive ? '20px' : '16px')
+                    .text(info.icon);
+
+                // Label below
+                g.append('text')
+                    .attr('text-anchor', 'middle')
+                    .attr('y', 50)
+                    .attr('fill', isActive ? info.color : '#8b949e')
+                    .attr('font-size', '10px')
+                    .attr('font-weight', isActive ? 'bold' : 'normal')
+                    .text(info.name);
+            });
+        }
+
+        function renderTimeline() {
+            const container = document.getElementById('regime-timeline');
+
+            // Calculate actual dates for the timeline
+            const today = new Date();
+            const startDate = new Date(today);
+            startDate.setDate(startDate.getDate() - 29); // 30 days including today
+
+            // Format date as "Jan 14"
+            const formatDate = (date) => {
+                return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+            };
+
+            // Update date labels
+            document.getElementById('timeline-start-date').textContent = formatDate(startDate);
+            document.getElementById('timeline-end-date').textContent = formatDate(today);
+
+            // Simulate 30 days of regime history
+            const regimeKeys = Object.keys(REGIMES);
+            const history = [];
+            let current = regimeKeys[Math.floor(Math.random() * regimeKeys.length)];
+
+            for (let i = 0; i < 30; i++) {
+                const date = new Date(startDate);
+                date.setDate(date.getDate() + i);
+
+                // 70% chance to stay, 30% chance to transition
+                if (Math.random() > 0.7) {
+                    current = regimeKeys[Math.floor(Math.random() * regimeKeys.length)];
+                }
+                history.push({ regime: current, date: date });
+            }
+
+            // Group consecutive same regimes
+            const segments = [];
+            let currentSegment = { regime: history[0].regime, days: 1, startDate: history[0].date, endDate: history[0].date };
+
+            for (let i = 1; i < history.length; i++) {
+                if (history[i].regime === currentSegment.regime) {
+                    currentSegment.days++;
+                    currentSegment.endDate = history[i].date;
+                } else {
+                    segments.push(currentSegment);
+                    currentSegment = { regime: history[i].regime, days: 1, startDate: history[i].date, endDate: history[i].date };
+                }
+            }
+            segments.push(currentSegment);
+
+            // Render
+            container.innerHTML = segments.map(seg => {
+                const info = REGIMES[seg.regime];
+                const widthPercent = (seg.days / 30) * 100;
+                const dateRange = seg.days === 1
+                    ? formatDate(seg.startDate)
+                    : `${formatDate(seg.startDate)} - ${formatDate(seg.endDate)}`;
+                return `
+                    <div class="timeline-segment" 
+                         style="width: ${widthPercent}%; background: ${info.color};"
+                         title="${info.name}: ${dateRange} (${seg.days} day${seg.days > 1 ? 's' : ''})">
+                        ${seg.days >= 3 ? info.icon : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+    </script>
+</body>
+
+</html>

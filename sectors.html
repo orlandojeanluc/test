@@ -550,6 +550,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
         import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
         import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-functions.js";
+        import { initializeAppCheck, ReCaptchaV3Provider } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app-check.js";
 
         // Config
         const firebaseConfig = {
@@ -559,6 +560,13 @@
             databaseURL: "https://trendscores-df341-default-rtdb.firebaseio.com"
         };
         const app = initializeApp(firebaseConfig);
+
+        // Initialize App Check with reCAPTCHA v3
+        const appCheck = initializeAppCheck(app, {
+            provider: new ReCaptchaV3Provider('6Ldi9EssAAAAKdrjmULW5Xg0nIsuDultrDuPS_a'),
+            isTokenAutoRefreshEnabled: true
+        });
+
         const db = getDatabase(app);
         const functions = getFunctions(app);
 
@@ -590,7 +598,6 @@
                 document.getElementById('last-updated').textContent = new Date().toLocaleTimeString();
 
             } catch (error) {
-                console.error("Error fetching sector data:", error);
                 document.getElementById('sector-grid').innerHTML = `
                     <div class="col-span-full text-center py-20 text-[#f48771] border border-[#f48771] rounded bg-[#0d1117]">
                         Error loading data. Please refresh.
@@ -1093,8 +1100,7 @@
                 renderHistoricalHeatmap(weeks, sectors);
 
             } catch (error) {
-                console.error('Error loading historical data:', error);
-                container.innerHTML = '<div class="text-center py-20 text-[#f48771]">Error loading historical data. Make sure the cloud function is deployed.</div>';
+                container.innerHTML = '<div class="text-center py-20 text-[#f48771]">Error loading historical data.</div>';
             }
         }
 
