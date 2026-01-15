@@ -1000,7 +1000,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
         import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-functions.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
-        import { initializeAppCheck, ReCaptchaV3Provider } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app-check.js";
+        import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app-check.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBxG5qf6mb8E_-b2TeXlRNseMZ26L9DRYg",
@@ -1011,9 +1011,9 @@
 
         const app = initializeApp(firebaseConfig);
 
-        // Initialize App Check with reCAPTCHA v3
+        // Initialize App Check with reCAPTCHA Enterprise
         const appCheck = initializeAppCheck(app, {
-            provider: new ReCaptchaV3Provider('6Ldi9EssAAAAKdrjmULW5Xg0nIsuDultrDuPS_a'),
+            provider: new ReCaptchaEnterpriseProvider('6Ldi9EssAAAAKdrjmULW5Xg0nIsuDultrDuPS_a'),
             isTokenAutoRefreshEnabled: true
         });
 
