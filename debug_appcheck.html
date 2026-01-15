@@ -94,12 +94,12 @@
 
                 log(`Initializing App Check with Enterprise Key: ${SITE_KEY}`, 'info');
 
-                // Enable debug mode to see more in console
-                self.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
+                // NO DEBUG TOKEN - Production Mode
+                // self.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
 
                 const appCheck = initializeAppCheck(app, {
                     provider: new ReCaptchaEnterpriseProvider(SITE_KEY),
-                    isTokenAutoRefreshEnabled: false // Manual trigger for debugging
+                    isTokenAutoRefreshEnabled: true
                 });
 
                 log("Requesting Token via getToken(forceRefresh=true)...", 'info');
