@@ -521,10 +521,13 @@
         import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-functions.js";
 
         const firebaseConfig = {
-            apiKey: "AIzaSyBxG5qf6mb8E_-b2TeXlRNseMZ26L9DRYg",
+            apiKey: "AIzaSyBQcttND6KKVGhccxOpv7rKWIPfIOCCpss",
             authDomain: "trendscores-df341.firebaseapp.com",
             projectId: "trendscores-df341",
-            databaseURL: "https://trendscores-df341-default-rtdb.firebaseio.com"
+            databaseURL: "https://trendscores-df341-default-rtdb.firebaseio.com",
+            storageBucket: "trendscores-df341.appspot.com",
+            messagingSenderId: "565710392511",
+            appId: "1:565710392511:web:37349319364bba19b3ca0a"
         };
 
         const app = initializeApp(firebaseConfig);
@@ -592,9 +595,6 @@
                 const result = await getPortfolioDetailData({ strategy: strategyName });
                 const data = result.data;
 
-                console.log("DEBUG: Full Data Received:", data);
-                if (data && data.signals) console.log("DEBUG: Signals Data:", data.signals);
-                else console.log("DEBUG: No Signals Data Found in Response");
 
                 if (!data) {
                     throw new Error("No data returned from server");
@@ -664,13 +664,11 @@
                     if (signalsContainer) signalsContainer.classList.add('hidden');
                 }
 
-                console.log('Firebase Cloud Function: Data Loaded Successfully');
 
             } catch (error) {
-                console.error("Error loading portfolio data:", error);
                 chartContainer.innerHTML = '<div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-[#f48771]">Error loading data</div>';
                 positionsBody.innerHTML = '<tr><td colspan="5" class="py-3 text-center text-[#f48771]">Error loading data</td></tr>';
-                returnsBody.innerHTML = '<tr><td colspan="14" class="py-4 text-center text-[#f48771]">Error loading data</td></tr>';
+                returnsBody.innerHTML = '<tr><td colspan=\"14\" class=\"py-4 text-center text-[#f48771]\">Error loading data</td></tr>';
             }
         }
 
@@ -857,13 +855,9 @@
         function renderAllocationChart(data, strategyName) {
             const ctx = document.getElementById('allocation-chart').getContext('2d');
 
-            // Debug: Log the first entry to understand structure
+            // Data Format: DateString -> Value ??
+            // If similar to monthlyspy, it might be an array or simple value.
             const entries = Object.entries(data);
-            if (entries.length > 0) {
-                console.log('Sample Entry:', entries[0]);
-                // Visual Debug (Temporary) - verify if this helps
-                // document.getElementById('allocation-chart').parentElement.setAttribute('data-debug', JSON.stringify(entries[0]));
-            }
 
             // Data Format: DateString -> Value ??
             // If similar to monthlyspy, it might be an array or simple value.
@@ -1096,7 +1090,6 @@
         // Expose to window for onclick access from module
         window.downloadPositionsCsv = function () {
             if (!currentPositionsData) {
-                console.error("No data available for CSV download");
                 return;
             }
 
@@ -1179,8 +1172,6 @@
             const tbody = document.getElementById('positions-body');
             tbody.innerHTML = ''; // Clear loading
 
-            console.log('Rendering Positions. Sample Data:', Object.values(data)[0]);
-
             // Data format: Key(Ticker) -> { Weight: 0.4 } OR Key(Ticker) -> [0.01] (Array) OR Key -> {0: 0.01} (Object with index key)
             Object.keys(data).forEach(tickerKey => {
                 const item = data[tickerKey];
@@ -1209,10 +1200,7 @@
                     }
                 }
 
-                // If weight is still essentially 0, log it for specific ticker (limit logs)
-                if (Math.abs(weight) < 0.000001 && tickerKey === 'AAPL') {
-                    console.warn(`Weight for AAPL parsed as 0. Raw Item:`, item);
-                }
+                // Skip logging for production
 
                 // FORCE POSITIVE for Momentum Factor as per user "no negative positions"
                 if (strategyName === 'Caltropia Momentum Factor') {
@@ -1501,9 +1489,8 @@
         function renderSpDailyChart(monthlySpyData, container, strategyName) {
             if (!container) return;
 
-            // Debug: Show first entry to confirm structure
+            // Process Data: Sort by Date
             const entries = Object.entries(monthlySpyData);
-            if (entries.length > 0) console.log('renderSpDailyChart First Entry:', entries[0]);
 
             // Process Data: Sort by Date
             const sortedEntries = entries.sort((a, b) => new Date(a[0]) - new Date(b[0]));
