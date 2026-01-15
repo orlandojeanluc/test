@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>App Check Debugger</title>
+    <title>App Check Debugger (DEBUG MODE)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
@@ -36,18 +36,18 @@
 
 <body>
     <div class="max-w-3xl mx-auto">
-        <h1 class="text-2xl font-bold mb-4">App Check Debugger (Enterprise)</h1>
+        <h1 class="text-2xl font-bold mb-4">App Check Debugger (DEBUG MODE)</h1>
 
         <div class="mb-6 p-4 border border-gray-700 rounded bg-gray-900">
-            <h2 class="text-xl mb-2">Configuration</h2>
-            <div class="grid grid-cols-[120px_1fr] gap-2 text-sm">
-                <div class="text-gray-500">Project ID:</div>
-                <div>trendscores-df341</div>
-                <div class="text-gray-500">Site Key:</div>
-                <div id="site-key-display">6LdhuEssAAAAAJrGKy3V5OZdCIjn4IGLz6iJRswE</div>
-                <div class="text-gray-500">Provider:</div>
-                <div>ReCaptchaEnterpriseProvider</div>
-            </div>
+            <h2 class="text-xl mb-2">Instructions</h2>
+            <ol class="list-decimal pl-5 space-y-2 text-sm text-gray-300">
+                <li>Open Browser Console (F12 or Right Click -> Inspect -> Console).</li>
+                <li>Find the line: <span class="text-yellow-400">App Check debug token: xxxx-xxxx...</span></li>
+                <li>Go to Firebase Console > App Check > Apps > Manage debug tokens.</li>
+                <li>Add that token there.</li>
+                <li>Refresh this page and Click Run.</li>
+            </ol>
+
             <button id="run-check-btn"
                 class="mt-4 px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded font-bold">
                 Run App Check Verification
@@ -94,33 +94,24 @@
 
                 log(`Initializing App Check with Enterprise Key: ${SITE_KEY}`, 'info');
 
-                // NO DEBUG TOKEN - Production Mode
-                // self.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
+                // ENABLE DEBUG MODE
+                self.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
+                log("DEBUG MODE ENABLED. Check Console for Token.", 'info');
 
                 const appCheck = initializeAppCheck(app, {
                     provider: new ReCaptchaEnterpriseProvider(SITE_KEY),
-                    isTokenAutoRefreshEnabled: true
+                    isTokenAutoRefreshEnabled: false
                 });
 
-                log("Requesting Token via getToken(forceRefresh=true)...", 'info');
+                log("Requesting Token...", 'info');
 
                 try {
                     const tokenResult = await getToken(appCheck, true);
                     log(`SUCCESS! Token received: ${tokenResult.token.substring(0, 10)}...`, 'success');
-                    log("App Check is working correctly on this client.", 'success');
+                    log("App Check is working correctly (Debug Bypass Active).", 'success');
                 } catch (err) {
                     log(`TOKEN EXCHANGE FAILED: ${err.message}`, 'error');
                     log(`Full Error Object: ${JSON.stringify(err, Object.getOwnPropertyNames(err))}`, 'error');
-
-                    if (err.code) log(`Error Code: ${err.code}`, 'error');
-
-                    // Specific advice based on message
-                    if (err.message && err.message.includes("400")) {
-                        log("⚠️ 400 Bad Request often means:", 'info');
-                        log("1. The Site Key in code does not match the one in Firebase Console.", 'info');
-                        log("2. The Firebase Console is set to 'v3' instead of 'Enterprise'.", 'info');
-                        log("3. The 'Firebase App Check API' is not enabled in Google Cloud.", 'info');
-                    }
                 }
 
             } catch (setupErr) {
