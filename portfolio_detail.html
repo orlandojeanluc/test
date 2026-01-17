@@ -519,6 +519,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
         import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-functions.js";
+        import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app-check.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBQcttND6KKVGhccxOpv7rKWIPfIOCCpss",
@@ -531,6 +532,13 @@
         };
 
         const app = initializeApp(firebaseConfig);
+
+        // Initialize App Check
+        const appCheck = initializeAppCheck(app, {
+            provider: new ReCaptchaEnterpriseProvider('6LdVLGQqAAAAAEn2gGr7-dM06xGkF40d9u26Yt6z'),
+            isTokenAutoRefreshEnabled: true
+        });
+
         const functions = getFunctions(app);
 
         // Global variables for chart data and instance
