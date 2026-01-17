@@ -24,8 +24,8 @@
                             border: '#30363d',
                             orange: '#c586c0',
                             amber: '#dcdcaa',
-                            green: '#b5cea8',
-                            red: '#f48771',
+                            green: '#a7f3d0',
+                            red: '#fecdd3',
                             blue: '#9cdcfe',
                             muted: '#8b949e'
                         }
@@ -763,14 +763,14 @@
                     <div id="total-assets" class="text-2xl font-bold text-white count-up">--</div>
                 </div>
                 <div class="terminal-card p-3 cursor-pointer" onclick="showMetricDetail('bullish')">
-                    <div class="text-[10px] font-bold mb-1 hover:text-[#b5cea8]" style="color:#fff">Bullish Trend
+                    <div class="text-[10px] font-bold mb-1 hover:text-[#a7f3d0]" style="color:#fff">Bullish Trend
                     </div>
                     <div class="flex items-baseline gap-2 mb-1">
-                        <span id="bullish-count" class="text-2xl font-bold text-[#b5cea8] count-up">--</span>
-                        <span id="bullish-pct" class="text-xs font-mono text-[#b5cea8]">--%</span>
+                        <span id="bullish-count" class="text-2xl font-bold text-[#a7f3d0] count-up">--</span>
+                        <span id="bullish-pct" class="text-xs font-mono text-[#a7f3d0]">--%</span>
                     </div>
                     <div class="w-full bg-[#1a1a1a] h-1">
-                        <div id="bullish-bar" class="h-full bg-[#b5cea8] bar-fill" style="width: 0%"></div>
+                        <div id="bullish-bar" class="h-full bg-[#a7f3d0] bar-fill" style="width: 0%"></div>
                     </div>
                 </div>
                 <div class="terminal-card p-3 cursor-pointer" onclick="showMetricDetail('neutral')">
@@ -784,14 +784,14 @@
                     </div>
                 </div>
                 <div class="terminal-card p-3 cursor-pointer" onclick="showMetricDetail('bearish')">
-                    <div class="text-[10px] font-bold mb-1 hover:text-[#f48771]" style="color:#fff">Bearish Trend
+                    <div class="text-[10px] font-bold mb-1 hover:text-[#fecdd3]" style="color:#fff">Bearish Trend
                     </div>
                     <div class="flex items-baseline gap-2 mb-1">
-                        <span id="bearish-count" class="text-2xl font-bold text-[#f48771] count-up">--</span>
-                        <span id="bearish-pct" class="text-xs font-mono text-[#f48771]">--%</span>
+                        <span id="bearish-count" class="text-2xl font-bold text-[#fecdd3] count-up">--</span>
+                        <span id="bearish-pct" class="text-xs font-mono text-[#fecdd3]">--%</span>
                     </div>
                     <div class="w-full bg-[#1a1a1a] h-1">
-                        <div id="bearish-bar" class="h-full bg-[#f48771] bar-fill" style="width: 0%"></div>
+                        <div id="bearish-bar" class="h-full bg-[#fecdd3] bar-fill" style="width: 0%"></div>
                     </div>
                 </div>
                 <div class="terminal-card p-3 cursor-pointer hover:border-[#bc8cff]" onclick="setFilter('divergence')">
@@ -927,7 +927,7 @@
                             <h3 class="text-sm font-bold text-[#dcdcaa]">Top Movers</h3>
                             <div class="flex">
                                 <button onclick="switchMovers('bulls')" id="movers-bulls"
-                                    class="px-3 py-1 text-[10px] font-bold bg-[#1a1a1a] text-[#b5cea8] border border-[#333] rounded-l-full">Bulls</button>
+                                    class="px-3 py-1 text-[10px] font-bold bg-[#1a1a1a] text-[#a7f3d0] border border-[#333] rounded-l-full">Bulls</button>
                                 <button onclick="switchMovers('bears')" id="movers-bears"
                                     class="px-3 py-1 text-[10px] font-bold bg-[#1a1a1a] text-[#8b949e] border border-[#333] border-l-0 rounded-r-full">Bears</button>
                             </div>
@@ -1029,9 +1029,9 @@
         const sectorColors = {
             "Technology": "#c586c0",      // Terminal orange (magenta/purple)
             "Financials": "#9cdcfe",      // Terminal blue
-            "Health Care": "#b5cea8",     // Terminal green
+            "Health Care": "#a7f3d0",     // Terminal green
             "Energy": "#dcdcaa",          // Terminal amber
-            "Consumer Disc": "#f48771",   // Terminal red
+            "Consumer Disc": "#fecdd3",   // Terminal red
             "Consumer Staples": "#ce9178", // Warm orange
             "Industrials": "#4fc1ff",     // Bright cyan
             "Utilities": "#569cd6",       // Steel blue
@@ -1122,11 +1122,11 @@
             const bulls = document.getElementById('movers-bulls');
             const bears = document.getElementById('movers-bears');
             if (type === 'bulls') {
-                bulls.classList.add('text-[#b5cea8]', 'border-[#333]'); bulls.classList.remove('text-[#8b949e]');
-                bears.classList.add('text-[#8b949e]'); bears.classList.remove('text-[#f48771]');
+                bulls.classList.add('text-[#a7f3d0]', 'border-[#333]'); bulls.classList.remove('text-[#8b949e]');
+                bears.classList.add('text-[#8b949e]'); bears.classList.remove('text-[#fecdd3]');
             } else {
-                bears.classList.add('text-[#f48771]', 'border-[#333]'); bears.classList.remove('text-[#8b949e]');
-                bulls.classList.add('text-[#8b949e]'); bulls.classList.remove('text-[#b5cea8]');
+                bears.classList.add('text-[#fecdd3]', 'border-[#333]'); bears.classList.remove('text-[#8b949e]');
+                bulls.classList.add('text-[#8b949e]'); bulls.classList.remove('text-[#a7f3d0]');
             }
             drawMovers();
         };
@@ -1158,7 +1158,7 @@
             const asset = assetsData.find(a => a.ticker === ticker);
             if (!asset) return;
             const el = document.getElementById('detail-content');
-            const color = asset.overallScore > 0 ? '#b5cea8' : '#f48771';
+            const color = asset.overallScore > 0 ? '#a7f3d0' : '#fecdd3';
             el.innerHTML = `
                 <div class="mb-2">
                     <div class="text-3xl font-bold text-[#c586c0] uppercase">${asset.ticker}</div>
@@ -1209,9 +1209,9 @@
         // --- Styles & Helpers ---
         function getScoreColor(score, range = [-8, 8]) {
             const [min, max] = range;
-            if (score >= max * 0.6) return "#b5cea8"; // Strong Green
+            if (score >= max * 0.6) return "#a7f3d0"; // Strong Green
             if (score > 0) return "#9cdcfe"; // Blue
-            if (score <= min * 0.6) return "#f48771"; // Red
+            if (score <= min * 0.6) return "#fecdd3"; // Red
             if (score < 0) return "#c586c0"; // Orange (actually make it red-ish/orange for bear)
             return "#666666";
         }
