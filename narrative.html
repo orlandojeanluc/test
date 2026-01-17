@@ -310,6 +310,19 @@
                 </div>
             </div>
 
+            <!-- Factor Strategies Dashboard -->
+            <div id="factor-dashboard" class="terminal-card p-6 border-t-4 border-[#dcdcaa] mb-8 hidden">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-[#8b949e] text-xs font-bold uppercase tracking-wider">Institutional Factor
+                        Strategies</h3>
+                    <span class="text-[10px] text-[#8b949e] bg-[#21262d] px-2 py-1 rounded">Live Holdings</span>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 divide-y md:divide-y-0 md:divide-x divide-[#21262d]"
+                    id="factor-container">
+                    <!-- Injected via JS -->
+                </div>
+            </div>
+
             <!-- Narrative Card -->
             <div class="terminal-card p-8">
                 <!-- Loading State -->
@@ -542,6 +555,77 @@
                     </div>
                 </div>
             `).join('');
+                </div >
+                `).join('');
+
+            // 4. Factor Strategies (Deep Data)
+            const factorDash = document.getElementById('factor-dashboard');
+            if (data.deepData && data.deepData.strategies) {
+                factorDash.classList.remove('hidden');
+                const factorContainer = document.getElementById('factor-container');
+                const strat = data.deepData.strategies;
+                const hold = data.deepData.holdings;
+
+                const factors = [
+                    {
+                        name: 'Momentum',
+                        stats: strat['Momentum Factor'],
+                        holdings: hold.momentum,
+                        color: 'text-[#9cdcfe]'
+                    },
+                    {
+                        name: 'Low Volatility',
+                        stats: strat['Low Vol Factor'],
+                        holdings: hold.lowVol,
+                        color: 'text-[#f48771]'
+                    },
+                    {
+                        name: 'Mean Reversion',
+                        stats: strat['Mean Reversion Factor'],
+                        holdings: hold.meanReversion,
+                        color: 'text-[#dcdcaa]'
+                    }
+                ];
+
+                factorContainer.innerHTML = factors.map(f => {
+                    const stats = f.stats || {};
+                    const holdings = f.holdings || [];
+                    
+                    const formatPct = (val) => {
+                        if (val === undefined) return '<span class="text-[#8b949e]">-</span>';
+                        const color = val > 0 ? 'text-[#b5cea8]' : val < 0 ? 'text-[#f48771]' : 'text-[#8b949e]';
+                        return `< span class="${color}" > ${ val > 0 ? '+' : '' }${ val.toFixed(2) }%</span > `;
+                    };
+
+                    return `
+                < div class="pt-4 md:pt-0 md:px-4 first:pl-0 last:pr-0" >
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="font-bold text-sm ${f.color}">${f.name}</span>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4 text-xs mb-4">
+                                <div>
+                                    <span class="text-[#8b949e] block mb-1">1 Month</span>
+                                    <span class="font-mono font-bold">${formatPct(stats.oneMonth)}</span>
+                                </div>
+                                <div>
+                                    <span class="text-[#8b949e] block mb-1">YTD</span>
+                                    <span class="font-mono font-bold">${formatPct(stats.ytd)}</span>
+                                </div>
+                            </div>
+                            <div>
+                                <span class="text-[10px] text-[#8b949e] uppercase tracking-wider mb-2 block">Top Holdings</span>
+                                <div class="flex flex-wrap gap-2">
+                                    ${holdings.slice(0, 5).map(ticker => 
+                                        `<span class="ticker-badge" style="font-size: 0.75rem">${ticker}</span>`
+                                    ).join('') || '<span class="text-[#8b949e] text-xs">No active signals</span>'}
+                                </div>
+                            </div>
+                        </div >
+                    `;
+                }).join('');
+            } else {
+                factorDash.classList.add('hidden');
+            }
         }
 
         // Event listeners
