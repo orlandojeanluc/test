@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caltropia | AI Market Intelligence</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        mono: ['"JetBrains Mono"', '"IBM Plex Mono"', 'monospace'],
+                        sans: ['"Inter"', 'sans-serif']
+                    },
+                    colors: {
+                        terminal: {
+                            bg: '#0d1117',
+                            panel: '#161b22',
+                            border: '#21262d',
+                            orange: '#c586c0',
+                            amber: '#dcdcaa',
+                            green: '#b5cea8',
+                            red: '#f48771',
+                            blue: '#9cdcfe',
+                            muted: '#8b949e'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        html,
+        body {
+            overflow-x: hidden;
+        }
+
+        body {
+            background-color: #0d1117;
+            color: #c9d1d9;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .terminal-header {
+            background: #0d1117;
+            border-bottom: 1px solid #21262d;
+        }
+
+        .terminal-card {
+            background: #0d1117;
+            border: 1px solid #21262d;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            border-radius: 16px;
+        }
+
+        .terminal-card:hover {
+            border-color: rgba(197, 134, 192, 0.3);
+            background: #1c2128;
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+        }
+
+        .effect-title {
+            background: linear-gradient(135deg, #E2E8F0 0%, #94A3B8 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 10px rgba(148, 163, 184, 0.1);
+        }
+
+        /* Narrative Content Styles */
+        .narrative-content {
+            font-size: 15px;
+            line-height: 1.8;
+        }
+
+        .narrative-content h1,
+        .narrative-content h2,
+        .narrative-content h3 {
+            color: #E2E8F0;
+            font-weight: 600;
+            margin-top: 1.5em;
+            margin-bottom: 0.75em;
+        }
+
+        .narrative-content h1 {
+            font-size: 1.5em;
+            border-bottom: 1px solid #21262d;
+            padding-bottom: 0.5em;
+        }
+
+        .narrative-content h2 {
+            font-size: 1.25em;
+            color: #c586c0;
+        }
+
+        .narrative-content h3 {
+            font-size: 1.1em;
+            color: #9cdcfe;
+        }
+
+        .narrative-content p {
+            margin-bottom: 1em;
+            color: #c9d1d9;
+        }
+
+        .narrative-content ul,
+        .narrative-content ol {
+            margin-left: 1.5em;
+            margin-bottom: 1em;
+        }
+
+        .narrative-content li {
+            margin-bottom: 0.5em;
+        }
+
+        .narrative-content strong {
+            color: #dcdcaa;
+        }
+
+        /* Loading Animation */
+        @keyframes pulse-glow {
+
+            0%,
+            100% {
+                opacity: 0.4;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        .loading-pulse {
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+
+        /* Timestamp Badge */
+        .timestamp-badge {
+            background: linear-gradient(135deg, #21262d 0%, #161b22 100%);
+            border: 1px solid #30363d;
+        }
+
+        /* AI Badge */
+        .ai-badge {
+            background: linear-gradient(135deg, #c586c0 0%, #9cdcfe 100%);
+            color: #0d1117;
+            font-weight: 700;
+            font-size: 10px;
+            padding: 4px 10px;
+            border-radius: 9999px;
+        }
+
+        /* Refresh Button */
+        .refresh-btn {
+            background: #21262d;
+            border: 1px solid #30363d;
+            transition: all 0.2s ease;
+        }
+
+        .refresh-btn:hover {
+            background: #30363d;
+            border-color: #c586c0;
+        }
+
+        .refresh-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Spinner */
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .spinner {
+            animation: spin 1s linear infinite;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen">
+    <!-- Header -->
+    <header class="terminal-header sticky top-0 z-50 px-6 py-4">
+        <div class="max-w-6xl mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <a href="index.html" class="text-lg font-bold text-white hover:text-[#c586c0] transition-colors">
+                    CALTROPIA
+                </a>
+                <span class="text-[#21262d]">|</span>
+                <span class="text-[#8b949e] text-sm">AI Market Intelligence</span>
+            </div>
+            <nav class="hidden md:flex items-center gap-6 text-sm">
+                <a href="radial.html" class="text-[#8b949e] hover:text-white transition-colors">Dashboard</a>
+                <a href="sectors.html" class="text-[#8b949e] hover:text-white transition-colors">Sectors</a>
+                <a href="scanner.html" class="text-[#8b949e] hover:text-white transition-colors">Scanner</a>
+                <a href="narrative.html" class="text-white font-medium">AI Intel</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="px-6 py-8">
+        <div class="max-w-4xl mx-auto">
+            <!-- Hero Section -->
+            <div class="text-center mb-8">
+                <div class="inline-flex items-center gap-2 mb-4">
+                    <span class="ai-badge">AI POWERED</span>
+                    <span id="cached-badge" class="hidden text-xs text-[#8b949e] bg-[#21262d] px-2 py-1 rounded-full">
+                        Cached
+                    </span>
+                </div>
+                <h1 class="text-3xl md:text-4xl font-bold effect-title mb-3">
+                    Daily Market Intelligence Brief
+                </h1>
+                <p class="text-[#8b949e] max-w-2xl mx-auto">
+                    AI-generated analysis of current market regimes, sector rotations, and risk signals from the
+                    Caltropia proprietary system.
+                </p>
+            </div>
+
+            <!-- Controls -->
+            <div class="flex items-center justify-between mb-6">
+                <div id="timestamp-container" class="timestamp-badge px-4 py-2 rounded-lg">
+                    <span class="text-[#8b949e] text-xs">Last Updated:</span>
+                    <span id="timestamp" class="text-white text-sm font-mono ml-2">--</span>
+                </div>
+                <button id="refresh-btn"
+                    class="refresh-btn px-4 py-2 rounded-lg flex items-center gap-2 text-sm text-white">
+                    <svg id="refresh-icon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
+                        </path>
+                    </svg>
+                    <span id="refresh-text">Refresh</span>
+                </button>
+            </div>
+
+            <!-- Narrative Card -->
+            <div class="terminal-card p-8">
+                <!-- Loading State -->
+                <div id="loading-state" class="py-16 text-center">
+                    <div class="inline-flex items-center gap-3 text-[#8b949e]">
+                        <svg class="w-5 h-5 spinner" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
+                            </path>
+                        </svg>
+                        <span class="loading-pulse">Generating market intelligence...</span>
+                    </div>
+                    <p class="text-xs text-[#8b949e] mt-4">This may take 10-15 seconds for fresh analysis</p>
+                </div>
+
+                <!-- Error State -->
+                <div id="error-state" class="hidden py-16 text-center">
+                    <div class="text-[#f48771] mb-4">
+                        <svg class="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
+                            </path>
+                        </svg>
+                    </div>
+                    <h3 class="text-white font-semibold mb-2">Unable to Generate Narrative</h3>
+                    <p id="error-message" class="text-[#8b949e] text-sm mb-4"></p>
+                    <button onclick="loadNarrative()" class="text-[#c586c0] hover:underline text-sm">
+                        Try Again
+                    </button>
+                </div>
+
+                <!-- Narrative Content -->
+                <div id="narrative-content" class="narrative-content hidden">
+                    <!-- Narrative will be inserted here -->
+                </div>
+            </div>
+
+            <!-- Data Sources Footer -->
+            <div class="mt-8 text-center text-xs text-[#8b949e]">
+                <p>Data sources: Caltropia Regime Models • Sector Trend Scores • Factor Signals • Volatility Analytics
+                </p>
+                <p class="mt-1">Narratives are cached for 4 hours. Click refresh for latest analysis.</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+        import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-functions.js";
+        import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app-check.js";
+
+        // Firebase Config
+        const firebaseConfig = {
+            apiKey: "AIzaSyBQcttND6KKVGhccxOpv7rKWIPfIOCCpss",
+            authDomain: "trendscores-df341.firebaseapp.com",
+            projectId: "trendscores-df341",
+            databaseURL: "https://trendscores-df341-default-rtdb.firebaseio.com",
+            storageBucket: "trendscores-df341.appspot.com",
+            messagingSenderId: "565710392511",
+            appId: "1:565710392511:web:37349319364bba19b3ca0a"
+        };
+
+        const app = initializeApp(firebaseConfig);
+
+        // Initialize App Check
+        const appCheck = initializeAppCheck(app, {
+            provider: new ReCaptchaEnterpriseProvider('6LdhuEssAAAAAJrGKy3V5OZdCIjn4IGLz6iJRswE'),
+            isTokenAutoRefreshEnabled: true
+        });
+
+        const functions = getFunctions(app);
+
+        // DOM Elements
+        const loadingState = document.getElementById('loading-state');
+        const errorState = document.getElementById('error-state');
+        const narrativeContent = document.getElementById('narrative-content');
+        const timestampEl = document.getElementById('timestamp');
+        const cachedBadge = document.getElementById('cached-badge');
+        const refreshBtn = document.getElementById('refresh-btn');
+        const refreshIcon = document.getElementById('refresh-icon');
+        const refreshText = document.getElementById('refresh-text');
+        const errorMessage = document.getElementById('error-message');
+
+        // Simple markdown to HTML converter
+        function markdownToHtml(markdown) {
+            let html = markdown
+                // Headers
+                .replace(/^### (.*$)/gm, '<h3>$1</h3>')
+                .replace(/^## (.*$)/gm, '<h2>$1</h2>')
+                .replace(/^# (.*$)/gm, '<h1>$1</h1>')
+                // Bold
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                // Line numbers (section headers without markdown)
+                .replace(/^(\d+)\. \*\*(.*?)\*\*/gm, '<h2>$2</h2>')
+                .replace(/^(\d+)\. (.*$)/gm, '<h2>$1. $2</h2>')
+                // Bullet points
+                .replace(/^\- (.*$)/gm, '<li>$1</li>')
+                .replace(/^\• (.*$)/gm, '<li>$1</li>')
+                // Wrap consecutive <li> in <ul>
+                .replace(/(<li>.*<\/li>)\n(?=<li>)/g, '$1')
+                .replace(/(<li>.*<\/li>)/gs, '<ul>$1</ul>')
+                // Paragraphs
+                .replace(/\n\n/g, '</p><p>')
+                .replace(/\n/g, '<br>');
+
+            return '<p>' + html + '</p>';
+        }
+
+        // Format timestamp
+        function formatTimestamp(isoString) {
+            const date = new Date(isoString);
+            return date.toLocaleString('en-US', {
+                weekday: 'short',
+                month: 'short',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true
+            });
+        }
+
+        // Load narrative
+        async function loadNarrative(forceRefresh = false) {
+            // Show loading
+            loadingState.classList.remove('hidden');
+            errorState.classList.add('hidden');
+            narrativeContent.classList.add('hidden');
+
+            // Disable refresh button
+            refreshBtn.disabled = true;
+            refreshIcon.classList.add('spinner');
+            refreshText.textContent = 'Loading...';
+
+            try {
+                const generateMarketNarrative = httpsCallable(functions, 'generateMarketNarrative');
+                const result = await generateMarketNarrative({ forceRefresh });
+                const data = result.data;
+
+                // Update UI
+                narrativeContent.innerHTML = markdownToHtml(data.narrative);
+                timestampEl.textContent = formatTimestamp(data.timestamp);
+
+                if (data.cached) {
+                    cachedBadge.classList.remove('hidden');
+                } else {
+                    cachedBadge.classList.add('hidden');
+                }
+
+                // Show content
+                loadingState.classList.add('hidden');
+                narrativeContent.classList.remove('hidden');
+
+            } catch (error) {
+                console.error('Error loading narrative:', error);
+                loadingState.classList.add('hidden');
+                errorState.classList.remove('hidden');
+                errorMessage.textContent = error.message || 'An unexpected error occurred';
+            } finally {
+                // Re-enable refresh button
+                refreshBtn.disabled = false;
+                refreshIcon.classList.remove('spinner');
+                refreshText.textContent = 'Refresh';
+            }
+        }
+
+        // Event listeners
+        refreshBtn.addEventListener('click', () => loadNarrative(true));
+
+        // Make loadNarrative available globally for error retry
+        window.loadNarrative = loadNarrative;
+
+        // Initial load
+        loadNarrative();
+    </script>
+</body>
+
+</html>
