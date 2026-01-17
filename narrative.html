@@ -555,8 +555,7 @@
                     </div>
                 </div>
             `).join('');
-                </div >
-                `).join('');
+
 
             // 4. Factor Strategies (Deep Data)
             const factorDash = document.getElementById('factor-dashboard');
@@ -590,11 +589,11 @@
                 factorContainer.innerHTML = factors.map(f => {
                     const stats = f.stats || {};
                     const holdings = f.holdings || [];
-                    
+
                     const formatPct = (val) => {
                         if (val === undefined) return '<span class="text-[#8b949e]">-</span>';
                         const color = val > 0 ? 'text-[#b5cea8]' : val < 0 ? 'text-[#f48771]' : 'text-[#8b949e]';
-                        return `< span class="${color}" > ${ val > 0 ? '+' : '' }${ val.toFixed(2) }%</span > `;
+                        return `< span class="${color}" > ${val > 0 ? '+' : ''}${val.toFixed(2)}%</span > `;
                     };
 
                     return `
@@ -615,9 +614,9 @@
                             <div>
                                 <span class="text-[10px] text-[#8b949e] uppercase tracking-wider mb-2 block">Top Holdings</span>
                                 <div class="flex flex-wrap gap-2">
-                                    ${holdings.slice(0, 5).map(ticker => 
-                                        `<span class="ticker-badge" style="font-size: 0.75rem">${ticker}</span>`
-                                    ).join('') || '<span class="text-[#8b949e] text-xs">No active signals</span>'}
+                                    ${holdings.slice(0, 5).map(ticker =>
+                        `<span class="ticker-badge" style="font-size: 0.75rem">${ticker}</span>`
+                    ).join('') || '<span class="text-[#8b949e] text-xs">No active signals</span>'}
                                 </div>
                             </div>
                         </div >
