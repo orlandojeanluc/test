@@ -653,7 +653,7 @@
     <div id="detail-overlay" onclick="closeDetailPanel()"></div>
     <div id="detail-panel">
         <div class="flex items-center justify-between mb-8 border-b border-[#333] pb-4">
-            <h2 id="detail-title" class="text-xl font-bold text-[#c586c0]">Asset Details</h2>
+            <h2 id="detail-title" class="text-xl font-bold text-white">Asset Details</h2>
             <button onclick="closeDetailPanel()" class="w-6 h-6 text-[#8b949e] hover:text-white">✕</button>
         </div>
         <div id="detail-content" class="space-y-6"></div>
@@ -1145,7 +1145,7 @@
             const color = asset.overallScore > 0 ? '#a7f3d0' : '#fecdd3';
             el.innerHTML = `
                 <div class="mb-2">
-                    <div class="text-3xl font-bold text-[#c586c0] uppercase">${asset.ticker}</div>
+                    <div class="text-3xl font-bold text-white uppercase">${asset.ticker}</div>
                     <div class="text-xs text-[#8b949e] font-mono">${asset.sector}</div>
                 </div>
                 <div class="text-4xl font-bold mb-4" style="color:${color}">${asset.overallScore}</div>
