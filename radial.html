@@ -1218,12 +1218,25 @@
             scoreEl.textContent = `Score: ${closestPoint.score > 0 ? '+' : ''}${closestPoint.score}`;
             scoreEl.setAttribute('fill', color);
 
+            // Track current ticker for tap-to-open
+            currentCenterTicker = closestPoint.ticker;
+
             // Counter-rotate the center text so it stays upright
             const centerGroup = document.getElementById('constellation-center');
             if (centerGroup) {
                 centerGroup.setAttribute('transform', `rotate(${-constellationRotation}, 350, 350)`);
             }
         }
+
+        // Track the currently selected ticker from constellation center for tap-to-open
+        let currentCenterTicker = null;
+
+        // Open asset detail for the ticker currently displayed in constellation center
+        window.openCenterAssetDetail = function () {
+            if (currentCenterTicker && currentCenterTicker !== 'ROTATE') {
+                openAssetDetail(currentCenterTicker);
+            }
+        };
 
         // Initialize touch rotation for constellation chart (mobile only)
         function initConstellationTouch() {
@@ -1484,10 +1497,10 @@
             // Add center text for mobile (shows selected ticker on rotation)
             if (isMobile()) {
                 html += `
-                    <g id="constellation-center">
+                    <g id="constellation-center" style="cursor:pointer" onclick="openCenterAssetDetail()">
                         <circle cx="${cx}" cy="${cy}" r="${innerR - 5}" fill="#0d1117" opacity="0.9"/>
                         <text id="constellation-center-ticker" x="${cx}" y="${cy - 10}" text-anchor="middle" fill="#c586c0" font-size="22" font-weight="bold">ROTATE</text>
-                        <text id="constellation-center-score" x="${cx}" y="${cy + 14}" text-anchor="middle" fill="#8b949e" font-size="14">to select</text>
+                        <text id="constellation-center-score" x="${cx}" y="${cy + 16}" text-anchor="middle" fill="#8b949e" font-size="16">to select</text>
                     </g>
                 `;
             }
