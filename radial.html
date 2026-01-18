@@ -1217,6 +1217,12 @@
             tickerEl.setAttribute('fill', color);
             scoreEl.textContent = `Score: ${closestPoint.score > 0 ? '+' : ''}${closestPoint.score}`;
             scoreEl.setAttribute('fill', color);
+
+            // Counter-rotate the center text so it stays upright
+            const centerGroup = document.getElementById('constellation-center');
+            if (centerGroup) {
+                centerGroup.setAttribute('transform', `rotate(${-constellationRotation}, 350, 350)`);
+            }
         }
 
         // Initialize touch rotation for constellation chart (mobile only)
