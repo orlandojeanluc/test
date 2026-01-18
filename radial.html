@@ -1176,6 +1176,14 @@
             el.innerHTML = `<span style="color:${color}">${sector}: ${avgScore > 0 ? '+' : ''}${avgScore.toFixed(2)}</span>`;
         };
 
+        // Reset radar info when scrolling (mobile UX improvement)
+        window.addEventListener('scroll', () => {
+            const el = document.getElementById('radar-info');
+            if (el && el.innerHTML !== 'Hover Sector') {
+                el.innerHTML = 'Hover Sector';
+            }
+        }, { passive: true });
+
         // Update constellation center display with selected ticker (mobile only)
         function updateConstellationCenter() {
             if (!isMobile() || constellationData.length === 0) return;
