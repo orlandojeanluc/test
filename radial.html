@@ -1488,7 +1488,7 @@
                 const y = margin.t + ((4 - a.itTrend) / 8) * h;
                 const dotColor = a.overallScore > 0 ? '#a7f3d0' : a.overallScore < 0 ? '#fecdd3' : '#8b949e';
                 html += `<circle cx="${x}" cy="${y}" r="4" fill="${dotColor}" opacity="0.8" style="cursor:pointer"
-                        onmouseenter="showTooltip(event, '${a.ticker}', '${a.sector}', ${a.overallScore})"
+                        onmouseenter="showGenericTooltip(event, '${a.ticker}', 'ST: ${a.stTrend} | IT: ${a.itTrend}')"
                         onmouseleave="hideTooltip()"
                         onclick="openAssetDetail('${a.ticker}')"/>`;
             });
