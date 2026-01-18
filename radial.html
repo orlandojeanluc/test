@@ -833,6 +833,9 @@
                                 <button onclick="switchConstellation('it')" id="const-it"
                                     class="const-tab px-3 py-1 text-[10px] font-bold bg-[#0d1117] border border-[#21262d] text-white hover:border-[#30363d] rounded-lg whitespace-nowrap flex-1 md:flex-none text-center">Interm
                                     Term</button>
+                                <button onclick="resetConstellation()" id="const-reset"
+                                    class="px-3 py-1 text-[10px] font-bold bg-[#0d1117] border border-[#21262d] text-[#8b949e] hover:text-white hover:border-[#c586c0] rounded-lg whitespace-nowrap flex-1 md:flex-none text-center hidden"
+                                    title="Reset to all sectors">↻ Reset</button>
                             </div>
                             <button onclick="toggleChartFullscreen()"
                                 class="p-1 text-white hover:text-[#c586c0] border border-[#21262d] bg-[#0d1117] rounded-lg"
@@ -1100,7 +1103,29 @@
             document.querySelectorAll('.filter-chip').forEach(c => {
                 c.classList.toggle('active', c.dataset.filter === filter);
             });
+
+            // Show/hide reset button based on filter
+            const resetBtn = document.getElementById('const-reset');
+            if (resetBtn) {
+                if (filter !== 'all') {
+                    resetBtn.classList.remove('hidden');
+                } else {
+                    resetBtn.classList.add('hidden');
+                }
+            }
+
             renderAll();
+        };
+
+        // Reset constellation to show all sectors
+        window.resetConstellation = function () {
+            setFilter('all');
+            // Reset constellation rotation on mobile
+            if (isMobile()) {
+                constellationRotation = 0;
+                const svg = document.getElementById('constellation-chart');
+                if (svg) svg.style.transform = 'rotate(0deg)';
+            }
         };
 
         window.setSort = function (sort) {
