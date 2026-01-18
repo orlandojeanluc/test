@@ -1147,12 +1147,28 @@
         window.showGenericTooltip = function (e, title, content) {
             const el = document.getElementById('tooltip');
             el.innerHTML = `<div class="font-bold text-[#c586c0]">${title}</div><div class="text-xs text-white">${content}</div>`;
-            el.style.left = (e.clientX + 10) + 'px';
-            el.style.top = (e.clientY + 10) + 'px';
+            // Handle both mouse and touch events
+            let x, y;
+            if (e.touches && e.touches.length > 0) {
+                x = e.touches[0].clientX;
+                y = e.touches[0].clientY;
+            } else {
+                x = e.clientX;
+                y = e.clientY;
+            }
+            el.style.left = (x + 10) + 'px';
+            el.style.top = (y + 10) + 'px';
             el.classList.add('show');
         };
 
         window.hideTooltip = function () { document.getElementById('tooltip').classList.remove('show'); };
+
+        // Mobile-friendly function to update radar info header on tap
+        window.updateRadarInfo = function (sector, avgScore) {
+            const el = document.getElementById('radar-info');
+            const color = avgScore > 0 ? '#a7f3d0' : avgScore < 0 ? '#fecdd3' : '#8b949e';
+            el.innerHTML = `<span style="color:${color}">${sector}: ${avgScore > 0 ? '+' : ''}${avgScore.toFixed(2)}</span>`;
+        };
 
         window.openAssetDetail = function (ticker) {
             const asset = assetsData.find(a => a.ticker === ticker);
@@ -1397,9 +1413,10 @@
                 html += `<text x="${lx}" y="${ly}" text-anchor="middle" font-size="9" fill="#888" dy="3">${label}</text>`;
 
                 // Interactive zone for tooltip - colored by sector sentiment
-                html += `<circle cx="${p.x}" cy="${p.y}" r="8" fill="${p.color}" stroke="${p.color}" stroke-width="1" style="cursor:help"
+                html += `<circle cx="${p.x}" cy="${p.y}" r="5" fill="${p.color}" stroke="${p.color}" stroke-width="1" style="cursor:pointer"
                         onmouseenter="showGenericTooltip(event, '${p.sector}', 'Avg Score: ${p.avg.toFixed(2)}')"
-                        ontouchstart="showGenericTooltip(event, '${p.sector}', 'Avg Score: ${p.avg.toFixed(2)}')"
+                        ontouchstart="updateRadarInfo('${p.sector}', ${p.avg.toFixed(2)})"
+                        onclick="updateRadarInfo('${p.sector}', ${p.avg.toFixed(2)})"
                         onmouseleave="hideTooltip()" />`;
             });
             svg.innerHTML = html;
