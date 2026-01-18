@@ -1119,7 +1119,17 @@
 
         // Reset constellation to show all sectors
         window.resetConstellation = function () {
+            // Clear search input (used by filterBySector)
+            const searchInput = document.getElementById('search-input');
+            if (searchInput) searchInput.value = '';
+
+            // Hide reset button
+            const resetBtn = document.getElementById('const-reset');
+            if (resetBtn) resetBtn.classList.add('hidden');
+
+            // Reset filter to all
             setFilter('all');
+
             // Reset constellation rotation on mobile
             if (isMobile()) {
                 constellationRotation = 0;
@@ -1164,6 +1174,13 @@
 
         window.filterBySector = function (sector) {
             document.getElementById('search-input').value = sector;
+
+            // Show reset button when filtering by sector
+            const resetBtn = document.getElementById('const-reset');
+            if (resetBtn) {
+                resetBtn.classList.remove('hidden');
+            }
+
             renderAll();
         };
 
