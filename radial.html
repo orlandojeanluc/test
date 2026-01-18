@@ -1397,8 +1397,9 @@
                 html += `<text x="${lx}" y="${ly}" text-anchor="middle" font-size="9" fill="#888" dy="3">${label}</text>`;
 
                 // Interactive zone for tooltip - colored by sector sentiment
-                html += `<circle cx="${p.x}" cy="${p.y}" r="5" fill="${p.color}" stroke="${p.color}" stroke-width="1" style="cursor:help"
+                html += `<circle cx="${p.x}" cy="${p.y}" r="8" fill="${p.color}" stroke="${p.color}" stroke-width="1" style="cursor:help"
                         onmouseenter="showGenericTooltip(event, '${p.sector}', 'Avg Score: ${p.avg.toFixed(2)}')"
+                        ontouchstart="showGenericTooltip(event, '${p.sector}', 'Avg Score: ${p.avg.toFixed(2)}')"
                         onmouseleave="hideTooltip()" />`;
             });
             svg.innerHTML = html;
