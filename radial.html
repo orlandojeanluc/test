@@ -1225,20 +1225,26 @@
             const svg = document.getElementById('constellation-chart');
             if (!container || !svg) return;
 
-            // Set transform origin
+            // Set transform origin and smooth transition for rotation
             svg.style.transformOrigin = 'center center';
+            svg.style.willChange = 'transform';
+
+            // Prevent page scroll when touching the constellation area on mobile
+            container.style.touchAction = 'none';
 
             container.addEventListener('touchstart', (e) => {
                 if (!isMobile()) return;
+                e.preventDefault(); // Prevent scroll
                 const rect = container.getBoundingClientRect();
                 const cx = rect.left + rect.width / 2;
                 const cy = rect.top + rect.height / 2;
                 const touch = e.touches[0];
                 constellationTouchStart = Math.atan2(touch.clientY - cy, touch.clientX - cx);
-            }, { passive: true });
+            }, { passive: false });
 
             container.addEventListener('touchmove', (e) => {
                 if (!isMobile() || constellationTouchStart === null) return;
+                e.preventDefault(); // Prevent scroll
                 const rect = container.getBoundingClientRect();
                 const cx = rect.left + rect.width / 2;
                 const cy = rect.top + rect.height / 2;
@@ -1251,11 +1257,12 @@
 
                 svg.style.transform = `rotate(${constellationRotation}deg)`;
                 updateConstellationCenter();
-            }, { passive: true });
+            }, { passive: false });
 
-            container.addEventListener('touchend', () => {
+            container.addEventListener('touchend', (e) => {
+                e.preventDefault();
                 constellationTouchStart = null;
-            }, { passive: true });
+            }, { passive: false });
         }
 
         window.openAssetDetail = function (ticker) {
