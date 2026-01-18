@@ -1259,6 +1259,11 @@
                 const cy = rect.top + rect.height / 2;
                 const touch = e.touches[0];
                 constellationTouchStart = Math.atan2(touch.clientY - cy, touch.clientX - cx);
+
+                // Track touch start position for tap detection
+                container._touchStartX = touch.clientX;
+                container._touchStartY = touch.clientY;
+                container._hasMoved = false;
             }, { passive: false });
 
             container.addEventListener('touchmove', (e) => {
@@ -1271,6 +1276,11 @@
                 const currentAngle = Math.atan2(touch.clientY - cy, touch.clientX - cx);
                 const delta = (currentAngle - constellationTouchStart) * (180 / Math.PI);
 
+                // Mark as moved if rotation is significant
+                if (Math.abs(delta) > 2) {
+                    container._hasMoved = true;
+                }
+
                 constellationRotation += delta;
                 constellationTouchStart = currentAngle;
 
@@ -1280,6 +1290,22 @@
 
             container.addEventListener('touchend', (e) => {
                 e.preventDefault();
+
+                // If it was a tap (no significant movement), check if tap was on center
+                if (!container._hasMoved && container._touchStartX && container._touchStartY) {
+                    const rect = container.getBoundingClientRect();
+                    const cx = rect.left + rect.width / 2;
+                    const cy = rect.top + rect.height / 2;
+                    const dx = container._touchStartX - cx;
+                    const dy = container._touchStartY - cy;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    // If tap was near center (within ~50px), open the detail
+                    if (distance < 60 && currentCenterTicker && currentCenterTicker !== 'ROTATE') {
+                        openAssetDetail(currentCenterTicker);
+                    }
+                }
+
                 constellationTouchStart = null;
             }, { passive: false });
         }
@@ -1500,7 +1526,7 @@
                     <g id="constellation-center" style="cursor:pointer" onclick="openCenterAssetDetail()">
                         <circle cx="${cx}" cy="${cy}" r="${innerR - 5}" fill="#0d1117" opacity="0.9"/>
                         <text id="constellation-center-ticker" x="${cx}" y="${cy - 10}" text-anchor="middle" fill="#c586c0" font-size="22" font-weight="bold">ROTATE</text>
-                        <text id="constellation-center-score" x="${cx}" y="${cy + 16}" text-anchor="middle" fill="#8b949e" font-size="16">to select</text>
+                        <text id="constellation-center-score" x="${cx}" y="${cy + 16}" text-anchor="middle" fill="#8b949e" font-size="18">to select</text>
                     </g>
                 `;
             }
