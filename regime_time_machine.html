@@ -634,12 +634,28 @@
                         data.combined;
                 const simColor = sim >= 70 ? '#a7f3d0' : sim >= 40 ? '#dcdcaa' : '#fecdd3';
 
+                // Show correct values based on current view
+                let nowVal, thenVal;
+                if (currentView === 'st') {
+                    nowVal = data.currentST?.toFixed(1) || '--';
+                    thenVal = data.historicalST?.toFixed(1) || '--';
+                } else if (currentView === 'it') {
+                    nowVal = data.currentIT?.toFixed(1) || '--';
+                    thenVal = data.historicalIT?.toFixed(1) || '--';
+                } else {
+                    // Combined: show ST + IT
+                    const nowCombined = (data.currentST || 0) + (data.currentIT || 0);
+                    const thenCombined = (data.historicalST || 0) + (data.historicalIT || 0);
+                    nowVal = nowCombined.toFixed(1);
+                    thenVal = thenCombined.toFixed(1);
+                }
+
                 sectorRows += `
                     <tr class="border-b border-[#21262d]">
                         <td class="py-2 text-white">${sector}</td>
                         <td class="py-2 text-center" style="color: ${simColor}">${sim.toFixed(0)}%</td>
-                        <td class="py-2 text-right text-[#9cdcfe]">${data.currentST?.toFixed(1) || '--'}</td>
-                        <td class="py-2 text-right text-[#8b949e]">${data.historicalST?.toFixed(1) || '--'}</td>
+                        <td class="py-2 text-right text-[#9cdcfe]">${nowVal}</td>
+                        <td class="py-2 text-right text-[#8b949e]">${thenVal}</td>
                     </tr>
                 `;
             });
