@@ -1276,6 +1276,11 @@
             document.getElementById('tooltip').style.display = 'none';
         }
 
+        // Hide tooltip when scrolling (mobile UX improvement)
+        window.addEventListener('scroll', () => {
+            hideTooltip();
+        }, { passive: true });
+
         window.openChartModalWithId = function (ticker) {
             const d = allData.find(item => item.ticker === ticker);
             if (d) openChartModal(d);
