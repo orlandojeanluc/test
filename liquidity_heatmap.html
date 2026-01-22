@@ -720,7 +720,7 @@
             appId: "1:565710392511:web:37349319364bba19b3ca0a"
         };
 
-        let app, functions, getVolatilityData, getEodhdData, appCheck;
+        let app, functions, getVolatilityData, getEodhdData, get30DayVolLevels, appCheck;
         try {
             app = initializeApp(firebaseConfig);
 
@@ -733,6 +733,7 @@
             functions = getFunctions(app);
             getVolatilityData = httpsCallable(functions, 'getVolatilityData', { timeout: 540000 });
             getEodhdData = httpsCallable(functions, 'getEodhdData', { timeout: 120000 });
+            get30DayVolLevels = httpsCallable(functions, 'get30DayVolLevels', { timeout: 60000 });
         } catch (err) {
             // Firebase initialization error handled silently
         }
@@ -1157,14 +1158,17 @@
                     renderChart(true);
                     updateStats();
 
-                    // 3. Calculate 30-Day Vol Levels (client-side using existing data)
+                    // 3. Fetch 30-Day Vol Levels from Cloud Function
                     try {
-                        zones30dData = calculate30DayVolZones(currentTicker);
-                        if (zones30dData) {
-                            renderChart(true); // Re-render to include 30D levels
+                        if (get30DayVolLevels) {
+                            const zones30dResult = await get30DayVolLevels({ ticker: currentTicker });
+                            zones30dData = zones30dResult.data?.zones30d || null;
+                            if (zones30dData) {
+                                renderChart(true); // Re-render to include 30D levels
+                            }
                         }
                     } catch (e) {
-                        console.log('30-day levels calculation error:', e.message);
+                        console.log('30-day levels fetch error:', e.message);
                     }
 
                     loader.style.display = 'none'; // Success
