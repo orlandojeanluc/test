@@ -720,7 +720,7 @@
             appId: "1:565710392511:web:37349319364bba19b3ca0a"
         };
 
-        let app, functions, getVolatilityData, getEodhdData, appCheck;
+        let app, functions, getVolatilityData, getEodhdData, get30DayVolLevels, appCheck;
         try {
             app = initializeApp(firebaseConfig);
 
@@ -733,6 +733,7 @@
             functions = getFunctions(app);
             getVolatilityData = httpsCallable(functions, 'getVolatilityData', { timeout: 540000 });
             getEodhdData = httpsCallable(functions, 'getEodhdData', { timeout: 120000 });
+            get30DayVolLevels = httpsCallable(functions, 'get30DayVolLevels', { timeout: 30000 });
         } catch (err) {
             // Firebase initialization error handled silently
         }
@@ -741,7 +742,9 @@
         let historyData = [];
         let optionsData = [];
         let proprietaryDataMap = null;
+        let zones30dData = null;  // 30-day aggregated vol levels
         let showOI = true;  // Toggle for OI levels visibility
+        let show30DLevels = true;  // Toggle for 30-day levels visibility
 
         // --- INIT ---
         document.addEventListener('DOMContentLoaded', () => {
@@ -1083,6 +1086,19 @@
                     renderChart(true);
                     updateStats();
 
+                    // 3. Fetch 30-Day Vol Levels (in background)
+                    try {
+                        if (get30DayVolLevels) {
+                            const zones30dResult = await get30DayVolLevels({ ticker: currentTicker });
+                            zones30dData = zones30dResult.data?.zones30d || null;
+                            if (zones30dData) {
+                                renderChart(true); // Re-render to include 30D levels
+                            }
+                        }
+                    } catch (e) {
+                        console.log('30-day levels not available:', e.message);
+                    }
+
                     loader.style.display = 'none'; // Success
 
                 } catch (optErr) {
@@ -1224,6 +1240,39 @@
                             lineStyle: style,
                             axisLabelVisible: true,
                             title: `${prefix}SUP ${m}σ`,
+                        });
+                    });
+                }
+            }
+
+            // --- ADD 30-DAY AGGREGATED LEVELS (Magenta Lines) ---
+            if (show30DLevels && zones30dData) {
+                // Resistance zones
+                if (zones30dData.resistance) {
+                    zones30dData.resistance.forEach(zone => {
+                        const lineWidth = zone.strength > 10 ? 3 : zone.strength > 5 ? 2 : 1;
+                        candleSeries.createPriceLine({
+                            price: zone.price,
+                            color: '#c586c0',  // Magenta (differentiates from daily blue)
+                            lineWidth: lineWidth,
+                            lineStyle: LightweightCharts.LineStyle.Solid,
+                            axisLabelVisible: true,
+                            title: `30D RES (${zone.type})`,
+                        });
+                    });
+                }
+
+                // Support zones
+                if (zones30dData.support) {
+                    zones30dData.support.forEach(zone => {
+                        const lineWidth = zone.strength > 10 ? 3 : zone.strength > 5 ? 2 : 1;
+                        candleSeries.createPriceLine({
+                            price: zone.price,
+                            color: '#c586c0',  // Magenta (differentiates from daily blue)
+                            lineWidth: lineWidth,
+                            lineStyle: LightweightCharts.LineStyle.Solid,
+                            axisLabelVisible: true,
+                            title: `30D SUP (${zone.type})`,
                         });
                     });
                 }
