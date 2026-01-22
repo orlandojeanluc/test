@@ -720,7 +720,7 @@
             appId: "1:565710392511:web:37349319364bba19b3ca0a"
         };
 
-        let app, functions, getVolatilityData, getEodhdData, get30DayVolLevels, appCheck;
+        let app, functions, getVolatilityData, getEodhdData, appCheck;
         try {
             app = initializeApp(firebaseConfig);
 
@@ -733,7 +733,6 @@
             functions = getFunctions(app);
             getVolatilityData = httpsCallable(functions, 'getVolatilityData', { timeout: 540000 });
             getEodhdData = httpsCallable(functions, 'getEodhdData', { timeout: 120000 });
-            get30DayVolLevels = httpsCallable(functions, 'get30DayVolLevels', { timeout: 30000 });
         } catch (err) {
             // Firebase initialization error handled silently
         }
@@ -957,6 +956,78 @@
             });
         }
 
+        // Calculate 30-day vol zones from existing price history + IV
+        function calculate30DayVolZones(ticker) {
+            if (!historyData || historyData.length < 30) return null;
+            if (!proprietaryDataMap || !proprietaryDataMap[ticker]) return null;
+
+            const prop = proprietaryDataMap[ticker];
+            if (!prop.impliedVol) return null;
+
+            const impliedVol = prop.impliedVol;
+            const last30Days = historyData.slice(-30);
+
+            const allResistance = [];
+            const allSupport = [];
+            const multipliers = [
+                { m: 0.25, type: '0.25σ' },
+                { m: 0.5, type: '0.5σ' },
+                { m: 1.0, type: '1σ' },
+                { m: 2.0, type: '2σ' }
+            ];
+
+            // Calculate levels for each day using that day's close + current IV
+            last30Days.forEach(candle => {
+                const close = candle.close;
+                const oneSigmaMove = close * impliedVol * Math.sqrt(30 / 365);
+
+                multipliers.forEach(({ m, type }) => {
+                    allResistance.push({ price: close + (oneSigmaMove * m), type });
+                    allSupport.push({ price: close - (oneSigmaMove * m), type });
+                });
+            });
+
+            // Cluster levels into zones (bucket by 1% of current price)
+            const currentPrice = historyData[historyData.length - 1].close;
+            const bucketSize = currentPrice * 0.01;
+
+            function clusterLevels(levels) {
+                const buckets = {};
+
+                levels.forEach(level => {
+                    const bucketKey = Math.round(level.price / bucketSize) * bucketSize;
+                    if (!buckets[bucketKey]) {
+                        buckets[bucketKey] = { priceSum: 0, count: 0, types: [] };
+                    }
+                    buckets[bucketKey].priceSum += level.price;
+                    buckets[bucketKey].count++;
+                    buckets[bucketKey].types.push(level.type);
+                });
+
+                // Convert to array, sort by strength, return top 5
+                return Object.entries(buckets)
+                    .map(([key, bucket]) => ({
+                        price: bucket.priceSum / bucket.count,
+                        strength: bucket.count,
+                        type: mostFrequent(bucket.types)
+                    }))
+                    .filter(zone => zone.strength >= 3)  // Only zones with 3+ touches
+                    .sort((a, b) => b.strength - a.strength)
+                    .slice(0, 5);
+            }
+
+            function mostFrequent(arr) {
+                const freq = {};
+                arr.forEach(t => freq[t] = (freq[t] || 0) + 1);
+                return Object.entries(freq).sort((a, b) => b[1] - a[1])[0]?.[0] || '';
+            }
+
+            return {
+                resistance: clusterLevels(allResistance),
+                support: clusterLevels(allSupport)
+            };
+        }
+
         // Main scanner function
         async function scanAllTickers() {
             if (!isMarketHours()) {
@@ -1086,17 +1157,14 @@
                     renderChart(true);
                     updateStats();
 
-                    // 3. Fetch 30-Day Vol Levels (in background)
+                    // 3. Calculate 30-Day Vol Levels (client-side using existing data)
                     try {
-                        if (get30DayVolLevels) {
-                            const zones30dResult = await get30DayVolLevels({ ticker: currentTicker });
-                            zones30dData = zones30dResult.data?.zones30d || null;
-                            if (zones30dData) {
-                                renderChart(true); // Re-render to include 30D levels
-                            }
+                        zones30dData = calculate30DayVolZones(currentTicker);
+                        if (zones30dData) {
+                            renderChart(true); // Re-render to include 30D levels
                         }
                     } catch (e) {
-                        console.log('30-day levels not available:', e.message);
+                        console.log('30-day levels calculation error:', e.message);
                     }
 
                     loader.style.display = 'none'; // Success
