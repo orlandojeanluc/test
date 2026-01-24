@@ -121,50 +121,50 @@
             }
         }
 
-        /* Regime Colors */
+        /* Regime Colors - using terminal theme */
         .regime-risk-on {
-            color: #22c55e;
+            color: #a7f3d0;
         }
 
         .regime-risk-off {
-            color: #ef4444;
+            color: #fecdd3;
         }
 
         .regime-rotation {
-            color: #f59e0b;
+            color: #dcdcaa;
         }
 
         .regime-recovery {
-            color: #3b82f6;
+            color: #9cdcfe;
         }
 
         .regime-uncertainty {
-            color: #8b5cf6;
+            color: #c586c0;
         }
 
         .bg-regime-risk-on {
-            background: rgba(34, 197, 94, 0.15);
-            border-color: #22c55e;
+            background: rgba(167, 243, 208, 0.1);
+            border-color: #a7f3d0;
         }
 
         .bg-regime-risk-off {
-            background: rgba(239, 68, 68, 0.15);
-            border-color: #ef4444;
+            background: rgba(254, 205, 211, 0.1);
+            border-color: #fecdd3;
         }
 
         .bg-regime-rotation {
-            background: rgba(245, 158, 11, 0.15);
-            border-color: #f59e0b;
+            background: rgba(220, 220, 170, 0.1);
+            border-color: #dcdcaa;
         }
 
         .bg-regime-recovery {
-            background: rgba(59, 130, 246, 0.15);
-            border-color: #3b82f6;
+            background: rgba(156, 220, 254, 0.1);
+            border-color: #9cdcfe;
         }
 
         .bg-regime-uncertainty {
-            background: rgba(139, 92, 246, 0.15);
-            border-color: #8b5cf6;
+            background: rgba(197, 134, 192, 0.1);
+            border-color: #c586c0;
         }
 
         /* Progress bar */
@@ -400,9 +400,8 @@
                         <span class="text-sm text-[#8b949e]">% bullish</span>
                     </div>
                     <div class="progress-bar">
-                        <div id="breadth-bar"
-                            class="progress-fill bg-gradient-to-r from-red-500 via-yellow-500 to-green-500"
-                            style="width: 50%"></div>
+                        <div id="breadth-bar" class=\"progress-fill bg-gradient-to-r from-[#fecdd3] via-[#dcdcaa]
+                            to-[#a7f3d0]\" style="width: 50%"></div>
                     </div>
                     <div class="flex justify-between text-[10px] text-[#8b949e] mt-1">
                         <span>Risk-Off</span>
@@ -446,9 +445,8 @@
                         <span class="text-sm text-[#8b949e]">% positive</span>
                     </div>
                     <div class="progress-bar">
-                        <div id="stock-breadth-bar"
-                            class="progress-fill bg-gradient-to-r from-red-500 via-yellow-500 to-green-500"
-                            style="width: 50%"></div>
+                        <div id="stock-breadth-bar" class=\"progress-fill bg-gradient-to-r from-[#fecdd3] via-[#dcdcaa]
+                            to-[#a7f3d0]\" style="width: 50%"></div>
                     </div>
                     <div class="text-xs text-[#8b949e] mt-1">
                         Individual stocks in uptrend
@@ -489,9 +487,8 @@
                         <span class="text-sm text-[#8b949e]">/ 100</span>
                     </div>
                     <div class="progress-bar">
-                        <div id="aggregate-bar"
-                            class="progress-fill bg-gradient-to-r from-red-500 via-yellow-500 to-green-500"
-                            style="width: 50%"></div>
+                        <div id="aggregate-bar" class=\"progress-fill bg-gradient-to-r from-[#fecdd3] via-[#dcdcaa]
+                            to-[#a7f3d0]\" style="width: 50%"></div>
                     </div>
                     <div class="text-xs text-[#8b949e] mt-1">
                         Combined from all data sources
@@ -518,38 +515,38 @@
             <div class="terminal-card p-4">
                 <div class="text-[10px] uppercase tracking-wider text-[#8b949e] mb-3">Regime Definitions</div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
-                    <div class="p-3 rounded-lg bg-green-500/10 border border-green-500/30">
+                    <div class="p-3 rounded-lg bg-[#a7f3d0]/10 border border-[#a7f3d0]/30">
                         <div class="flex items-center gap-2 mb-1">
                             <span>🟢</span>
-                            <span class="text-sm font-bold text-green-400">RISK-ON</span>
+                            <span class="text-sm font-bold text-[#a7f3d0]">RISK-ON</span>
                         </div>
                         <div class="text-[10px] text-[#8b949e]">Broad rally, low vol, risk assets outperforming</div>
                     </div>
-                    <div class="p-3 rounded-lg bg-red-500/10 border border-red-500/30">
+                    <div class="p-3 rounded-lg bg-[#fecdd3]/10 border border-[#fecdd3]/30">
                         <div class="flex items-center gap-2 mb-1">
                             <span>🔴</span>
-                            <span class="text-sm font-bold text-red-400">RISK-OFF</span>
+                            <span class="text-sm font-bold text-[#fecdd3]">RISK-OFF</span>
                         </div>
                         <div class="text-[10px] text-[#8b949e]">Defensive positioning, flight to safety</div>
                     </div>
-                    <div class="p-3 rounded-lg bg-amber-500/10 border border-amber-500/30">
+                    <div class="p-3 rounded-lg bg-[#dcdcaa]/10 border border-[#dcdcaa]/30">
                         <div class="flex items-center gap-2 mb-1">
                             <span>🔄</span>
-                            <span class="text-sm font-bold text-amber-400">ROTATION</span>
+                            <span class="text-sm font-bold text-[#dcdcaa]">ROTATION</span>
                         </div>
                         <div class="text-[10px] text-[#8b949e]">Sector rotation, leadership changing</div>
                     </div>
-                    <div class="p-3 rounded-lg bg-blue-500/10 border border-blue-500/30">
+                    <div class="p-3 rounded-lg bg-[#9cdcfe]/10 border border-[#9cdcfe]/30">
                         <div class="flex items-center gap-2 mb-1">
                             <span>📈</span>
-                            <span class="text-sm font-bold text-blue-400">RECOVERY</span>
+                            <span class="text-sm font-bold text-[#9cdcfe]">RECOVERY</span>
                         </div>
                         <div class="text-[10px] text-[#8b949e]">Emerging from risk-off, early bull signals</div>
                     </div>
-                    <div class="p-3 rounded-lg bg-purple-500/10 border border-purple-500/30">
+                    <div class="p-3 rounded-lg bg-[#c586c0]/10 border border-[#c586c0]/30">
                         <div class="flex items-center gap-2 mb-1">
                             <span>⚠️</span>
-                            <span class="text-sm font-bold text-purple-400">UNCERTAINTY</span>
+                            <span class="text-sm font-bold text-[#c586c0]">UNCERTAINTY</span>
                         </div>
                         <div class="text-[10px] text-[#8b949e]">Choppy, mixed signals, no clear direction</div>
                     </div>
@@ -586,11 +583,11 @@
 
         // --- REGIME DEFINITIONS ---
         const REGIMES = {
-            RISK_ON: { name: 'RISK-ON', icon: '🟢', color: '#22c55e', bgClass: 'bg-regime-risk-on' },
-            RISK_OFF: { name: 'RISK-OFF', icon: '🔴', color: '#ef4444', bgClass: 'bg-regime-risk-off' },
-            ROTATION: { name: 'ROTATION', icon: '🔄', color: '#f59e0b', bgClass: 'bg-regime-rotation' },
-            RECOVERY: { name: 'RECOVERY', icon: '📈', color: '#3b82f6', bgClass: 'bg-regime-recovery' },
-            UNCERTAINTY: { name: 'UNCERTAINTY', icon: '⚠️', color: '#8b5cf6', bgClass: 'bg-regime-uncertainty' }
+            RISK_ON: { name: 'RISK-ON', icon: '🟢', color: '#a7f3d0', bgClass: 'bg-regime-risk-on' },
+            RISK_OFF: { name: 'RISK-OFF', icon: '🔴', color: '#fecdd3', bgClass: 'bg-regime-risk-off' },
+            ROTATION: { name: 'ROTATION', icon: '🔄', color: '#dcdcaa', bgClass: 'bg-regime-rotation' },
+            RECOVERY: { name: 'RECOVERY', icon: '📈', color: '#9cdcfe', bgClass: 'bg-regime-recovery' },
+            UNCERTAINTY: { name: 'UNCERTAINTY', icon: '⚠️', color: '#c586c0', bgClass: 'bg-regime-uncertainty' }
         };
 
         // State - only tracks current regime for rendering
@@ -652,7 +649,7 @@
             const macroScore = metrics.macroScore;
             document.getElementById('macro-score').textContent = macroScore > 0 ? `+${macroScore}` : macroScore;
             macroLabel.textContent = macroScore > 5 ? 'Bullish' : macroScore < -5 ? 'Bearish' : 'Neutral';
-            macroLabel.className = `text-xs px-2 py-0.5 rounded ${macroScore > 5 ? 'bg-green-500/20 text-green-400' : macroScore < -5 ? 'bg-red-500/20 text-red-400' : 'bg-[#21262d] text-[#8b949e]'}`;
+            macroLabel.className = `text-xs px-2 py-0.5 rounded ${macroScore > 5 ? 'bg-[#a7f3d0]/20 text-[#a7f3d0]' : macroScore < -5 ? 'bg-[#fecdd3]/20 text-[#fecdd3]' : 'bg-[#21262d] text-[#8b949e]'}`;
 
             // Mean Rev
             document.getElementById('meanrev-count').textContent = metrics.meanRevSignals;
@@ -665,14 +662,14 @@
             document.getElementById('iv-regime').textContent = `${metrics.avgIVPercentile}%`;
             const ivLabel = document.getElementById('iv-label');
             ivLabel.textContent = metrics.ivRegime;
-            ivLabel.className = `text-xs px-2 py-0.5 rounded ${metrics.ivRegime === 'Low' ? 'bg-green-500/20 text-green-400' : metrics.ivRegime === 'High' ? 'bg-red-500/20 text-red-400' : 'bg-[#21262d] text-[#8b949e]'}`;
+            ivLabel.className = `text-xs px-2 py-0.5 rounded ${metrics.ivRegime === 'Low' ? 'bg-[#a7f3d0]/20 text-[#a7f3d0]' : metrics.ivRegime === 'High' ? 'bg-[#fecdd3]/20 text-[#fecdd3]' : 'bg-[#21262d] text-[#8b949e]'}`;
 
             // Low Vol Factor
             const lowVolScore = metrics.lowVolScore;
             document.getElementById('lowvol-score').textContent = lowVolScore > 0 ? `+${lowVolScore}` : lowVolScore;
             const lvLabel = document.getElementById('lowvol-label');
             lvLabel.textContent = metrics.lowVolStrength;
-            lvLabel.className = `text-xs px-2 py-0.5 rounded ${metrics.lowVolStrength === 'Strong' ? 'bg-green-500/20 text-green-400' : metrics.lowVolStrength === 'Weak' ? 'bg-red-500/20 text-red-400' : 'bg-[#21262d] text-[#8b949e]'}`;
+            lvLabel.className = `text-xs px-2 py-0.5 rounded ${metrics.lowVolStrength === 'Strong' ? 'bg-[#a7f3d0]/20 text-[#a7f3d0]' : metrics.lowVolStrength === 'Weak' ? 'bg-[#fecdd3]/20 text-[#fecdd3]' : 'bg-[#21262d] text-[#8b949e]'}`;
 
             // Aggregate Score
             document.getElementById('aggregate-score').textContent = metrics.aggregateScore;
