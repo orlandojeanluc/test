@@ -601,6 +601,44 @@
                 const scoreColor = getScoreColor(a.score);
                 const displayScore = a.score > 0 ? `+${a.score.toFixed(2)}` : a.score.toFixed(2);
 
+                // Maturity Clock rendering
+                let maturityHtml = '<span class="text-[#8b949e]">—</span>';
+                if (a.maturityData && a.maturityData.daysActive > 0) {
+                    const { daysActive, avgResolutionDays, estimatedDaysRemaining, historicalCycles } = a.maturityData;
+
+                    // Calculate progress percentage
+                    let progressPct = 0;
+                    if (avgResolutionDays && avgResolutionDays > 0) {
+                        progressPct = Math.min(100, Math.round((daysActive / avgResolutionDays) * 100));
+                    }
+
+                    // Color based on progress
+                    const progressColor = progressPct >= 80 ? '#a7f3d0' : progressPct >= 50 ? '#dcdcaa' : '#fecdd3';
+
+                    if (avgResolutionDays !== null && historicalCycles > 0) {
+                        maturityHtml = `
+                            <div class="flex flex-col gap-1">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-[11px] text-white">🕐 ${daysActive}d in, ~${estimatedDaysRemaining}d left</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <div class="w-16 h-1.5 bg-[#21262d] rounded-full overflow-hidden">
+                                        <div class="h-full rounded-full" style="width: ${progressPct}%; background: ${progressColor}"></div>
+                                    </div>
+                                    <span class="text-[9px] text-[#8b949e]">${historicalCycles} cycles</span>
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        maturityHtml = `
+                            <div class="flex items-center gap-2">
+                                <span class="text-[11px] text-[#dcdcaa]">🕐 ${daysActive}d</span>
+                                <span class="text-[9px] text-[#8b949e]">(no history)</span>
+                            </div>
+                        `;
+                    }
+                }
+
                 return `
                     <tr class="border-b border-[#30363d] hover:bg-[#1f2937] hover:shadow-[inset_0_0_0_1px_rgba(139,92,246,0.3)] transition-colors even:bg-[#161b22]/50">
                         <td class="py-2 px-3">
@@ -618,18 +656,22 @@
                         <td class="py-2 px-2">
                             <span class="signal-badge ${signalStrength.badge}">${signalStrength.text}</span>
                         </td>
+                        <td class="py-2 px-2">
+                            ${maturityHtml}
+                        </td>
                     </tr>
                 `;
             }).join('');
 
             const desktopTable = `
                 <div style="overflow-x: auto; overscroll-behavior: none; -webkit-overflow-scrolling: touch;">
-                    <table class="w-full text-left text-sm text-[#c9d1d9]" style="min-width: 400px;">
+                    <table class="w-full text-left text-sm text-[#c9d1d9]" style="min-width: 500px;">
                         <thead class="text-sm bg-[#161b22] text-white sticky top-0 z-10 shadow-sm">
                             <tr>
                                 <th class="py-2 px-3 text-left font-semibold whitespace-nowrap" style="width: 150px;">Asset</th>
-                                <th class="py-2 px-2 text-left font-semibold whitespace-nowrap" style="width: 180px;">Signal Score</th>
-                                <th class="py-2 px-2 text-left font-semibold whitespace-nowrap" style="width: 140px;">Mean Rev Regime</th>
+                                <th class="py-2 px-2 text-left font-semibold whitespace-nowrap" style="width: 160px;">Signal Score</th>
+                                <th class="py-2 px-2 text-left font-semibold whitespace-nowrap" style="width: 120px;">Regime</th>
+                                <th class="py-2 px-2 text-left font-semibold whitespace-nowrap" style="width: 180px;">Maturity Clock</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-[#30363d]">
