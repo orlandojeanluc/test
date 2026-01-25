@@ -630,10 +630,12 @@
                             </div>
                         `;
                     } else {
+                        // Has data but no completed cycles detected
+                        const hasData = a.maturityData.totalDataPoints && a.maturityData.totalDataPoints > 0;
                         maturityHtml = `
                             <div class="flex items-center gap-2">
                                 <span class="text-xs text-[#dcdcaa]">${daysActive}d</span>
-                                <span class="text-[10px] text-[#8b949e]">(no history)</span>
+                                <span class="text-[10px] text-[#8b949e]">${hasData ? '(new signal)' : '(no history)'}</span>
                             </div>
                         `;
                     }
