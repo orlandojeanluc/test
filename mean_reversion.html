@@ -619,21 +619,21 @@
                         maturityHtml = `
                             <div class="flex flex-col gap-1">
                                 <div class="flex items-center gap-2">
-                                    <span class="text-[11px] text-white">🕐 ${daysActive}d in, ~${estimatedDaysRemaining}d left</span>
+                                    <span class="text-xs text-white">${daysActive}d in, ~${estimatedDaysRemaining}d left</span>
                                 </div>
                                 <div class="flex items-center gap-2">
                                     <div class="w-16 h-1.5 bg-[#21262d] rounded-full overflow-hidden">
                                         <div class="h-full rounded-full" style="width: ${progressPct}%; background: ${progressColor}"></div>
                                     </div>
-                                    <span class="text-[9px] text-[#8b949e]">${historicalCycles} cycles</span>
+                                    <span class="text-[10px] text-[#8b949e]">${historicalCycles} cycles</span>
                                 </div>
                             </div>
                         `;
                     } else {
                         maturityHtml = `
                             <div class="flex items-center gap-2">
-                                <span class="text-[11px] text-[#dcdcaa]">🕐 ${daysActive}d</span>
-                                <span class="text-[9px] text-[#8b949e]">(no history)</span>
+                                <span class="text-xs text-[#dcdcaa]">${daysActive}d</span>
+                                <span class="text-[10px] text-[#8b949e]">(no history)</span>
                             </div>
                         `;
                     }
