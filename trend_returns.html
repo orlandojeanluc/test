@@ -250,7 +250,7 @@
         </div>
 
         <!-- Tables Container -->
-        <div id="tables-container" class="hidden p-4 grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div id="tables-container" class="hidden p-4 grid grid-cols-1 gap-6">
             <!-- ST Trend Returns Table -->
             <div class="terminal-card overflow-hidden">
                 <div class="bg-[#161b22] px-4 py-2 border-b border-[#21262d]">
@@ -266,6 +266,10 @@
                                 <th>Avg Return</th>
                                 <th>Win Rate</th>
                                 <th>Avg Days</th>
+                                <th>Std Dev</th>
+                                <th>Max</th>
+                                <th>Min</th>
+                                <th>Sharpe</th>
                             </tr>
                         </thead>
                         <tbody id="st-table-body">
@@ -289,6 +293,10 @@
                                 <th>Avg Return</th>
                                 <th>Win Rate</th>
                                 <th>Avg Days</th>
+                                <th>Std Dev</th>
+                                <th>Max</th>
+                                <th>Min</th>
+                                <th>Sharpe</th>
                             </tr>
                         </thead>
                         <tbody id="it-table-body">
@@ -413,6 +421,7 @@
                     const s = data.stReturns[score.toString()];
                     const isCurrentScore = score === currentStRounded;
                     const rowClass = isCurrentScore ? 'score-row current-score' : 'score-row';
+                    const sharpeColor = s.sharpe > 0.5 ? 'positive' : s.sharpe < -0.5 ? 'negative' : 'neutral';
                     stBody.innerHTML += `
                         <tr class="${rowClass}">
                             <td class="font-mono font-bold ${score > 0 ? 'positive' : score < 0 ? 'negative' : 'neutral'}">${score > 0 ? '+' : ''}${score}</td>
@@ -420,6 +429,10 @@
                             <td>${formatReturn(s.avgReturn)}</td>
                             <td>${formatWinRate(s.winRate)}</td>
                             <td class="text-[#9cdcfe]">${s.avgDays !== null ? s.avgDays + 'd' : '-'}</td>
+                            <td class="text-[#dcdcaa]">${s.stdDev !== null ? s.stdDev.toFixed(1) + '%' : '-'}</td>
+                            <td>${formatReturn(s.maxReturn)}</td>
+                            <td>${formatReturn(s.minReturn)}</td>
+                            <td class="${sharpeColor} font-semibold">${s.sharpe !== null ? s.sharpe.toFixed(2) : '-'}</td>
                         </tr>
                     `;
                 }
@@ -433,6 +446,7 @@
                     const s = data.itReturns[score.toString()];
                     const isCurrentScore = score === currentItRounded;
                     const rowClass = isCurrentScore ? 'score-row current-score' : 'score-row';
+                    const sharpeColor = s.sharpe > 0.5 ? 'positive' : s.sharpe < -0.5 ? 'negative' : 'neutral';
                     itBody.innerHTML += `
                         <tr class="${rowClass}">
                             <td class="font-mono font-bold ${score > 0 ? 'positive' : score < 0 ? 'negative' : 'neutral'}">${score > 0 ? '+' : ''}${score}</td>
@@ -440,6 +454,10 @@
                             <td>${formatReturn(s.avgReturn)}</td>
                             <td>${formatWinRate(s.winRate)}</td>
                             <td class="text-[#9cdcfe]">${s.avgDays !== null ? s.avgDays + 'd' : '-'}</td>
+                            <td class="text-[#dcdcaa]">${s.stdDev !== null ? s.stdDev.toFixed(1) + '%' : '-'}</td>
+                            <td>${formatReturn(s.maxReturn)}</td>
+                            <td>${formatReturn(s.minReturn)}</td>
+                            <td class="${sharpeColor} font-semibold">${s.sharpe !== null ? s.sharpe.toFixed(2) : '-'}</td>
                         </tr>
                     `;
                 }
