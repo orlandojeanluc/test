@@ -254,19 +254,18 @@
             <!-- ST Trend Returns Table -->
             <div class="terminal-card overflow-hidden">
                 <div class="bg-[#161b22] px-4 py-2 border-b border-[#21262d]">
-                    <h2 class="text-white font-semibold">Short-Term Trend Returns</h2>
-                    <p class="text-[#8b949e] text-xs">Forward returns: 5 days, 10 days</p>
+                    <h2 class="text-white font-semibold">Short-Term Trend Holding Returns</h2>
+                    <p class="text-[#8b949e] text-xs">Return while score was at each level</p>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="score-table w-full text-sm">
                         <thead>
                             <tr>
                                 <th>Score</th>
-                                <th>Count</th>
-                                <th>Avg 5D Return</th>
-                                <th>Win Rate 5D</th>
-                                <th>Avg 10D Return</th>
-                                <th>Win Rate 10D</th>
+                                <th>Periods</th>
+                                <th>Avg Return</th>
+                                <th>Win Rate</th>
+                                <th>Avg Days</th>
                             </tr>
                         </thead>
                         <tbody id="st-table-body">
@@ -278,19 +277,18 @@
             <!-- IT Trend Returns Table -->
             <div class="terminal-card overflow-hidden">
                 <div class="bg-[#161b22] px-4 py-2 border-b border-[#21262d]">
-                    <h2 class="text-white font-semibold">Intermediate-Term Trend Returns</h2>
-                    <p class="text-[#8b949e] text-xs">Forward returns: 15 days, 30 days</p>
+                    <h2 class="text-white font-semibold">Intermediate-Term Trend Holding Returns</h2>
+                    <p class="text-[#8b949e] text-xs">Return while score was at each level</p>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="score-table w-full text-sm">
                         <thead>
                             <tr>
                                 <th>Score</th>
-                                <th>Count</th>
-                                <th>Avg 15D Return</th>
-                                <th>Win Rate 15D</th>
-                                <th>Avg 30D Return</th>
-                                <th>Win Rate 30D</th>
+                                <th>Periods</th>
+                                <th>Avg Return</th>
+                                <th>Win Rate</th>
+                                <th>Avg Days</th>
                             </tr>
                         </thead>
                         <tbody id="it-table-body">
@@ -419,10 +417,9 @@
                         <tr class="${rowClass}">
                             <td class="font-mono font-bold ${score > 0 ? 'positive' : score < 0 ? 'negative' : 'neutral'}">${score > 0 ? '+' : ''}${score}</td>
                             <td class="text-[#8b949e]">${s.count || 0}</td>
-                            <td>${formatReturn(s.avg5d)}</td>
-                            <td>${formatWinRate(s.winRate5d)}</td>
-                            <td>${formatReturn(s.avg10d)}</td>
-                            <td>${formatWinRate(s.winRate10d)}</td>
+                            <td>${formatReturn(s.avgReturn)}</td>
+                            <td>${formatWinRate(s.winRate)}</td>
+                            <td class="text-[#9cdcfe]">${s.avgDays !== null ? s.avgDays + 'd' : '-'}</td>
                         </tr>
                     `;
                 }
@@ -440,10 +437,9 @@
                         <tr class="${rowClass}">
                             <td class="font-mono font-bold ${score > 0 ? 'positive' : score < 0 ? 'negative' : 'neutral'}">${score > 0 ? '+' : ''}${score}</td>
                             <td class="text-[#8b949e]">${s.count || 0}</td>
-                            <td>${formatReturn(s.avg15d)}</td>
-                            <td>${formatWinRate(s.winRate15d)}</td>
-                            <td>${formatReturn(s.avg30d)}</td>
-                            <td>${formatWinRate(s.winRate30d)}</td>
+                            <td>${formatReturn(s.avgReturn)}</td>
+                            <td>${formatWinRate(s.winRate)}</td>
+                            <td class="text-[#9cdcfe]">${s.avgDays !== null ? s.avgDays + 'd' : '-'}</td>
                         </tr>
                     `;
                 }
