@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caltropia | Trend Score Returns</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        mono: ['"JetBrains Mono"', '"IBM Plex Mono"', 'monospace'],
+                        sans: ['"Inter"', 'sans-serif']
+                    },
+                    colors: {
+                        terminal: {
+                            bg: '#0d1117',
+                            panel: '#161b22',
+                            border: '#21262d',
+                            orange: '#c586c0',
+                            amber: '#dcdcaa',
+                            green: '#b5cea8',
+                            red: '#f48771',
+                            blue: '#9cdcfe',
+                            muted: '#8b949e'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        html,
+        body {
+            overflow-x: hidden;
+        }
+
+        body {
+            background-color: #0d1117;
+            color: #c9d1d9;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        .terminal-card {
+            background: #0d1117;
+            border: 1px solid #21262d;
+            transition: all 0.15s ease;
+            border-radius: 0.5rem;
+        }
+
+        .terminal-card:hover {
+            border-color: #c586c0;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0d1117;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #21262d;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #c586c0;
+        }
+
+        .blink {
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        input,
+        select {
+            background: #11151b !important;
+            border: 1px solid #21262d !important;
+            color: #fff !important;
+            font-family: 'Inter', sans-serif !important;
+            border-radius: 0.375rem;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #c586c0 !important;
+            outline: none !important;
+        }
+
+        .score-table th,
+        .score-table td {
+            padding: 8px 12px;
+            text-align: center;
+            border-bottom: 1px solid #21262d;
+        }
+
+        .score-table th {
+            background: #161b22;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .score-row:hover {
+            background: #1f2937;
+        }
+
+        .positive {
+            color: #b5cea8;
+        }
+
+        .negative {
+            color: #f48771;
+        }
+
+        .neutral {
+            color: #dcdcaa;
+        }
+
+        .current-score {
+            background: rgba(197, 134, 192, 0.2);
+            border: 1px solid #c586c0;
+        }
+
+        .loading-spinner {
+            border: 3px solid #21262d;
+            border-top: 3px solid #c586c0;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body class="min-h-screen w-screen overflow-x-hidden">
+
+    <!-- Sidebar Navigation -->
+    <nav id="sidebar" class="fixed z-50 bg-[#0a0e14] flex items-center
+                bottom-0 w-full h-14 flex-row justify-around py-0
+                lg:left-0 lg:top-0 lg:h-full lg:w-12 lg:flex-col lg:py-4 transition-all duration-300">
+
+        <div class="hidden lg:block text-[#c586c0] font-bold text-xs mb-6 w-full text-center relative">
+            <span class="logo-icon">C</span>
+        </div>
+
+        <div
+            class="flex-1 flex flex-row w-full justify-around items-center lg:flex-col lg:w-full lg:justify-start lg:gap-2">
+            <a href="radial.html"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
+                title="Dashboard">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6z"></path>
+                </svg>
+            </a>
+
+            <a href="momentum.html"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
+                title="Trend Signals">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path>
+                </svg>
+            </a>
+
+            <a href="mean_reversion.html"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
+                title="Mean Reversion">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
+                    </path>
+                </svg>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="lg:ml-12 min-h-screen pb-20 lg:pb-0">
+        <!-- Header -->
+        <div
+            class="sticky top-0 z-30 bg-[#0d1117] border-b border-[#21262d] px-4 py-3 flex items-center gap-4 flex-wrap">
+            <h1 class="text-white text-lg font-semibold hidden md:block">Trend Score Returns Analysis</h1>
+
+            <div class="flex items-center gap-2">
+                <label class="text-[#8b949e] text-xs">Ticker:</label>
+                <select id="ticker-select" class="px-3 py-1.5 text-sm min-w-[120px]">
+                    <option value="">Select...</option>
+                </select>
+            </div>
+
+            <button id="load-btn" onclick="loadData()"
+                class="px-4 py-1.5 text-xs bg-[#c586c0] text-white rounded-lg hover:bg-[#b376b0] transition-colors">
+                Load Returns
+            </button>
+
+            <div id="loading" class="hidden flex items-center gap-2">
+                <div class="loading-spinner"></div>
+                <span class="text-[#8b949e] text-xs">Loading...</span>
+            </div>
+
+            <div id="data-info" class="ml-auto text-xs text-[#8b949e] hidden">
+                <span id="st-count"></span> ST datapoints | <span id="it-count"></span> IT datapoints
+            </div>
+        </div>
+
+        <!-- Mobile Title -->
+        <div class="md:hidden px-4 py-2">
+            <h1 class="text-white text-lg font-semibold">Trend Score Returns</h1>
+        </div>
+
+        <!-- Current Scores Banner -->
+        <div id="current-scores" class="hidden mx-4 mt-4 p-3 terminal-card">
+            <div class="flex items-center gap-6 text-sm">
+                <span class="text-[#8b949e]">Current Scores:</span>
+                <span>ST Trend: <strong id="current-st" class="text-white">-</strong></span>
+                <span>IT Trend: <strong id="current-it" class="text-white">-</strong></span>
+            </div>
+        </div>
+
+        <!-- Tables Container -->
+        <div id="tables-container" class="hidden p-4 grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- ST Trend Returns Table -->
+            <div class="terminal-card overflow-hidden">
+                <div class="bg-[#161b22] px-4 py-2 border-b border-[#21262d]">
+                    <h2 class="text-white font-semibold">Short-Term Trend Returns</h2>
+                    <p class="text-[#8b949e] text-xs">Forward returns: 5 days, 10 days</p>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="score-table w-full text-sm">
+                        <thead>
+                            <tr>
+                                <th>Score</th>
+                                <th>Count</th>
+                                <th>Avg 5D Return</th>
+                                <th>Win Rate 5D</th>
+                                <th>Avg 10D Return</th>
+                                <th>Win Rate 10D</th>
+                            </tr>
+                        </thead>
+                        <tbody id="st-table-body">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- IT Trend Returns Table -->
+            <div class="terminal-card overflow-hidden">
+                <div class="bg-[#161b22] px-4 py-2 border-b border-[#21262d]">
+                    <h2 class="text-white font-semibold">Intermediate-Term Trend Returns</h2>
+                    <p class="text-[#8b949e] text-xs">Forward returns: 15 days, 30 days</p>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="score-table w-full text-sm">
+                        <thead>
+                            <tr>
+                                <th>Score</th>
+                                <th>Count</th>
+                                <th>Avg 15D Return</th>
+                                <th>Win Rate 15D</th>
+                                <th>Avg 30D Return</th>
+                                <th>Win Rate 30D</th>
+                            </tr>
+                        </thead>
+                        <tbody id="it-table-body">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Empty State -->
+        <div id="empty-state" class="flex flex-col items-center justify-center py-20 text-center">
+            <svg class="w-16 h-16 text-[#21262d] mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
+                </path>
+            </svg>
+            <h3 class="text-white text-lg font-semibold mb-2">Select a Ticker</h3>
+            <p class="text-[#8b949e] text-sm max-w-md">Choose a ticker from the dropdown above to see historical forward
+                returns for each trend score level.</p>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+        import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-functions.js";
+        import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app-check.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBQcttND6KKVGhccxOpv7rKWIPfIOCCpss",
+            authDomain: "trendscores-df341.firebaseapp.com",
+            projectId: "trendscores-df341",
+            databaseURL: "https://trendscores-df341-default-rtdb.firebaseio.com",
+            storageBucket: "trendscores-df341.appspot.com",
+            messagingSenderId: "565710392511",
+            appId: "1:565710392511:web:37349319364bba19b3ca0a"
+        };
+
+        const app = initializeApp(firebaseConfig);
+
+        const appCheck = initializeAppCheck(app, {
+            provider: new ReCaptchaEnterpriseProvider('6LdhuEssAAAAAJrGKy3V5OZdCIjn4IGLz6iJRswE'),
+            isTokenAutoRefreshEnabled: true
+        });
+
+        const functions = getFunctions(app);
+        const getTrendScoreReturns = httpsCallable(functions, 'getTrendScoreReturns');
+        const auth = getAuth(app);
+
+        // Ticker list
+        const tickers = [
+            'AAPL', 'MSFT', 'GOOGL', 'AMZN', 'NVDA', 'META', 'TSLA', 'BRK.B', 'UNH', 'JNJ',
+            'V', 'JPM', 'XOM', 'MA', 'PG', 'HD', 'CVX', 'MRK', 'ABBV', 'LLY',
+            'PEP', 'KO', 'COST', 'TMO', 'WMT', 'MCD', 'CSCO', 'ABT', 'DHR', 'ACN',
+            'AVGO', 'VZ', 'NEE', 'NKE', 'TXN', 'PM', 'BMY', 'UNP', 'HON', 'INTC',
+            'COP', 'LOW', 'RTX', 'QCOM', 'ORCL', 'AMGN', 'IBM', 'CAT', 'GE', 'AMD'
+        ];
+
+        // Populate ticker dropdown
+        const tickerSelect = document.getElementById('ticker-select');
+        tickers.sort().forEach(ticker => {
+            const option = document.createElement('option');
+            option.value = ticker;
+            option.textContent = ticker;
+            tickerSelect.appendChild(option);
+        });
+
+        // Format return value
+        const formatReturn = (val) => {
+            if (val === null || val === undefined) return '-';
+            const sign = val >= 0 ? '+' : '';
+            const colorClass = val >= 0 ? 'positive' : 'negative';
+            return `<span class="${colorClass}">${sign}${val.toFixed(2)}%</span>`;
+        };
+
+        // Format win rate
+        const formatWinRate = (val) => {
+            if (val === null || val === undefined) return '-';
+            const colorClass = val >= 50 ? 'positive' : val >= 40 ? 'neutral' : 'negative';
+            return `<span class="${colorClass}">${val.toFixed(1)}%</span>`;
+        };
+
+        // Load data
+        window.loadData = async function () {
+            const ticker = tickerSelect.value;
+            if (!ticker) {
+                alert('Please select a ticker');
+                return;
+            }
+
+            const loading = document.getElementById('loading');
+            const loadBtn = document.getElementById('load-btn');
+            const emptyState = document.getElementById('empty-state');
+            const tablesContainer = document.getElementById('tables-container');
+            const currentScores = document.getElementById('current-scores');
+            const dataInfo = document.getElementById('data-info');
+
+            loading.classList.remove('hidden');
+            loadBtn.disabled = true;
+            emptyState.classList.add('hidden');
+
+            try {
+                const result = await getTrendScoreReturns({ ticker });
+                const data = result.data;
+
+                // Show current scores
+                document.getElementById('current-st').textContent = data.currentStScore !== null ? data.currentStScore : '-';
+                document.getElementById('current-it').textContent = data.currentItScore !== null ? data.currentItScore : '-';
+                currentScores.classList.remove('hidden');
+
+                // Show data info
+                document.getElementById('st-count').textContent = data.totalDailyDataPoints;
+                document.getElementById('it-count').textContent = data.totalWeeklyDataPoints;
+                dataInfo.classList.remove('hidden');
+
+                // Render ST table
+                const stBody = document.getElementById('st-table-body');
+                stBody.innerHTML = '';
+                const currentStRounded = data.currentStScore !== null ? Math.round(data.currentStScore) : null;
+
+                for (let score = 4; score >= -4; score--) {
+                    const s = data.stReturns[score.toString()];
+                    const isCurrentScore = score === currentStRounded;
+                    const rowClass = isCurrentScore ? 'score-row current-score' : 'score-row';
+                    stBody.innerHTML += `
+                        <tr class="${rowClass}">
+                            <td class="font-mono font-bold ${score > 0 ? 'positive' : score < 0 ? 'negative' : 'neutral'}">${score > 0 ? '+' : ''}${score}</td>
+                            <td class="text-[#8b949e]">${s.count || 0}</td>
+                            <td>${formatReturn(s.avg5d)}</td>
+                            <td>${formatWinRate(s.winRate5d)}</td>
+                            <td>${formatReturn(s.avg10d)}</td>
+                            <td>${formatWinRate(s.winRate10d)}</td>
+                        </tr>
+                    `;
+                }
+
+                // Render IT table
+                const itBody = document.getElementById('it-table-body');
+                itBody.innerHTML = '';
+                const currentItRounded = data.currentItScore !== null ? Math.round(data.currentItScore) : null;
+
+                for (let score = 4; score >= -4; score--) {
+                    const s = data.itReturns[score.toString()];
+                    const isCurrentScore = score === currentItRounded;
+                    const rowClass = isCurrentScore ? 'score-row current-score' : 'score-row';
+                    itBody.innerHTML += `
+                        <tr class="${rowClass}">
+                            <td class="font-mono font-bold ${score > 0 ? 'positive' : score < 0 ? 'negative' : 'neutral'}">${score > 0 ? '+' : ''}${score}</td>
+                            <td class="text-[#8b949e]">${s.count || 0}</td>
+                            <td>${formatReturn(s.avg15d)}</td>
+                            <td>${formatWinRate(s.winRate15d)}</td>
+                            <td>${formatReturn(s.avg30d)}</td>
+                            <td>${formatWinRate(s.winRate30d)}</td>
+                        </tr>
+                    `;
+                }
+
+                tablesContainer.classList.remove('hidden');
+
+            } catch (error) {
+                console.error('Error loading data:', error);
+                alert('Error loading data: ' + error.message);
+            } finally {
+                loading.classList.add('hidden');
+                loadBtn.disabled = false;
+            }
+        };
+
+        // Auth check
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                window.location.href = 'login.html';
+            }
+        });
+    </script>
+</body>
+
+</html>
