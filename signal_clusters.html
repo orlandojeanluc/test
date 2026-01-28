@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caltropia | Signal Clusters</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        mono: ['"JetBrains Mono"', 'monospace'],
+                        sans: ['"Inter"', 'sans-serif']
+                    },
+                    colors: {
+                        terminal: {
+                            bg: '#0d1117',
+                            panel: '#161b22',
+                            border: '#21262d',
+                            orange: '#c586c0',
+                            green: '#b5cea8',
+                            red: '#f48771',
+                            blue: '#9cdcfe',
+                            muted: '#8b949e'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        body {
+            background-color: #0d1117;
+            color: #c9d1d9;
+        }
+
+        .terminal-card {
+            background: #0d1117;
+            border: 1px solid #21262d;
+            border-radius: 0.5rem;
+        }
+
+        .loading-spinner {
+            border: 3px solid #21262d;
+            border-top: 3px solid #c586c0;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .cluster-badge {
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .cluster-0 {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .cluster-1 {
+            background: #10b981;
+            color: white;
+        }
+
+        .cluster-2 {
+            background: #f59e0b;
+            color: black;
+        }
+
+        .cluster-3 {
+            background: #ef4444;
+            color: white;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen">
+    <!-- Sidebar Navigation -->
+    <nav id="sidebar" class="fixed z-50 bg-[#0a0e14] flex items-center
+                bottom-0 w-full h-14 flex-row justify-around py-0
+                lg:left-0 lg:top-0 lg:h-full lg:w-12 lg:flex-col lg:py-4">
+        <div class="hidden lg:block text-[#c586c0] font-bold text-xs mb-6 w-full text-center">
+            <span>C</span>
+        </div>
+        <div
+            class="flex-1 flex flex-row w-full justify-around items-center lg:flex-col lg:w-full lg:justify-start lg:gap-2">
+            <a href="radial.html"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0]"
+                title="Dashboard">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6z"></path>
+                </svg>
+            </a>
+            <a href="momentum.html"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0]"
+                title="Trend Signals">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4"></path>
+                </svg>
+            </a>
+            <a href="trend_returns.html"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0]"
+                title="Score Returns">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6"></path>
+                </svg>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="lg:ml-12 min-h-screen pb-20 lg:pb-0">
+        <!-- Header -->
+        <div
+            class="sticky top-0 z-30 bg-[#0d1117] border-b border-[#21262d] px-4 py-3 flex items-center gap-4 flex-wrap">
+            <h1 class="text-white text-lg font-semibold">Signal Clusters (PCA)</h1>
+
+            <button id="load-btn" onclick="loadClusters()"
+                class="px-4 py-1.5 text-xs bg-[#c586c0] text-white rounded-lg hover:bg-[#b376b0]">
+                Load Clusters
+            </button>
+
+            <div id="loading" class="hidden flex items-center gap-2">
+                <div class="loading-spinner"></div>
+                <span class="text-[#8b949e] text-xs">Clustering tickers...</span>
+            </div>
+
+            <div id="stats" class="ml-auto text-xs text-[#8b949e] hidden">
+                <span id="ticker-count"></span> tickers |
+                Variance explained: <span id="variance" class="text-[#b5cea8]"></span>
+            </div>
+        </div>
+
+        <!-- Cluster Legend -->
+        <div id="legend" class="hidden px-4 py-3 flex flex-wrap gap-4 border-b border-[#21262d]">
+            <div class="flex items-center gap-2">
+                <span class="cluster-badge cluster-0">Cluster 0</span>
+                <span id="cluster-0-count" class="text-xs text-[#8b949e]"></span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="cluster-badge cluster-1">Cluster 1</span>
+                <span id="cluster-1-count" class="text-xs text-[#8b949e]"></span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="cluster-badge cluster-2">Cluster 2</span>
+                <span id="cluster-2-count" class="text-xs text-[#8b949e]"></span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="cluster-badge cluster-3">Cluster 3</span>
+                <span id="cluster-3-count" class="text-xs text-[#8b949e]"></span>
+            </div>
+        </div>
+
+        <!-- 3D Plot Container -->
+        <div id="plot-container" class="p-4">
+            <div id="plot" style="width:100%; height:600px;"></div>
+        </div>
+
+        <!-- Cluster Tables -->
+        <div id="cluster-tables" class="hidden p-4 grid grid-cols-1 lg:grid-cols-2 gap-4">
+        </div>
+
+        <!-- Empty State -->
+        <div id="empty-state" class="flex flex-col items-center justify-center py-20 text-center">
+            <svg class="w-16 h-16 text-[#21262d] mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z">
+                </path>
+            </svg>
+            <h3 class="text-white text-lg font-semibold mb-2">Signal-Based Clustering</h3>
+            <p class="text-[#8b949e] text-sm max-w-md">Click "Load Clusters" to analyze all tickers and group them by
+                their signal profiles using PCA.</p>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+        import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-functions.js";
+        import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app-check.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBQcttND6KKVGhccxOpv7rKWIPfIOCCpss",
+            authDomain: "trendscores-df341.firebaseapp.com",
+            projectId: "trendscores-df341",
+            databaseURL: "https://trendscores-df341-default-rtdb.firebaseio.com",
+            storageBucket: "trendscores-df341.appspot.com",
+            messagingSenderId: "565710392511",
+            appId: "1:565710392511:web:37349319364bba19b3ca0a"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const appCheck = initializeAppCheck(app, {
+            provider: new ReCaptchaEnterpriseProvider('6LdhuEssAAAAAJrGKy3V5OZdCIjn4IGLz6iJRswE'),
+            isTokenAutoRefreshEnabled: true
+        });
+
+        const functions = getFunctions(app);
+        const getSignalClusters = httpsCallable(functions, 'getSignalClusters');
+
+        const clusterColors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444'];
+        const clusterNames = ['Cluster 0', 'Cluster 1', 'Cluster 2', 'Cluster 3'];
+
+        window.loadClusters = async function () {
+            const loading = document.getElementById('loading');
+            const loadBtn = document.getElementById('load-btn');
+            const emptyState = document.getElementById('empty-state');
+            const plotContainer = document.getElementById('plot-container');
+            const legend = document.getElementById('legend');
+            const stats = document.getElementById('stats');
+            const clusterTables = document.getElementById('cluster-tables');
+
+            loading.classList.remove('hidden');
+            loadBtn.disabled = true;
+            emptyState.classList.add('hidden');
+
+            try {
+                const result = await getSignalClusters({});
+                const data = result.data;
+
+                // Update stats
+                document.getElementById('ticker-count').textContent = data.numTickers;
+                document.getElementById('variance').textContent = data.explainedVariance.map(v => v + '%').join(' + ');
+                stats.classList.remove('hidden');
+
+                // Update cluster counts
+                const clusterCounts = [0, 0, 0, 0];
+                data.tickers.forEach(t => clusterCounts[t.cluster]++);
+                for (let i = 0; i < 4; i++) {
+                    document.getElementById(`cluster-${i}-count`).textContent = `${clusterCounts[i]} tickers`;
+                }
+                legend.classList.remove('hidden');
+
+                // Create 3D scatter plot
+                const traces = [];
+                for (let c = 0; c < 4; c++) {
+                    const clusterTickers = data.tickers.filter(t => t.cluster === c);
+                    traces.push({
+                        x: clusterTickers.map(t => t.pc1),
+                        y: clusterTickers.map(t => t.pc2),
+                        z: clusterTickers.map(t => t.pc3),
+                        mode: 'markers+text',
+                        type: 'scatter3d',
+                        name: clusterNames[c],
+                        text: clusterTickers.map(t => t.ticker),
+                        textposition: 'top center',
+                        textfont: { size: 9, color: '#8b949e' },
+                        hovertemplate: clusterTickers.map(t =>
+                            `<b>${t.ticker}</b><br>` +
+                            `ST: ${t.signals.stTrend.toFixed(1)}<br>` +
+                            `IT: ${t.signals.itTrend.toFixed(1)}<br>` +
+                            `Mom: ${t.signals.momentum.toFixed(2)}<br>` +
+                            `MRev: ${t.signals.meanRev.toFixed(2)}<extra></extra>`
+                        ),
+                        marker: {
+                            size: 8,
+                            color: clusterColors[c],
+                            opacity: 0.8
+                        }
+                    });
+                }
+
+                const layout = {
+                    paper_bgcolor: '#0d1117',
+                    plot_bgcolor: '#0d1117',
+                    font: { color: '#c9d1d9' },
+                    scene: {
+                        xaxis: { title: 'PC1', gridcolor: '#21262d', zerolinecolor: '#21262d' },
+                        yaxis: { title: 'PC2', gridcolor: '#21262d', zerolinecolor: '#21262d' },
+                        zaxis: { title: 'PC3', gridcolor: '#21262d', zerolinecolor: '#21262d' },
+                        bgcolor: '#0d1117'
+                    },
+                    legend: {
+                        x: 0.02,
+                        y: 0.98,
+                        bgcolor: 'rgba(22,27,34,0.8)',
+                        bordercolor: '#21262d',
+                        borderwidth: 1
+                    },
+                    margin: { l: 0, r: 0, t: 30, b: 0 }
+                };
+
+                Plotly.newPlot('plot', traces, layout, { responsive: true });
+
+                // Create cluster tables
+                clusterTables.innerHTML = '';
+                for (let c = 0; c < 4; c++) {
+                    const clusterTickers = data.tickers.filter(t => t.cluster === c);
+                    const tableHtml = `
+                        <div class="terminal-card overflow-hidden">
+                            <div class="bg-[#161b22] px-4 py-2 border-b border-[#21262d] flex items-center gap-2">
+                                <span class="cluster-badge cluster-${c}">${clusterNames[c]}</span>
+                                <span class="text-[#8b949e] text-xs">${clusterCounts[c]} tickers</span>
+                            </div>
+                            <div class="p-3 flex flex-wrap gap-2">
+                                ${clusterTickers.map(t => `
+                                    <span class="px-2 py-1 bg-[#161b22] rounded text-xs font-mono text-white">${t.ticker}</span>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                    clusterTables.innerHTML += tableHtml;
+                }
+                clusterTables.classList.remove('hidden');
+
+            } catch (error) {
+                console.error('Error loading clusters:', error);
+                alert('Error: ' + error.message);
+            } finally {
+                loading.classList.add('hidden');
+                loadBtn.disabled = false;
+            }
+        };
+    </script>
+</body>
+
+</html>
