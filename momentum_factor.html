@@ -606,10 +606,27 @@
                 return '#fecdd3';  // Red - poor
             };
 
+            // Helper: Get change color (green = improving/positive for momentum, red = worsening/negative)
+            const getChangeColor = (change) => {
+                if (change === null || change === undefined) return '#8b949e';  // Gray - no data
+                if (change > 0) return '#a7f3d0';  // Green - improving momentum
+                if (change < 0) return '#fecdd3';  // Red - worsening momentum
+                return '#9ca3af';  // Gray - no change
+            };
+
+            // Helper: Format change with arrow
+            const formatChange = (change) => {
+                if (change === null || change === undefined) return 'N/A';
+                const arrow = change > 0 ? '↑' : change < 0 ? '↓' : '—';
+                return `${arrow} ${Math.abs(change).toFixed(1)}`;
+            };
+
             // Table rows
             const tableRows = data.map(a => {
                 const factorLevel = getFactorLevel(a.score);
                 const scoreColor = getScoreColor(a.score);
+                const lastMonthColor = a.lastMonth !== null ? getScoreColor(a.lastMonth) : '#8b949e';
+                const changeColor = getChangeColor(a.change);
 
                 return `
                     <tr class="border-b border-[#30363d] hover:bg-[#1f2937] hover:shadow-[inset_0_0_0_1px_rgba(139,92,246,0.3)] transition-colors even:bg-[#161b22]/50">
@@ -626,6 +643,12 @@
                             </div>
                         </td>
                         <td class="py-2 px-2">
+                            <span class="text-sm font-medium" style="color: ${lastMonthColor}">${a.lastMonth !== null ? a.lastMonth.toFixed(1) : 'N/A'}</span>
+                        </td>
+                        <td class="py-2 px-2">
+                            <span class="text-sm font-medium" style="color: ${changeColor}">${formatChange(a.change)}</span>
+                        </td>
+                        <td class="py-2 px-2">
                             <span class="momentum-badge ${factorLevel.badge}">${factorLevel.text}</span>
                         </td>
                     </tr>
@@ -634,11 +657,13 @@
 
             const desktopTable = `
                 <div style="overflow-x: auto; overscroll-behavior-x: none; -webkit-overflow-scrolling: touch;">
-                    <table class="w-full text-left text-sm text-[#c9d1d9]" style="min-width: 400px;">
+                    <table class="w-full text-left text-sm text-[#c9d1d9]" style="min-width: 650px;">
                         <thead class="text-sm bg-[#161b22] text-white sticky top-0 z-10 shadow-sm">
                             <tr>
                                 <th class="py-2 px-3 text-left font-semibold whitespace-nowrap" style="width: 150px;">Asset</th>
-                                <th class="py-2 px-2 text-left font-semibold whitespace-nowrap" style="width: 180px;">Momentum Score</th>
+                                <th class="py-2 px-2 text-left font-semibold whitespace-nowrap" style="width: 160px;">Momentum Score</th>
+                                <th class="py-2 px-2 text-left font-semibold whitespace-nowrap" style="width: 100px;">Last Month</th>
+                                <th class="py-2 px-2 text-left font-semibold whitespace-nowrap" style="width: 90px;">Change</th>
                                 <th class="py-2 px-2 text-left font-semibold whitespace-nowrap" style="width: 120px;">Momentum Regime</th>
                             </tr>
                         </thead>
