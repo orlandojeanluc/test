@@ -356,6 +356,14 @@
                     <!-- Key Stats -->
                     <div class="terminal-card p-4">
                         <h3 class="text-white font-bold text-sm mb-4 border-b border-[#21262d] pb-2">Key Statistics</h3>
+                        <!-- Daily Return - Prominent Display -->
+                        <div class="mb-4 p-3 bg-[#161b22] border border-[#21262d] rounded-lg">
+                            <div class="flex justify-between items-center">
+                                <div class="text-[#8b949e] text-[10px] uppercase">Today's Return (15min delay)</div>
+                                <div class="text-[10px] text-[#8b949e]" id="daily-return-timestamp">--:--</div>
+                            </div>
+                            <div id="daily-return-value" class="text-2xl font-bold text-white mt-1">Loading...</div>
+                        </div>
                         <div class="grid grid-cols-2 gap-4">
                             <div>
                                 <div class="text-[#8b949e] text-[10px]">CAGR</div>
@@ -590,6 +598,37 @@
             loadData(decodedName);
         });
 
+        // Load Daily Portfolio Return using EODHD realtime data
+        async function loadDailyReturn(strategyName, positions) {
+            const dailyReturnEl = document.getElementById('daily-return-value');
+            const timestampEl = document.getElementById('daily-return-timestamp');
+
+            try {
+                const getPortfolioDailyReturn = httpsCallable(functions, 'getPortfolioDailyReturn');
+                const result = await getPortfolioDailyReturn({ strategy: strategyName, positions: positions });
+                const data = result.data;
+
+                if (data && data.dailyReturn !== undefined) {
+                    const returnVal = data.dailyReturn;
+                    const sign = returnVal >= 0 ? '+' : '';
+                    const colorClass = returnVal >= 0 ? 'text-[#b5cea8]' : 'text-[#f48771]';
+
+                    dailyReturnEl.className = `text-2xl font-bold ${colorClass} mt-1`;
+                    dailyReturnEl.textContent = `${sign}${returnVal.toFixed(2)}%`;
+
+                    // Update timestamp
+                    const now = new Date();
+                    timestampEl.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                } else {
+                    dailyReturnEl.textContent = 'N/A';
+                    dailyReturnEl.className = 'text-2xl font-bold text-[#8b949e] mt-1';
+                }
+            } catch (error) {
+                console.error('Error loading daily return:', error);
+                dailyReturnEl.textContent = 'Error';
+                dailyReturnEl.className = 'text-2xl font-bold text-[#f48771] mt-1';
+            }
+        }
         async function loadData(strategyName) {
             const chartContainer = document.getElementById('chart-container');
             const positionsBody = document.getElementById('positions-body');
@@ -633,6 +672,9 @@
                         const secChart = document.getElementById('sector-chart-container');
                         if (secChart) secChart.classList.remove('hidden');
                     }
+
+                    // 3b. Load Daily Portfolio Return using EODHD realtime data
+                    loadDailyReturn(strategyName, data.positions);
                 } else {
                     positionsBody.innerHTML = '<tr><td colspan="5" class="py-3 text-center text-[#f48771]">No positions data found</td></tr>';
                 }
