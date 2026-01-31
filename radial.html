@@ -813,6 +813,18 @@
                 </div>
             </div>
 
+            <!-- Portfolio Strategies Section -->
+            <div class="terminal-card p-4 mt-4">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-sm font-bold text-white">Portfolio Strategies</h3>
+                    <span class="text-[10px] text-[#8b949e] font-mono">15min delay</span>
+                </div>
+                <div id="portfolio-strategies-grid" class="flex gap-3 overflow-x-auto pb-2">
+                    <!-- Cards will be dynamically populated -->
+                    <div class="text-[#8b949e] text-xs">Loading strategies...</div>
+                </div>
+            </div>
+
             <!-- Main Charts Row -->
             <div class="grid grid-cols-1 xl:grid-cols-12 gap-4">
                 <div class="xl:col-span-8 terminal-card p-4">
@@ -1096,6 +1108,88 @@
 
         // Expose to window for onclick handlers - DEFINED EARLY TO ENSURE SCOPE AVAILABILITY
         window.loadData = loadData;
+
+        // Portfolio Strategies Daily Returns
+        async function loadPortfolioStrategies() {
+            const container = document.getElementById('portfolio-strategies-grid');
+            if (!container) return;
+
+            // Define all strategies with their cloud functions and display names
+            const strategies = [
+                { name: 'S&P Daily Rebalance', displayName: 'S&P Daily', cloudFunc: 'getPortfolioDetailData' },
+                { name: 'S&P Dip/Rip', displayName: 'Dip/Rip', cloudFunc: 'getPortfolioDetailData' },
+                { name: 'Caltropia Momentum Factor', displayName: 'Momentum', cloudFunc: 'getMomentumFactorData' },
+                { name: 'Caltropia Mean Reversion Factor', displayName: 'Mean Rev', cloudFunc: 'getMeanReversionData' },
+                { name: 'Caltropia Low Vol Factor', displayName: 'Low Vol', cloudFunc: 'getLowVolData' },
+                { name: 'Caltropia Bond Regime Model', displayName: 'Bonds', cloudFunc: 'getPortfolioDetailData' },
+                { name: 'Caltropia Managed Futures EW', displayName: 'Futures', cloudFunc: 'getManagedFuturesData' }
+            ];
+
+            container.innerHTML = strategies.map(s => `
+                <a href="portfolio_detail.html?strategy=${encodeURIComponent(s.name)}" 
+                   class="flex-shrink-0 w-[140px] terminal-card p-3 cursor-pointer hover:border-[#c586c0] transition-all">
+                    <div class="text-[10px] text-[#8b949e] font-bold mb-1 truncate">${s.displayName}</div>
+                    <div id="strategy-return-${s.name.replace(/[^a-zA-Z0-9]/g, '')}" 
+                         class="text-lg font-bold text-white">--</div>
+                </a>
+            `).join('');
+
+            // Fetch positions for each strategy and calculate daily return
+            for (const strategy of strategies) {
+                try {
+                    // First get the positions from the appropriate cloud function
+                    let positions = {};
+
+                    if (['S&P Daily Rebalance', 'S&P Dip/Rip', 'Caltropia Bond Regime Model'].includes(strategy.name)) {
+                        const getPortfolioDetailData = httpsCallable(functions, 'getPortfolioDetailData');
+                        const result = await getPortfolioDetailData({ strategy: strategy.name });
+                        positions = result.data.positions || {};
+                    } else if (strategy.name === 'Caltropia Momentum Factor') {
+                        const getMomentumFactorData = httpsCallable(functions, 'getMomentumFactorData');
+                        const result = await getMomentumFactorData();
+                        positions = result.data.positions || {};
+                    } else if (strategy.name === 'Caltropia Mean Reversion Factor') {
+                        const getMeanReversionData = httpsCallable(functions, 'getMeanReversionData');
+                        const result = await getMeanReversionData();
+                        positions = result.data.positions || {};
+                    } else if (strategy.name === 'Caltropia Low Vol Factor') {
+                        const getLowVolData = httpsCallable(functions, 'getLowVolData');
+                        const result = await getLowVolData();
+                        positions = result.data.positions || {};
+                    } else if (strategy.name === 'Caltropia Managed Futures EW') {
+                        const getManagedFuturesData = httpsCallable(functions, 'getManagedFuturesData');
+                        const result = await getManagedFuturesData();
+                        positions = result.data.positions || {};
+                    }
+
+                    // Now calculate daily return
+                    const getPortfolioDailyReturn = httpsCallable(functions, 'getPortfolioDailyReturn');
+                    const returnResult = await getPortfolioDailyReturn({ strategy: strategy.name, positions: positions });
+
+                    const dailyReturn = returnResult.data.dailyReturn || 0;
+                    const safeId = strategy.name.replace(/[^a-zA-Z0-9]/g, '');
+                    const el = document.getElementById(`strategy-return-${safeId}`);
+
+                    if (el) {
+                        const sign = dailyReturn >= 0 ? '+' : '';
+                        const colorClass = dailyReturn >= 0 ? 'text-[#a7f3d0]' : 'text-[#fecdd3]';
+                        el.textContent = `${sign}${dailyReturn.toFixed(2)}%`;
+                        el.className = `text-lg font-bold ${colorClass}`;
+                    }
+                } catch (error) {
+                    console.error(`Error loading ${strategy.name}:`, error);
+                    const safeId = strategy.name.replace(/[^a-zA-Z0-9]/g, '');
+                    const el = document.getElementById(`strategy-return-${safeId}`);
+                    if (el) {
+                        el.textContent = 'N/A';
+                        el.className = 'text-lg font-bold text-[#8b949e]';
+                    }
+                }
+            }
+        }
+
+        // Call loadPortfolioStrategies after page loads
+        setTimeout(() => loadPortfolioStrategies(), 1000);
 
         // Helper functions moved to top to avoid hoisting issues
         window.setFilter = function (filter) {
