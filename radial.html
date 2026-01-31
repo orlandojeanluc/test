@@ -1134,8 +1134,8 @@
                 </a>
             `).join('');
 
-            // Fetch positions for each strategy and calculate daily return
-            for (const strategy of strategies) {
+            // Fetch ALL strategies in PARALLEL for faster loading
+            const strategyPromises = strategies.map(async (strategy) => {
                 try {
                     // Use getPortfolioDetailData for ALL strategies (same as portfolio_detail.html)
                     const getPortfolioDetailData = httpsCallable(functions, 'getPortfolioDetailData');
@@ -1165,7 +1165,10 @@
                         el.className = 'text-lg font-bold text-[#8b949e]';
                     }
                 }
-            }
+            });
+
+            // Wait for all to complete in parallel
+            await Promise.all(strategyPromises);
         }
 
         // Call loadPortfolioStrategies after page loads
