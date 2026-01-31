@@ -1114,17 +1114,18 @@
             const container = document.getElementById('portfolio-strategies-grid');
             if (!container) return;
 
-            // Define all strategies with their cloud functions and display names
+            // Define all strategies with display names
             const strategies = [
-                { name: 'S&P Daily Rebalance', displayName: 'S&P Daily', cloudFunc: 'getPortfolioDetailData' },
-                { name: 'S&P Dip/Rip', displayName: 'Dip/Rip', cloudFunc: 'getPortfolioDetailData' },
-                { name: 'Caltropia Momentum Factor', displayName: 'Momentum', cloudFunc: 'getMomentumFactorData' },
-                { name: 'Caltropia Mean Reversion Factor', displayName: 'Mean Rev', cloudFunc: 'getMeanReversionData' },
-                { name: 'Caltropia Low Vol Factor', displayName: 'Low Vol', cloudFunc: 'getLowVolData' },
-                { name: 'Caltropia Bond Regime Model', displayName: 'Bonds', cloudFunc: 'getPortfolioDetailData' },
-                { name: 'Caltropia Managed Futures EW', displayName: 'Futures', cloudFunc: 'getManagedFuturesData' }
+                { name: 'S&P Daily Rebalance', displayName: 'S&P Daily' },
+                { name: 'S&P Dip/Rip', displayName: 'Dip/Rip' },
+                { name: 'Caltropia Momentum Factor', displayName: 'Momentum' },
+                { name: 'Caltropia Mean Reversion Factor', displayName: 'Mean Rev' },
+                { name: 'Caltropia Low Vol Factor', displayName: 'Low Vol' },
+                { name: 'Caltropia Bond Regime Model', displayName: 'Bonds' },
+                { name: 'Caltropia Managed Futures EW', displayName: 'Futures' }
             ];
 
+            // Render cards with loading state
             container.innerHTML = strategies.map(s => `
                 <a href="portfolio_detail.html?strategy=${encodeURIComponent(s.name)}" 
                    class="flex-shrink-0 w-[140px] terminal-card p-3 cursor-pointer hover:border-[#c586c0] transition-all">
@@ -1134,41 +1135,41 @@
                 </a>
             `).join('');
 
-            // Fetch ALL strategies in PARALLEL for faster loading
-            const strategyPromises = strategies.map(async (strategy) => {
-                try {
-                    // Use getPortfolioDetailData for ALL strategies (same as portfolio_detail.html)
-                    const getPortfolioDetailData = httpsCallable(functions, 'getPortfolioDetailData');
-                    const result = await getPortfolioDetailData({ strategy: strategy.name });
-                    const positions = result.data.positions || {};
+            try {
+                // SINGLE cloud function call for ALL strategies (much faster!)
+                const getAllStrategyDailyReturns = httpsCallable(functions, 'getAllStrategyDailyReturns');
+                const result = await getAllStrategyDailyReturns();
+                const strategyReturns = result.data.strategies || {};
 
-                    // Now calculate daily return
-                    const getPortfolioDailyReturn = httpsCallable(functions, 'getPortfolioDailyReturn');
-                    const returnResult = await getPortfolioDailyReturn({ strategy: strategy.name, positions: positions });
-
-                    const dailyReturn = returnResult.data.dailyReturn || 0;
-                    const safeId = strategy.name.replace(/[^a-zA-Z0-9]/g, '');
+                // Update all cards with results
+                strategies.forEach(s => {
+                    const safeId = s.name.replace(/[^a-zA-Z0-9]/g, '');
                     const el = document.getElementById(`strategy-return-${safeId}`);
+                    if (!el) return;
 
-                    if (el) {
+                    const data = strategyReturns[s.name];
+                    if (data && data.dailyReturn !== undefined) {
+                        const dailyReturn = data.dailyReturn;
                         const sign = dailyReturn >= 0 ? '+' : '';
                         const colorClass = dailyReturn >= 0 ? 'text-[#a7f3d0]' : 'text-[#fecdd3]';
                         el.textContent = `${sign}${dailyReturn.toFixed(2)}%`;
                         el.className = `text-lg font-bold ${colorClass}`;
+                    } else {
+                        el.textContent = 'N/A';
+                        el.className = 'text-lg font-bold text-[#8b949e]';
                     }
-                } catch (error) {
-                    console.error(`Error loading ${strategy.name}:`, error);
-                    const safeId = strategy.name.replace(/[^a-zA-Z0-9]/g, '');
+                });
+            } catch (error) {
+                console.error('Error loading strategy returns:', error);
+                strategies.forEach(s => {
+                    const safeId = s.name.replace(/[^a-zA-Z0-9]/g, '');
                     const el = document.getElementById(`strategy-return-${safeId}`);
                     if (el) {
                         el.textContent = 'N/A';
                         el.className = 'text-lg font-bold text-[#8b949e]';
                     }
-                }
-            });
-
-            // Wait for all to complete in parallel
-            await Promise.all(strategyPromises);
+                });
+            }
         }
 
         // Call loadPortfolioStrategies after page loads
