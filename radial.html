@@ -1128,8 +1128,8 @@
             // Render cards with loading state
             container.innerHTML = strategies.map(s => `
                 <a href="portfolio_detail.html?strategy=${encodeURIComponent(s.name)}" 
-                   class="flex-shrink-0 w-[140px] terminal-card p-3 cursor-pointer hover:border-[#c586c0] transition-all">
-                    <div class="text-[10px] text-[#8b949e] font-bold mb-1 truncate">${s.displayName}</div>
+                   class="flex-shrink-0 w-[170px] terminal-card p-3 cursor-pointer hover:border-[#c586c0] transition-all">
+                    <div class="text-[10px] text-[#8b949e] font-bold mb-1">${s.displayName}</div>
                     <div id="strategy-return-${s.name.replace(/[^a-zA-Z0-9]/g, '')}" 
                          class="text-lg font-bold text-white">--</div>
                 </a>
