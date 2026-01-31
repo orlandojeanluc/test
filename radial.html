@@ -1137,30 +1137,10 @@
             // Fetch positions for each strategy and calculate daily return
             for (const strategy of strategies) {
                 try {
-                    // First get the positions from the appropriate cloud function
-                    let positions = {};
-
-                    if (['S&P Daily Rebalance', 'S&P Dip/Rip', 'Caltropia Bond Regime Model'].includes(strategy.name)) {
-                        const getPortfolioDetailData = httpsCallable(functions, 'getPortfolioDetailData');
-                        const result = await getPortfolioDetailData({ strategy: strategy.name });
-                        positions = result.data.positions || {};
-                    } else if (strategy.name === 'Caltropia Momentum Factor') {
-                        const getMomentumFactorData = httpsCallable(functions, 'getMomentumFactorData');
-                        const result = await getMomentumFactorData();
-                        positions = result.data.positions || {};
-                    } else if (strategy.name === 'Caltropia Mean Reversion Factor') {
-                        const getMeanReversionData = httpsCallable(functions, 'getMeanReversionData');
-                        const result = await getMeanReversionData();
-                        positions = result.data.positions || {};
-                    } else if (strategy.name === 'Caltropia Low Vol Factor') {
-                        const getLowVolData = httpsCallable(functions, 'getLowVolData');
-                        const result = await getLowVolData();
-                        positions = result.data.positions || {};
-                    } else if (strategy.name === 'Caltropia Managed Futures EW') {
-                        const getManagedFuturesData = httpsCallable(functions, 'getManagedFuturesData');
-                        const result = await getManagedFuturesData();
-                        positions = result.data.positions || {};
-                    }
+                    // Use getPortfolioDetailData for ALL strategies (same as portfolio_detail.html)
+                    const getPortfolioDetailData = httpsCallable(functions, 'getPortfolioDetailData');
+                    const result = await getPortfolioDetailData({ strategy: strategy.name });
+                    const positions = result.data.positions || {};
 
                     // Now calculate daily return
                     const getPortfolioDailyReturn = httpsCallable(functions, 'getPortfolioDailyReturn');
