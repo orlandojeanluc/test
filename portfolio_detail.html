@@ -691,7 +691,29 @@
                 }
 
                 // 5. Render Monthly Returns
-                if (data.returns) {
+                if (strategyName === 'Caltropia Momentum Factor') {
+                    // Load historical factor returns from new cloud function
+                    try {
+                        const getHistoricalFactorReturns = httpsCallable(functions, 'getHistoricalFactorReturns');
+                        const histResult = await getHistoricalFactorReturns({ strategy: 'momentum' });
+                        const histData = histResult.data;
+
+                        if (histData && histData.monthlyReturns) {
+                            renderMonthlyReturnsTable(histData.monthlyReturns, strategyName);
+                        }
+
+                        // Update cumulative chart with calculated data
+                        if (histData && histData.cumulativeData && histData.cumulativeData.length > 0) {
+                            renderCalculatedCumulativeChart(histData.cumulativeData, chartContainer, strategyName);
+                        }
+                    } catch (histError) {
+                        console.error('Error loading historical returns:', histError);
+                        // Fallback to existing returns data
+                        if (data.returns) {
+                            renderMonthlyReturnsTable(data.returns, strategyName);
+                        }
+                    }
+                } else if (data.returns) {
                     // Specific check for Bond Regime which returns prices that need conversion
                     if (strategyName === 'Caltropia Bond Regime Model') {
                         const returnsData = convertPricesToReturns(data.returns);
@@ -1724,6 +1746,120 @@
                             afterFit: function (scaleInstance) {
                                 scaleInstance.width = 60; // Force minimum width for y-axis
                             }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Render calculated cumulative chart from historical factor returns
+        function renderCalculatedCumulativeChart(cumulativeData, container, strategyName) {
+            if (!container || !cumulativeData || cumulativeData.length === 0) return;
+
+            // Clear container and create canvas
+            container.innerHTML = '<canvas id="calculated-chart" class="w-full h-full"></canvas>';
+            const canvas = document.getElementById('calculated-chart');
+            const ctx = canvas.getContext('2d');
+
+            // Apply time range filter
+            const maxDate = new Date(cumulativeData[cumulativeData.length - 1].date);
+            let startDate = new Date(cumulativeData[0].date);
+
+            if (currentRange === '1M') {
+                startDate = new Date(maxDate);
+                startDate.setMonth(maxDate.getMonth() - 1);
+            } else if (currentRange === '3M') {
+                startDate = new Date(maxDate);
+                startDate.setMonth(maxDate.getMonth() - 3);
+            } else if (currentRange === 'YTD') {
+                startDate = new Date(maxDate.getFullYear(), 0, 1);
+            } else if (currentRange === '1Y') {
+                startDate = new Date(maxDate);
+                startDate.setFullYear(maxDate.getFullYear() - 1);
+            }
+
+            const filteredData = cumulativeData.filter(d => new Date(d.date) >= startDate);
+
+            // Prepare chart data
+            const labels = filteredData.map(d => {
+                const date = new Date(d.date);
+                return date.toLocaleDateString('en-US', { month: 'short', year: '2-digit' });
+            });
+            const values = filteredData.map(d => d.value);
+
+            // Calculate total return for display
+            const totalReturn = ((values[values.length - 1] - 10000) / 10000 * 100).toFixed(2);
+            const returnColor = totalReturn >= 0 ? '#b5cea8' : '#f48771';
+
+            // Destroy existing chart
+            if (chartInstance) {
+                chartInstance.destroy();
+            }
+
+            chartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: `${strategyName} (Calculated)`,
+                        data: values,
+                        borderColor: '#c586c0',
+                        backgroundColor: 'rgba(197, 134, 192, 0.1)',
+                        borderWidth: 2,
+                        pointRadius: 0,
+                        pointHoverRadius: 4,
+                        tension: 0.1,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#8b949e',
+                                font: { family: 'JetBrains Mono', size: 10 },
+                                boxWidth: 10
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: '#161b22',
+                            borderColor: '#21262d',
+                            borderWidth: 1,
+                            titleColor: '#c586c0',
+                            bodyColor: '#c9d1d9',
+                            callbacks: {
+                                label: function (context) {
+                                    const value = context.raw;
+                                    const returnPct = ((value - 10000) / 10000 * 100).toFixed(2);
+                                    return `$${value.toLocaleString()} (${returnPct >= 0 ? '+' : ''}${returnPct}%)`;
+                                }
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: `Growth of $10,000 | Total: ${totalReturn >= 0 ? '+' : ''}${totalReturn}%`,
+                            color: returnColor,
+                            font: { family: 'JetBrains Mono', size: 11, weight: 'bold' }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: { color: '#8b949e', font: { family: 'JetBrains Mono', size: 9 } },
+                            grid: { color: '#21262d', drawBorder: false }
+                        },
+                        y: {
+                            ticks: {
+                                color: '#8b949e',
+                                font: { family: 'JetBrains Mono', size: 9 },
+                                callback: function (value) { return '$' + value.toLocaleString(); }
+                            },
+                            grid: { color: '#21262d', drawBorder: false }
                         }
                     }
                 }
