@@ -1154,7 +1154,7 @@
                 const row = document.createElement('tr');
                 row.className = 'terminal-table-row group';
 
-                let rowHtml = `<td class="py-3 px-4 text-left font-mono font-bold text-[#c586c0] bg-terminal-bg sticky left-0 z-10 border-r border-[#30363d] group-hover:bg-[#1f2937]">${year}</td>`;
+                let rowHtml = `<td class="py-3 px-4 text-left font-mono font-bold text-[#c586c0] bg-[#0d1117] sticky left-0 z-10 border-r border-[#30363d]">${year}</td>`;
 
                 let product = 1.0;
                 let hasData = false;
@@ -1183,7 +1183,7 @@
                     ytdColor = ytd >= 0 ? 'text-[#a7f3d0] font-bold' : 'text-[#fecdd3] font-bold';
                 }
 
-                rowHtml += `<td class="py-3 text-center font-mono text-[11px] border-l border-[#30363d] bg-terminal-bg sticky right-0 z-10 group-hover:bg-[#1f2937] ${ytdColor}">${ytdDisplay}</td>`;
+                rowHtml += `<td class="py-3 text-center font-mono text-[11px] border-l border-[#30363d] bg-[#0d1117] ${ytdColor}">${ytdDisplay}</td>`;
 
                 row.innerHTML = rowHtml;
                 tbody.appendChild(row);
@@ -1699,15 +1699,15 @@
                 const row = document.createElement('tr');
                 row.className = 'terminal-table-row group';
                 row.innerHTML = `
-                    <td class="py-3 px-3">
+                    <td class="py-3 px-3 min-w-[60px]">
                         <div class="font-bold text-white">
                             ${tickerKey.toUpperCase()}
                         </div>
                     </td>
-                    <td class="py-3 px-3 text-[#8b949e] text-xs">${fullName}</td>
-                    <td class="py-3 px-3 text-right font-mono font-bold text-white">${weightPct}</td>
-                    <td class="py-3 px-3 text-right font-mono ${plClass} opacity-50">--</td>
-                    <td class="py-3 px-3 text-right">${statusBadge}</td>
+                    <td class="py-3 px-3 text-[#8b949e] text-xs min-w-[80px] truncate max-w-[120px]">${fullName}</td>
+                    <td class="py-3 px-3 text-right font-mono font-bold text-white min-w-[70px]">${weightPct}</td>
+                    <td class="py-3 px-3 text-right font-mono ${plClass} opacity-50 min-w-[60px]">--</td>
+                    <td class="py-3 px-3 text-right min-w-[60px]">${statusBadge}</td>
                 `;
                 tbody.appendChild(row);
             });
