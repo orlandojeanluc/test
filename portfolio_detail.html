@@ -776,6 +776,65 @@
                             }
                         })();
                     }
+
+                    // For S&P Dip/Rip: async merge new calculated returns from daily data (non-blocking)
+                    if (strategyName === 'S&P Dip/Rip') {
+                        // Fire off async call - doesn't block original render
+                        (async () => {
+                            try {
+                                const getHistoricalSpDipRipReturns = httpsCallable(functions, 'getHistoricalSpDipRipReturns');
+                                const histResult = await getHistoricalSpDipRipReturns({});
+                                const histData = histResult.data;
+
+                                if (histData && histData.monthlyReturns) {
+                                    // Merge: original + new calculated returns for TABLE
+                                    const mergedReturns = { ...data.returns, ...histData.monthlyReturns };
+                                    renderMonthlyReturnsTable(mergedReturns, strategyName);
+                                }
+
+                                // Merge CHART data: add new cumulative points with proper dollar values
+                                if (histData && histData.cumulativeData && histData.cumulativeData.length > 0 && data.chartData) {
+                                    // Get the last values from original chart data
+                                    const sortedOriginalDates = Object.keys(data.chartData).sort((a, b) => new Date(a) - new Date(b));
+                                    let lastStrategyValue = 10000;
+
+                                    if (sortedOriginalDates.length > 0) {
+                                        const lastKey = sortedOriginalDates[sortedOriginalDates.length - 1];
+                                        const lastEntry = data.chartData[lastKey];
+
+                                        // Handle array format [strategy, benchmark] or simple number
+                                        if (Array.isArray(lastEntry)) {
+                                            lastStrategyValue = lastEntry[0] || 10000;
+                                        } else if (typeof lastEntry === 'object' && lastEntry !== null) {
+                                            lastStrategyValue = lastEntry.strategy || lastEntry.Main || Object.values(lastEntry)[0] || 10000;
+                                        } else if (typeof lastEntry === 'number') {
+                                            lastStrategyValue = lastEntry;
+                                        }
+                                    }
+
+                                    // Calculate new dollar values
+                                    const newChartPoints = {};
+                                    let runningValue = parseFloat(lastStrategyValue) || 10000;
+
+                                    histData.cumulativeData.forEach(point => {
+                                        const date = new Date(point.date);
+                                        const dateKey = date.toString();
+
+                                        // Apply return to get new dollar value
+                                        runningValue = runningValue * (1 + point.return);
+                                        newChartPoints[dateKey] = parseFloat(runningValue.toFixed(2));
+                                    });
+
+                                    // Merge with original chartData
+                                    const mergedChartData = { ...data.chartData, ...newChartPoints };
+                                    fullStrategyData = mergedChartData;
+                                    renderSpDailyChart(mergedChartData, chartContainer, strategyName);
+                                }
+                            } catch (e) {
+                                console.log('S&P Dip/Rip historical returns fetch failed (using original data):', e.message);
+                            }
+                        })();
+                    }
                 } else {
                     returnsBody.innerHTML = '<tr><td colspan="14" class="py-4 text-center text-[#f48771]">No returns data found</td></tr>';
                 }
