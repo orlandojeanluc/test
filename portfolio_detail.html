@@ -46,30 +46,57 @@
         body {
             background-color: #0d1117;
             color: #c9d1d9;
-            font-size: 12px;
-            line-height: 1.4;
+            font-size: 13px;
+            /* Slightly larger for readability */
+            line-height: 1.5;
             overflow-x: hidden;
         }
 
         .terminal-header {
-            background: #161b22;
+            background: #0d1117;
             border-bottom: 1px solid #21262d;
         }
 
         .terminal-card {
             background: #0d1117;
             border: 1px solid #21262d;
-            transition: all 0.15s ease;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
-            border-radius: 0.5rem;
-            overflow: visible;
+            border-radius: 12px;
         }
 
         .terminal-card:hover {
-            border-color: #c586c0;
-            box-shadow: 0 0 20px rgba(197, 134, 192, 0.1);
+            border-color: rgba(197, 134, 192, 0.3);
+            background: #161b22;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transform: translateY(-1px);
         }
 
+        /* Table Styles */
+        .terminal-table-header {
+            background: #161b22;
+            color: #8b949e;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .terminal-table-row {
+            border-bottom: 1px solid #21262d;
+            transition: background-color 0.15s ease;
+        }
+
+        .terminal-table-row:hover {
+            background-color: #1f2937 !important;
+            /* Slightly lighter on hover */
+        }
+
+        .terminal-table-row:nth-child(even) {
+            background-color: rgba(22, 27, 34, 0.5);
+        }
+
+        /* Scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
             height: 8px;
@@ -80,7 +107,7 @@
         }
 
         ::-webkit-scrollbar-thumb {
-            background: #21262d;
+            background: #30363d;
             border-radius: 4px;
         }
 
@@ -89,13 +116,55 @@
         }
 
         .blink {
-            animation: blink 1s infinite;
+            animation: blink 2s infinite;
         }
 
         @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
             50% {
                 opacity: 0.5;
             }
+        }
+
+        /* Badges */
+        .sector-badge {
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 700;
+            white-space: nowrap;
+            display: inline-block;
+        }
+
+        .badge-bullish {
+            background-color: rgba(167, 243, 208, 0.1);
+            color: #a7f3d0;
+            border: 1px solid rgba(167, 243, 208, 0.2);
+        }
+
+        .badge-bearish {
+            background-color: rgba(254, 205, 211, 0.1);
+            color: #fecdd3;
+            border: 1px solid rgba(254, 205, 211, 0.2);
+        }
+
+        .badge-neutral {
+            background-color: rgba(139, 148, 158, 0.1);
+            color: #8b949e;
+            border: 1px solid rgba(139, 148, 158, 0.2);
+        }
+
+        /* Effects */
+        .effect-title {
+            background: linear-gradient(135deg, #E2E8F0 0%, #94A3B8 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
     </style>
 </head>
@@ -1085,28 +1154,42 @@
 
             sortedYears.forEach(year => {
                 const monthData = yearMap[year];
-                let rowHtml = `<tr class="border-b border-[#21262d] hover:bg-[#111]">
-                    <td class="py-3 text-left font-bold text-[#ccc]">${year}</td>`;
+                const row = document.createElement('tr');
+                row.className = 'terminal-table-row group';
+
+                let rowHtml = `<td class="py-3 px-4 text-left font-mono font-bold text-[#c586c0] bg-[#161b22]/50 sticky left-0 border-r border-[#30363d] group-hover:bg-[#1f2937]">${year}</td>`;
 
                 let product = 1.0;
                 let hasData = false;
 
                 for (let i = 1; i <= 12; i++) {
                     const val = monthData[i];
-                    rowHtml += formatCell(val);
+                    let display = '-';
+                    let color = 'text-[#2d333b]'; // Very dim for empty
 
                     if (val !== undefined && !isNaN(val)) {
+                        display = (val * 100).toFixed(2) + '%';
+                        color = val >= 0 ? 'text-[#a7f3d0]' : 'text-[#fecdd3]';
                         product *= (1 + val);
                         hasData = true;
                     }
+                    rowHtml += `<td class="py-3 text-center font-mono text-[11px] ${color}">${display}</td>`;
                 }
 
                 // Calculate YTD
                 const ytd = hasData ? (product - 1) : null;
-                rowHtml += formatCell(ytd, true);
+                let ytdDisplay = '-';
+                let ytdColor = 'text-[#8b949e]';
 
-                rowHtml += `</tr>`;
-                tbody.insertAdjacentHTML('beforeend', rowHtml);
+                if (ytd !== null) {
+                    ytdDisplay = (ytd * 100).toFixed(2) + '%';
+                    ytdColor = ytd >= 0 ? 'text-[#a7f3d0] font-bold' : 'text-[#fecdd3] font-bold';
+                }
+
+                rowHtml += `<td class="py-3 text-center font-mono text-[11px] border-l border-[#30363d] bg-[#161b22]/50 group-hover:bg-[#1f2937] ${ytdColor}">${ytdDisplay}</td>`;
+
+                row.innerHTML = rowHtml;
+                tbody.appendChild(row);
             });
         }
 
@@ -1400,10 +1483,16 @@
             const labels = Object.keys(sectorWeights);
             const values = Object.values(sectorWeights);
 
-            // Define Sector Colors (Custom Palette)
+            // Define Sector Colors (Terminal Palette)
             const colorMap = {
-                'Tech': '#8b949ecc', 'Finance': '#109618', 'Health': '#dc3912', 'Energy': '#ff9900',
-                'Consumer': '#990099', 'Industrial': '#0099c6', 'Utilities': '#dd4477', 'Other': '#66aa00'
+                'Tech': '#c586c0',     // Purple
+                'Finance': '#9cdcfe',  // Blue
+                'Health': '#f48771',   // Red/Orange
+                'Energy': '#dcdcaa',   // Amber
+                'Consumer': '#b5cea8', // Green
+                'Industrial': '#4ec9b0',// Teal
+                'Utilities': '#ce9178',// Brown/Peach
+                'Other': '#8b949e'     // Muted Gray
             };
             const bgColors = labels.map(l => colorMap[l] || '#8b949e');
 
@@ -1416,7 +1505,8 @@
                     datasets: [{
                         data: values,
                         backgroundColor: bgColors,
-                        borderWidth: 0,
+                        borderWidth: 1, // Subtle border
+                        borderColor: '#0d1117', // Match bg
                         hoverOffset: 4
                     }]
                 },
@@ -1577,31 +1667,20 @@
                     return; // Skip this asset
                 }
 
-                // Determine Status and Color
-                let status = 'Flat';
-                let statusColor = 'text-[#aaa]';
-                if (weight > 0) {
-                    status = 'Long';
-                    statusColor = 'text-[#b5cea8]';
-                } else if (weight < 0) {
-                    status = 'Short';
-                    statusColor = 'text-[#f48771]';
-                }
+                // Determine Status and Badge
+                let statusBadge = `<span class="sector-badge badge-neutral">Hold</span>`;
+                if (strategyName.includes('Momentum') && weight > 0) statusBadge = `<span class="sector-badge badge-bullish">Bullish</span>`;
+                else if (weight < 0) statusBadge = `<span class="sector-badge badge-bearish">Short</span>`;
 
                 // Format Percentage
-                // For S&P (decimal 0.4 -> 40%), we multiply by 100.
-                // For Mean Reversion, user requested divide by 100 compared to previous.
-                // Previous was (weight * 100). So new is (weight).
-                // implying raw data IS the percentage.
-
                 let weightPct;
-                if (strategyName === 'Caltropia Mean Reversion Factor' || strategyName === 'Caltropia Momentum Factor' || strategyName === 'Caltropia Low Vol Factor') { // Use arg strategyName
+                if (strategyName === 'Caltropia Mean Reversion Factor' || strategyName === 'Caltropia Momentum Factor' || strategyName === 'Caltropia Low Vol Factor') {
                     weightPct = (weight).toFixed(2) + '%';
                 } else {
-                    weightPct = (weight * 100).toFixed(2) + '%'; // Standard
+                    weightPct = (weight * 100).toFixed(2) + '%';
                 }
 
-                // Name Mapping (Basic)
+                // Name Mapping
                 let nameMap = {
                     'SPY': 'SPDR S&P 500 ETF Trust',
                     'TLT': 'iShares 20+ Year Treasury Bond ETF',
@@ -1614,44 +1693,40 @@
                 // Managed Futures EW Specific Mapping
                 if (strategyName === 'Caltropia Managed Futures EW') {
                     nameMap = {
-                        '6B': 'British Pound',
-                        '6E': 'Euro',
-                        '6J': 'Japanese Yen',
-                        'CL': 'Crude Oil',
-                        'ES': 'S&P 500',
-                        'GC': 'Gold',
-                        'HG': 'Copper',
-                        'NG': 'Natural Gas',
-                        'SB': 'Sugar #11',
-                        'ZC': 'Corn',
-                        'ZN': '10 YR US Treasuries'
+                        '6B': 'British Pound', '6E': 'Euro', '6J': 'Japanese Yen',
+                        'CL': 'Crude Oil', 'ES': 'S&P 500', 'GC': 'Gold',
+                        'HG': 'Copper', 'NG': 'Natural Gas', 'SB': 'Sugar',
+                        'KC': 'Coffee', 'CC': 'Cocoa', 'CT': 'Cotton',
+                        'LBS': 'Lumber', 'HE': 'Live Hogs', 'LE': 'Live Cattle',
+                        'GF': 'Feeder Cattle', 'SI': 'Silver', 'ZN': '10-Year Treasury',
+                        'ZC': 'Corn', 'ZW': 'Wheat', 'ZS': 'Soybeans'
                     };
                 }
 
-                let fullName = nameMap[tickerKey.toUpperCase()];
+                let fullName = nameMap[tickerKey.toUpperCase()] || tickerKey.toUpperCase();
 
-                if (!fullName) {
-                    if (strategyName === 'Caltropia Mean Reversion Factor' || strategyName === 'Caltropia Momentum Factor' || strategyName === 'Caltropia Low Vol Factor' || strategyName === 'Caltropia Managed Futures EW') {
-                        fullName = tickerKey.toUpperCase(); // Stocks/Futures, just show ticker if not mapped
-                    } else {
-                        fullName = tickerKey.toUpperCase() + ' ETF'; // Default Assumption for S&P Strat
-                    }
-                }
-
-                // Global suffix cleanup (e.g. " ETF", " US EQUITY")
-                // User requested to remove " ETF" suffix specifically.
+                // Cleanup Suffixes for Display Name
                 fullName = fullName.replace(' ETF', '').replace(' US EQUITY', '');
 
-                const row = `
-                    <tr class="border-b border-[#21262d] hover:bg-[#111]">
-                        <td class="py-3 text-[#dcdcaa]">${tickerKey.toUpperCase()}</td>
-                        <td class="py-3 text-[#ccc]">${fullName}</td>
-                        <td class="py-3 text-right">${weightPct}</td>
-                        <td class="py-3 text-right text-[#aaa]">--</td>
-                        <td class="py-3 text-right ${statusColor}">${status}</td>
-                    </tr>
+                // P/L Color (Proxy using weight sign for now)
+                const plClass = weight >= 0 ? 'text-[#a7f3d0]' : 'text-[#fecdd3]';
+                const plSign = weight >= 0 ? '+' : '';
+
+                const row = document.createElement('tr');
+                row.className = 'terminal-table-row group';
+                row.innerHTML = `
+                    <td class="py-3 px-3">
+                        <div class="font-bold text-white group-hover:text-[#c586c0] transition-colors cursor-pointer flex items-center gap-2" onclick="window.open('https://finance.yahoo.com/quote/${tickerKey}', '_blank')">
+                            ${tickerKey.toUpperCase()}
+                            <svg class="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity text-[#c586c0]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                        </div>
+                    </td>
+                    <td class="py-3 px-3 text-[#8b949e] text-xs">${fullName}</td>
+                    <td class="py-3 px-3 text-right font-mono font-bold text-white">${weightPct}</td>
+                    <td class="py-3 px-3 text-right font-mono ${plClass} opacity-50">--</td>
+                    <td class="py-3 px-3 text-right">${statusBadge}</td>
                 `;
-                tbody.insertAdjacentHTML('beforeend', row);
+                tbody.appendChild(row);
             });
 
             // Update Allocation Panel (Dynamic)
