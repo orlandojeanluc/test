@@ -66,10 +66,7 @@
         }
 
         .terminal-card:hover {
-            border-color: rgba(197, 134, 192, 0.3);
-            background: #161b22;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            transform: translateY(-1px);
+            border-color: rgba(197, 134, 192, 0.5);
         }
 
         /* Table Styles */
@@ -1669,7 +1666,7 @@
 
                 // Determine Status and Badge
                 let statusBadge = `<span class="sector-badge badge-neutral">Hold</span>`;
-                if (strategyName.includes('Momentum') && weight > 0) statusBadge = `<span class="sector-badge badge-bullish">Bullish</span>`;
+                if (strategyName.includes('Momentum') && weight > 0) statusBadge = `<span class="sector-badge badge-bullish">Long</span>`;
                 else if (weight < 0) statusBadge = `<span class="sector-badge badge-bearish">Short</span>`;
 
                 // Format Percentage
@@ -1716,9 +1713,8 @@
                 row.className = 'terminal-table-row group';
                 row.innerHTML = `
                     <td class="py-3 px-3">
-                        <div class="font-bold text-white group-hover:text-[#c586c0] transition-colors cursor-pointer flex items-center gap-2" onclick="window.open('https://finance.yahoo.com/quote/${tickerKey}', '_blank')">
+                        <div class="font-bold text-white">
                             ${tickerKey.toUpperCase()}
-                            <svg class="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity text-[#c586c0]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                         </div>
                     </td>
                     <td class="py-3 px-3 text-[#8b949e] text-xs">${fullName}</td>
