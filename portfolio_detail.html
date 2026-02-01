@@ -1311,35 +1311,28 @@
         }
 
         // Ticker Sector Map
+        // Ticker Sector Map (Comprehensive)
         const tickerSectorMap = {
-            "NVDA": "Tech", "MSFT": "Tech", "AAPL": "Tech", "AMZN": "Tech", "META": "Tech", "AVGO": "Tech", "GOOGL": "Tech", "TSLA": "Tech", "ORCL": "Tech",
-            "PLTR": "Tech", "CSCO": "Tech", "AMD": "Tech", "CRM": "Tech", "IBM": "Tech", "NOW": "Tech", "QCOM": "Tech", "TXN": "Tech", "ADBE": "Tech",
-            "ANET": "Tech", "MU": "Tech", "AMAT": "Tech", "LRCX": "Tech", "PANW": "Tech", "ADI": "Tech", "KLAC": "Tech", "SNPS": "Tech", "INTC": "Tech",
-            "CRWD": "Tech", "CDNS": "Tech", "NXPI": "Tech", "GLW": "Tech",
-            "JPM": "Finance", "V": "Finance", "MA": "Finance", "BAC": "Finance", "WFC": "Finance", "GS": "Finance", "MS": "Finance", "AXP": "Finance",
-            "C": "Finance", "SPGI": "Finance", "SCHW": "Finance", "BLK": "Finance", "COF": "Finance", "PNC": "Finance", "USB": "Finance", "BK": "Finance",
-            "FI": "Finance", "MCO": "Finance", "ICE": "Finance", "CME": "Finance", "KKR": "Finance", "MMC": "Finance", "AON": "Finance", "AJG": "Finance",
-            "TFC": "Finance", "APO": "Finance", "TRV": "Finance", "ALL": "Finance", "AFL": "Finance", "BX": "Finance", "PYPL": "Finance", "COIN": "Finance",
-            "LLY": "Health", "UNH": "Health", "JNJ": "Health", "ABBV": "Health", "MRK": "Health", "PFE": "Health", "TMO": "Health", "ABT": "Health",
-            "AMGN": "Health", "GILD": "Health", "VRTX": "Health", "BMY": "Health", "CVS": "Health", "CI": "Health", "ELV": "Health", "SYK": "Health",
-            "MDT": "Health", "DHR": "Health", "BSX": "Health", "ISRG": "Health", "ZTS": "Health", "REGN": "Health", "HCA": "Health", "MCK": "Health",
-            "BDX": "Health",
+            // Technology -> Tech
+            "AAPL": "Tech", "MSFT": "Tech", "NVDA": "Tech", "AVGO": "Tech", "ORCL": "Tech", "CRM": "Tech", "AMD": "Tech", "CSCO": "Tech", "IBM": "Tech", "NOW": "Tech", "QCOM": "Tech", "TXN": "Tech", "ADBE": "Tech", "ANET": "Tech", "MU": "Tech", "AMAT": "Tech", "LRCX": "Tech", "PANW": "Tech", "ADI": "Tech", "KLAC": "Tech", "SNPS": "Tech", "INTC": "Tech", "CRWD": "Tech", "CDNS": "Tech", "NXPI": "Tech", "PLTR": "Tech", "GLW": "Tech", "APH": "Tech", "TEL": "Tech", "MSI": "Tech", "INTU": "Tech", "ACN": "Tech", "ADSK": "Tech",
+            // Financials -> Finance
+            "JPM": "Finance", "V": "Finance", "MA": "Finance", "BAC": "Finance", "WFC": "Finance", "GS": "Finance", "MS": "Finance", "AXP": "Finance", "C": "Finance", "SPGI": "Finance", "SCHW": "Finance", "BLK": "Finance", "COF": "Finance", "PNC": "Finance", "USB": "Finance", "BK": "Finance", "FI": "Finance", "MCO": "Finance", "ICE": "Finance", "CME": "Finance", "KKR": "Finance", "MMC": "Finance", "AON": "Finance", "AJG": "Finance", "TFC": "Finance", "APO": "Finance", "TRV": "Finance", "ALL": "Finance", "AFL": "Finance", "BX": "Finance", "PYPL": "Finance", "COIN": "Finance", "CB": "Finance", "PGR": "Finance",
+            // Health Care -> Health
+            "LLY": "Health", "UNH": "Health", "JNJ": "Health", "ABBV": "Health", "MRK": "Health", "PFE": "Health", "TMO": "Health", "ABT": "Health", "AMGN": "Health", "GILD": "Health", "VRTX": "Health", "BMY": "Health", "CVS": "Health", "CI": "Health", "ELV": "Health", "SYK": "Health", "MDT": "Health", "DHR": "Health", "BSX": "Health", "ISRG": "Health", "ZTS": "Health", "REGN": "Health", "HCA": "Health", "MCK": "Health", "BDX": "Health",
+            // Energy -> Energy
             "XOM": "Energy", "CVX": "Energy", "COP": "Energy", "EOG": "Energy", "SLB": "Energy", "MPC": "Energy", "WMB": "Energy", "PSX": "Energy",
-            "VST": "Energy", "CEG": "Energy",
-            "WMT": "Consumer", "COST": "Consumer", "HD": "Consumer", "PG": "Consumer", "KO": "Consumer", "PEP": "Consumer", "MCD": "Consumer",
-            "NKE": "Consumer", "SBUX": "Consumer", "TJX": "Consumer", "LOW": "Consumer", "ORLY": "Consumer", "AZO": "Consumer", "MDLZ": "Consumer",
-            "CL": "Consumer", "CMG": "Consumer", "MAR": "Consumer", "HLT": "Consumer", "RCL": "Consumer", "ABNB": "Consumer", "DIS": "Consumer",
-            "NFLX": "Consumer", "BKNG": "Consumer",
-            "CAT": "Industrial", "DE": "Industrial", "UNP": "Industrial", "HON": "Industrial", "GE": "Industrial", "BA": "Industrial", "RTX": "Industrial",
-            "LMT": "Industrial", "GD": "Industrial", "NOC": "Industrial", "MMM": "Industrial", "EMR": "Industrial", "ETN": "Industrial", "PH": "Industrial",
-            "ITW": "Industrial", "CMI": "Industrial", "CSX": "Industrial", "NSC": "Industrial", "UPS": "Industrial", "FAST": "Industrial", "URI": "Industrial",
-            "PWR": "Industrial", "CTAS": "Industrial", "TDG": "Industrial", "HWM": "Industrial", "AXON": "Industrial", "JCI": "Industrial", "TT": "Industrial",
-            "MSI": "Industrial", "ROP": "Industrial",
-            "NEE": "Utilities", "DUK": "Utilities", "SO": "Utilities", "AEP": "Utilities", "SRE": "Utilities", "PLD": "Utilities", "AMT": "Utilities",
-            "EQIX": "Utilities", "WELL": "Utilities", "SPG": "Utilities", "O": "Utilities",
-            "T": "Other", "VZ": "Other", "TMUS": "Other", "UBER": "Other", "DASH": "Other", "INTU": "Other", "ADSK": "Other", "ACN": "Other",
-            "ADP": "Other", "APH": "Other", "TEL": "Other", "APD": "Other", "ECL": "Other", "SHW": "Other", "LIN": "Other", "FCX": "Other",
-            "NEM": "Other", "CB": "Other", "PGR": "Other", "WM": "Other", "GM": "Other", "PM": "Other", "MO": "Other"
+            // Consumer Disc/Staples -> Consumer
+            "AMZN": "Consumer", "TSLA": "Consumer", "HD": "Consumer", "NKE": "Consumer", "SBUX": "Consumer", "TJX": "Consumer", "LOW": "Consumer", "ORLY": "Consumer", "AZO": "Consumer", "CMG": "Consumer", "MAR": "Consumer", "HLT": "Consumer", "RCL": "Consumer", "ABNB": "Consumer", "BKNG": "Consumer", "MCD": "Consumer", "GM": "Consumer", "DASH": "Consumer",
+            "WMT": "Consumer", "COST": "Consumer", "PG": "Consumer", "KO": "Consumer", "PEP": "Consumer", "MDLZ": "Consumer", "CL": "Consumer", "PM": "Consumer", "MO": "Consumer", "DIS": "Consumer", "NFLX": "Consumer",
+            // Industrials -> Industrial
+            "CAT": "Industrial", "DE": "Industrial", "UNP": "Industrial", "HON": "Industrial", "GE": "Industrial", "BA": "Industrial", "RTX": "Industrial", "LMT": "Industrial", "GD": "Industrial", "NOC": "Industrial", "MMM": "Industrial", "EMR": "Industrial", "ETN": "Industrial", "PH": "Industrial", "ITW": "Industrial", "CMI": "Industrial", "CSX": "Industrial", "NSC": "Industrial", "UPS": "Industrial", "FAST": "Industrial", "URI": "Industrial", "PWR": "Industrial", "CTAS": "Industrial", "TDG": "Industrial", "HWM": "Industrial", "AXON": "Industrial", "JCI": "Industrial", "TT": "Industrial", "ROP": "Industrial", "ADP": "Industrial", "UBER": "Industrial", "WM": "Industrial",
+            // Utilities -> Utilities
+            "NEE": "Utilities", "DUK": "Utilities", "SO": "Utilities", "AEP": "Utilities", "SRE": "Utilities", "VST": "Utilities", "CEG": "Utilities", "PLD": "Utilities", "AMT": "Utilities", "EQIX": "Utilities", "WELL": "Utilities", "SPG": "Utilities", "O": "Utilities",
+            // Comm Services -> Other (or add explicit mapping if chart supports)
+            "GOOGL": "Tech", "META": "Tech", // Often grouped with Tech in simpler views, or add Comm Services category? Current chart has Tech/Finance/Health/Energy/Consumer/Industrial/Utilities/Other. Putting GOOGL/META in Tech seems safer given the chart keys.
+            "T": "Other", "VZ": "Other", "TMUS": "Other",
+            // Materials -> Other/Industrial
+            "APD": "Other", "ECL": "Other", "SHW": "Other", "LIN": "Other", "FCX": "Other", "NEM": "Other"
         };
 
         let sectorChartInstance = null;
