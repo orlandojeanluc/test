@@ -1356,35 +1356,45 @@
             const ctx = document.getElementById('sector-chart').getContext('2d');
 
             // Aggregate Weights
-            const sectorWeights = {};
+            // Aggregate Weights
+            let sectorWeights = {};
 
-            Object.keys(data).forEach(ticker => {
-                const item = data[ticker];
-                let weight = 0;
+            // Check if data is PRE-CALCULATED (Server Side)
+            const inputKeys = Object.keys(data);
+            const knownSectors = ['Tech', 'Finance', 'Health', 'Energy', 'Consumer', 'Industrial', 'Utilities', 'Other'];
+            // If the input keys match our sector names, use them directly
+            const isPreCalculated = inputKeys.some(k => knownSectors.includes(k));
 
-                // Extraction Logic (matches renderPositionsTable)
-                if (typeof item === 'number') weight = item;
-                else if (item.Weight !== undefined) weight = item.Weight;
-                else if (Array.isArray(item) && item.length > 0) weight = item[0];
-                else if (typeof item === 'object') {
-                    if (item[0] !== undefined) weight = item[0];
-                    else if (item.Value !== undefined) weight = item.Value;
-                }
+            if (isPreCalculated) {
+                // Trust Server Data
+                sectorWeights = data;
+            } else {
+                // Client-Side Aggregation Logic (Fallback)
+                inputKeys.forEach(ticker => {
+                    const item = data[ticker];
+                    let weight = 0;
 
-                // Filter dust
-                if (Math.abs(weight - 0.01) < 0.0001) return;
+                    // Extraction Logic (matches renderPositionsTable)
+                    if (typeof item === 'number') weight = item;
+                    else if (item.Weight !== undefined) weight = item.Weight;
+                    else if (Array.isArray(item) && item.length > 0) weight = item[0];
+                    else if (typeof item === 'object') {
+                        if (item[0] !== undefined) weight = item[0];
+                        else if (item.Value !== undefined) weight = item.Value;
+                    }
 
-                // Add to Sector
-                // Ensure raw weight matches expected scale (Raw is %)
-                // We sum up the Raw Percentages directly.
+                    // Filter dust
+                    if (Math.abs(weight - 0.01) < 0.0001) return;
 
-                // CLEAN TICKER: Remove suffixes to match map keys
-                let cleanTicker = ticker.toUpperCase();
-                cleanTicker = cleanTicker.replace(' US EQUITY', '').replace(' ETF', '').trim();
+                    // Add to Sector
+                    // CLEAN TICKER: Remove suffixes to match map keys
+                    let cleanTicker = ticker.toUpperCase();
+                    cleanTicker = cleanTicker.replace(' US EQUITY', '').replace(' ETF', '').replace(' US', '').trim(); // Consistent cleaning
 
-                const sector = tickerSectorMap[cleanTicker] || 'Other';
-                sectorWeights[sector] = (sectorWeights[sector] || 0) + weight;
-            });
+                    const sector = tickerSectorMap[cleanTicker] || 'Other';
+                    sectorWeights[sector] = (sectorWeights[sector] || 0) + weight;
+                });
+            }
 
             // Prepare Chart Data
             const labels = Object.keys(sectorWeights);
