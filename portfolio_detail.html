@@ -797,6 +797,8 @@
                                     // Get the last values from original chart data
                                     const sortedOriginalDates = Object.keys(data.chartData).sort((a, b) => new Date(a) - new Date(b));
                                     let lastStrategyValue = 10000;
+                                    let lastBenchmarkValue = 10000;
+                                    let hasOriginalBenchmark = false;
 
                                     if (sortedOriginalDates.length > 0) {
                                         const lastKey = sortedOriginalDates[sortedOriginalDates.length - 1];
@@ -805,8 +807,16 @@
                                         // Handle array format [strategy, benchmark] or simple number
                                         if (Array.isArray(lastEntry)) {
                                             lastStrategyValue = lastEntry[0] || 10000;
+                                            if (lastEntry.length > 1) {
+                                                lastBenchmarkValue = lastEntry[1] || 10000;
+                                                hasOriginalBenchmark = true;
+                                            }
                                         } else if (typeof lastEntry === 'object' && lastEntry !== null) {
                                             lastStrategyValue = lastEntry.strategy || lastEntry.Main || Object.values(lastEntry)[0] || 10000;
+                                            if (lastEntry.Benchmark !== undefined || lastEntry.benchmark !== undefined || lastEntry.SPY !== undefined) {
+                                                lastBenchmarkValue = lastEntry.Benchmark || lastEntry.benchmark || lastEntry.SPY;
+                                                hasOriginalBenchmark = true;
+                                            }
                                         } else if (typeof lastEntry === 'number') {
                                             lastStrategyValue = lastEntry;
                                         }
@@ -814,15 +824,22 @@
 
                                     // Calculate new dollar values
                                     const newChartPoints = {};
-                                    let runningValue = parseFloat(lastStrategyValue) || 10000;
+                                    let runningStrategyValue = parseFloat(lastStrategyValue) || 10000;
+                                    let runningBenchmarkValue = parseFloat(lastBenchmarkValue) || 10000;
 
                                     histData.cumulativeData.forEach(point => {
                                         const date = new Date(point.date);
                                         const dateKey = date.toString();
 
                                         // Apply return to get new dollar value
-                                        runningValue = runningValue * (1 + point.return);
-                                        newChartPoints[dateKey] = parseFloat(runningValue.toFixed(2));
+                                        runningStrategyValue = runningStrategyValue * (1 + point.return);
+                                        runningBenchmarkValue = runningBenchmarkValue * (1 + (point.benchmarkReturn || 0));
+
+                                        // Store as array [Strategy, Benchmark]
+                                        newChartPoints[dateKey] = [
+                                            parseFloat(runningStrategyValue.toFixed(2)),
+                                            parseFloat(runningBenchmarkValue.toFixed(2))
+                                        ];
                                     });
 
                                     // Merge with original chartData
