@@ -903,7 +903,7 @@
                 // Handle Array like [0.05] or Object { val: 0.05 }
                 if (Array.isArray(val)) val = val[0];
                 else if (typeof val === 'object' && val !== null) {
-                    val = val.Weight || val.value || val.Value || Object.values(val)[0];
+                    val = val.return || val.Weight || val.value || val.Value || Object.values(val)[0];
                 }
                 if (typeof val === 'string') val = parseFloat(val);
 
@@ -911,9 +911,8 @@
                 // This means data is stored as percentages (e.g. 1.95 for 1.95%) NOT decimals (0.0195).
                 // Normalize to decimal for consistency.
                 if (!isNaN(val)) {
-                    // For Momentum Factor, user says numbers are "100 times too small" if we divide.
-                    // This means Momentum Factor is ALREADY decimal (0.05). So SKIP division.
-                    if (strategyName === 'Caltropia Momentum Factor' || strategyName === 'Caltropia Low Vol Factor') {
+                    // For Momentum Factor and S&P Dip/Rip, values are ALREADY decimal (0.05). So SKIP division.
+                    if (strategyName === 'Caltropia Momentum Factor' || strategyName === 'Caltropia Low Vol Factor' || strategyName === 'S&P Dip/Rip') {
                         // Keep raw val (decimal)
                     } else {
                         // For others (S&P, Bond, etc), divide by 100 (Percentage Points -> Decimal)
