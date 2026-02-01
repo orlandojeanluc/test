@@ -1362,7 +1362,12 @@
                 // Add to Sector
                 // Ensure raw weight matches expected scale (Raw is %)
                 // We sum up the Raw Percentages directly.
-                const sector = tickerSectorMap[ticker.toUpperCase()] || 'Other';
+
+                // CLEAN TICKER: Remove suffixes to match map keys
+                let cleanTicker = ticker.toUpperCase();
+                cleanTicker = cleanTicker.replace(' US EQUITY', '').replace(' ETF', '').trim();
+
+                const sector = tickerSectorMap[cleanTicker] || 'Other';
                 sectorWeights[sector] = (sectorWeights[sector] || 0) + weight;
             });
 
