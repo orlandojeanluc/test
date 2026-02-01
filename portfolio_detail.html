@@ -710,10 +710,28 @@
                                 const histData = histResult.data;
 
                                 if (histData && histData.monthlyReturns) {
-                                    // Merge: original + new calculated returns
+                                    // Merge: original + new calculated returns for TABLE
                                     const mergedReturns = { ...data.returns, ...histData.monthlyReturns };
                                     renderMonthlyReturnsTable(mergedReturns, strategyName);
                                     console.log('Merged historical returns:', Object.keys(histData.monthlyReturns).length, 'new months');
+                                }
+
+                                // Merge CHART data: add new cumulative points
+                                if (histData && histData.cumulativeData && histData.cumulativeData.length > 0 && data.chartData) {
+                                    // Convert cumulativeData to chartData format: { "date-string": value }
+                                    const newChartPoints = {};
+                                    histData.cumulativeData.forEach(point => {
+                                        const date = new Date(point.date);
+                                        const dateKey = date.toString();
+                                        // Use the return percentage (scale to match existing data format)
+                                        newChartPoints[dateKey] = point.return;
+                                    });
+
+                                    // Merge with original chartData
+                                    const mergedChartData = { ...data.chartData, ...newChartPoints };
+                                    fullStrategyData = mergedChartData;
+                                    renderSpDailyChart(mergedChartData, chartContainer, strategyName);
+                                    console.log('Merged chart data:', histData.cumulativeData.length, 'new points');
                                 }
                             } catch (e) {
                                 console.log('Historical returns fetch failed (using original data):', e.message);
