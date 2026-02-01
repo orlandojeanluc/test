@@ -715,32 +715,55 @@
                                     renderMonthlyReturnsTable(mergedReturns, strategyName);
                                 }
 
-                                // Merge CHART data: add new cumulative points with proper dollar values
+                                // Merge CHART data: add new cumulative points with proper dollar values (strategy + benchmark)
                                 if (histData && histData.cumulativeData && histData.cumulativeData.length > 0 && data.chartData) {
-                                    // Get the last value from original chart data
+                                    // Get the last values from original chart data (strategy + benchmark)
                                     const sortedOriginalDates = Object.keys(data.chartData).sort((a, b) => new Date(a) - new Date(b));
-                                    let lastValue = 10000; // Default starting value
+                                    let lastStrategyValue = 10000;
+                                    let lastBenchmarkValue = 10000;
+                                    let hasOriginalBenchmark = false;
+
                                     if (sortedOriginalDates.length > 0) {
                                         const lastKey = sortedOriginalDates[sortedOriginalDates.length - 1];
                                         const lastEntry = data.chartData[lastKey];
-                                        // Handle if lastEntry is object or number
-                                        if (typeof lastEntry === 'object' && lastEntry !== null) {
-                                            // Might be { strategy: value, benchmark: value }
-                                            lastValue = lastEntry.strategy || lastEntry['Caltropia Momentum Factor'] || Object.values(lastEntry)[0];
-                                        } else {
-                                            lastValue = lastEntry;
+
+                                        // Handle both array format [strategy, benchmark] and object format
+                                        if (Array.isArray(lastEntry)) {
+                                            lastStrategyValue = lastEntry[0] || 10000;
+                                            if (lastEntry.length > 1) {
+                                                lastBenchmarkValue = lastEntry[1] || 10000;
+                                                hasOriginalBenchmark = true;
+                                            }
+                                        } else if (typeof lastEntry === 'object' && lastEntry !== null) {
+                                            // Object format: { Main: value, Benchmark: value } or similar
+                                            lastStrategyValue = lastEntry.strategy || lastEntry.Main || lastEntry['Caltropia Momentum Factor'] || Object.values(lastEntry)[0] || 10000;
+                                            if (lastEntry.Benchmark !== undefined || lastEntry.benchmark !== undefined || lastEntry.SPY !== undefined) {
+                                                lastBenchmarkValue = lastEntry.Benchmark || lastEntry.benchmark || lastEntry.SPY;
+                                                hasOriginalBenchmark = true;
+                                            }
+                                        } else if (typeof lastEntry === 'number') {
+                                            lastStrategyValue = lastEntry;
                                         }
                                     }
 
-                                    // Calculate new dollar values: lastValue * (1 + return%)
+                                    // Calculate new dollar values for both strategy and benchmark
                                     const newChartPoints = {};
-                                    let runningValue = parseFloat(lastValue) || 10000;
+                                    let runningStrategyValue = parseFloat(lastStrategyValue) || 10000;
+                                    let runningBenchmarkValue = parseFloat(lastBenchmarkValue) || 10000;
+
                                     histData.cumulativeData.forEach(point => {
                                         const date = new Date(point.date);
                                         const dateKey = date.toString();
-                                        // Apply the return to get new dollar value
-                                        runningValue = runningValue * (1 + point.return);
-                                        newChartPoints[dateKey] = parseFloat(runningValue.toFixed(2));
+
+                                        // Apply returns to get new dollar values
+                                        runningStrategyValue = runningStrategyValue * (1 + point.return);
+                                        runningBenchmarkValue = runningBenchmarkValue * (1 + (point.benchmarkReturn || 0));
+
+                                        // Store as array [strategy, benchmark] to match expected chart format
+                                        newChartPoints[dateKey] = [
+                                            parseFloat(runningStrategyValue.toFixed(2)),
+                                            parseFloat(runningBenchmarkValue.toFixed(2))
+                                        ];
                                     });
 
                                     // Merge with original chartData
