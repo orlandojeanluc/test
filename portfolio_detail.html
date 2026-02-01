@@ -691,33 +691,7 @@
                 }
 
                 // 5. Render Monthly Returns
-                if (strategyName === 'Caltropia Momentum Factor') {
-                    // Load historical factor returns from new cloud function
-                    // and MERGE with existing data (not replace)
-                    try {
-                        const getHistoricalFactorReturns = httpsCallable(functions, 'getHistoricalFactorReturns');
-                        const histResult = await getHistoricalFactorReturns({ strategy: 'momentum' });
-                        const histData = histResult.data;
-
-                        // MERGE monthly returns: original data + new calculated data
-                        let mergedReturns = data.returns ? { ...data.returns } : {};
-                        if (histData && histData.monthlyReturns) {
-                            mergedReturns = { ...mergedReturns, ...histData.monthlyReturns };
-                        }
-                        renderMonthlyReturnsTable(mergedReturns, strategyName);
-
-                        // MERGE chart data: keep original, add new cumulative points
-                        // The original chart still renders from data.chartData
-                        // We don't replace the chart - it already rendered above
-
-                    } catch (histError) {
-                        console.error('Error loading historical returns:', histError);
-                        // Fallback to existing returns data
-                        if (data.returns) {
-                            renderMonthlyReturnsTable(data.returns, strategyName);
-                        }
-                    }
-                } else if (data.returns) {
+                if (data.returns) {
                     // Specific check for Bond Regime which returns prices that need conversion
                     if (strategyName === 'Caltropia Bond Regime Model') {
                         const returnsData = convertPricesToReturns(data.returns);
