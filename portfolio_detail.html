@@ -619,6 +619,14 @@
                     // Update timestamp
                     const now = new Date();
                     timestampEl.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+                    // Render Server-Side Sector Allocations (Security/Logic centralized)
+                    // This overwrites any client-side rendered chart
+                    if (data.sectorAllocations) {
+                        const secChart = document.getElementById('sector-chart-container');
+                        if (secChart) secChart.classList.remove('hidden');
+                        renderSectorChart(data.sectorAllocations);
+                    }
                 } else {
                     dailyReturnEl.textContent = 'N/A';
                     dailyReturnEl.className = 'text-2xl font-bold text-[#8b949e] mt-1';
