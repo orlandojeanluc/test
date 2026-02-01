@@ -852,6 +852,63 @@
                             }
                         })();
                     }
+
+                    // For S&P Daily Rebalance: async merge new calculated returns
+                    if (strategyName === 'S&P Daily Rebalance') {
+                        (async () => {
+                            try {
+                                const getHistoricalSpDailyRebalanceReturns = httpsCallable(functions, 'getHistoricalSpDailyRebalanceReturns');
+                                const histResult = await getHistoricalSpDailyRebalanceReturns({});
+                                const histData = histResult.data;
+
+                                if (histData && histData.monthlyReturns) {
+                                    const mergedReturns = { ...data.returns, ...histData.monthlyReturns };
+                                    renderMonthlyReturnsTable(mergedReturns, strategyName);
+                                }
+
+                                if (histData && histData.cumulativeData && histData.cumulativeData.length > 0 && data.chartData) {
+                                    const sortedOriginalDates = Object.keys(data.chartData).sort((a, b) => new Date(a) - new Date(b));
+                                    let lastStrategyValue = 10000;
+                                    let lastBenchmarkValue = 10000;
+
+                                    if (sortedOriginalDates.length > 0) {
+                                        const lastKey = sortedOriginalDates[sortedOriginalDates.length - 1];
+                                        const lastEntry = data.chartData[lastKey];
+                                        if (Array.isArray(lastEntry)) {
+                                            lastStrategyValue = lastEntry[0] || 10000;
+                                            if (lastEntry.length > 1) lastBenchmarkValue = lastEntry[1] || 10000;
+                                        } else if (typeof lastEntry === 'object' && lastEntry !== null) {
+                                            lastStrategyValue = lastEntry.strategy || lastEntry.Main || Object.values(lastEntry)[0] || 10000;
+                                            if (lastEntry.Benchmark || lastEntry.SPY) lastBenchmarkValue = lastEntry.Benchmark || lastEntry.SPY;
+                                        } else if (typeof lastEntry === 'number') {
+                                            lastStrategyValue = lastEntry;
+                                        }
+                                    }
+
+                                    const newChartPoints = {};
+                                    let runningStrategyValue = parseFloat(lastStrategyValue) || 10000;
+                                    let runningBenchmarkValue = parseFloat(lastBenchmarkValue) || 10000;
+
+                                    histData.cumulativeData.forEach(point => {
+                                        const date = new Date(point.date);
+                                        const dateKey = date.toString();
+                                        runningStrategyValue = runningStrategyValue * (1 + point.return);
+                                        runningBenchmarkValue = runningBenchmarkValue * (1 + (point.benchmarkReturn || 0));
+                                        newChartPoints[dateKey] = [
+                                            parseFloat(runningStrategyValue.toFixed(2)),
+                                            parseFloat(runningBenchmarkValue.toFixed(2))
+                                        ];
+                                    });
+
+                                    const mergedChartData = { ...data.chartData, ...newChartPoints };
+                                    fullStrategyData = mergedChartData;
+                                    renderSpDailyChart(mergedChartData, chartContainer, strategyName);
+                                }
+                            } catch (e) {
+                                console.log('S&P Daily Rebalance historical returns fetch failed:', e.message);
+                            }
+                        })();
+                    }
                 } else {
                     returnsBody.innerHTML = '<tr><td colspan="14" class="py-4 text-center text-[#f48771]">No returns data found</td></tr>';
                 }
@@ -922,6 +979,14 @@
                     // Nov 2025+ (New Calc) = Decimals (Keep)
                     else if (strategyName === 'S&P Dip/Rip') {
                         if (y > 2025 || (y === 2025 && m >= 11)) {
+                            isAlreadyDecimal = true;
+                        }
+                    }
+                    // S&P Daily Rebalance: Hybrid.
+                    // Pre-Aug 2025 (Legacy) = Percentage Points (Needs /100)
+                    // Aug 2025+ (New Calc) = Decimals (Keep)
+                    else if (strategyName === 'S&P Daily Rebalance') {
+                        if (y > 2025 || (y === 2025 && m >= 8)) {
                             isAlreadyDecimal = true;
                         }
                     }
