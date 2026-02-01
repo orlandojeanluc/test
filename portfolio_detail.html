@@ -627,6 +627,13 @@
                         if (secChart) secChart.classList.remove('hidden');
                         renderSectorChart(data.sectorAllocations);
                     }
+
+                    // Debugging for Sector Map
+                    if (data.debug && data.debug.unmapped && data.debug.unmapped.length > 0) {
+                        console.warn("Server - Unmapped Tickers:", data.debug.unmapped);
+                        // Optional: Temporarily alert user if critical failure persists?
+                        // alert("Debug: Unmapped Tickers: " + data.debug.unmapped.join(', '));
+                    }
                 } else {
                     dailyReturnEl.textContent = 'N/A';
                     dailyReturnEl.className = 'text-2xl font-bold text-[#8b949e] mt-1';
