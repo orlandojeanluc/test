@@ -496,11 +496,11 @@
                     <table class="w-full text-left border-collapse">
                         <thead>
                             <tr class="text-[#8b949e] text-[10px] border-b border-[#21262d]">
-                                <th class="py-2 font-normal">Ticker</th>
-                                <th class="py-2 font-normal">Name</th>
-                                <th class="py-2 font-normal text-right">Weight</th>
-                                <th class="py-2 font-normal text-right">P/L Day</th>
-                                <th class="py-2 font-normal text-right">Status</th>
+                                <th class="py-2 px-3 font-normal text-left">Ticker</th>
+                                <th class="py-2 px-3 font-normal text-left">Name</th>
+                                <th class="py-2 px-3 font-normal text-right">Weight</th>
+                                <th class="py-2 px-3 font-normal text-right">P/L Day</th>
+                                <th class="py-2 px-3 font-normal text-right">Status</th>
                             </tr>
                         </thead>
                         <tbody id="positions-body" class="text-xs font-bold">
@@ -538,12 +538,12 @@
                     <table class="w-full text-left border-collapse">
                         <thead>
                             <tr class="text-[#8b949e] text-[10px] border-b border-[#21262d]">
-                                <th class="py-2 font-normal">Ticker</th>
-                                <th class="py-2 font-normal">Proxy</th>
-                                <th class="py-2 font-normal text-right">Short Term Trend</th>
-                                <th class="py-2 font-normal text-right">Interm Trend</th>
-                                <th class="py-2 font-normal text-right">Mean Reversion</th>
-                                <th class="py-2 font-normal text-right">Breakout/Down</th>
+                                <th class="py-2 px-3 font-normal text-left">Ticker</th>
+                                <th class="py-2 px-3 font-normal text-left">Proxy</th>
+                                <th class="py-2 px-3 font-normal text-right">Short Term Trend</th>
+                                <th class="py-2 px-3 font-normal text-right">Interm Trend</th>
+                                <th class="py-2 px-3 font-normal text-right">Mean Reversion</th>
+                                <th class="py-2 px-3 font-normal text-right">Status</th>
                             </tr>
                         </thead>
                         <tbody id="signals-body" class="text-xs font-bold">
@@ -1154,7 +1154,7 @@
                 const row = document.createElement('tr');
                 row.className = 'terminal-table-row group';
 
-                let rowHtml = `<td class="py-3 px-4 text-left font-mono font-bold text-[#c586c0] bg-[#161b22]/50 sticky left-0 border-r border-[#30363d] group-hover:bg-[#1f2937]">${year}</td>`;
+                let rowHtml = `<td class="py-3 px-4 text-left font-mono font-bold text-[#c586c0] bg-terminal-bg sticky left-0 z-10 border-r border-[#30363d] group-hover:bg-[#1f2937]">${year}</td>`;
 
                 let product = 1.0;
                 let hasData = false;
@@ -1183,7 +1183,7 @@
                     ytdColor = ytd >= 0 ? 'text-[#a7f3d0] font-bold' : 'text-[#fecdd3] font-bold';
                 }
 
-                rowHtml += `<td class="py-3 text-center font-mono text-[11px] border-l border-[#30363d] bg-[#161b22]/50 group-hover:bg-[#1f2937] ${ytdColor}">${ytdDisplay}</td>`;
+                rowHtml += `<td class="py-3 text-center font-mono text-[11px] border-l border-[#30363d] bg-terminal-bg sticky right-0 z-10 group-hover:bg-[#1f2937] ${ytdColor}">${ytdDisplay}</td>`;
 
                 row.innerHTML = rowHtml;
                 tbody.appendChild(row);
@@ -1203,31 +1203,18 @@
                 const shortTermClass = sig.shortTermTrend > 0 ? "text-[#b5cea8]" : (sig.shortTermTrend < 0 ? "text-[#f48771]" : "text-[#8b949e]");
                 const intermClass = sig.intermTrend > 0 ? "text-[#b5cea8]" : (sig.intermTrend < 0 ? "text-[#f48771]" : "text-[#8b949e]");
 
-                // Mean Reversion: > 0 is Buy (Oversold), < 0 is Sell (Overbought)
-                const meanRevLabel = sig.meanReversion > 0 ? "Buy" : (sig.meanReversion < 0 ? "Sell" : "Neutral");
-                // Color: Keep Green/Red logic but apply to Buy/Sell label
-                // Buy (Oversold) -> Green, Sell (Overbought) -> Red
-                const meanRevClass = sig.meanReversion > 0 ? "text-[#b5cea8]" : (sig.meanReversion < 0 ? "text-[#f48771]" : "text-[#8b949e]");
-
-                // Breakout: > 0 (Green), < 0 (Red), 0 (Gray)
-                let breakoutLabel = "Neutral";
-                let breakoutClass = "text-[#8b949e]";
-                if (sig.breakoutScore > 0) {
-                    breakoutLabel = "Breakout";
-                    breakoutClass = "text-[#b5cea8]";
-                } else if (sig.breakoutScore < 0) {
-                    breakoutLabel = "Breakdown";
-                    breakoutClass = "text-[#f48771]";
-                }
+                // Status Standardization
+                const statusLabel = sig.meanReversion > 0 ? "Long" : (sig.meanReversion < 0 ? "Short" : "Flat");
+                const statusClass = sig.meanReversion > 0 ? "text-[#b5cea8]" : (sig.meanReversion < 0 ? "text-[#f48771]" : "text-[#8b949e]");
 
                 const rowHtml = `
                     <tr class="border-b border-[#21262d] hover:bg-[#111]">
-                        <td class="py-3 text-[#dcdcaa]">${sig.ticker}</td>
-                        <td class="py-3 text-[#ccc]">${sig.proxy}</td>
-                        <td class="py-3 text-right ${shortTermClass}">${sig.shortTermTrend > 0 ? '+' : ''}${sig.shortTermTrend.toFixed(2)}</td>
-                        <td class="py-3 text-right ${intermClass}">${sig.intermTrend > 0 ? '+' : ''}${sig.intermTrend.toFixed(2)}</td>
-                        <td class="py-3 text-right ${meanRevClass}">${meanRevLabel} (${sig.meanReversion.toFixed(2)})</td>
-                        <td class="py-3 text-right ${breakoutClass}">${breakoutLabel}</td>
+                        <td class="py-3 px-3 text-[#dcdcaa] text-left">${sig.ticker}</td>
+                        <td class="py-3 px-3 text-[#ccc] text-left">${sig.proxy}</td>
+                        <td class="py-3 px-3 text-right ${shortTermClass}">${sig.shortTermTrend > 0 ? '+' : ''}${sig.shortTermTrend.toFixed(2)}</td>
+                        <td class="py-3 px-3 text-right ${intermClass}">${sig.intermTrend > 0 ? '+' : ''}${sig.intermTrend.toFixed(2)}</td>
+                        <td class="py-3 px-3 text-right text-[#8b949e]">${sig.meanReversion.toFixed(2)}</td>
+                        <td class="py-3 px-3 text-right ${statusClass}">${statusLabel}</td>
                     </tr>
                 `;
                 tbody.insertAdjacentHTML('beforeend', rowHtml);
@@ -1665,8 +1652,8 @@
                 }
 
                 // Determine Status and Badge
-                let statusBadge = `<span class="sector-badge badge-neutral">Hold</span>`;
-                if (strategyName.includes('Momentum') && weight > 0) statusBadge = `<span class="sector-badge badge-bullish">Long</span>`;
+                let statusBadge = `<span class="sector-badge badge-neutral">Flat</span>`;
+                if (weight > 0) statusBadge = `<span class="sector-badge badge-bullish">Long</span>`;
                 else if (weight < 0) statusBadge = `<span class="sector-badge badge-bearish">Short</span>`;
 
                 // Format Percentage
