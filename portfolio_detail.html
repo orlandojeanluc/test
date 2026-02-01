@@ -716,22 +716,32 @@
                                     console.log('Merged historical returns:', Object.keys(histData.monthlyReturns).length, 'new months');
                                 }
 
-                                // Merge CHART data: add new cumulative points
+                                // Merge CHART data: add new cumulative points with proper dollar values
                                 if (histData && histData.cumulativeData && histData.cumulativeData.length > 0 && data.chartData) {
-                                    // Convert cumulativeData to chartData format: { "date-string": value }
+                                    // Get the last value from original chart data
+                                    const sortedOriginalDates = Object.keys(data.chartData).sort((a, b) => new Date(a) - new Date(b));
+                                    let lastValue = 10000; // Default starting value
+                                    if (sortedOriginalDates.length > 0) {
+                                        const lastKey = sortedOriginalDates[sortedOriginalDates.length - 1];
+                                        lastValue = data.chartData[lastKey];
+                                    }
+
+                                    // Calculate new dollar values: lastValue * (1 + return%)
                                     const newChartPoints = {};
+                                    let runningValue = lastValue;
                                     histData.cumulativeData.forEach(point => {
                                         const date = new Date(point.date);
                                         const dateKey = date.toString();
-                                        // Use the return percentage (scale to match existing data format)
-                                        newChartPoints[dateKey] = point.return;
+                                        // Apply the return to get new dollar value
+                                        runningValue = runningValue * (1 + point.return);
+                                        newChartPoints[dateKey] = parseFloat(runningValue.toFixed(2));
                                     });
 
                                     // Merge with original chartData
                                     const mergedChartData = { ...data.chartData, ...newChartPoints };
                                     fullStrategyData = mergedChartData;
                                     renderSpDailyChart(mergedChartData, chartContainer, strategyName);
-                                    console.log('Merged chart data:', histData.cumulativeData.length, 'new points');
+                                    console.log('Merged chart data:', histData.cumulativeData.length, 'new points, last value:', runningValue.toFixed(2));
                                 }
                             } catch (e) {
                                 console.log('Historical returns fetch failed (using original data):', e.message);
