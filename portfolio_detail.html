@@ -699,6 +699,27 @@
                     } else {
                         renderMonthlyReturnsTable(data.returns, strategyName);
                     }
+
+                    // For Momentum Factor: async merge new calculated returns (non-blocking)
+                    if (strategyName === 'Caltropia Momentum Factor') {
+                        // Fire off async call - doesn't block original render
+                        (async () => {
+                            try {
+                                const getHistoricalFactorReturns = httpsCallable(functions, 'getHistoricalFactorReturns');
+                                const histResult = await getHistoricalFactorReturns({ strategy: 'momentum' });
+                                const histData = histResult.data;
+
+                                if (histData && histData.monthlyReturns) {
+                                    // Merge: original + new calculated returns
+                                    const mergedReturns = { ...data.returns, ...histData.monthlyReturns };
+                                    renderMonthlyReturnsTable(mergedReturns, strategyName);
+                                    console.log('Merged historical returns:', Object.keys(histData.monthlyReturns).length, 'new months');
+                                }
+                            } catch (e) {
+                                console.log('Historical returns fetch failed (using original data):', e.message);
+                            }
+                        })();
+                    }
                 } else {
                     returnsBody.innerHTML = '<tr><td colspan="14" class="py-4 text-center text-[#f48771]">No returns data found</td></tr>';
                 }
