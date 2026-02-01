@@ -153,25 +153,16 @@
             border-color: #c586c0;
         }
 
-        /* Fix for scroll capture on table containers */
+        /* AGGRESSIVE FIX: Never capture vertical scroll on table wrappers */
         .overflow-x-auto {
-            overscroll-behavior-x: contain;
-            overscroll-behavior-y: auto;
+            overflow-x: auto;
+            overflow-y: visible !important;
+            overscroll-behavior: contain;
         }
 
-        /* Allow page scroll when table doesn't need horizontal scrolling */
-        .overflow-x-auto:not(:hover) {
-            overflow-x: visible;
-        }
-
-        /* Ensure tables don't capture vertical scroll */
-        table {
-            pointer-events: auto;
-        }
-
-        .terminal-card .overflow-x-auto {
-            max-height: none;
-            overflow-y: visible;
+        /* Remove the inline styles that cause scroll capture */
+        [style*="overscroll-behavior"] {
+            overscroll-behavior: auto !important;
         }
     </style>
 </head>
@@ -535,7 +526,7 @@
                         <span class="w-1.5 h-4 bg-[#f48771]"></span>
                         Holdings Detail
                     </h3>
-                    <div class="overflow-x-auto" style="overscroll-behavior: none; -webkit-overflow-scrolling: touch;">
+                    <div class="overflow-x-auto">
                         <table class="w-full text-xs" style="min-width: 600px;">
                             <thead>
                                 <tr class="text-[#8b949e] border-b border-[#21262d]">
@@ -627,8 +618,7 @@
                     <div>
                         <div class="text-[10px] text-[#8b949e] uppercase tracking-wide mb-2">Suggested Risk-Parity
                             Weights</div>
-                        <div class="overflow-x-auto"
-                            style="overscroll-behavior: none; -webkit-overflow-scrolling: touch;">
+                        <div class="overflow-x-auto">
                             <table class="w-full text-xs" style="min-width: 400px;">
                                 <thead>
                                     <tr class="text-[#8b949e] border-b border-[#21262d]">
@@ -1520,24 +1510,15 @@
     </script>
 
     <script>
-        // Fix for Chrome scroll capture on table containers
-        // Allow vertical scrolling to propagate to parent when hovering over tables
+        // AGGRESSIVE FIX: Force vertical scroll to work over tables
         document.addEventListener('DOMContentLoaded', function () {
             const scrollContainers = document.querySelectorAll('.overflow-x-auto');
 
             scrollContainers.forEach(container => {
                 container.addEventListener('wheel', function (e) {
-                    // If scrolling vertically and there's no horizontal overflow needed
-                    if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
-                        // Check if container has horizontal scroll
-                        const hasHorizontalScroll = container.scrollWidth > container.clientWidth;
-
-                        // If no horizontal scroll or scrolling vertically, propagate to page
-                        if (!hasHorizontalScroll || Math.abs(e.deltaY) > Math.abs(e.deltaX) * 2) {
-                            // Allow the event to bubble up to the document
-                            // by not calling stopPropagation
-                            return;
-                        }
+                    // Always scroll the window vertically
+                    if (Math.abs(e.deltaY) > 0) {
+                        window.scrollBy(0, e.deltaY);
                     }
                 }, { passive: true });
             });
