@@ -911,11 +911,25 @@
                 // This means data is stored as percentages (e.g. 1.95 for 1.95%) NOT decimals (0.0195).
                 // Normalize to decimal for consistency.
                 if (!isNaN(val)) {
-                    // For Momentum Factor and S&P Dip/Rip, values are ALREADY decimal (0.05). So SKIP division.
-                    if (strategyName === 'Caltropia Momentum Factor' || strategyName === 'Caltropia Low Vol Factor' || strategyName === 'S&P Dip/Rip') {
+                    let isAlreadyDecimal = false;
+
+                    // Momentum & Low Vol are always decimal
+                    if (strategyName === 'Caltropia Momentum Factor' || strategyName === 'Caltropia Low Vol Factor') {
+                        isAlreadyDecimal = true;
+                    }
+                    // S&P Dip/Rip: Hybrid.
+                    // Pre-Nov 2025 (Legacy) = Percentage Points (Needs /100)
+                    // Nov 2025+ (New Calc) = Decimals (Keep)
+                    else if (strategyName === 'S&P Dip/Rip') {
+                        if (y > 2025 || (y === 2025 && m >= 11)) {
+                            isAlreadyDecimal = true;
+                        }
+                    }
+
+                    if (isAlreadyDecimal) {
                         // Keep raw val (decimal)
                     } else {
-                        // For others (S&P, Bond, etc), divide by 100 (Percentage Points -> Decimal)
+                        // For others (S&P, Bond, etc) & Legacy Dip/Rip, divide by 100 (Percentage Points -> Decimal)
                         val = val / 100;
                     }
                 }
