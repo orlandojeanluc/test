@@ -1059,8 +1059,8 @@
             const height = 400;
             const centerX = width / 2;
             const centerY = height / 2;
-            const innerRadius = 160;
-            const outerRadius = 240; // Thick rings
+            const innerRadius = 120; // Reduced to fit
+            const outerRadius = 180; // Reduced to fit (Max height 360px < 400px)
 
             // --- DEFS & FILTERS ---
             const defs = svg.append("defs");
@@ -1220,16 +1220,16 @@
                 // 1. Icon (Large)
                 centerGroup.append('text')
                     .attr('text-anchor', 'middle')
-                    .attr('y', -20)
-                    .attr('font-size', '48px')
+                    .attr('y', -15)
+                    .attr('font-size', '40px')
                     .text(info.icon);
 
                 // 2. Name
                 centerGroup.append('text')
                     .attr('text-anchor', 'middle')
-                    .attr('y', 25)
+                    .attr('y', 20)
                     .attr('fill', info.color)
-                    .attr('font-size', '16px')
+                    .attr('font-size', '14px')
                     .attr('font-weight', 'bold')
                     .attr('letter-spacing', '0.05em')
                     .text(info.name.toUpperCase());
@@ -1237,9 +1237,9 @@
                 // 3. Status/Meta
                 centerGroup.append('text')
                     .attr('text-anchor', 'middle')
-                    .attr('y', 45)
+                    .attr('y', 35)
                     .attr('fill', '#8b949e')
-                    .attr('font-size', '12px')
+                    .attr('font-size', '10px')
                     .attr('class', 'font-mono')
                     .text('CURRENT REGIME');
             }
