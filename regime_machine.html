@@ -79,7 +79,7 @@
         }
 
         .regime-node.active {
-            filter: drop-shadow(0 0 20px currentColor);
+            /* filter: drop-shadow(0 0 20px currentColor); handled by SVG filter */
         }
 
         .regime-node circle {
@@ -122,49 +122,50 @@
         }
 
         /* Regime Colors - using terminal theme */
+        /* Regime Colors - using terminal theme */
         .regime-risk-on {
-            color: #a7f3d0;
+            color: #22c55e;
         }
 
         .regime-risk-off {
-            color: #fecdd3;
+            color: #ef4444;
         }
 
         .regime-rotation {
-            color: #dcdcaa;
+            color: #facc15;
         }
 
         .regime-recovery {
-            color: #9cdcfe;
+            color: #94a3b8;
         }
 
         .regime-uncertainty {
-            color: #c586c0;
+            color: #fbbf24;
         }
 
         .bg-regime-risk-on {
-            background: rgba(167, 243, 208, 0.1);
-            border-color: #a7f3d0;
+            background: rgba(34, 197, 94, 0.1);
+            border-color: #22c55e;
         }
 
         .bg-regime-risk-off {
-            background: rgba(254, 205, 211, 0.1);
-            border-color: #fecdd3;
+            background: rgba(239, 68, 68, 0.1);
+            border-color: #ef4444;
         }
 
         .bg-regime-rotation {
-            background: rgba(220, 220, 170, 0.1);
-            border-color: #dcdcaa;
+            background: rgba(250, 204, 21, 0.1);
+            border-color: #facc15;
         }
 
         .bg-regime-recovery {
-            background: rgba(156, 220, 254, 0.1);
-            border-color: #9cdcfe;
+            background: rgba(148, 163, 184, 0.1);
+            border-color: #94a3b8;
         }
 
         .bg-regime-uncertainty {
-            background: rgba(197, 134, 192, 0.1);
-            border-color: #c586c0;
+            background: rgba(251, 191, 36, 0.1);
+            border-color: #fbbf24;
         }
 
         /* Progress bar */
@@ -930,11 +931,11 @@
 
         // --- REGIME DEFINITIONS ---
         const REGIMES = {
-            RISK_ON: { name: 'Risk-On', icon: '🟢', color: '#a7f3d0', bgClass: 'bg-regime-risk-on' },
-            RISK_OFF: { name: 'Risk-Off', icon: '🔴', color: '#fecdd3', bgClass: 'bg-regime-risk-off' },
-            ROTATION: { name: 'Rotation', icon: '🔄', color: '#dcdcaa', bgClass: 'bg-regime-rotation' },
-            RECOVERY: { name: 'Recovery', icon: '📈', color: '#9cdcfe', bgClass: 'bg-regime-recovery' },
-            UNCERTAINTY: { name: 'Uncertainty', icon: '⚠️', color: '#c586c0', bgClass: 'bg-regime-uncertainty' }
+            RISK_ON: { name: 'Risk-On', icon: '🟢', color: '#22c55e', bgClass: 'bg-regime-risk-on' },     // Green
+            RISK_OFF: { name: 'Risk-Off', icon: '🔴', color: '#ef4444', bgClass: 'bg-regime-risk-off' },   // Red
+            ROTATION: { name: 'Rotation', icon: '🔄', color: '#facc15', bgClass: 'bg-regime-rotation' },   // Yellow/Gold
+            RECOVERY: { name: 'Recovery', icon: '📈', color: '#94a3b8', bgClass: 'bg-regime-recovery' },   // Slate/Blue
+            UNCERTAINTY: { name: 'Uncertainty', icon: '⚠️', color: '#fbbf24', bgClass: 'bg-regime-uncertainty' } // Amber
         };
 
         // State - only tracks current regime for rendering
@@ -1058,45 +1059,49 @@
             const centerX = width / 2;
             const centerY = height / 2;
 
-            // Define Glow Filter
+            // Define Heavy Glow Filter for Center
             const defs = svg.append("defs");
             const filter = defs.append("filter")
-                .attr("id", "glow")
-                .attr("x", "-50%")
-                .attr("y", "-50%")
-                .attr("width", "200%")
-                .attr("height", "200%");
+                .attr("id", "heavy-glow")
+                .attr("x", "-100%")
+                .attr("y", "-100%")
+                .attr("width", "300%")
+                .attr("height", "300%");
 
             filter.append("feGaussianBlur")
-                .attr("stdDeviation", "8")
+                .attr("stdDeviation", "15")
                 .attr("result", "coloredBlur");
 
             const feMerge = filter.append("feMerge");
             feMerge.append("feMergeNode").attr("in", "coloredBlur");
             feMerge.append("feMergeNode").attr("in", "SourceGraphic");
 
-            // Node positions (Centered)
-            const spreadX = 220; // Horizontal spread
-            const spreadY = 80;  // Vertical spread
+            // Node positions (Bow-Tie / Envelope shape)
+            // Center: Rotation
+            // Top Left/Right: Risk-On / Risk-Off
+            // Bottom Left/Right: Recovery / Uncertainty
 
             const nodes = [
-                { id: 'ROTATION', x: centerX, y: centerY },           // Center
-                { id: 'RISK_ON', x: centerX - spreadX, y: centerY - 40 }, // Top Left
-                { id: 'RISK_OFF', x: centerX + spreadX, y: centerY - 40 }, // Top Right
-                { id: 'RECOVERY', x: centerX - (spreadX * 0.6), y: centerY + spreadY }, // Bottom Left
-                { id: 'UNCERTAINTY', x: centerX + (spreadX * 0.6), y: centerY + spreadY } // Bottom Right
+                { id: 'ROTATION', x: centerX, y: centerY },                 // Center
+                { id: 'RISK_ON', x: centerX - 250, y: centerY - 60 },       // Top Left
+                { id: 'RISK_OFF', x: centerX + 250, y: centerY - 60 },      // Top Right
+                { id: 'RECOVERY', x: centerX - 180, y: centerY + 100 },     // Bottom Left
+                { id: 'UNCERTAINTY', x: centerX + 180, y: centerY + 100 }   // Bottom Right
             ];
 
-            // Edges (fully connected to Rotation)
+            // Edges form the "envelope" shape
             const edges = [
+                // Spoke connections to center
                 { from: 'RISK_ON', to: 'ROTATION' },
                 { from: 'RISK_OFF', to: 'ROTATION' },
                 { from: 'RECOVERY', to: 'ROTATION' },
                 { from: 'UNCERTAINTY', to: 'ROTATION' },
+
                 // Peripheral connections
-                { from: 'RISK_ON', to: 'RECOVERY' },
-                { from: 'RISK_OFF', to: 'UNCERTAINTY' },
-                { from: 'RECOVERY', to: 'UNCERTAINTY' }
+                { from: 'RISK_ON', to: 'RISK_OFF' },       // Top bar
+                { from: 'RECOVERY', to: 'UNCERTAINTY' },   // Bottom bar
+                { from: 'RISK_ON', to: 'RECOVERY' },       // Left side
+                { from: 'RISK_OFF', to: 'UNCERTAINTY' }    // Right side
             ];
 
             // Draw edges
@@ -1110,8 +1115,8 @@
                     .attr('x2', to.x)
                     .attr('y2', to.y)
                     .attr('stroke', '#30363d')
-                    .attr('stroke-width', 1.5)
-                    .attr('opacity', 0.4);
+                    .attr('stroke-width', 1.0)
+                    .attr('opacity', 0.6); // Slightly more visible lines
             });
 
             // Draw nodes
@@ -1124,43 +1129,78 @@
                     .attr('transform', `translate(${node.x}, ${node.y})`)
                     .style('cursor', 'default');
 
-                // Active Glow
+                // Active State Visuals (Layers of Glow)
                 if (isActive) {
+                    // Outer diffuse glow
                     g.append('circle')
-                        .attr('r', 55)
+                        .attr('r', 80)
                         .attr('fill', info.color)
-                        .attr('opacity', 0.2)
-                        .style("filter", "url(#glow)");
+                        .attr('opacity', 0.1)
+                        .style("filter", "url(#heavy-glow)");
 
+                    // Middle glow ring
                     g.append('circle')
-                        .attr('r', 45)
+                        .attr('r', 60)
+                        .attr('fill', 'none')
+                        .attr('stroke', info.color)
+                        .attr('stroke-width', 1)
+                        .attr('opacity', 0.3);
+
+                    // Inner intense glow
+                    g.append('circle')
+                        .attr('r', 50)
                         .attr('fill', info.color)
-                        .attr('opacity', 0.2)
-                        .style("filter", "url(#glow)");
+                        .attr('opacity', 0.15)
+                        .style("filter", "url(#heavy-glow)");
+
+                    // Solid Ring
+                    g.append('circle')
+                        .attr('r', 40)
+                        .attr('fill', 'none')
+                        .attr('stroke', info.color)
+                        .attr('stroke-width', 2)
+                        .attr('opacity', 0.8);
+                } else {
+                    // Inactive Ring
+                    g.append('circle')
+                        .attr('r', 35)
+                        .attr('fill', 'none')
+                        .attr('stroke', '#30363d') // Dark grey for inactive
+                        .attr('stroke-width', 1.5)
+                        .attr('opacity', 0.5);
                 }
 
-                // Node circle
+                // Inner circle background (for icon legibility)
                 g.append('circle')
-                    .attr('r', isActive ? 35 : 25)
-                    .attr('fill', isActive ? `${info.color}20` : '#0d1117') // 20 = faint background
-                    .attr('stroke', info.color)
-                    .attr('stroke-width', isActive ? 2 : 1.5)
-                    .attr('stroke-opacity', isActive ? 1 : 0.6);
+                    .attr('r', 25)
+                    .attr('fill', '#0d1117') // Match card bg
+                    .attr('opacity', 1);
 
                 // Node icon
-                g.append('text')
-                    .attr('text-anchor', 'middle')
-                    .attr('dominant-baseline', 'middle')
-                    .attr('font-size', isActive ? '24px' : '16px')
-                    .text(info.icon);
+                if (node.id === 'ROTATION' && isActive) {
+                    // Special case for Rotation icon if needed, or just larger
+                    g.append('text')
+                        .attr('text-anchor', 'middle')
+                        .attr('dominant-baseline', 'middle')
+                        .attr('font-size', '28px')
+                        .text(info.icon);
+                } else {
+                    g.append('text')
+                        .attr('text-anchor', 'middle')
+                        .attr('dominant-baseline', 'middle')
+                        .attr('font-size', isActive ? '24px' : '20px')
+                        .attr('opacity', isActive ? 1 : 0.7)
+                        .text(info.icon);
+                }
 
-                // Label below
+                // Label below (Active gets brighter color)
                 g.append('text')
                     .attr('text-anchor', 'middle')
-                    .attr('y', isActive ? 55 : 45)
-                    .attr('fill', isActive ? info.color : '#8b949e')
-                    .attr('font-size', '10px')
+                    .attr('y', isActive ? 60 : 50)
+                    .attr('fill', isActive ? '#eab308' : '#8b949e') // Highlight active text
+                    .attr('font-size', isActive ? '14px' : '10px')
                     .attr('font-weight', isActive ? 'bold' : 'normal')
+                    .style('text-shadow', isActive ? '0 0 10px #000' : 'none')
                     .text(info.name);
             });
         }
