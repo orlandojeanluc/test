@@ -738,9 +738,22 @@
                     </div>
 
                     <!-- Chart Container -->
-                    <div id="state-machine-container"
-                        class="flex justify-center items-center py-4 relative min-h-[400px]">
-                        <svg id="state-machine" width="100%" height="400" viewBox="0 0 800 400"></svg>
+                    <!-- Main Content: Chart + Transitions -->
+                    <div class="flex flex-col lg:flex-row border-t border-[#21262d]">
+                        <!-- Chart (Left) -->
+                        <div id="state-machine-container"
+                            class="flex-grow flex justify-center items-center py-4 relative min-h-[400px] lg:border-r border-[#21262d]">
+                            <svg id="state-machine" width="100%" height="400" viewBox="0 0 800 400"></svg>
+                        </div>
+
+                        <!-- Transitions Panel (Right) -->
+                        <div class="w-full lg:w-1/3 p-6 flex flex-col justify-center bg-[#0d1117]/50">
+                            <div class="text-[12px] tracking-wider text-[#8b949e] font-medium mb-4">Transition
+                                Probabilities</div>
+                            <div id="transitions-list" class="space-y-3">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -749,12 +762,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
 
                 <!-- Transition Probabilities -->
-                <div class="terminal-card p-4">
-                    <div class="text-[10px] tracking-wider text-[#8b949e] mb-3">Transition Probabilities</div>
-                    <div id="transitions-list" class="space-y-2">
-                        <!-- Populated by JS -->
-                    </div>
-                </div>
+                <!-- (Old Transitions Card Removed) -->
 
                 <!-- Sector Breadth -->
                 <div class="terminal-card p-4">
@@ -1035,20 +1043,48 @@
 
         function renderTransitionsFromServer(transitions) {
             const container = document.getElementById('transitions-list');
+            if (!transitions || transitions.length === 0) return;
 
-            container.innerHTML = transitions.map(t => {
+            // 1. Separate "Stay" vs "Others"
+            // Sort by probability desc first
+            const sorted = [...transitions].sort((a, b) => b.prob - a.prob);
+
+            // Assume "Stay" is self-transition. If not explicit, logic might need adjustment but
+            // for now we check t.to === currentRegime.
+            const stayTransition = sorted.find(t => t.to === currentRegime);
+            const otherTransitions = sorted.filter(t => t.to !== currentRegime).slice(0, 3); // Top 3 others
+
+            let html = '';
+
+            // Render STAY (Top Box)
+            if (stayTransition) {
+                const info = REGIMES[stayTransition.to];
+                html += `
+                    <div class="flex items-center justify-between p-3 rounded-lg bg-[#21262d] mb-4 border border-[#30363d]">
+                        <div class="flex items-center gap-3">
+                            <span class="text-xl shadow-lg rounded-full bg-[#0d1117] p-1">${info.icon}</span>
+                            <span class="text-sm font-bold text-white">Stay ${info.name}</span>
+                        </div>
+                        <span class="text-lg font-bold" style="color: ${info.color}">${stayTransition.prob}%</span>
+                    </div>
+                `;
+            }
+
+            // Render Others
+            otherTransitions.forEach(t => {
                 const info = REGIMES[t.to];
-                const isStay = t.to === currentRegime;
-                return `
-                    <div class="flex items-center justify-between p-2 rounded ${isStay ? 'bg-[#21262d]' : ''}">
-                        <div class="flex items-center gap-2">
-                            <span>${info.icon}</span>
-                            <span class="text-xs ${isStay ? 'text-white font-bold' : 'text-[#8b949e]'}">${isStay ? 'Stay' : '→'} ${info.name}</span>
+                html += `
+                    <div class="flex items-center justify-between px-2 py-1">
+                        <div class="flex items-center gap-3 opacity-80">
+                            <span class="text-xs">${info.icon}</span>
+                            <span class="text-[#8b949e] text-xs">→ ${info.name}</span>
                         </div>
                         <span class="text-sm font-mono font-bold" style="color: ${info.color}">${t.prob}%</span>
                     </div>
                 `;
-            }).join('');
+            });
+
+            container.innerHTML = html;
         }
 
         function renderStateMachine() {
