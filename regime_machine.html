@@ -694,33 +694,38 @@
 
         <!-- Main Grid -->
         <div class="p-4 space-y-4">
-            <!-- Top Row: Current Regime + State Machine -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            <!-- Top Row: Regime Constellation -->
+            <div class="w-full">
+                <div class="terminal-card p-0 relative overflow-hidden min-h-[350px]">
+                    <!-- Background / Chart -->
+                    <div id="state-machine-container"
+                        class="w-full h-[350px] flex justify-center items-center bg-[#0d1117]">
+                        <svg id="state-machine" width="100%" height="350" viewBox="0 0 800 350"></svg>
+                    </div>
 
-                <!-- Current Regime Card -->
-                <div id="current-regime-card" class="terminal-card p-6 border-2 bg-regime-uncertainty">
-                    <div class="text-[10px] tracking-wider text-[#8b949e] mb-2">Current Regime</div>
-                    <div class="flex items-center gap-3 mb-4">
-                        <span id="regime-icon" class="text-4xl">⚠️</span>
-                        <div>
-                            <h2 id="regime-name" class="text-2xl font-bold text-white">LOADING...</h2>
-                            <div class="flex items-center gap-2 mt-1">
-                                <span id="regime-confidence" class="text-sm font-mono text-[#8b949e]">--%
-                                    confidence</span>
+                    <!-- Overlay HUD: Current Regime Info -->
+                    <div id="current-regime-hud"
+                        class="absolute top-6 left-6 z-10 bg-[#161b22]/90 backdrop-blur-md p-5 rounded-xl border border-[#c586c0] shadow-[0_0_15px_rgba(197,134,192,0.1)] max-w-[280px]">
+                        <div class="text-[10px] tracking-wider text-[#8b949e] uppercase mb-3 font-semibold">Current
+                            Regime</div>
+                        <div class="flex items-start gap-3 mb-3">
+                            <span id="regime-icon"
+                                class="text-4xl filter drop-shadow hover:scale-110 transition-transform cursor-default">⚠️</span>
+                            <div>
+                                <h2 id="regime-name" class="text-2xl font-bold text-white leading-tight">LOADING...</h2>
+                                <div id="regime-confidence" class="text-sm font-mono text-[#c586c0] mt-1">--% confidence
+                                </div>
                             </div>
                         </div>
+                        <div class="flex items-center gap-2 text-xs border-t border-[#30363d] pt-3 mt-1">
+                            <span class="text-[#8b949e]">Time in regime:</span>
+                            <span id="time-in-regime" class="text-white font-mono font-bold">-- days</span>
+                        </div>
                     </div>
-                    <div class="text-xs text-[#8b949e]">
-                        <span>Time in regime: </span>
-                        <span id="time-in-regime" class="text-white font-mono">-- days</span>
-                    </div>
-                </div>
 
-                <!-- State Machine Visualization -->
-                <div class="terminal-card p-4 lg:col-span-2">
-                    <div class="text-[10px] tracking-wider text-[#8b949e] mb-3">Regime State Machine</div>
-                    <div id="state-machine-container" class="flex justify-center items-center min-h-[250px]">
-                        <svg id="state-machine" width="100%" height="250" viewBox="0 0 600 250"></svg>
+                    <!-- Title Label -->
+                    <div class="absolute top-4 right-4 text-xs font-mono text-[#8b949e]/50 select-none">
+                        REGIME STATE MACHINE
                     </div>
                 </div>
             </div>
@@ -957,16 +962,21 @@
             const { regime, confidence, metrics, transitions } = data;
             currentRegime = regime;
 
-            // Current Regime Card
+            // Current Regime HUD Styling
             const regimeInfo = REGIMES[regime];
-            const card = document.getElementById('current-regime-card');
-            Object.values(REGIMES).forEach(r => card.classList.remove(r.bgClass));
-            card.classList.add(regimeInfo.bgClass);
+            const hud = document.getElementById('current-regime-hud');
+
+            // Update HUD border and glow
+            hud.style.borderColor = regimeInfo.color;
+            hud.style.boxShadow = `0 0 20px ${regimeInfo.color}30`; // 30 = approx 20% opacity
+
             document.getElementById('regime-icon').textContent = regimeInfo.icon;
             document.getElementById('regime-name').textContent = regimeInfo.name;
             document.getElementById('regime-name').style.color = regimeInfo.color;
             document.getElementById('regime-confidence').textContent = `${confidence}% confidence`;
-            document.getElementById('time-in-regime').textContent = `${Math.floor(Math.random() * 5) + 1} days`;
+            document.getElementById('regime-confidence').style.color = regimeInfo.color;
+            document.getElementById('time-in-regime').textContent = `${Math.floor(Math.random() * 5) + 1} days`; // Mock data for now
+
 
             // Sector Breadth
             document.getElementById('breadth-value').textContent = metrics.sectorBreadth;
@@ -1029,29 +1039,50 @@
             const svg = d3.select('#state-machine');
             svg.selectAll('*').remove();
 
-            const width = 600;
-            const height = 250;
+            const width = 800;
+            const height = 350;
+            const centerX = width / 2;
             const centerY = height / 2;
 
-            // Node positions
+            // Define Glow Filter
+            const defs = svg.append("defs");
+            const filter = defs.append("filter")
+                .attr("id", "glow")
+                .attr("x", "-50%")
+                .attr("y", "-50%")
+                .attr("width", "200%")
+                .attr("height", "200%");
+
+            filter.append("feGaussianBlur")
+                .attr("stdDeviation", "8")
+                .attr("result", "coloredBlur");
+
+            const feMerge = filter.append("feMerge");
+            feMerge.append("feMergeNode").attr("in", "coloredBlur");
+            feMerge.append("feMergeNode").attr("in", "SourceGraphic");
+
+            // Node positions (Centered)
+            const spreadX = 220; // Horizontal spread
+            const spreadY = 80;  // Vertical spread
+
             const nodes = [
-                { id: 'RISK_ON', x: 100, y: centerY - 50 },
-                { id: 'ROTATION', x: 300, y: centerY - 70 },
-                { id: 'RISK_OFF', x: 500, y: centerY - 50 },
-                { id: 'RECOVERY', x: 150, y: centerY + 60 },
-                { id: 'UNCERTAINTY', x: 350, y: centerY + 60 }
+                { id: 'ROTATION', x: centerX, y: centerY },           // Center
+                { id: 'RISK_ON', x: centerX - spreadX, y: centerY - 40 }, // Top Left
+                { id: 'RISK_OFF', x: centerX + spreadX, y: centerY - 40 }, // Top Right
+                { id: 'RECOVERY', x: centerX - (spreadX * 0.6), y: centerY + spreadY }, // Bottom Left
+                { id: 'UNCERTAINTY', x: centerX + (spreadX * 0.6), y: centerY + spreadY } // Bottom Right
             ];
 
-            // Edges (simplified - main transitions)
+            // Edges (fully connected to Rotation)
             const edges = [
                 { from: 'RISK_ON', to: 'ROTATION' },
-                { from: 'ROTATION', to: 'RISK_OFF' },
-                { from: 'ROTATION', to: 'RISK_ON' },
-                { from: 'RISK_OFF', to: 'RECOVERY' },
-                { from: 'RECOVERY', to: 'RISK_ON' },
+                { from: 'RISK_OFF', to: 'ROTATION' },
                 { from: 'RECOVERY', to: 'ROTATION' },
                 { from: 'UNCERTAINTY', to: 'ROTATION' },
-                { from: 'UNCERTAINTY', to: 'RECOVERY' }
+                // Peripheral connections
+                { from: 'RISK_ON', to: 'RECOVERY' },
+                { from: 'RISK_OFF', to: 'UNCERTAINTY' },
+                { from: 'RECOVERY', to: 'UNCERTAINTY' }
             ];
 
             // Draw edges
@@ -1066,7 +1097,7 @@
                     .attr('y2', to.y)
                     .attr('stroke', '#30363d')
                     .attr('stroke-width', 1.5)
-                    .attr('opacity', 0.5);
+                    .attr('opacity', 0.4);
             });
 
             // Draw nodes
@@ -1076,26 +1107,43 @@
 
                 const g = svg.append('g')
                     .attr('class', `regime-node ${isActive ? 'active' : ''}`)
-                    .attr('transform', `translate(${node.x}, ${node.y})`);
+                    .attr('transform', `translate(${node.x}, ${node.y})`)
+                    .style('cursor', 'default');
+
+                // Active Glow
+                if (isActive) {
+                    g.append('circle')
+                        .attr('r', 55)
+                        .attr('fill', info.color)
+                        .attr('opacity', 0.2)
+                        .style("filter", "url(#glow)");
+
+                    g.append('circle')
+                        .attr('r', 45)
+                        .attr('fill', info.color)
+                        .attr('opacity', 0.2)
+                        .style("filter", "url(#glow)");
+                }
 
                 // Node circle
                 g.append('circle')
-                    .attr('r', isActive ? 35 : 28)
-                    .attr('fill', isActive ? info.color : '#161b22')
+                    .attr('r', isActive ? 35 : 25)
+                    .attr('fill', isActive ? `${info.color}20` : '#0d1117') // 20 = faint background
                     .attr('stroke', info.color)
-                    .attr('stroke-width', isActive ? 3 : 2);
+                    .attr('stroke-width', isActive ? 2 : 1.5)
+                    .attr('stroke-opacity', isActive ? 1 : 0.6);
 
                 // Node icon
                 g.append('text')
                     .attr('text-anchor', 'middle')
                     .attr('dominant-baseline', 'middle')
-                    .attr('font-size', isActive ? '20px' : '16px')
+                    .attr('font-size', isActive ? '24px' : '16px')
                     .text(info.icon);
 
                 // Label below
                 g.append('text')
                     .attr('text-anchor', 'middle')
-                    .attr('y', 50)
+                    .attr('y', isActive ? 55 : 45)
                     .attr('fill', isActive ? info.color : '#8b949e')
                     .attr('font-size', '10px')
                     .attr('font-weight', isActive ? 'bold' : 'normal')
