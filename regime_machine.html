@@ -840,21 +840,6 @@
                 </div>
             </div>
 
-            <!-- Bottom Row: Regime History Timeline -->
-            <div class="terminal-card p-4">
-                <div class="flex items-center justify-between mb-3">
-                    <div class="text-[10px] tracking-wider text-[#8b949e]">Regime History (Simulated)</div>
-                    <div class="text-[10px] text-[#8b949e]">Last 30 days</div>
-                </div>
-                <div id="regime-timeline" class="flex rounded overflow-hidden">
-                    <!-- Populated by JS -->
-                </div>
-                <div class="flex justify-between text-[10px] text-[#8b949e] mt-2">
-                    <span id="timeline-start-date">--</span>
-                    <span id="timeline-end-date">--</span>
-                </div>
-            </div>
-
             <!-- Regime Descriptions -->
             <div class="terminal-card p-4">
                 <div class="text-[10px] tracking-wider text-[#8b949e] mb-3">Regime Definitions</div>
@@ -944,7 +929,6 @@
             await loadRegimeData();
             showLoading(false);
             renderStateMachine();
-            renderTimeline();
         });
 
         function showLoading(show) {
@@ -1119,70 +1103,6 @@
             });
         }
 
-        function renderTimeline() {
-            const container = document.getElementById('regime-timeline');
-
-            // Calculate actual dates for the timeline
-            const today = new Date();
-            const startDate = new Date(today);
-            startDate.setDate(startDate.getDate() - 29); // 30 days including today
-
-            // Format date as "Jan 14"
-            const formatDate = (date) => {
-                return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-            };
-
-            // Update date labels
-            document.getElementById('timeline-start-date').textContent = formatDate(startDate);
-            document.getElementById('timeline-end-date').textContent = formatDate(today);
-
-            // Simulate 30 days of regime history
-            const regimeKeys = Object.keys(REGIMES);
-            const history = [];
-            let current = regimeKeys[Math.floor(Math.random() * regimeKeys.length)];
-
-            for (let i = 0; i < 30; i++) {
-                const date = new Date(startDate);
-                date.setDate(date.getDate() + i);
-
-                // 70% chance to stay, 30% chance to transition
-                if (Math.random() > 0.7) {
-                    current = regimeKeys[Math.floor(Math.random() * regimeKeys.length)];
-                }
-                history.push({ regime: current, date: date });
-            }
-
-            // Group consecutive same regimes
-            const segments = [];
-            let currentSegment = { regime: history[0].regime, days: 1, startDate: history[0].date, endDate: history[0].date };
-
-            for (let i = 1; i < history.length; i++) {
-                if (history[i].regime === currentSegment.regime) {
-                    currentSegment.days++;
-                    currentSegment.endDate = history[i].date;
-                } else {
-                    segments.push(currentSegment);
-                    currentSegment = { regime: history[i].regime, days: 1, startDate: history[i].date, endDate: history[i].date };
-                }
-            }
-            segments.push(currentSegment);
-
-            // Render
-            container.innerHTML = segments.map(seg => {
-                const info = REGIMES[seg.regime];
-                const widthPercent = (seg.days / 30) * 100;
-                const dateRange = seg.days === 1
-                    ? formatDate(seg.startDate)
-                    : `${formatDate(seg.startDate)} - ${formatDate(seg.endDate)}`;
-                return `
-                    <div class="timeline-segment" 
-                         style="width: ${widthPercent}%; background: ${info.color};"
-                         title="${info.name}: ${dateRange} (${seg.days} day${seg.days > 1 ? 's' : ''})">
-                        ${seg.days >= 3 ? info.icon : ''}
-                    </div>
-                `;
-            }).join('');
-        }
         // --- SIDEBAR & MOBILE NAV LOGIC ---
         window.toggleSidebar = function () {
             const sidebar = document.getElementById('sidebar');
