@@ -1059,45 +1059,56 @@
             const centerX = width / 2;
             const centerY = height / 2;
 
-            // --- FILTERS ---
+            // --- DEFS & GRADIENTS ---
             const defs = svg.append("defs");
 
-            // 1. Intense Inner Glow (The "Core")
-            const coreGlow = defs.append("filter")
-                .attr("id", "core-glow")
+            // 1. Orbital Glow (Subtle background atmosphere)
+            const orbitGlow = defs.append("filter")
+                .attr("id", "orbit-glow")
                 .attr("x", "-50%")
                 .attr("y", "-50%")
                 .attr("width", "200%")
                 .attr("height", "200%");
-            coreGlow.append("feGaussianBlur")
-                .attr("stdDeviation", "8") // Tighter blur for the core
+            orbitGlow.append("feGaussianBlur")
+                .attr("stdDeviation", "3")
                 .attr("result", "coloredBlur");
-            const coreMerge = coreGlow.append("feMerge");
-            coreMerge.append("feMergeNode").attr("in", "coloredBlur");
-            coreMerge.append("feMergeNode").attr("in", "SourceGraphic");
+            const orbitMerge = orbitGlow.append("feMerge");
+            orbitMerge.append("feMergeNode").attr("in", "coloredBlur");
+            orbitMerge.append("feMergeNode").attr("in", "SourceGraphic");
 
-            // 2. Diffuse Ambient Halo (The "Atmosphere")
-            const ambientGlow = defs.append("filter")
-                .attr("id", "ambient-glow")
-                .attr("x", "-100%")
-                .attr("y", "-100%")
-                .attr("width", "300%")
-                .attr("height", "300%");
-            ambientGlow.append("feGaussianBlur")
-                .attr("stdDeviation", "20") // Wide, soft blur
-                .attr("result", "coloredBlur");
-            const ambientMerge = ambientGlow.append("feMerge");
-            ambientMerge.append("feMergeNode").attr("in", "coloredBlur");
-            ambientMerge.append("feMergeNode").attr("in", "SourceGraphic");
+            // 2. Generate 3D Spherical Gradients for each Regime
+            Object.keys(REGIMES).forEach(key => {
+                const info = REGIMES[key];
+
+                // Active/Main Gradient
+                const gradId = `grad-${key}`;
+                const radial = defs.append("radialGradient")
+                    .attr("id", gradId)
+                    .attr("cx", "30%")  // Off-center highlight
+                    .attr("cy", "30%")
+                    .attr("r", "70%");
+
+                // Bright highlight (Top-left)
+                radial.append("stop")
+                    .attr("offset", "0%")
+                    .attr("stop-color", info.color)
+                    .attr("stop-opacity", 1);
+
+                // Main body
+                radial.append("stop")
+                    .attr("offset", "100%")
+                    .attr("stop-color", d3.rgb(info.color).darker(2.5).toString()) // Deep shadow at edges
+                    .attr("stop-opacity", 1);
+            });
 
             // --- LAYOUT ---
-            // "Cinematic" Aspect Ratio - Wider spread
+            // Cinematic Bow-Tie
             const nodes = [
-                { id: 'ROTATION', x: centerX, y: centerY },
-                { id: 'RISK_ON', x: centerX - 280, y: centerY - 50 },
-                { id: 'RISK_OFF', x: centerX + 280, y: centerY - 50 },
-                { id: 'RECOVERY', x: centerX - 160, y: centerY + 90 },
-                { id: 'UNCERTAINTY', x: centerX + 160, y: centerY + 90 }
+                { id: 'ROTATION', x: centerX, y: centerY, r: 55 },
+                { id: 'RISK_ON', x: centerX - 260, y: centerY - 60, r: 45 },
+                { id: 'RISK_OFF', x: centerX + 260, y: centerY - 60, r: 45 },
+                { id: 'RECOVERY', x: centerX - 180, y: centerY + 100, r: 40 },
+                { id: 'UNCERTAINTY', x: centerX + 180, y: centerY + 100, r: 40 }
             ];
 
             const edges = [
@@ -1111,9 +1122,24 @@
                 { from: 'RISK_OFF', to: 'UNCERTAINTY' }
             ];
 
+            // --- BACKGROUND ORBITS ---
+            // Concentric rings to give "system" feel
+            const orbits = [150, 280, 420];
+            orbits.forEach(r => {
+                svg.append("circle")
+                    .attr("cx", centerX)
+                    .attr("cy", centerY)
+                    .attr("r", r)
+                    .attr("fill", "none")
+                    .attr("stroke", "#30363d")
+                    .attr("stroke-width", 1)
+                    .attr("opacity", 0.3)
+                    .attr("stroke-dasharray", "4 4"); // Tech-y dashed lines
+            });
+
             // --- DRAWING ---
 
-            // Edges: Ultra-thin, subtle lines
+            // Edges: Barely visible tethers
             edges.forEach(edge => {
                 const from = nodes.find(n => n.id === edge.from);
                 const to = nodes.find(n => n.id === edge.to);
@@ -1125,91 +1151,77 @@
                     .attr('y2', to.y)
                     .attr('stroke', '#30363d')
                     .attr('stroke-width', 1)
-                    .attr('opacity', 0.4);
+                    .attr('opacity', 0.2);
             });
 
             nodes.forEach(node => {
                 const info = REGIMES[node.id];
                 const isActive = currentRegime === node.id;
 
+                // Dynamic sizing: Active is larger
+                const radius = isActive ? node.r * 1.3 : node.r;
+
                 const g = svg.append('g')
                     .attr('class', `regime-node ${isActive ? 'active' : ''}`)
                     .attr('transform', `translate(${node.x}, ${node.y})`)
                     .style('cursor', 'default');
 
-                if (isActive) {
-                    // --- ACTIVE STATE: The "Premium Halo" ---
-
-                    // 1. Large ambient wash (very subtle background color)
-                    g.append('circle')
-                        .attr('r', 100)
-                        .attr('fill', info.color)
-                        .attr('opacity', 0.08)
-                        .style("filter", "url(#ambient-glow)");
-
-                    // 2. Focused Core Glow
-                    g.append('circle')
-                        .attr('r', 55)
-                        .attr('fill', info.color)
-                        .attr('opacity', 0.15)
-                        .style("filter", "url(#core-glow)");
-
-                    // 3. Sharp Ring 1 (Thin, precise)
-                    g.append('circle')
-                        .attr('r', 45)
-                        .attr('fill', 'none')
-                        .attr('stroke', info.color)
-                        .attr('stroke-width', 1.5)
-                        .attr('opacity', 0.6);
-
-                    // 4. Sharp Ring 2 (Inner, slightly thicker)
-                    g.append('circle')
-                        .attr('r', 38)
-                        .attr('fill', 'none')
-                        .attr('stroke', info.color)
-                        .attr('stroke-width', 0.5)
-                        .attr('opacity', 0.4);
-
-                } else {
-                    // --- INACTIVE STATE: Minimalist Tech circles ---
-                    g.append('circle')
-                        .attr('r', 32)
-                        .attr('fill', '#0d1117')
-                        .attr('stroke', '#30363d')
-                        .attr('stroke-width', 1)
-                        .attr('opacity', 0.8);
-                }
-
-                // Node Center/Icon Background
-                // Use a darker "hole" for the icon to pop against the glow
+                // 1. Back Glow (Ambient)
                 if (isActive) {
                     g.append('circle')
-                        .attr('r', 28)
-                        .attr('fill', '#0d1117') // Cut out the glow
-                        .attr('opacity', 0.9);
+                        .attr('r', radius * 1.5)
+                        .attr('fill', info.color)
+                        .attr('opacity', 0.2)
+                        .style("filter", "url(#orbit-glow)");
                 }
 
-                // Icon
+                // 2. The Sphere (Main Visual)
+                // Use Gradient for Active, Dark Glass for Inactive
+                g.append('circle')
+                    .attr('r', radius)
+                    .attr('fill', isActive ? `url(#grad-${node.id})` : '#0d1117')
+                    .attr('stroke', isActive ? 'none' : '#30363d')
+                    .attr('stroke-width', isActive ? 0 : 2)
+                    .attr('opacity', isActive ? 1 : 0.6)
+                    .style("filter", isActive ? "drop-shadow(0 10px 20px rgba(0,0,0,0.5))" : "none");
+
+                // 3. Icon
                 g.append('text')
                     .attr('text-anchor', 'middle')
                     .attr('dominant-baseline', 'middle')
-                    .attr('font-size', isActive ? '26px' : '18px')
-                    .attr('opacity', isActive ? 1 : 0.8)
-                    .style('filter', isActive ? 'drop-shadow(0 2px 4px rgba(0,0,0,0.5))' : 'none')
+                    .attr('font-size', isActive ? '28px' : '20px')
+                    .attr('y', 0)
+                    .attr('fill', '#fff')
+                    .style('text-shadow', '0 2px 5px rgba(0,0,0,0.5)')
                     .text(info.icon);
 
-                // Label
-                const labelY = isActive ? 70 : 55;
-                const labelColor = isActive ? '#fff' : '#8b949e'; // White for active, muted for others
+                // 4. Floating Label
+                // Positioned outside the sphere for cleaner look, like a HUD tag
+                const labelDist = radius + 20;
+
+                // Label Background Pill (Only for active)
+                if (isActive) {
+                    g.append('rect')
+                        .attr('x', -40)
+                        .attr('y', radius + 10)
+                        .attr('width', 80)
+                        .attr('height', 20)
+                        .attr('rx', 10)
+                        .attr('fill', '#0d1117')
+                        .attr('stroke', info.color)
+                        .attr('stroke-width', 1)
+                        .attr('opacity', 0.9);
+                }
 
                 g.append('text')
                     .attr('text-anchor', 'middle')
-                    .attr('y', labelY)
-                    .attr('fill', labelColor)
+                    .attr('dominant-baseline', 'middle')
+                    .attr('y', radius + 21) // Centered in pill if active
+                    .attr('fill', isActive ? info.color : '#8b949e')
                     .attr('font-family', 'Inter, sans-serif')
                     .attr('font-size', '11px')
-                    .attr('font-weight', isActive ? '600' : '400')
-                    .attr('letter-spacing', '0.05em') // Elegant spacing
+                    .attr('font-weight', isActive ? 'bold' : 'normal')
+                    .attr('letter-spacing', '0.05em')
                     .text(info.name);
             });
         }
