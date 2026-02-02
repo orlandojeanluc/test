@@ -1058,172 +1058,190 @@
             const height = 400;
             const centerX = width / 2;
             const centerY = height / 2;
+            const innerRadius = 160;
+            const outerRadius = 240; // Thick rings
 
-            // --- DEFS & GRADIENTS ---
+            // --- DEFS & FILTERS ---
             const defs = svg.append("defs");
 
-            // 1. Orbital Glow (Subtle background atmosphere)
-            const orbitGlow = defs.append("filter")
-                .attr("id", "orbit-glow")
+            // Drop Shadow for depth
+            const dropShadow = defs.append("filter")
+                .attr("id", "gauge-shadow")
                 .attr("x", "-50%")
                 .attr("y", "-50%")
                 .attr("width", "200%")
                 .attr("height", "200%");
-            orbitGlow.append("feGaussianBlur")
-                .attr("stdDeviation", "3")
-                .attr("result", "coloredBlur");
-            const orbitMerge = orbitGlow.append("feMerge");
-            orbitMerge.append("feMergeNode").attr("in", "coloredBlur");
-            orbitMerge.append("feMergeNode").attr("in", "SourceGraphic");
+            dropShadow.append("feGaussianBlur")
+                .attr("in", "SourceAlpha")
+                .attr("stdDeviation", "4")
+                .attr("result", "blur");
+            dropShadow.append("feOffset")
+                .attr("in", "blur")
+                .attr("dx", "2")
+                .attr("dy", "4")
+                .attr("result", "offsetBlur");
+            const feMerge = dropShadow.append("feMerge");
+            feMerge.append("feMergeNode").attr("in", "offsetBlur");
+            feMerge.append("feMergeNode").attr("in", "SourceGraphic");
 
-            // 2. Generate 3D Spherical Gradients for each Regime
+            // Gradients for each regime
             Object.keys(REGIMES).forEach(key => {
                 const info = REGIMES[key];
-
-                // Active/Main Gradient
-                const gradId = `grad-${key}`;
-                const radial = defs.append("radialGradient")
+                const gradId = `gauge-grad-${key}`;
+                const gradient = defs.append("linearGradient")
                     .attr("id", gradId)
-                    .attr("cx", "30%")  // Off-center highlight
-                    .attr("cy", "30%")
-                    .attr("r", "70%");
+                    .attr("x1", "0%")
+                    .attr("y1", "0%")
+                    .attr("x2", "100%")
+                    .attr("y2", "100%"); // Diagonal gradient
 
-                // Bright highlight (Top-left)
-                radial.append("stop")
+                gradient.append("stop")
                     .attr("offset", "0%")
                     .attr("stop-color", info.color)
                     .attr("stop-opacity", 1);
 
-                // Main body
-                radial.append("stop")
+                gradient.append("stop")
                     .attr("offset", "100%")
-                    .attr("stop-color", d3.rgb(info.color).darker(2.5).toString()) // Deep shadow at edges
-                    .attr("stop-opacity", 1);
+                    .attr("stop-color", d3.rgb(info.color).darker(0.8).toString()) // Slight darkening
+                    .attr("stop-opacity", 0.9);
             });
 
-            // --- LAYOUT ---
-            // Cinematic Bow-Tie
-            const nodes = [
-                { id: 'ROTATION', x: centerX, y: centerY, r: 55 },
-                { id: 'RISK_ON', x: centerX - 260, y: centerY - 60, r: 45 },
-                { id: 'RISK_OFF', x: centerX + 260, y: centerY - 60, r: 45 },
-                { id: 'RECOVERY', x: centerX - 180, y: centerY + 100, r: 40 },
-                { id: 'UNCERTAINTY', x: centerX + 180, y: centerY + 100, r: 40 }
-            ];
+            // --- DATA PREP ---
+            // Prepare segments. 
+            // Active Regime = Big segment (approx 50%)
+            // Others = Equal share of remaining 50%
+            const regimeKeys = Object.keys(REGIMES);
+            const otherCount = regimeKeys.length - 1;
 
-            const edges = [
-                { from: 'RISK_ON', to: 'ROTATION' },
-                { from: 'RISK_OFF', to: 'ROTATION' },
-                { from: 'RECOVERY', to: 'ROTATION' },
-                { from: 'UNCERTAINTY', to: 'ROTATION' },
-                { from: 'RISK_ON', to: 'RISK_OFF' },
-                { from: 'RECOVERY', to: 'UNCERTAINTY' },
-                { from: 'RISK_ON', to: 'RECOVERY' },
-                { from: 'RISK_OFF', to: 'UNCERTAINTY' }
-            ];
+            // Configuration
+            const gap = 0.08; // Gap in radians
+            const totalGap = gap * regimeKeys.length;
+            const availableAngle = (Math.PI * 2) - totalGap;
 
-            // --- BACKGROUND ORBITS ---
-            // Concentric rings to give "system" feel
-            const orbits = [150, 280, 420];
-            orbits.forEach(r => {
-                svg.append("circle")
-                    .attr("cx", centerX)
-                    .attr("cy", centerY)
-                    .attr("r", r)
-                    .attr("fill", "none")
-                    .attr("stroke", "#30363d")
-                    .attr("stroke-width", 1)
-                    .attr("opacity", 0.3)
-                    .attr("stroke-dasharray", "4 4"); // Tech-y dashed lines
+            // Angle allocation
+            const activeAngle = availableAngle * 0.45; // 45% for winner
+            const otherAngle = (availableAngle * 0.55) / otherCount; // 55% distributed
+
+            let data = [];
+            // Reorder keys so Active is at a nice starting position (e.g., right side)
+            // We want Active to be prominent. Let's put it on the right (0 to angle).
+
+            let currentAngle = -Math.PI / 2; // Start from top
+
+            // We need to find the active index to handle ordering if we want specific placement
+            // For now, let's just iterate and assign angles
+
+            // Sort keys so currentRegime is last (to be drawn effectively? no, just standard loop)
+            // Actually, let's just build the list with explicit angles.
+
+            // Push active regime first? No, let's maintain some consistent order but resize.
+            // BETTER: Constant order (RISK_ON -> OFF etc) but the SIZE changes dynamically.
+
+            regimeKeys.forEach(key => {
+                const isTarget = (key === currentRegime);
+                const angleSize = isTarget ? activeAngle : otherAngle;
+
+                data.push({
+                    id: key,
+                    startAngle: currentAngle,
+                    endAngle: currentAngle + angleSize,
+                    isActive: isTarget
+                });
+
+                currentAngle += angleSize + gap;
             });
 
-            // --- DRAWING ---
+            // Arc Generator
+            const arc = d3.arc()
+                .innerRadius(innerRadius)
+                .outerRadius(outerRadius)
+                .cornerRadius(20); // Nice rounded corners as per image
 
-            // Edges: Barely visible tethers
-            edges.forEach(edge => {
-                const from = nodes.find(n => n.id === edge.from);
-                const to = nodes.find(n => n.id === edge.to);
+            // --- RENDER SECTORS ---
+            const sectors = svg.append('g')
+                .attr('transform', `translate(${centerX}, ${centerY})`);
 
-                svg.append('line')
-                    .attr('x1', from.x)
-                    .attr('y1', from.y)
-                    .attr('x2', to.x)
-                    .attr('y2', to.y)
-                    .attr('stroke', '#30363d')
-                    .attr('stroke-width', 1)
-                    .attr('opacity', 0.2);
-            });
+            sectors.selectAll('path')
+                .data(data)
+                .enter()
+                .append('path')
+                .attr('d', arc)
+                .attr('fill', d => `url(#gauge-grad-${d.id})`)
+                .attr('filter', 'url(#gauge-shadow)')
+                .attr('stroke', '#0d1117')
+                .attr('stroke-width', 2)
+                .style('cursor', 'default')
+                .transition().duration(800).attrTween("d", function (d) {
+                    const i = d3.interpolate(d.startAngle + 0.1, d.endAngle);
+                    return function (t) {
+                        d.endAngle = i(t);
+                        return arc(d);
+                    }
+                });
 
-            nodes.forEach(node => {
-                const info = REGIMES[node.id];
-                const isActive = currentRegime === node.id;
+            // --- TEXT LABELS INSIDE SECTORS ---
+            sectors.selectAll('text.sector-label')
+                .data(data)
+                .enter()
+                .append('text')
+                .attr('class', 'sector-label')
+                .attr('transform', d => {
+                    // Centroid for text
+                    const centroid = arc.centroid(d);
+                    // No rotation for ease of reading, as per reference "43" is upright
+                    return `translate(${centroid[0]}, ${centroid[1]})`;
+                })
+                .attr('text-anchor', 'middle')
+                .attr('dominant-baseline', 'middle')
+                .attr('fill', '#fff') // White text on colored background
+                .attr('font-size', d => d.isActive ? '24px' : '14px')
+                .attr('font-weight', 'bold')
+                .style('text-shadow', '0 1px 2px rgba(0,0,0,0.4)')
+                .style('pointer-events', 'none')
+                .text(d => {
+                    const info = REGIMES[d.id];
+                    // If active, show name or big Value? User ref has number "43".
+                    // We don't have a score for everyone.
+                    // Let's show Icon for small ones, Name/Confidence for Big one?
+                    // Ref image has numbers "2,7", "4,1"...
+                    // We have confidence only for active.
+                    // Let's put Icon for now.
+                    return info.icon;
+                });
 
-                // Dynamic sizing: Active is larger
-                const radius = isActive ? node.r * 1.3 : node.r;
+            // --- CENTER CONTENT ---
+            // The "Hole" needs to act as the Legend/Status
+            const centerGroup = sectors.append('g');
 
-                const g = svg.append('g')
-                    .attr('class', `regime-node ${isActive ? 'active' : ''}`)
-                    .attr('transform', `translate(${node.x}, ${node.y})`)
-                    .style('cursor', 'default');
+            if (currentRegime) {
+                const info = REGIMES[currentRegime];
 
-                // 1. Back Glow (Ambient)
-                if (isActive) {
-                    g.append('circle')
-                        .attr('r', radius * 1.5)
-                        .attr('fill', info.color)
-                        .attr('opacity', 0.2)
-                        .style("filter", "url(#orbit-glow)");
-                }
-
-                // 2. The Sphere (Main Visual)
-                // Use Gradient for Active, Dark Glass for Inactive
-                g.append('circle')
-                    .attr('r', radius)
-                    .attr('fill', isActive ? `url(#grad-${node.id})` : '#0d1117')
-                    .attr('stroke', isActive ? 'none' : '#30363d')
-                    .attr('stroke-width', isActive ? 0 : 2)
-                    .attr('opacity', isActive ? 1 : 0.6)
-                    .style("filter", isActive ? "drop-shadow(0 10px 20px rgba(0,0,0,0.5))" : "none");
-
-                // 3. Icon
-                g.append('text')
+                // 1. Icon (Large)
+                centerGroup.append('text')
                     .attr('text-anchor', 'middle')
-                    .attr('dominant-baseline', 'middle')
-                    .attr('font-size', isActive ? '28px' : '20px')
-                    .attr('y', 0)
-                    .attr('fill', '#fff')
-                    .style('text-shadow', '0 2px 5px rgba(0,0,0,0.5)')
+                    .attr('y', -20)
+                    .attr('font-size', '48px')
                     .text(info.icon);
 
-                // 4. Floating Label
-                // Positioned outside the sphere for cleaner look, like a HUD tag
-                const labelDist = radius + 20;
-
-                // Label Background Pill (Only for active)
-                if (isActive) {
-                    g.append('rect')
-                        .attr('x', -40)
-                        .attr('y', radius + 10)
-                        .attr('width', 80)
-                        .attr('height', 20)
-                        .attr('rx', 10)
-                        .attr('fill', '#0d1117')
-                        .attr('stroke', info.color)
-                        .attr('stroke-width', 1)
-                        .attr('opacity', 0.9);
-                }
-
-                g.append('text')
+                // 2. Name
+                centerGroup.append('text')
                     .attr('text-anchor', 'middle')
-                    .attr('dominant-baseline', 'middle')
-                    .attr('y', radius + 21) // Centered in pill if active
-                    .attr('fill', isActive ? info.color : '#8b949e')
-                    .attr('font-family', 'Inter, sans-serif')
-                    .attr('font-size', '11px')
-                    .attr('font-weight', isActive ? 'bold' : 'normal')
+                    .attr('y', 25)
+                    .attr('fill', info.color)
+                    .attr('font-size', '16px')
+                    .attr('font-weight', 'bold')
                     .attr('letter-spacing', '0.05em')
-                    .text(info.name);
-            });
+                    .text(info.name.toUpperCase());
+
+                // 3. Status/Meta
+                centerGroup.append('text')
+                    .attr('text-anchor', 'middle')
+                    .attr('y', 45)
+                    .attr('fill', '#8b949e')
+                    .attr('font-size', '12px')
+                    .attr('class', 'font-mono')
+                    .text('CURRENT REGIME');
+            }
         }
 
         // --- SIDEBAR & MOBILE NAV LOGIC ---
