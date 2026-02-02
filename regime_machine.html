@@ -1059,52 +1059,61 @@
             const centerX = width / 2;
             const centerY = height / 2;
 
-            // Define Heavy Glow Filter for Center
+            // --- FILTERS ---
             const defs = svg.append("defs");
-            const filter = defs.append("filter")
-                .attr("id", "heavy-glow")
+
+            // 1. Intense Inner Glow (The "Core")
+            const coreGlow = defs.append("filter")
+                .attr("id", "core-glow")
+                .attr("x", "-50%")
+                .attr("y", "-50%")
+                .attr("width", "200%")
+                .attr("height", "200%");
+            coreGlow.append("feGaussianBlur")
+                .attr("stdDeviation", "8") // Tighter blur for the core
+                .attr("result", "coloredBlur");
+            const coreMerge = coreGlow.append("feMerge");
+            coreMerge.append("feMergeNode").attr("in", "coloredBlur");
+            coreMerge.append("feMergeNode").attr("in", "SourceGraphic");
+
+            // 2. Diffuse Ambient Halo (The "Atmosphere")
+            const ambientGlow = defs.append("filter")
+                .attr("id", "ambient-glow")
                 .attr("x", "-100%")
                 .attr("y", "-100%")
                 .attr("width", "300%")
                 .attr("height", "300%");
-
-            filter.append("feGaussianBlur")
-                .attr("stdDeviation", "15")
+            ambientGlow.append("feGaussianBlur")
+                .attr("stdDeviation", "20") // Wide, soft blur
                 .attr("result", "coloredBlur");
+            const ambientMerge = ambientGlow.append("feMerge");
+            ambientMerge.append("feMergeNode").attr("in", "coloredBlur");
+            ambientMerge.append("feMergeNode").attr("in", "SourceGraphic");
 
-            const feMerge = filter.append("feMerge");
-            feMerge.append("feMergeNode").attr("in", "coloredBlur");
-            feMerge.append("feMergeNode").attr("in", "SourceGraphic");
-
-            // Node positions (Bow-Tie / Envelope shape)
-            // Center: Rotation
-            // Top Left/Right: Risk-On / Risk-Off
-            // Bottom Left/Right: Recovery / Uncertainty
-
+            // --- LAYOUT ---
+            // "Cinematic" Aspect Ratio - Wider spread
             const nodes = [
-                { id: 'ROTATION', x: centerX, y: centerY },                 // Center
-                { id: 'RISK_ON', x: centerX - 250, y: centerY - 60 },       // Top Left
-                { id: 'RISK_OFF', x: centerX + 250, y: centerY - 60 },      // Top Right
-                { id: 'RECOVERY', x: centerX - 180, y: centerY + 100 },     // Bottom Left
-                { id: 'UNCERTAINTY', x: centerX + 180, y: centerY + 100 }   // Bottom Right
+                { id: 'ROTATION', x: centerX, y: centerY },
+                { id: 'RISK_ON', x: centerX - 280, y: centerY - 50 },
+                { id: 'RISK_OFF', x: centerX + 280, y: centerY - 50 },
+                { id: 'RECOVERY', x: centerX - 160, y: centerY + 90 },
+                { id: 'UNCERTAINTY', x: centerX + 160, y: centerY + 90 }
             ];
 
-            // Edges form the "envelope" shape
             const edges = [
-                // Spoke connections to center
                 { from: 'RISK_ON', to: 'ROTATION' },
                 { from: 'RISK_OFF', to: 'ROTATION' },
                 { from: 'RECOVERY', to: 'ROTATION' },
                 { from: 'UNCERTAINTY', to: 'ROTATION' },
-
-                // Peripheral connections
-                { from: 'RISK_ON', to: 'RISK_OFF' },       // Top bar
-                { from: 'RECOVERY', to: 'UNCERTAINTY' },   // Bottom bar
-                { from: 'RISK_ON', to: 'RECOVERY' },       // Left side
-                { from: 'RISK_OFF', to: 'UNCERTAINTY' }    // Right side
+                { from: 'RISK_ON', to: 'RISK_OFF' },
+                { from: 'RECOVERY', to: 'UNCERTAINTY' },
+                { from: 'RISK_ON', to: 'RECOVERY' },
+                { from: 'RISK_OFF', to: 'UNCERTAINTY' }
             ];
 
-            // Draw edges
+            // --- DRAWING ---
+
+            // Edges: Ultra-thin, subtle lines
             edges.forEach(edge => {
                 const from = nodes.find(n => n.id === edge.from);
                 const to = nodes.find(n => n.id === edge.to);
@@ -1115,11 +1124,10 @@
                     .attr('x2', to.x)
                     .attr('y2', to.y)
                     .attr('stroke', '#30363d')
-                    .attr('stroke-width', 1.0)
-                    .attr('opacity', 0.6); // Slightly more visible lines
+                    .attr('stroke-width', 1)
+                    .attr('opacity', 0.4);
             });
 
-            // Draw nodes
             nodes.forEach(node => {
                 const info = REGIMES[node.id];
                 const isActive = currentRegime === node.id;
@@ -1129,78 +1137,79 @@
                     .attr('transform', `translate(${node.x}, ${node.y})`)
                     .style('cursor', 'default');
 
-                // Active State Visuals (Layers of Glow)
                 if (isActive) {
-                    // Outer diffuse glow
+                    // --- ACTIVE STATE: The "Premium Halo" ---
+
+                    // 1. Large ambient wash (very subtle background color)
                     g.append('circle')
-                        .attr('r', 80)
+                        .attr('r', 100)
                         .attr('fill', info.color)
-                        .attr('opacity', 0.1)
-                        .style("filter", "url(#heavy-glow)");
+                        .attr('opacity', 0.08)
+                        .style("filter", "url(#ambient-glow)");
 
-                    // Middle glow ring
+                    // 2. Focused Core Glow
                     g.append('circle')
-                        .attr('r', 60)
-                        .attr('fill', 'none')
-                        .attr('stroke', info.color)
-                        .attr('stroke-width', 1)
-                        .attr('opacity', 0.3);
-
-                    // Inner intense glow
-                    g.append('circle')
-                        .attr('r', 50)
+                        .attr('r', 55)
                         .attr('fill', info.color)
                         .attr('opacity', 0.15)
-                        .style("filter", "url(#heavy-glow)");
+                        .style("filter", "url(#core-glow)");
 
-                    // Solid Ring
+                    // 3. Sharp Ring 1 (Thin, precise)
                     g.append('circle')
-                        .attr('r', 40)
+                        .attr('r', 45)
                         .attr('fill', 'none')
                         .attr('stroke', info.color)
-                        .attr('stroke-width', 2)
-                        .attr('opacity', 0.8);
-                } else {
-                    // Inactive Ring
-                    g.append('circle')
-                        .attr('r', 35)
-                        .attr('fill', 'none')
-                        .attr('stroke', '#30363d') // Dark grey for inactive
                         .attr('stroke-width', 1.5)
-                        .attr('opacity', 0.5);
-                }
+                        .attr('opacity', 0.6);
 
-                // Inner circle background (for icon legibility)
-                g.append('circle')
-                    .attr('r', 25)
-                    .attr('fill', '#0d1117') // Match card bg
-                    .attr('opacity', 1);
+                    // 4. Sharp Ring 2 (Inner, slightly thicker)
+                    g.append('circle')
+                        .attr('r', 38)
+                        .attr('fill', 'none')
+                        .attr('stroke', info.color)
+                        .attr('stroke-width', 0.5)
+                        .attr('opacity', 0.4);
 
-                // Node icon
-                if (node.id === 'ROTATION' && isActive) {
-                    // Special case for Rotation icon if needed, or just larger
-                    g.append('text')
-                        .attr('text-anchor', 'middle')
-                        .attr('dominant-baseline', 'middle')
-                        .attr('font-size', '28px')
-                        .text(info.icon);
                 } else {
-                    g.append('text')
-                        .attr('text-anchor', 'middle')
-                        .attr('dominant-baseline', 'middle')
-                        .attr('font-size', isActive ? '24px' : '20px')
-                        .attr('opacity', isActive ? 1 : 0.7)
-                        .text(info.icon);
+                    // --- INACTIVE STATE: Minimalist Tech circles ---
+                    g.append('circle')
+                        .attr('r', 32)
+                        .attr('fill', '#0d1117')
+                        .attr('stroke', '#30363d')
+                        .attr('stroke-width', 1)
+                        .attr('opacity', 0.8);
                 }
 
-                // Label below (Active gets brighter color)
+                // Node Center/Icon Background
+                // Use a darker "hole" for the icon to pop against the glow
+                if (isActive) {
+                    g.append('circle')
+                        .attr('r', 28)
+                        .attr('fill', '#0d1117') // Cut out the glow
+                        .attr('opacity', 0.9);
+                }
+
+                // Icon
                 g.append('text')
                     .attr('text-anchor', 'middle')
-                    .attr('y', isActive ? 60 : 50)
-                    .attr('fill', isActive ? '#eab308' : '#8b949e') // Highlight active text
-                    .attr('font-size', isActive ? '14px' : '10px')
-                    .attr('font-weight', isActive ? 'bold' : 'normal')
-                    .style('text-shadow', isActive ? '0 0 10px #000' : 'none')
+                    .attr('dominant-baseline', 'middle')
+                    .attr('font-size', isActive ? '26px' : '18px')
+                    .attr('opacity', isActive ? 1 : 0.8)
+                    .style('filter', isActive ? 'drop-shadow(0 2px 4px rgba(0,0,0,0.5))' : 'none')
+                    .text(info.icon);
+
+                // Label
+                const labelY = isActive ? 70 : 55;
+                const labelColor = isActive ? '#fff' : '#8b949e'; // White for active, muted for others
+
+                g.append('text')
+                    .attr('text-anchor', 'middle')
+                    .attr('y', labelY)
+                    .attr('fill', labelColor)
+                    .attr('font-family', 'Inter, sans-serif')
+                    .attr('font-size', '11px')
+                    .attr('font-weight', isActive ? '600' : '400')
+                    .attr('letter-spacing', '0.05em') // Elegant spacing
                     .text(info.name);
             });
         }
