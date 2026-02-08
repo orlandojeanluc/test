@@ -4,6 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self' https://cdn.tailwindcss.com https://cdn.jsdelivr.net https://www.gstatic.com https://www.google.com https://d3js.org 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self' https://us-central1-trendscores-df341.cloudfunctions.net https://trendscores-df341-default-rtdb.firebaseio.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com https://www.gstatic.com https://content-firebaseappcheck.googleapis.com https://www.google.com; frame-src 'self' https://www.google.com;">
     <title>Caltropia | Regime State Machine</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
@@ -22,7 +24,7 @@
                         terminal: {
                             bg: '#0d1117',
                             panel: '#161b22',
-                            border: '#21262d',
+                            border: '#30363d',
                             orange: '#c586c0',
                             amber: '#dcdcaa',
                             green: '#a7f3d0',
@@ -312,11 +314,13 @@
         #mobile-nav-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.7);
             z-index: 998;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.4s ease;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
         }
 
         #mobile-nav-overlay.show {
@@ -329,15 +333,18 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background: #0d1117;
-            border-top: 1px solid #21262d;
-            border-radius: 20px 20px 0 0;
+            background: rgba(13, 17, 23, 0.92);
+            backdrop-filter: blur(24px) saturate(180%);
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            border-top: 1px solid #30363d;
+            border-radius: 24px 24px 0 0;
             z-index: 999;
             transform: translateY(100%);
-            transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+            transition: transform 0.45s cubic-bezier(0.32, 0.72, 0, 1);
             max-height: 85vh;
             overflow-y: auto;
-            padding: 16px 16px 32px 16px;
+            padding: 12px 16px 36px 16px;
+            box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.4);
         }
 
         #mobile-nav-panel.show {
@@ -345,41 +352,116 @@
         }
 
         #mobile-nav-panel .nav-handle {
-            width: 40px;
-            height: 4px;
+            width: 48px;
+            height: 5px;
             background: #30363d;
-            border-radius: 2px;
-            margin: 0 auto 16px auto;
+            border-radius: 3px;
+            margin: 4px auto 20px auto;
+            opacity: 0.7;
         }
 
         .mobile-nav-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        /* Staggered card entry animation */
+        @keyframes cardSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(24px) scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
         }
 
         .mobile-nav-card {
-            background: #0d1117;
-            border: 1px solid #21262d;
+            background: rgba(22, 27, 34, 0.6);
+            border: 1px solid rgba(48, 54, 61, 0.8);
             border-radius: 12px;
-            padding: 16px;
+            padding: 12px 10px;
             display: flex;
             flex-direction: column;
             align-items: flex-start;
-            gap: 8px;
+            gap: 6px;
             text-decoration: none;
-            transition: all 0.2s ease;
+            transition: transform 0.15s ease, border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+            opacity: 0;
+            will-change: transform, opacity;
         }
 
-        .mobile-nav-card:hover,
+        /* Staggered animation delays */
+        #mobile-nav-panel.show .mobile-nav-card:nth-child(1) {
+            animation: cardSlideUp 0.35s ease forwards 0.05s;
+        }
+
+        #mobile-nav-panel.show .mobile-nav-card:nth-child(2) {
+            animation: cardSlideUp 0.35s ease forwards 0.08s;
+        }
+
+        #mobile-nav-panel.show .mobile-nav-card:nth-child(3) {
+            animation: cardSlideUp 0.35s ease forwards 0.11s;
+        }
+
+        #mobile-nav-panel.show .mobile-nav-card:nth-child(4) {
+            animation: cardSlideUp 0.35s ease forwards 0.14s;
+        }
+
+        #mobile-nav-panel.show .mobile-nav-card:nth-child(5) {
+            animation: cardSlideUp 0.35s ease forwards 0.17s;
+        }
+
+        #mobile-nav-panel.show .mobile-nav-card:nth-child(6) {
+            animation: cardSlideUp 0.35s ease forwards 0.20s;
+        }
+
+        #mobile-nav-panel.show .mobile-nav-card:nth-child(7) {
+            animation: cardSlideUp 0.35s ease forwards 0.23s;
+        }
+
+        #mobile-nav-panel.show .mobile-nav-card:nth-child(8) {
+            animation: cardSlideUp 0.35s ease forwards 0.26s;
+        }
+
+        #mobile-nav-panel.show .mobile-nav-card:nth-child(9) {
+            animation: cardSlideUp 0.35s ease forwards 0.29s;
+        }
+
+        #mobile-nav-panel.show .mobile-nav-card:nth-child(10) {
+            animation: cardSlideUp 0.35s ease forwards 0.32s;
+        }
+
+        #mobile-nav-panel.show .mobile-nav-card:nth-child(11) {
+            animation: cardSlideUp 0.35s ease forwards 0.35s;
+        }
+
+        #mobile-nav-panel.show .mobile-nav-card:nth-child(12) {
+            animation: cardSlideUp 0.35s ease forwards 0.38s;
+        }
+
+        #mobile-nav-panel.show .mobile-nav-card:nth-child(13) {
+            animation: cardSlideUp 0.35s ease forwards 0.41s;
+        }
+
+        /* Touch feedback - scale on press */
         .mobile-nav-card:active {
-            border-color: #c586c0;
-            background: #1c2128;
+            transform: scale(0.96) !important;
         }
 
+        .mobile-nav-card:hover {
+            border-color: rgba(197, 134, 192, 0.5);
+            background: rgba(28, 33, 40, 0.8);
+        }
+
+        /* Active card with left accent bar */
         .mobile-nav-card.active {
-            border-color: #c586c0;
-            background: rgba(197, 134, 192, 0.1);
+            background: rgba(22, 27, 34, 0.6);
+            border-color: #30363d;
+            border-left: 2px solid #c9d1d9;
         }
 
         .mobile-nav-card .nav-icon {
@@ -388,28 +470,36 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #0d1117;
-            border-radius: 8px;
+            background: rgba(13, 17, 23, 0.9);
+            border-radius: 10px;
+            border: 1px solid rgba(48, 54, 61, 0.5);
+        }
+
+        .mobile-nav-card.active .nav-icon {
+            background: rgba(13, 17, 23, 0.9);
+            border-color: rgba(48, 54, 61, 0.5);
         }
 
         .mobile-nav-card .nav-icon svg {
-            width: 18px;
-            height: 18px;
+            width: 16px;
+            height: 16px;
         }
 
         .mobile-nav-card .nav-label {
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 600;
             color: #fff;
+            letter-spacing: -0.01em;
+            line-height: 1.2;
         }
 
         .mobile-nav-card .nav-sublabel {
-            font-size: 10px;
+            font-size: 9px;
             color: #8b949e;
             margin-top: -4px;
         }
 
-        /* Mobile menu trigger button */
+        /* Mobile menu trigger button - minimal style to match nav */
         #mobile-menu-trigger {
             background: transparent;
             border: none;
@@ -430,9 +520,8 @@
 <body class="min-h-screen w-screen overflow-x-hidden">
 
     <!-- Sidebar Navigation -->
-    <!-- Sidebar Navigation -->
     <!-- Navigation: Bottom on Mobile, Left on Desktop -->
-    <nav id="sidebar" class="fixed z-50 bg-[#0a0e14] flex items-center
+        <nav id="sidebar" class="fixed z-50 bg-[#0a0e14] flex items-center
                 bottom-0 w-full h-14 flex-row justify-center py-0
                 lg:left-0 lg:top-0 lg:h-full lg:w-12 lg:flex-col lg:py-4 transition-all duration-300">
 
@@ -448,9 +537,12 @@
 
             <!-- Mobile Menu Trigger "C" Button (Only visible on mobile) -->
             <button id="mobile-menu-trigger"
-                class="lg:hidden w-10 h-full flex items-center justify-center text-[#c586c0]" onclick="openMobileNav()"
-                title="Menu">
-                <span style="font-size: 16px; font-weight: 700; font-family: 'Inter', sans-serif;">C</span>
+                class="lg:hidden w-10 h-full flex items-center justify-center text-[#c586c0] gap-0.5"
+                onclick="openMobileNav()" title="Menu">
+                <span style="font-size: 14px; font-weight: 700; font-family: 'Inter', sans-serif;">C</span>
+                <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 15l7-7 7 7"></path>
+                </svg>
             </button>
 
             <a href="radial.html"
@@ -463,20 +555,6 @@
                 </svg>
                 <span
                     class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Home</span>
-            </a>
-
-            <!-- REGIME MACHINE (ACTIVE) -->
-            <a href="regime_machine.html"
-                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#c586c0] lg:bg-[#161b22] border-t-2 lg:border-t-0 lg:border-l-2 lg:border-r-0 border-[#c586c0] group overflow-hidden"
-                title="Regime Machine">
-                <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z">
-                    </path>
-                </svg>
-                <span
-                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Regime
-                    Machine</span>
             </a>
 
             <a href="momentum.html"
@@ -517,6 +595,31 @@
                     Vol Factor</span>
             </a>
 
+            <a href="momentum_factor.html"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
+                title="Momentum Factor">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                </svg>
+                <span
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Momentum
+                    Factor</span>
+            </a>
+
+            <a href="mean_reversion.html"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
+                title="Mean Reversion">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
+                    </path>
+                </svg>
+                <span
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Mean
+                    Rev Factor</span>
+            </a>
+
             <a href="sectors.html"
                 class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
                 title="Sectors">
@@ -531,6 +634,57 @@
                     Inspection</span>
             </a>
 
+            <a href="portfolios.html"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
+                title="Portfolios">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
+                    </path>
+                </svg>
+                <span
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Caltropia
+                    Strategies</span>
+            </a>
+
+            <a href="portfolio_xray.html"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
+                title="Portfolio X-Ray">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 5H7a2 2 0 00-2-2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01">
+                    </path>
+                </svg>
+                <span
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Portfolio
+                    X-Ray</span>
+            </a>
+
+            <a href="market_map.html"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
+                title="Market Map">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7">
+                    </path>
+                </svg>
+                <span
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Market
+                    Map</span>
+            </a>
+
+            <a href="regime_machine.html"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#c586c0] lg:bg-[#161b22] border-t-2 lg:border-t-0 lg:border-l-2 lg:border-r-0 border-[#c586c0] group overflow-hidden"
+                title="Regime Machine">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
+                    </path>
+                </svg>
+                <span
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Regime
+                    Machine</span>
+            </a>
             <a href="voldashboard.html"
                 class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
                 title="Vol Dashboard">
@@ -548,11 +702,12 @@
                 title="Liquidity Heatmap">
                 <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                    </path>
                 </svg>
                 <span
-                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Liquidity
-                    Chart</span>
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Caltropia
+                    Levels</span>
             </a>
         </div>
 
@@ -584,19 +739,6 @@
                 </div>
                 <span class="nav-label">Dashboard</span>
                 <span class="nav-sublabel">Market Overview</span>
-            </a>
-
-            <!-- Regime Machine (Active) -->
-            <a href="regime_machine.html" class="mobile-nav-card active">
-                <div class="nav-icon">
-                    <svg fill="none" stroke="#c586c0" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z">
-                        </path>
-                    </svg>
-                </div>
-                <span class="nav-label">Regime Machine</span>
-                <span class="nav-sublabel">Market State</span>
             </a>
 
             <!-- Trend Signals -->
@@ -637,6 +779,31 @@
                 <span class="nav-sublabel">Risk Terminal</span>
             </a>
 
+            <!-- Momentum Factor -->
+            <a href="momentum_factor.html" class="mobile-nav-card">
+                <div class="nav-icon">
+                    <svg fill="none" stroke="#8b949e" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg>
+                </div>
+                <span class="nav-label">Momentum Factor</span>
+                <span class="nav-sublabel">Factor Exposure</span>
+            </a>
+
+            <!-- Mean Reversion -->
+            <a href="mean_reversion.html" class="mobile-nav-card">
+                <div class="nav-icon">
+                    <svg fill="none" stroke="#8b949e" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
+                        </path>
+                    </svg>
+                </div>
+                <span class="nav-label">Mean Reversion</span>
+                <span class="nav-sublabel">Reversal Signals</span>
+            </a>
+
             <!-- Sectors -->
             <a href="sectors.html" class="mobile-nav-card">
                 <div class="nav-icon">
@@ -651,6 +818,59 @@
                 <span class="nav-sublabel">Sector Inspection</span>
             </a>
 
+            <!-- Portfolios -->
+            <a href="portfolios.html" class="mobile-nav-card">
+                <div class="nav-icon">
+                    <svg fill="none" stroke="#8b949e" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
+                        </path>
+                    </svg>
+                </div>
+                <span class="nav-label">Caltropia Strategies</span>
+                <span class="nav-sublabel">Models and Strategies</span>
+            </a>
+
+            <!-- Portfolio X-Ray -->
+            <a href="portfolio_xray.html" class="mobile-nav-card">
+                <div class="nav-icon">
+                    <svg fill="none" stroke="#8b949e" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 5H7a2 2 0 00-2-2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01">
+                        </path>
+                    </svg>
+                </div>
+                <span class="nav-label">Portfolio X-Ray</span>
+                <span class="nav-sublabel">Analyze Holdings</span>
+            </a>
+
+            <!-- Market Map -->
+            <a href="market_map.html" class="mobile-nav-card">
+                <div class="nav-icon">
+                    <svg fill="none" stroke="#8b949e" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7">
+                        </path>
+                    </svg>
+                </div>
+                <span class="nav-label">Market Map</span>
+                <span class="nav-sublabel">Visual Heatmap</span>
+            </a>
+
+
+            <!-- Regime Machine -->
+            <a href="regime_machine.html" class="mobile-nav-card active">
+                <div class="nav-icon">
+                    <svg fill="none" stroke="#c586c0" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
+                        </path>
+                    </svg>
+                </div>
+                <span class="nav-label">Regime Machine</span>
+                <span class="nav-sublabel">Market Regimes</span>
+            </a>
+
             <!-- Vol Dashboard -->
             <a href="voldashboard.html" class="mobile-nav-card">
                 <div class="nav-icon">
@@ -660,24 +880,24 @@
                     </svg>
                 </div>
                 <span class="nav-label">Vol Dashboard</span>
-                <span class="nav-sublabel">Risk Overview</span>
+                <span class="nav-sublabel">Volatility Analysis</span>
             </a>
 
-            <!-- Liquidity -->
+            <!-- Liquidity Heatmap -->
             <a href="liquidity_heatmap.html" class="mobile-nav-card">
                 <div class="nav-icon">
                     <svg fill="none" stroke="#8b949e" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                            d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                        </path>
                     </svg>
                 </div>
-                <span class="nav-label">Liquidity</span>
-                <span class="nav-sublabel">Flows & Strength</span>
+                <span class="nav-label">Caltropia Levels</span>
+                <span class="nav-sublabel">Signal Levels</span>
             </a>
         </div>
     </div>
 
-    <!-- Main Content -->
     <div id="main-content" class="ml-0 lg:ml-12 pb-20 lg:pb-0 transition-all duration-300">
         <!-- Header -->
         <header class="terminal-header px-4 py-3 flex items-center justify-between gap-4 sticky top-0 z-40">
@@ -739,22 +959,31 @@
 
                     <!-- Chart Container -->
                     <!-- Main Content: Chart + Transitions -->
-                    <div class="flex flex-col lg:flex-row border-t border-[#21262d]">
-                        <!-- Chart (Left) -->
+                    <!-- Flex-1 Balance Strategy: Left Spacer (flex-1) | Chart (fixed) | Right Panel (flex-1) -->
+                    <div class="flex flex-col lg:flex-row items-center border-t border-[#21262d] py-2 lg:gap-0">
+
+                        <!-- Left Spacer (Balances the Right Panel Container) -->
+                        <div class="hidden lg:block flex-1"></div>
+
+                        <!-- Chart (Center - Fixed Width) -->
                         <div id="state-machine-container"
-                            class="flex-grow flex justify-center lg:justify-end items-center py-4 relative min-h-[400px]">
-                            <svg id="state-machine" class="w-full max-w-[400px]" height="400"
-                                viewBox="0 0 400 400"></svg>
+                            class="flex-none flex justify-center items-center relative w-[400px] h-[400px] pr-6">
+                            <svg id="state-machine" class="w-full h-full" viewBox="0 0 400 400"></svg>
                         </div>
 
-                        <!-- Transitions Panel (Right) -->
-                        <div class="w-full lg:w-1/3 p-6 lg:pl-4 flex flex-col justify-center bg-[#0d1117]/50">
-                            <div class="text-[12px] tracking-wider text-[#8b949e] font-medium mb-4">Transition
-                                Probabilities</div>
-                            <div id="transitions-list" class="space-y-3">
-                                <!-- Populated by JS -->
+                        <!-- Right Container (Flex-1, Panel aligned left to hug chart) -->
+                        <div class="w-full lg:flex-1 flex justify-center lg:justify-start">
+                            <!-- Panel Content - Pushed right to align with "Current" header -->
+                            <div
+                                class="w-full max-w-[320px] p-4 lg:ml-28 flex flex-col justify-center bg-[#0d1117]/50 rounded-r-xl">
+                                <div class="text-[12px] tracking-wider text-[#8b949e] font-medium mb-4">Transition
+                                    Probabilities</div>
+                                <div id="transitions-list" class="space-y-3">
+                                    <!-- Populated by JS -->
+                                </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -1042,6 +1271,16 @@
             renderTransitionsFromServer(transitions);
         }
 
+        function escapeHtml(unsafe) {
+            if (typeof unsafe !== 'string') return unsafe;
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
         function renderTransitionsFromServer(transitions) {
             const container = document.getElementById('transitions-list');
             if (!transitions || transitions.length === 0) return;
@@ -1053,7 +1292,8 @@
             // Assume "Stay" is self-transition. If not explicit, logic might need adjustment but
             // for now we check t.to === currentRegime.
             const stayTransition = sorted.find(t => t.to === currentRegime);
-            const otherTransitions = sorted.filter(t => t.to !== currentRegime).slice(0, 3); // Top 3 others
+            // Show ALL other transitions so we don't hide any regimes (even if 0%)
+            const otherTransitions = sorted.filter(t => t.to !== currentRegime);
 
             let html = '';
 
@@ -1064,7 +1304,7 @@
                     <div class="flex items-center justify-between p-3 rounded-lg bg-[#21262d] mb-4 border border-[#30363d]">
                         <div class="flex items-center gap-3">
                             <span class="text-xl shadow-lg rounded-full bg-[#0d1117] p-1">${info.icon}</span>
-                            <span class="text-sm font-bold text-white">Stay ${info.name}</span>
+                            <span class="text-sm font-bold text-white">Stay ${escapeHtml(info.name)}</span>
                         </div>
                         <span class="text-lg font-bold" style="color: ${info.color}">${stayTransition.prob}%</span>
                     </div>
@@ -1078,7 +1318,7 @@
                     <div class="flex items-center justify-between px-2 py-1">
                         <div class="flex items-center gap-3 opacity-80">
                             <span class="text-xs">${info.icon}</span>
-                            <span class="text-[#8b949e] text-xs">→ ${info.name}</span>
+                            <span class="text-[#8b949e] text-xs">→ ${escapeHtml(info.name)}</span>
                         </div>
                         <span class="text-sm font-mono font-bold" style="color: ${info.color}">${t.prob}%</span>
                     </div>

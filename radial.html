@@ -4,6 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self' https://cdn.tailwindcss.com https://cdn.jsdelivr.net https://www.gstatic.com https://www.google.com 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self' https://us-central1-trendscores-df341.cloudfunctions.net https://trendscores-df341-default-rtdb.firebaseio.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com https://www.gstatic.com https://content-firebaseappcheck.googleapis.com https://www.google.com; frame-src 'self' https://www.google.com;">
+
     <title>Caltropia | Market Intelligence Terminal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link
@@ -199,11 +202,13 @@
         #mobile-nav-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.7);
             z-index: 998;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.4s ease;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
         }
 
         #mobile-nav-overlay.show {
@@ -216,15 +221,18 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background: #0d1117;
-            border-top: 1px solid #21262d;
-            border-radius: 20px 20px 0 0;
+            background: rgba(13, 17, 23, 0.92);
+            backdrop-filter: blur(24px) saturate(180%);
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            border-top: 1px solid #30363d;
+            border-radius: 24px 24px 0 0;
             z-index: 999;
             transform: translateY(100%);
-            transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+            transition: transform 0.45s cubic-bezier(0.32, 0.72, 0, 1);
             max-height: 85vh;
             overflow-y: auto;
-            padding: 16px 16px 32px 16px;
+            padding: 12px 16px 36px 16px;
+            box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.4);
         }
 
         #mobile-nav-panel.show {
@@ -232,41 +240,116 @@
         }
 
         #mobile-nav-panel .nav-handle {
-            width: 40px;
-            height: 4px;
+            width: 48px;
+            height: 5px;
             background: #30363d;
-            border-radius: 2px;
-            margin: 0 auto 16px auto;
+            border-radius: 3px;
+            margin: 4px auto 20px auto;
+            opacity: 0.7;
         }
 
         .mobile-nav-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        /* Staggered card entry animation */
+        @keyframes cardSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(24px) scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
         }
 
         .mobile-nav-card {
-            background: #0d1117;
-            border: 1px solid #21262d;
+            background: rgba(22, 27, 34, 0.6);
+            border: 1px solid rgba(48, 54, 61, 0.8);
             border-radius: 12px;
-            padding: 16px;
+            padding: 12px 10px;
             display: flex;
             flex-direction: column;
             align-items: flex-start;
-            gap: 8px;
+            gap: 6px;
             text-decoration: none;
-            transition: all 0.2s ease;
+            transition: transform 0.15s ease, border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+            opacity: 0;
+            will-change: transform, opacity;
         }
 
-        .mobile-nav-card:hover,
+        /* Staggered animation delays */
+        #mobile-nav-panel.show .mobile-nav-card:nth-child(1) {
+            animation: cardSlideUp 0.35s ease forwards 0.05s;
+        }
+
+        #mobile-nav-panel.show .mobile-nav-card:nth-child(2) {
+            animation: cardSlideUp 0.35s ease forwards 0.08s;
+        }
+
+        #mobile-nav-panel.show .mobile-nav-card:nth-child(3) {
+            animation: cardSlideUp 0.35s ease forwards 0.11s;
+        }
+
+        #mobile-nav-panel.show .mobile-nav-card:nth-child(4) {
+            animation: cardSlideUp 0.35s ease forwards 0.14s;
+        }
+
+        #mobile-nav-panel.show .mobile-nav-card:nth-child(5) {
+            animation: cardSlideUp 0.35s ease forwards 0.17s;
+        }
+
+        #mobile-nav-panel.show .mobile-nav-card:nth-child(6) {
+            animation: cardSlideUp 0.35s ease forwards 0.20s;
+        }
+
+        #mobile-nav-panel.show .mobile-nav-card:nth-child(7) {
+            animation: cardSlideUp 0.35s ease forwards 0.23s;
+        }
+
+        #mobile-nav-panel.show .mobile-nav-card:nth-child(8) {
+            animation: cardSlideUp 0.35s ease forwards 0.26s;
+        }
+
+        #mobile-nav-panel.show .mobile-nav-card:nth-child(9) {
+            animation: cardSlideUp 0.35s ease forwards 0.29s;
+        }
+
+        #mobile-nav-panel.show .mobile-nav-card:nth-child(10) {
+            animation: cardSlideUp 0.35s ease forwards 0.32s;
+        }
+
+        #mobile-nav-panel.show .mobile-nav-card:nth-child(11) {
+            animation: cardSlideUp 0.35s ease forwards 0.35s;
+        }
+
+        #mobile-nav-panel.show .mobile-nav-card:nth-child(12) {
+            animation: cardSlideUp 0.35s ease forwards 0.38s;
+        }
+
+        #mobile-nav-panel.show .mobile-nav-card:nth-child(13) {
+            animation: cardSlideUp 0.35s ease forwards 0.41s;
+        }
+
+        /* Touch feedback - scale on press */
         .mobile-nav-card:active {
-            border-color: #c586c0;
-            background: #1c2128;
+            transform: scale(0.96) !important;
         }
 
+        .mobile-nav-card:hover {
+            border-color: rgba(197, 134, 192, 0.5);
+            background: rgba(28, 33, 40, 0.8);
+        }
+
+        /* Active card with left accent bar */
         .mobile-nav-card.active {
-            border-color: #c586c0;
-            background: rgba(197, 134, 192, 0.1);
+            background: rgba(22, 27, 34, 0.6);
+            border-color: #30363d;
+            border-left: 2px solid #c9d1d9;
         }
 
         .mobile-nav-card .nav-icon {
@@ -275,23 +358,31 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #0d1117;
-            border-radius: 8px;
+            background: rgba(13, 17, 23, 0.9);
+            border-radius: 10px;
+            border: 1px solid rgba(48, 54, 61, 0.5);
+        }
+
+        .mobile-nav-card.active .nav-icon {
+            background: rgba(13, 17, 23, 0.9);
+            border-color: rgba(48, 54, 61, 0.5);
         }
 
         .mobile-nav-card .nav-icon svg {
-            width: 18px;
-            height: 18px;
+            width: 16px;
+            height: 16px;
         }
 
         .mobile-nav-card .nav-label {
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 600;
             color: #fff;
+            letter-spacing: -0.01em;
+            line-height: 1.2;
         }
 
         .mobile-nav-card .nav-sublabel {
-            font-size: 10px;
+            font-size: 9px;
             color: #8b949e;
             margin-top: -4px;
         }
@@ -334,9 +425,12 @@
 
             <!-- Mobile Menu Trigger "C" Button (Only visible on mobile) -->
             <button id="mobile-menu-trigger"
-                class="lg:hidden w-10 h-full flex items-center justify-center text-[#c586c0]" onclick="openMobileNav()"
-                title="Menu">
-                <span style="font-size: 16px; font-weight: 700; font-family: 'Inter', sans-serif;">C</span>
+                class="lg:hidden w-10 h-full flex items-center justify-center text-[#c586c0] gap-0.5"
+                onclick="openMobileNav()" title="Menu">
+                <span style="font-size: 14px; font-weight: 700; font-family: 'Inter', sans-serif;">C</span>
+                <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 15l7-7 7 7"></path>
+                </svg>
             </button>
 
             <a href="radial.html"
@@ -466,6 +560,19 @@
                     class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Market
                     Map</span>
             </a>
+
+            <a href="regime_machine.html"
+                class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
+                title="Regime Machine">
+                <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
+                    </path>
+                </svg>
+                <span
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Regime
+                    Machine</span>
+            </a>
             <a href="voldashboard.html"
                 class="w-10 h-full lg:w-full lg:h-8 flex items-center justify-center lg:justify-start lg:px-4 text-[#8b949e] hover:text-[#c586c0] lg:hover:bg-[#161b22] group overflow-hidden"
                 title="Vol Dashboard">
@@ -483,11 +590,12 @@
                 title="Liquidity Heatmap">
                 <svg class="w-5 h-5 lg:w-4 lg:h-4 min-w-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                    </path>
                 </svg>
                 <span
-                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Liquidity
-                    Chart</span>
+                    class="nav-text hidden lg:block ml-3 text-xs whitespace-nowrap opacity-0 transition-opacity duration-300">Caltropia
+                    Levels</span>
             </a>
         </div>
 
@@ -511,14 +619,14 @@
             <!-- Dashboard -->
             <a href="radial.html" class="mobile-nav-card active">
                 <div class="nav-icon">
-                    <svg fill="none" stroke="#c586c0" viewBox="0 0 24 24">
+                    <svg fill="none" stroke="#8b949e" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z">
                         </path>
                     </svg>
                 </div>
                 <span class="nav-label">Dashboard</span>
-                <span class="nav-sublabel">Market Overview</span>
+                <span class="nav-sublabel">Signal Overview</span>
             </a>
 
             <!-- Trend Signals -->
@@ -530,7 +638,7 @@
                     </svg>
                 </div>
                 <span class="nav-label">Trend Signals</span>
-                <span class="nav-sublabel">Momentum Scanner</span>
+                <span class="nav-sublabel">Equity Trend</span>
             </a>
 
             <!-- Macro -->
@@ -568,7 +676,7 @@
                     </svg>
                 </div>
                 <span class="nav-label">Momentum Factor</span>
-                <span class="nav-sublabel">Factor Exposure</span>
+                <span class="nav-sublabel">Momentum Terminal</span>
             </a>
 
             <!-- Mean Reversion -->
@@ -581,7 +689,7 @@
                     </svg>
                 </div>
                 <span class="nav-label">Mean Reversion</span>
-                <span class="nav-sublabel">Reversal Signals</span>
+                <span class="nav-sublabel">Reversion Terminal</span>
             </a>
 
             <!-- Sectors -->
@@ -607,8 +715,8 @@
                         </path>
                     </svg>
                 </div>
-                <span class="nav-label">Strategies</span>
-                <span class="nav-sublabel">Caltropia Portfolios</span>
+                <span class="nav-label">Caltropia Strategies</span>
+                <span class="nav-sublabel">Models and Strategies</span>
             </a>
 
             <!-- Portfolio X-Ray -->
@@ -637,17 +745,18 @@
                 <span class="nav-sublabel">Visual Heatmap</span>
             </a>
 
-            <!-- Factor Arena -->
-            <a href="factor_arena.html" class="mobile-nav-card">
+
+            <!-- Regime Machine -->
+            <a href="regime_machine.html" class="mobile-nav-card">
                 <div class="nav-icon">
                     <svg fill="none" stroke="#8b949e" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3v18h18"></path>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12l4-4 4 4 4-4">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
                         </path>
                     </svg>
                 </div>
-                <span class="nav-label">Factor Arena</span>
-                <span class="nav-sublabel">Factor Comparison</span>
+                <span class="nav-label">Regime Machine</span>
+                <span class="nav-sublabel">Market Regimes</span>
             </a>
 
             <!-- Vol Dashboard -->
@@ -667,11 +776,12 @@
                 <div class="nav-icon">
                     <svg fill="none" stroke="#8b949e" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                            d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                        </path>
                     </svg>
                 </div>
-                <span class="nav-label">Liquidity Chart</span>
-                <span class="nav-sublabel">Options Flow</span>
+                <span class="nav-label">Caltropia Levels</span>
+                <span class="nav-sublabel">Signal Levels</span>
             </a>
         </div>
     </div>
@@ -985,7 +1095,8 @@
                     <h3 id="grid-title" class="text-sm font-bold text-white">Trend Leaders</h3>
                     <span id="showing-count" class="text-xs text-[#8b949e] font-mono">Loading...</span>
                 </div>
-                <div id="momentum-grid" class="flex gap-2 overflow-x-auto pb-2"></div>
+                <div id="momentum-grid"
+                    class="grid grid-flow-col auto-cols-[160px] grid-rows-2 gap-2 overflow-x-auto pb-2"></div>
             </div>
 
             <!-- Bottom Grid -->
@@ -995,7 +1106,7 @@
                     <svg id="histogram-chart" width="100%" height="200" viewBox="0 0 500 200" class="w-full"></svg>
                 </div>
                 <div class="terminal-card p-4">
-                    <h3 class="text-sm font-bold text-white mb-2">Trend Correlation</h3>
+                    <h3 class="text-sm font-bold text-white mb-2">Trend Divergence</h3>
                     <svg id="scatter-chart" width="100%" height="200" viewBox="0 0 500 200" class="w-full"></svg>
                 </div>
             </div>
@@ -1289,9 +1400,25 @@
             renderAll();
         };
 
+        // Helper to prevent XSS
+        function escapeHtml(unsafe) {
+            if (typeof unsafe !== 'string') return unsafe;
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function escapeJs(unsafe) {
+            if (typeof unsafe !== 'string') return unsafe;
+            return unsafe.replace(/\\/g, "\\\\").replace(/'/g, "\\'");
+        }
+
         window.showTooltip = function (e, ticker, sector, score) {
             const el = document.getElementById('tooltip');
-            el.innerHTML = `<div class="font-bold text-[#c586c0] uppercase">${ticker}</div><div class="text-xs text-white">${sector}</div><div class="text-xs mt-1">Score: ${score}</div>`;
+            el.innerHTML = `<div class="font-bold text-[#c586c0] uppercase">${escapeHtml(ticker)}</div><div class="text-xs text-white">${escapeHtml(sector)}</div><div class="text-xs mt-1">Score: ${score}</div>`;
             el.style.left = (e.clientX + 10) + 'px';
             el.style.top = (e.clientY + 10) + 'px';
             el.classList.add('show');
@@ -1299,7 +1426,7 @@
 
         window.showGenericTooltip = function (e, title, content) {
             const el = document.getElementById('tooltip');
-            el.innerHTML = `<div class="font-bold text-[#c586c0]">${title}</div><div class="text-xs text-white">${content}</div>`;
+            el.innerHTML = `<div class="font-bold text-[#c586c0]">${escapeHtml(title)}</div><div class="text-xs text-white">${escapeHtml(content)}</div>`;
             // Handle both mouse and touch events
             let x, y;
             if (e.touches && e.touches.length > 0) {
@@ -1320,7 +1447,7 @@
         window.updateRadarInfo = function (sector, avgScore) {
             const el = document.getElementById('radar-info');
             const color = avgScore > 0 ? '#a7f3d0' : avgScore < 0 ? '#fecdd3' : '#8b949e';
-            el.innerHTML = `<span style="color:${color}">${sector}: ${avgScore > 0 ? '+' : ''}${avgScore.toFixed(2)}</span>`;
+            el.innerHTML = `<span style="color:${color}">${escapeHtml(sector)}: ${avgScore > 0 ? '+' : ''}${avgScore.toFixed(2)}</span>`;
         };
 
         // Reset radar info and hide tooltip when scrolling (mobile UX improvement)
@@ -1474,8 +1601,8 @@
             const color = asset.overallScore > 0 ? '#a7f3d0' : '#fecdd3';
             el.innerHTML = `
                 <div class="mb-2">
-                    <div class="text-3xl font-bold text-white uppercase">${asset.ticker}</div>
-                    <div class="text-xs text-[#8b949e] font-mono">${asset.sector}</div>
+                    <div class="text-3xl font-bold text-white uppercase">${escapeHtml(asset.ticker)}</div>
+                    <div class="text-xs text-[#8b949e] font-mono">${escapeHtml(asset.sector)}</div>
                 </div>
                 <div class="text-4xl font-bold mb-4" style="color:${color}">${asset.overallScore}</div>
                 <div class="grid grid-cols-2 gap-4 text-sm">
@@ -1656,8 +1783,8 @@
                 const size = 5;
 
                 html += `
-                    <g style="cursor:pointer" onclick="openAssetDetail('${p.ticker}')"
-                       onmouseenter="showTooltip(event, '${p.ticker}', '${p.sector}', ${p.score}, '${p.stTrend}', '${p.itTrend}')"
+                    <g style="cursor:pointer" onclick="openAssetDetail('${escapeJs(p.ticker)}')"
+                       onmouseenter="showTooltip(event, '${escapeJs(p.ticker)}', '${escapeJs(p.sector)}', ${p.score}, '${p.stTrend}', '${p.itTrend}')"
                        onmouseleave="hideTooltip()">
                         <circle cx="${p.x}" cy="${p.y}" r="15" fill="transparent"/>
                         <circle cx="${p.x}" cy="${p.y}" r="${size}" fill="${color}"/>
@@ -1670,7 +1797,7 @@
                     const deg = p.ang * 180 / Math.PI;
                     const rot = (deg > -90 && deg < 90) ? deg : deg + 180;
                     const anchor = (deg > -90 && deg < 90) ? "start" : "end";
-                    html += `<text x="${lx}" y="${ly}" transform="rotate(${rot},${lx},${ly})" text-anchor="${anchor}" font-size="12" font-weight="bold" class="uppercase" fill="#c9d1d9" font-family="Inter, sans-serif">${p.ticker}</text>`;
+                    html += `<text x="${lx}" y="${ly}" transform="rotate(${rot},${lx},${ly})" text-anchor="${anchor}" font-size="12" font-weight="bold" class="uppercase" fill="#c9d1d9" font-family="Inter, sans-serif">${escapeHtml(p.ticker)}</text>`;
                 }
             });
 
@@ -1729,13 +1856,13 @@
             points.forEach((p, i) => {
                 const lx = cx + (maxR + 15) * Math.cos(p.ang), ly = cy + (maxR + 15) * Math.sin(p.ang);
                 const label = p.sector.length > 6 ? p.sector.split(' ')[0].slice(0, 5) : p.sector;
-                html += `<text x="${lx}" y="${ly}" text-anchor="middle" font-size="9" fill="#888" dy="3">${label}</text>`;
+                html += `<text x="${lx}" y="${ly}" text-anchor="middle" font-size="9" fill="#888" dy="3">${escapeHtml(label)}</text>`;
 
                 // Interactive zone for tooltip - colored by sector sentiment
                 html += `<circle cx="${p.x}" cy="${p.y}" r="5" fill="${p.color}" stroke="${p.color}" stroke-width="1" style="cursor:pointer"
-                        onmouseenter="showGenericTooltip(event, '${p.sector}', 'Avg Score: ${p.avg.toFixed(2)}')"
-                        ontouchstart="updateRadarInfo('${p.sector}', ${p.avg.toFixed(2)})"
-                        onclick="updateRadarInfo('${p.sector}', ${p.avg.toFixed(2)})"
+                        onmouseenter="showGenericTooltip(event, '${escapeJs(p.sector)}', 'Avg Score: ${p.avg.toFixed(2)}')"
+                        ontouchstart="updateRadarInfo('${escapeJs(p.sector)}', ${p.avg.toFixed(2)})"
+                        onclick="updateRadarInfo('${escapeJs(p.sector)}', ${p.avg.toFixed(2)})"
                         onmouseleave="hideTooltip()" />`;
             });
             svg.innerHTML = html;
@@ -1755,13 +1882,13 @@
                 `).join('');
 
                 return `
-                    <div class="min-w-[160px] bg-[#0d1117] p-3 border border-[#21262d] rounded-lg hover:border-[#30363d] cursor-pointer" onclick="openAssetDetail('${a.ticker}')">
+                    <div class="min-w-[160px] bg-[#0d1117] p-3 border border-[#21262d] rounded-lg hover:border-[#30363d] cursor-pointer" onclick="openAssetDetail('${escapeJs(a.ticker)}')">
                         <div class="flex justify-between mb-2">
-                            <span class="font-bold text-[#fff]">${a.ticker}</span>
+                            <span class="font-bold text-[#fff]">${escapeHtml(a.ticker)}</span>
                             <span class="font-mono text-xs" style="color:${color}">${displayVal}</span>
                         </div>
                         <div class="flex gap-0.5">${bars}</div>
-                        <div class="text-[10px] text-[#8b949e] bg-[#21262d] px-1.5 py-0.5 rounded border border-[#30363d] mt-2 inline-block">${a.sector}</div>
+                        <div class="text-[10px] text-[#8b949e] bg-[#21262d] px-1.5 py-0.5 rounded border border-[#30363d] mt-2 inline-block">${escapeHtml(a.sector)}</div>
                     </div>
                 `;
             }).join('');
@@ -1774,9 +1901,9 @@
             document.getElementById('movers-list').innerHTML = sorted.map((a, i) => {
                 const color = a.overallScore > 0 ? '#a7f3d0' : a.overallScore < 0 ? '#fecdd3' : '#8b949e';
                 return `
-                    <div class="flex items-center justify-between p-2 hover:bg-[#1a1a1a] cursor-pointer border-b border-[#1a1a1a]" onclick="openAssetDetail('${a.ticker}')">
+                    <div class="flex items-center justify-between p-2 hover:bg-[#1a1a1a] cursor-pointer border-b border-[#1a1a1a]" onclick="openAssetDetail('${escapeJs(a.ticker)}')">
                         <span class="text-[#8b949e] w-4">${i + 1}</span>
-                        <span class="text-white font-bold w-12">${a.ticker}</span>
+                        <span class="text-white font-bold w-12">${escapeHtml(a.ticker)}</span>
                         <div class="flex-1 mx-2 h-1 bg-[#333]"><div class="h-full" style="width:${Math.min(100, Math.abs(a.overallScore) * 12.5)}%; background:${color}"></div></div>
                         <span class="font-mono text-xs" style="color:${color}">${a.overallScore}</span>
                     </div>
@@ -1825,9 +1952,9 @@
                 const y = margin.t + ((4 - a.itTrend) / 8) * h;
                 const dotColor = a.overallScore > 0 ? '#a7f3d0' : a.overallScore < 0 ? '#fecdd3' : '#8b949e';
                 html += `<circle cx="${x}" cy="${y}" r="4" fill="${dotColor}" opacity="0.8" style="cursor:pointer"
-                        onmouseenter="showGenericTooltip(event, '${a.ticker}', 'ST: ${a.stTrend} | IT: ${a.itTrend}')"
+                        onmouseenter="showGenericTooltip(event, '${escapeJs(a.ticker)}', 'ST: ${a.stTrend} | IT: ${a.itTrend}')"
                         onmouseleave="hideTooltip()"
-                        onclick="openAssetDetail('${a.ticker}')"/>`;
+                        onclick="openAssetDetail('${escapeJs(a.ticker)}')"/>`;
             });
             svg.innerHTML = html;
         }
@@ -1886,9 +2013,9 @@
                 const momColor = avgMom > 0 ? 'text-[#a7f3d0]' : avgMom < 0 ? 'text-[#fecdd3]' : 'text-[#8b949e]';
 
                 return `
-                    <div class="bg-[#0d1117] p-3 border border-[#21262d] rounded-lg cursor-pointer hover:border-[#30363d]" onclick="filterBySector('${s}')">
+                    <div class="bg-[#0d1117] p-3 border border-[#21262d] rounded-lg cursor-pointer hover:border-[#30363d]" onclick="filterBySector('${escapeJs(s)}')">
                         <div class="flex justify-between items-center">
-                            <span class="text-white font-bold">${s}</span>
+                            <span class="text-white font-bold">${escapeHtml(s)}</span>
                             <span class="font-mono ${trendColor} font-bold">${avgTrend > 0 ? '+' : ''}${avgTrend.toFixed(1)}</span>
                         </div>
                         <div class="flex justify-between items-center mt-2 text-[10px]">
@@ -1909,8 +2036,8 @@
             ).slice(0, 10);
 
             document.getElementById('divergence-list').innerHTML = divs.map(a => `
-                <div class="flex justify-between p-2 bg-[#0d1117] border border-[#21262d] rounded mb-1 cursor-pointer hover:border-[#30363d]" onclick="openAssetDetail('${a.ticker}')">
-                    <span class="text-white font-bold uppercase">${a.ticker}</span>
+                <div class="flex justify-between p-2 bg-[#0d1117] border border-[#21262d] rounded mb-1 cursor-pointer hover:border-[#30363d]" onclick="openAssetDetail('${escapeJs(a.ticker)}')">
+                    <span class="text-white font-bold uppercase">${escapeHtml(a.ticker)}</span>
                     <span class="text-xs text-white">ST: ${a.stTrend} | IT: ${a.itTrend}</span>
                 </div>
             `).join('');
